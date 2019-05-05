@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "767390119944",
+    "firebase_url": "https://rococodish.firebaseio.com",
+    "project_id": "rococodish",
+    "storage_bucket": "rococodish.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767390119944:android:3a1f02e44f7af9e7",
+        "android_client_info": {
+          "package_name": "com.example.front_ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "767390119944-8141os56audt2unmc7mnajb2lu9rcbd7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.front_ui",
+            "certificate_hash": "cbe4a82cf6108a8a07fdf969d0052d613aaad854"
+          }
+        },
+        {
+          "client_id": "767390119944-d2s42s1plcopendl9942an9elt2b3if5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWE30i4QBg3Xl-aup4NIhHX-7w74oWlmg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "767390119944-d2s42s1plcopendl9942an9elt2b3if5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
