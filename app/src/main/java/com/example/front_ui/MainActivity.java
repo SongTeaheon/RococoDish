@@ -8,6 +8,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String TAG = "TAGMainActivity";
     Button buttonToLogin;
     Button buttonToSingIn;
 
