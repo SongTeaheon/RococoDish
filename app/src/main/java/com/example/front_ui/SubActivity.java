@@ -28,6 +28,7 @@ public class SubActivity extends AppCompatActivity {
     private static final String TAG = "TAG_SubActivity";
     private FusedLocationProviderClient mFusedLocationClient;
     RecyclerView my_recycler_view;
+    RecyclerView myPage_recyclerview;
     private Location mCurrentLocation;
     private boolean mLocationPermissionGranted = false;
     ImageView imageView;
@@ -53,7 +54,11 @@ public class SubActivity extends AppCompatActivity {
 
 
 
-
+        //마이페이지용 리사이클러 뷰 변수
+        myPage_recyclerview = findViewById(R.id.myPage_recyclerview_activitySub);
+        Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
+        myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        myPage_recyclerview.setAdapter(myPageAdapter);
     }
 
     //location permission을 가져온다.
