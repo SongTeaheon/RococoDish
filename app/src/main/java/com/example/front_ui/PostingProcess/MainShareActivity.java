@@ -1,7 +1,12 @@
 package com.example.front_ui.PostingProcess;
 
+import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,6 +15,12 @@ import android.widget.Toast;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.R;
 import com.example.front_ui.Utils.Permissions;
+import com.theartofdev.edmodo.cropper.CropImage;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 
 
 public class MainShareActivity extends AppCompatActivity {
@@ -97,6 +108,39 @@ public class MainShareActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.relLayout1, storeSearchFragment).commit();
 
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult");
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && data != null){
+//            ProgressDialog loading = ProgressDialog.show(this, "로딩중", "잠시만 기다려주세요...");
+            CropImage.ActivityResult result =CropImage.getActivityResult(data);
+            try {
+                Bitmap selectedBmp = MediaStore.Images.Media.getBitmap(getContentResolver(), result.getUri());
+                OutputStream outputStream = new ByteArrayOutputStream();
+                selectedBmp.compress(Bitmap.CompressFormat.JPEG, 60, outputStream);
+                byte[] byteArray = ((ByteArrayOutputStream) outputStream).toByteArray();
+//                Intent passByte = new Intent(getContext(), LastShareFragment.class);
+//                passByte.putExtra("byteArray", byteArray);
+//                startActivity(passByte);
+                //fragment로 데이터 전송 및 변경
+                LastShareFragment lastShareFragment = new LastShareFragment();
+                Bundle args = new Bundle();
+                args.putByteArray("byteArray", byteArray);
+                Log.d(TAG, "성공적으로 바이트어레이 이동");
+                lastShareFragment.setArguments(args);
+
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.relLayout1, lastShareFragment).commit();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 
 }

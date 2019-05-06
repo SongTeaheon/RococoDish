@@ -1,7 +1,16 @@
 package com.example.front_ui.PostingProcess;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +30,13 @@ import com.example.front_ui.Utils.RecyclerItemClickListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -117,7 +132,7 @@ public class StoreSearchFragment extends Fragment {
                         Log.d(TAG, "move to Last Share Fragment");
 
                         //선택한 가게 정보 데이터를 bundle에 넣고 다음 프래그먼트로 이동
-                        setFragmentAndMove(itemPosition);
+                        setFragmentAndMove(getContext());
 
                     }
 
@@ -133,19 +148,57 @@ public class StoreSearchFragment extends Fragment {
 
     //선택한 가게 정보 데이터를 bundle에 넣고 다음 프래그먼트로 이동
     //태완태완 : 여기 setFragmentAndMove함수에서 그 갤러리 액티비티로 넘어가야합니다.
-    private void setFragmentAndMove(int itemPosition) {
-        Log.d(TAG, "put data in Fragment");
-        GalleryFragment fragment = new GalleryFragment();
-        Bundle args = new Bundle();
-        args.putParcelable("StoreData", storeInfoArrayList.get(itemPosition));
-        fragment.setArguments(args);
-
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.relLayout1, fragment);
-        ft.addToBackStack(null);
-        ft.commit();
+    private void setFragmentAndMove(Context context) {
+//        Log.d(TAG, "put data in Fragment");
+//        GalleryFragment fragment = new GalleryFragment();
+//        Bundle args = new Bundle();
+//        args.putParcelable("StoreData", storeInfoArrayList.get(itemPosition));
+//        fragment.setArguments(args);
+//
+//        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+//        ft.replace(R.id.relLayout1, fragment);
+//        ft.addToBackStack(null);
+//        ft.commit();
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setCropShape(CropImageView.CropShape.OVAL)
+                .setBorderCornerColor(Color.GRAY)
+                .setAutoZoomEnabled(true)
+                .setFixAspectRatio(true)
+                .start((Activity) context);
     }
 
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        Log.d(TAG, "onActivityResult");
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && data != null){
+//            ProgressDialog loading = ProgressDialog.show(getContext(), "로딩중", "잠시만 기다려주세요...");
+//            CropImage.ActivityResult result =CropImage.getActivityResult(data);
+//            try {
+//                Bitmap selectedBmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), result.getUri());
+//                OutputStream outputStream = new ByteArrayOutputStream();
+//                selectedBmp.compress(Bitmap.CompressFormat.JPEG, 60, outputStream);
+//                byte[] byteArray = ((ByteArrayOutputStream) outputStream).toByteArray();
+////                Intent passByte = new Intent(getContext(), LastShareFragment.class);
+////                passByte.putExtra("byteArray", byteArray);
+////                startActivity(passByte);
+//                //fragment로 데이터 전송 및 변경
+//                LastShareFragment fragment = new LastShareFragment();
+//                Bundle args = new Bundle();
+//                args.putByteArray("byteArray", byteArray);
+//                fragment.setArguments(args);
+//
+//                FragmentTransaction fragmentTransaction = getFragmentManager()
+//                        .beginTransaction()
+//                        .replace(R.id.relLayout1, fragment);
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.commit();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     //네이버 api 검색 실행. 성공하면 정보 받아서 리사이클러뷰 어댑터로 넘긴다.
     private void requestSearchApi(String searchWord){

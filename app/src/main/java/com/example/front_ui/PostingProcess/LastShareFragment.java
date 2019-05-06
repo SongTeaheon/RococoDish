@@ -1,5 +1,8 @@
 package com.example.front_ui.PostingProcess;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -83,8 +86,8 @@ public class LastShareFragment extends Fragment {
         Log.d(TAG, "onCreate!");
         //Store Search Fragment에서 받은 bundle데이터(네이터 api 검색 결과 선택 항목)을 받는다.
         if (getArguments() != null) {
-            kakaoStoreInfo = getArguments().getParcelable("StoreData");
-            Log.d(TAG, "kakaoStoreInfo : " + kakaoStoreInfo.place_name);
+            //kakaoStoreInfo = getArguments().getParcelable("StoreData");
+//            Log.d(TAG, "kakaoStoreInfo : " + kakaoStoreInfo.place_name);
         }
     }
 
@@ -136,6 +139,10 @@ public class LastShareFragment extends Fragment {
                 getActivity().finish();
             }
         });
+
+        //StoreSearchFragment에서 건너온 사진 byteArray를 받음
+        byte[] byteArray = getActivity().getIntent().getByteArrayExtra("byteArray");
+//        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);//가져온 byteArray를 비트맵 이미지로 변경
 
         //Star Rating Bar setup
         setupStarRatingBar();
