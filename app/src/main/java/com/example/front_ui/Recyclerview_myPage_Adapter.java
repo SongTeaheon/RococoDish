@@ -59,6 +59,7 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
     public int getItemCount() {
         return (null != list? list.size() : 0);
     }
+
     public class myPageItemHolder extends RecyclerView.ViewHolder{
 
         private ImageView imageview;
