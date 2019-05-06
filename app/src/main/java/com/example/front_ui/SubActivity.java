@@ -1,6 +1,7 @@
 package com.example.front_ui;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -12,15 +13,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.front_ui.DataModel.PostingInfo;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+
+import java.util.ArrayList;
 
 public class SubActivity extends AppCompatActivity {
 
@@ -32,7 +38,10 @@ public class SubActivity extends AppCompatActivity {
     private Location mCurrentLocation;
     private boolean mLocationPermissionGranted = false;
     ImageView imageView;
-
+    TextView myPageTextview;
+    private ArrayList<PostingInfo> list;
+    private int position;
+    private TextView starText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +68,43 @@ public class SubActivity extends AppCompatActivity {
         Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
         myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         myPage_recyclerview.setAdapter(myPageAdapter);
+
+        //일단 마이페이지 리사이클러뷰에서 0번째는 플러스 기능, 나머지는 게시물 구체적 보기 창으로 이동
+//        if(position == 0){
+//            myPage_recyclerview.findViewHolderForAdapterPosition(position).itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(getApplicationContext(), "이건 처음 아이템입니다.", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
+//        else{
+//            myPage_recyclerview.findViewHolderForAdapterPosition(0).itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(getApplicationContext(), "나머지 아이템입니다.", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
+
+        //마이페이지 글자 누를시 이벤트
+        myPageTextview = findViewById(R.id.myPage_textview_activitySub);
+        myPageTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SubActivity.this, MyPage.class);
+                startActivity(intent);
+            }
+        });
+
+        //별점평균 누를시 생기는 이벤트
+        starText = findViewById(R.id.storeStar);
+        starText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "포스팅 가즈아", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //location permission을 가져온다.
