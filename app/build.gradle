@@ -23,6 +23,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.android.support:support-v4:28.0.0'
@@ -76,6 +77,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     //geoFirestore 라이브러리
     implementation 'com.github.imperiumlabs:GeoFirestore-Android:v1.1.1'
+    //이미지 크롭 라이브러리
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.6.+'
 }
 repositories {
     mavenCentral()

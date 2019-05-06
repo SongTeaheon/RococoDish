@@ -1,5 +1,7 @@
 package com.example.front_ui.DataModel;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,10 +10,10 @@ public class StoreInfo {
     public float aver_star;
     public String address;
     public List<Float> detail_aver_star;
-    public int coordinates_x;
-    public int coordinates_y;
     public String postId;//String ID
     private ArrayList<PostingInfo> allItemsInSection;
+    public GeoPoint geoPoint;
+
 
     public StoreInfo() {
 
@@ -21,14 +23,14 @@ public class StoreInfo {
                      float aver_star,
                      String address,
                      List<Float> detail_aver_star,
-                     int coordinates_x,
-                     int coordinates_y) {
+                     GeoPoint geoPoint
+                     ) {
         this.name = name;
         this.aver_star = aver_star;
         this.address = address;
         this.detail_aver_star = detail_aver_star;
-        this.coordinates_x = coordinates_x;
-        this.coordinates_y = coordinates_y;
+        this.geoPoint = geoPoint;
+
     }
 
 
@@ -49,12 +51,12 @@ public class StoreInfo {
         return detail_aver_star;
     }
 
-    public int getCoordinates_x() {
-        return coordinates_x;
+    public GeoPoint getGeoPoint() {
+        return geoPoint;
     }
 
-    public int getCoordinates_y() {
-        return coordinates_y;
+    public void setGeoPoint(GeoPoint geoPoint) {
+        this.geoPoint = geoPoint;
     }
 
     public void setName(String name) {
