@@ -10,4 +10,9 @@
     <color name="colorMainSearchIcon">#CDB745</color>
     <color name="colorGray">#E2E2E2</color>
     <color name="colorNone">#00000000</color>
+
+    <!--파이어베이스 UI-->
+    <color name="colorPrimary2">#F7DC6F</color>
+    <color name="colorPrimaryDark2">#FFCA28</color>
+    <color name="colorAccent2">#E74C3C</color>
 </resources>
