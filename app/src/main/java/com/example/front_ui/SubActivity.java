@@ -106,9 +106,7 @@ public class SubActivity extends AppCompatActivity {
         starText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "포스팅 가즈아", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), MainShareActivity.class);
-                startActivity(intent);
+
             }
         });
     }

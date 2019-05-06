@@ -1,6 +1,7 @@
 package com.example.front_ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.front_ui.DataModel.PostingInfo;
+import com.example.front_ui.PostingProcess.MainShareActivity;
 import com.example.front_ui.Utils.GlideApp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,36 +33,51 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
         Log.d(TAG, "어댑터의 constructor가 불러졌습니다.");
 
         list = new ArrayList<>();
+        list.add(new PostingInfo());//빈 탱이를 넣는다.
         this.context = context;
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+        getUserPostInfo();
+    }
+
+    private void getUserPostInfo() {
+        //storage에서 해당 사용자가 쓴 정보를 가져온다. 그걸 list에 담는다.
+        //만약 첫 번째 데이터를 가져오면,         list.remove를 한 번하고 넣기 시작한다.
     }
 
 
     @NonNull
     @Override
     public myPageItemHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.plus_layout, null);
+        View v = LayoutInflater.from(context).inflate(R.layout.polar_style, null);
         myPageItemHolder holder = new myPageItemHolder(v);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull final myPageItemHolder itemRowHolder, int i) {
+        Log.d(TAG, "onBindviewHolder position : " + i);
         if(i == 0){
-            //+이미지
             GlideApp.with(context)
                     .load(R.drawable.plus)
                     .into(itemRowHolder.imageview);
         }else if(i > 0){
-            PostingInfo postingInfo = list.get(i-1);
+            PostingInfo postingInfo = list.get(i-1);//노확실
             //이 경우엔 그냥 평소 넣는대로 함.
         }
-        PostingInfo postingInfo = list.get(i);
         itemRowHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int pos = itemRowHolder.getAdapterPosition();
+                if(pos == 0){
+                    //글 작성으로 이동
+                    Toast.makeText(context, "포스팅 가즈아", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, MainShareActivity.class);
+                    context.startActivity(intent);
+                }else{
+                    //해당 가게 화면으로 이동
+                }
                 Toast.makeText(v.getContext(), "여기다가 디비에 있는 이미지 끌어와서 글라이드로 붙이면 될듯", Toast.LENGTH_SHORT).show();
             }
         });
@@ -74,7 +91,7 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
 
     @Override
     public int getItemCount() {
-        return (null != list? list.size() : 1);
+        return (null != list? list.size() : 0);
     }
 
     public class myPageItemHolder extends RecyclerView.ViewHolder{
