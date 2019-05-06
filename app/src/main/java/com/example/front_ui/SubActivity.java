@@ -27,6 +27,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SubActivity extends AppCompatActivity {
 
@@ -43,12 +46,13 @@ public class SubActivity extends AppCompatActivity {
     private int position;
     private TextView starText;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate is called");
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
+
 
         my_recycler_view = (RecyclerView) findViewById(R.id.mrecyclerView);
 
@@ -61,13 +65,12 @@ public class SubActivity extends AppCompatActivity {
         getLocationPermission(); //Permission완료해야 recyclerview를 불러온다.(그 전에 불러오면 안되기 때문)
 
 
-
-
         //마이페이지용 리사이클러 뷰 변수
         myPage_recyclerview = findViewById(R.id.myPage_recyclerview_activitySub);
         Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
         myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         myPage_recyclerview.setAdapter(myPageAdapter);
+
 
         //일단 마이페이지 리사이클러뷰에서 0번째는 플러스 기능, 나머지는 게시물 구체적 보기 창으로 이동
 //        if(position == 0){
@@ -106,6 +109,7 @@ public class SubActivity extends AppCompatActivity {
             }
         });
     }
+
 
     //location permission을 가져온다.
     //permission이 있으면 location을 가져온다.

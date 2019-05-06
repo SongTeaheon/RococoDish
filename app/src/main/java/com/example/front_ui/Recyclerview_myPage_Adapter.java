@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.front_ui.DataModel.PostingInfo;
+import com.example.front_ui.Utils.GlideApp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -26,7 +27,7 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
     FirebaseStorage storage;
     StorageReference storageReference;
 
-    public Recyclerview_myPage_Adapter(Context context){
+    public Recyclerview_myPage_Adapter(Context context) {
         Log.d(TAG, "어댑터의 constructor가 불러졌습니다.");
 
         list = new ArrayList<>();
@@ -39,14 +40,24 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
 
     @NonNull
     @Override
-    public myPageItemHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(context).inflate(R.layout.polar_style, null);
+    public myPageItemHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.plus_layout, null);
         myPageItemHolder holder = new myPageItemHolder(v);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull final myPageItemHolder itemRowHolder, int i) {
+        if(i == 0){
+            //+이미지
+            GlideApp.with(context)
+                    .load(R.drawable.plus)
+                    .into(itemRowHolder.imageview);
+        }else if(i > 0){
+            PostingInfo postingInfo = list.get(i-1);
+            //이 경우엔 그냥 평소 넣는대로 함.
+        }
+        PostingInfo postingInfo = list.get(i);
         itemRowHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,8 +67,14 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
     }
 
     @Override
+    public int getItemViewType(int position) {
+//        return super.getItemViewType(position);
+        return position;
+    }
+
+    @Override
     public int getItemCount() {
-        return (null != list? list.size() : 0);
+        return (null != list? list.size() : 1);
     }
 
     public class myPageItemHolder extends RecyclerView.ViewHolder{

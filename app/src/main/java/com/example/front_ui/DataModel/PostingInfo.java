@@ -21,7 +21,7 @@ public class PostingInfo {
     public PostingInfo() {
     }
 
-    public PostingInfo(String storeName, String imagePathInStorage, int numLike, Object postingTime, String title, Map<String, Boolean> tag, String description, String writerName, String address, String storeId, String writerId, float aver_star, List<Float> detail_aver_star, String id) {
+    public PostingInfo(String storeName, String imagePathInStorage, int numLike, Object postingTime, String title, Map<String, Boolean> tag, String description, String writerName, String address, String storeId, String writerId, float aver_star, List<Float> detail_aver_star) {
         this.storeName = storeName;
         this.imagePathInStorage = imagePathInStorage;
         this.numLike = numLike;
