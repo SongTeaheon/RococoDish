@@ -5,6 +5,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.example.front_ui.R.id.login_button_activityLogin
 import com.example.front_ui.Util_Kotlin.Firestore
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
@@ -28,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
     val RC_AUTHUI_REQUEST_CODE = 1001
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {n
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
