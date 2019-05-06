@@ -1,8 +1,10 @@
 package com.example.front_ui;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -16,13 +18,14 @@ import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 
 public class SubActivity extends AppCompatActivity {
 
     private static final int REQUEST_LOCATION = 10002;
-    private static final String TAG = "TAGSubActivity";
+    private static final String TAG = "TAG_SubActivity";
     private FusedLocationProviderClient mFusedLocationClient;
     RecyclerView my_recycler_view;
     RecyclerView myPage_recyclerview;
@@ -38,14 +41,18 @@ public class SubActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        getLocationPermission();
-
         my_recycler_view = (RecyclerView) findViewById(R.id.mrecyclerView);
-        my_recycler_view.setHasFixedSize(true);
-        RecyclerViewDataAdapter adapter = new RecyclerViewDataAdapter(this);
-        my_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        my_recycler_view.setAdapter(adapter);
+
+        //mCurrentLocation초기화 -> permission안될 경우 때문!!
+        mCurrentLocation= new Location("dummyprovider");
+        mCurrentLocation.setLatitude(37.583816);
+        mCurrentLocation.setLongitude(127.058877);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        getLocationPermission(); //Permission완료해야 recyclerview를 불러온다.(그 전에 불러오면 안되기 때문)
+
+
+
 
         //마이페이지용 리사이클러 뷰 변수
         myPage_recyclerview = findViewById(R.id.myPage_recyclerview_activitySub);
@@ -54,28 +61,37 @@ public class SubActivity extends AppCompatActivity {
         myPage_recyclerview.setAdapter(myPageAdapter);
     }
 
+    //location permission을 가져온다.
+    //permission이 있으면 location을 가져온다.
     private void getLocationPermission(){
+        Log.d(TAG, "getLocationPermission");
+
+        //permission없는 경우 요청, 있는 경우 location을 가져온다.
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED){
+            //permission없는 경우
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_LOCATION);
         }else{
+            //permission있는 경우
             getCurrentLocation();
             mLocationPermissionGranted = true;
         }
     }
 
-
+    //location을 가져오고 recylcer뷰를 실행한다.
     private void getCurrentLocation() {
+        Log.d(TAG, "getCurrentLocation");
         OnCompleteListener<Location> mCompleteListener = new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
                 if(task.isSuccessful() && task.getResult() != null){
                     mCurrentLocation = task.getResult();
+                    Log.d(TAG, "getCurrentLocation - success mCurrentLocation lat : "+ mCurrentLocation.getLatitude()+" long : "+ mCurrentLocation.getLongitude());
                     Toast.makeText(getApplicationContext(), "lat : " + mCurrentLocation.getLatitude() +
                             "\n lng: " + mCurrentLocation.getLongitude(), Toast.LENGTH_LONG).show();
-
+                    initRecyclerView();//내 위치를 가져오면 그 때 recyclerview 실행
                 }else{
                     Log.e(TAG, "getCurrentLocation Exception"+ task.getException());
                 }
@@ -86,30 +102,39 @@ public class SubActivity extends AppCompatActivity {
             mFusedLocationClient.getLastLocation().addOnCompleteListener(mCompleteListener);
         }catch(SecurityException e){
             e.printStackTrace();
-
         }
-
     }
 
+    //permission요청 결과
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionResult : grantResult size" + grantResults.length);
         switch (requestCode) {
             case REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                    //permission허용한 경우
                     getCurrentLocation();
-
                 } else {
-
+                    //permission거절한 경우
                     Toast.makeText(getApplicationContext(), "permission is denied", Toast.LENGTH_LONG).show();
+                    initRecyclerView();
                 }
                 return;
             }
         }
     }
+
+    private void initRecyclerView(){
+        Log.d(TAG, "initRecyclerView");
+        my_recycler_view.setHasFixedSize(true);
+        RecyclerViewDataAdapter adapter = new RecyclerViewDataAdapter(this, mCurrentLocation);
+        my_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        my_recycler_view.setAdapter(adapter);
+    }
+
 
 
 

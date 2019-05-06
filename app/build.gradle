@@ -48,8 +48,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
-    //gps사용 라이브러리
-    implementation 'com.google.android.gms:play-services-location:15.0.1'
+
 
     //카카오 api라이브러리
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
@@ -72,6 +71,11 @@ dependencies {
             coroutines "enable"
         }
     }
+
+    //gps사용 라이브러리
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    //geoFirestore 라이브러리
+    implementation 'com.github.imperiumlabs:GeoFirestore-Android:v1.1.1'
 }
 repositories {
     mavenCentral()

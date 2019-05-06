@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.front_ui.Utils.GlideApp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -53,14 +55,11 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         Log.d(TAG, "onBindViewHolder");
 
         final PostingInfo singleItem = list.get(i);
-
-        //holder.mainView.setText(singleItem.getTitle());
-
         Log.d(TAG, "downloadImageFromFirebaseStorage : " + singleItem.imagePathInStorage);
 
 
         StorageReference fileReference = storage.getReferenceFromUrl(singleItem.imagePathInStorage);
-        //GlideApp.with(mContext).load(fileReference).into(holder.imageView);
+        GlideApp.with(mContext).load(fileReference).into(holder.imageView);
 
         //태완태완 이미지 선택시 반응입니다. 여기가 그 각 포스팅1 글 누르면 발생하는 이벤트 부분입니다.
         holder.view.setOnClickListener(new View.OnClickListener() {
@@ -70,14 +69,6 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 Toast.makeText(v.getContext(), singleItem.title, Toast.LENGTH_SHORT).show();
             }
         });
-
-
-       /* Glide.with(mContext)
-                .load(feedItem.getImageURL())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop()
-                .error(R.drawable.bg)
-                .into(feedListRowHolder.thumbView);*/
     }
 
     @Override
@@ -88,7 +79,6 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageView;
-        //private TextView mainView;
         View view;
 
 
@@ -96,10 +86,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             super(view);
             this.view = view;
             Log.d(TAG, "singleItemRowHolder");
-            //this.mainView = (TextView) view.findViewById(R.id.textmain);
             this.imageView = (ImageView) view.findViewById(R.id.imagefood);
-
-
 
         }
 
