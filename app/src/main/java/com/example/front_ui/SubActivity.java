@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.front_ui.DataModel.PostingInfo;
+import com.example.front_ui.PostingProcess.MainShareActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -103,6 +104,8 @@ public class SubActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "포스팅 가즈아", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), MainShareActivity.class);
+                startActivity(intent);
             }
         });
     }
