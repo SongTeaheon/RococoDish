@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorMainBackGround"
+        card_view:cardUseCompatPadding="false">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorMainBackGround">
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/touchStore"
+                android:background="@color/colorMainBackGround"
+                card_view:cardUseCompatPadding="false">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorMainBackGround">
+
+                    <TextView
+                        android:id="@+id/storeName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorMainBackGround"
+                        android:textColor="@color/colorMainText"
+                        android:text="가게이름"
+                        android:textSize="20sp"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="@dimen/spacing_large"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:layout_marginBottom="@dimen/spacing_small" />
+
+                    <TextView
+                        android:id="@+id/storeStar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorMainBackGround"
+                        android:textColor="@color/colorMainText"
+                        android:text="평균별점"
+                        android:textSize="20sp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="@dimen/spacing_large"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:layout_marginBottom="@dimen/spacing_small" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/touchStore"
+                android:background="@color/colorMainBackGround"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp">
+            </android.support.v7.widget.RecyclerView>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>
