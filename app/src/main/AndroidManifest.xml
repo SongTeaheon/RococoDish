@@ -24,8 +24,10 @@
         <activity android:name=".MainActivity">
 
         </activity>
-        <activity android:name=".SignInActivity" />
-        <activity android:name=".SubActivity" />
+        <activity android:name=".SignInActivity"/>
+        <activity android:name=".SubActivity"/>
+        <activity android:name=".MyPage"/>
+
     </application>
 
 </manifest>

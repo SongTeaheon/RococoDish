@@ -8,4 +8,6 @@
     <color name="colorMainText">#E38F73</color>
     <color name="colorMainSearch">#D2DAC7</color>
     <color name="colorMainSearchIcon">#CDB745</color>
+    <color name="colorGray">#E2E2E2</color>
+    <color name="colorNone">#00000000</color>
 </resources>

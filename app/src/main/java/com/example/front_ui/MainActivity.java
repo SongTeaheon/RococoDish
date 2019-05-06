@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.firebase.storage.StorageReference;
-
 public class MainActivity extends AppCompatActivity {
-    private final String TAG = "TAGMainActivity";
+
     Button buttonToLogin;
     Button buttonToSingIn;
+    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +32,14 @@ public class MainActivity extends AppCompatActivity {
                 moveToSignInActivity();
             }
         });
+
+        button = findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToMyPage();
+            }
+        });
     }
 
     public void moveToLoginActivity() {
@@ -42,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void moveToSignInActivity() {
         Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
+    }
+
+    public void moveToMyPage() {
+        Intent intent = new Intent(this, MyPage.class);
         startActivity(intent);
     }
 }
