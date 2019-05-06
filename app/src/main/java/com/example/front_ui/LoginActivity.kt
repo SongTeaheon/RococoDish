@@ -38,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
     val RC_AUTHUI_REQUEST_CODE = 1001
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {n
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
