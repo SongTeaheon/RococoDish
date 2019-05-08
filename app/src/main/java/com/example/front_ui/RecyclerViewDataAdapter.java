@@ -47,7 +47,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
     public RecyclerViewDataAdapter(Context context, Location cLocation) {
         Log.d(TAG, "adpater constructor called");
-        list= new ArrayList<>();
+        list= new ArrayList<>();//dummy data
         this.mContext = context;
         db = FirebaseFirestore.getInstance();
         mCurrentLocation = cLocation;

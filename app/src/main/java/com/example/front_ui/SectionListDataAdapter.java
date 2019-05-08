@@ -36,8 +36,6 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     FirebaseStorage storage;
     StorageReference storageReference;
 
-
-
     public SectionListDataAdapter(Context context, String storeId) {
         this.mContext = context;
         db = FirebaseFirestore.getInstance();
@@ -88,7 +86,6 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
         private ImageView imageView;
         View view;
-
 
         public SingleItemRowHolder(View view) {
             super(view);
