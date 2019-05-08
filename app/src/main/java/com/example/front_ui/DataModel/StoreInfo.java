@@ -7,10 +7,10 @@ import java.util.List;
 
 public class StoreInfo {
     public String name;
+    public String storeId;
     public float aver_star;
     public String address;
     public List<Float> detail_aver_star;
-    public String postId;//String ID
     private ArrayList<PostingInfo> allItemsInSection;
     public GeoPoint geoPoint;
 
@@ -74,4 +74,11 @@ public class StoreInfo {
         this.allItemsInSection = allItemsInSection;
     }
 
+    public String getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
+    }
 }

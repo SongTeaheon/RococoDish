@@ -1,6 +1,7 @@
 package com.example.front_ui;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,14 +11,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Utils.GlideApp;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.example.front_ui.DataModel.PostingInfo;
 //import com.songtaeheon.posting.Utils.GlideApp;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListDataAdapter.SingleItemRowHolder> { // 가로 리사이클러뷰를 위한 어뎁터
 
@@ -30,13 +38,13 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
 
 
-    public SectionListDataAdapter(Context context,String postId, ArrayList<PostingInfo> mList) {
-        this.list = mList;
+    public SectionListDataAdapter(Context context, String storeId) {
         this.mContext = context;
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        //getPostDataFromCloud(postId);
+        list = new ArrayList<>();
+        getPostDataFromCloud(storeId);
     }
 
 
@@ -93,8 +101,37 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     }
 
 
+    //posting Info를 가져온다.
+    private void getPostDataFromCloud(String storeId) {
+
+        Log.d(TAG, "getDataFromFirestore");
+        db.collection("가게").document(storeId).collection("포스팅채널")
+                .orderBy("postingTime", Query.Direction.DESCENDING)
+                .limit(12)//최대 12개만 가져오도록
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            //조건에 해당하는게 없는지 확인
+                            if (task.getResult().isEmpty())
+                                Log.d(TAG, "task.getResult : " + task.getResult().isEmpty());
+
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                PostingInfo post = document.toObject(PostingInfo.class);
+                                list.add(post);
+                            }
+                            //post데이터가 들어오면 리사이클러뷰를 refresh한다.
+                            notifyDataSetChanged();
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
 
 
-
+    }
 
 }

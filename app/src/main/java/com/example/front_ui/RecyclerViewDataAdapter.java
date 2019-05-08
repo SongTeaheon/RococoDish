@@ -31,6 +31,7 @@ import org.imperiumlabs.geofirestore.GeoQueryEventListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDataAdapter.ItemRowHolder> { // 세로 리사이클러 뷰를 위한 어뎁터
 
@@ -40,6 +41,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     FirebaseFirestore db;
     SectionListDataAdapter itemListDataAdapter;
     private Location mCurrentLocation;
+
 
 
 
@@ -66,15 +68,13 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
         final String sectionName = list.get(i).getName();
         final float sectionStar = list.get(i).aver_star;
-        String postId = list.get(i).postId;
 
 
         //텍스트 세팅 부분
         itemRowHolder.storeName.setText(sectionName);
         itemRowHolder.storeStar.setText(Float.toString(sectionStar));
 
-        ArrayList singleSectionItems = list.get(i).getAllItemsInSection();
-        itemListDataAdapter = new SectionListDataAdapter(mContext, postId, singleSectionItems);
+        itemListDataAdapter = new SectionListDataAdapter(mContext, list.get(i).getStoreId());
 
         itemRowHolder.recycler_view_list.setHasFixedSize(true);
         itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
@@ -126,9 +126,9 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
     //내 위치 주변 10km 가게 찾기.
     private int radius = 10;
-    HashSet<String> dcSet = new HashSet<>();
+    HashSet<String> dcSet = new HashSet<>(); //중복x
     private void getCloseStoreIdAndGetData() {
-        CollectionReference geoFirestoreRef = FirebaseFirestore.getInstance().collection("store");
+        CollectionReference geoFirestoreRef = FirebaseFirestore.getInstance().collection("가게");
         GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
         final GeoPoint myPoint = new GeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         //내 위치에서 radius(km)이내에 있는 값을 찾아라
@@ -142,6 +142,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                     Log.d(TAG, String.format("Document %s entered the searc area at [%f,%f] (radius : %d)", documentID, location.getLatitude(), location.getLongitude(), radius));
                     dcSet.add(documentID);
                     getStoreDataFromCloud(documentID);
+
                 }
             }
 
@@ -175,10 +176,10 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
 
 
-    private void getStoreDataFromCloud(String documentID) {
+    private void getStoreDataFromCloud(final String documentID) {
         Log.d(TAG, "getDataFromFirestore");
 
-        db.collection("store").document(documentID)
+        db.collection("가게").document(documentID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -188,52 +189,16 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                             Log.d(TAG, document.getId() + " => " + document.getData());
                             //store 정보를 가져오고, id를 따로 저장한다.
                             StoreInfo storeInfo = document.toObject(StoreInfo.class);
-                            storeInfo.postId = document.getId();
+                            storeInfo.setStoreId(documentID);
                             //해당 가게 정보의 post데이터를 가져온다.
-                            getPostDataFromCloud(document.getId(), storeInfo);
                             list.add(storeInfo);
 
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
+                        notifyDataSetChanged();
                     }
                 });
     }
-
-
-    private void getPostDataFromCloud(String postId, final StoreInfo storeInfo) {
-
-        Log.d(TAG, "getDataFromFirestore");
-        db.collection("store").document(postId).collection("post")
-                .orderBy("postingTime", Query.Direction.DESCENDING)
-                .limit(12)//최대 12개만 가져오도록
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-
-                            //조건에 해당하는게 없는지 확인
-                            if (task.getResult().isEmpty())
-                                Log.d(TAG, "task.getResult : " + task.getResult().isEmpty());
-
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                PostingInfo postingInfo = document.toObject(PostingInfo.class);
-                                storeInfo.getAllItemsInSection().add(postingInfo);
-                            }
-                            //post데이터가 들어오면 리사이클러뷰를 refresh한다.
-                            notifyDataSetChanged();
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
-    }
-
-
-
-
-
 
 }

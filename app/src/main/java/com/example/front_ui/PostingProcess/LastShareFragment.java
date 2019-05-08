@@ -23,6 +23,7 @@ import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.R;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,12 +37,15 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.imperiumlabs.geofirestore.GeoFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /*
 * oncreate : bundle에서 데이터를 꺼낸다.
@@ -69,13 +73,12 @@ public class LastShareFragment extends Fragment {
     TextView mStarText4;
     EditText text_description;
     EditText text_title;
-    ScrollView sv;
-    RelativeLayout relLay;
     List<Float> detail_aver_star;
     GeoPoint geoPoint;
 
 
     KakaoStoreInfo kakaoStoreInfo;
+    byte[] byteImage;
 
     FirebaseStorage storage;
     FirebaseFirestore db;
@@ -86,8 +89,11 @@ public class LastShareFragment extends Fragment {
         Log.d(TAG, "onCreate!");
         //Store Search Fragment에서 받은 bundle데이터(네이터 api 검색 결과 선택 항목)을 받는다.
         if (getArguments() != null) {
-            //kakaoStoreInfo = getArguments().getParcelable("StoreData");
-//            Log.d(TAG, "kakaoStoreInfo : " + kakaoStoreInfo.place_name);
+            kakaoStoreInfo = getArguments().getParcelable("storeData");
+            byteImage = getArguments().getByteArray("byteArray");
+            Log.d(TAG, "kakaoStoreInfo : " + kakaoStoreInfo.place_name);
+            if(byteImage == null)
+                Log.e(TAG, "no byteImage");
         }
     }
 
@@ -139,10 +145,6 @@ public class LastShareFragment extends Fragment {
                 getActivity().finish();
             }
         });
-
-        //StoreSearchFragment에서 건너온 사진 byteArray를 받음
-        byte[] byteArray = getActivity().getIntent().getByteArrayExtra("byteArray");
-//        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);//가져온 byteArray를 비트맵 이미지로 변경
 
         //Star Rating Bar setup
         setupStarRatingBar();
@@ -213,10 +215,48 @@ public class LastShareFragment extends Fragment {
 
     //사진 upload 후, 사진 업로드가 완료되면 업로드된 url을 가져온 후, db에 다른 정보들과 함께 세팅한다.
     private void postingOnFirebaseDatabase() {
-        //사진 업로드.
-        //사진 업로드 끝나면 업로드 onComplete에 setAndSendPosting전달
-        //setAndSendPosting(imagePath);
+        Log.d(TAG, "start postingOnFirebaseDatabase");
+        String uploadDir = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        StorageReference storageRef = storage.getReference();
+        String filename = UUID.nameUUIDFromBytes(byteImage).toString();
+        final StorageReference imagesRef = storageRef.child("images/"+uploadDir+"/"+filename+".jpg");
+
+        UploadTask uploadTask = imagesRef.putBytes(byteImage);
+        //get upload Url
+        Task<Uri> urlTask = uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.w(TAG, "sending image to firebase is failed");
+                // Handle unsuccessful uploads
+            }
+        }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                // Continue with the task to get the download URL
+                return imagesRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    String downloadUriStr = downloadUri.toString();
+                    Log.d(TAG, "Getting upload url is completed. download url : " + downloadUriStr);
+
+                    //전달해야하는 데이터 세팅 및 데이터 전달
+                    setAndSendPosting(downloadUriStr);
+
+                } else {
+                    // Handle failures
+                    Log.w(TAG, "Getting upload url is failed.");
+                }
+            }
+        });
     }
+
     private void setAndSendPosting(String imagePathInStorage) {
         /*
         * 함수 구조
@@ -225,8 +265,6 @@ public class LastShareFragment extends Fragment {
         * 3. check the data in log cat
         * 4. add store info and posting info in dataBase!!!!
          * */
-
-
         //1. set the Posting data!!
         final PostingInfo postingInfo = new PostingInfo();
         postingInfo.writerId = FirebaseAuth.getInstance().getCurrentUser().getEmail();
@@ -382,18 +420,36 @@ public class LastShareFragment extends Fragment {
 
     private void putPostingInfo(String storeId, PostingInfo postingInfo){
         //db에 데이터를 넣는 코드 필요
-        db.collection("가게").document(storeId).collection("가게")
-                .add(postingInfo)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        final String docUUID = UUID.randomUUID().toString();
+        //posting document uuid
+        postingInfo.setStoreId(storeId);
+        db.collection("가게").document(storeId).collection("포스팅채널").document(docUUID)
+                .set(postingInfo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "store컬렉션 내부 post컬렉션 내부 포스팅 ID: " + documentReference.getId());
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "store컬렉션 내부 post컬렉션 내부 포스팅 ID: " + docUUID);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
+                        Log.w(TAG, "가게 내부 포스팅 채널. Error writing document on putPosting", e);
+                    }
+                });
+
+        db.collection("포스팅").document(docUUID)
+                .set(postingInfo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "포스팅 컬렉션: " + docUUID);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "포스팅 collection setting. Error adding document", e);
                     }
                 });
     }

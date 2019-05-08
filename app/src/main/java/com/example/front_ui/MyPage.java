@@ -11,9 +11,9 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,18 +24,43 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.front_ui.Utils.GlideApp;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
-
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
-public class MyPage extends AppCompatActivity {
+import com.example.front_ui.DataModel.PostingInfo;
+import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.Interface.MyPageDataPass;
+import com.example.front_ui.Utils.GlideApp;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
+
+//interface for datapass to MyPage
+public class MyPage extends AppCompatActivity implements MyPageDataPass {
+
+    private final String TAG = "TAGMyPage";
+    int numOfMyPost = 0;
+    TextView tvOfNum;
+    @Override
+    public void setNumberOfData(int value) {
+        Log.d(TAG, "setNumberOfData - callback function");
+        numOfMyPost = value;
+        tvOfNum = findViewById(R.id.textNumOfData);
+        tvOfNum.setText(Integer.toString(numOfMyPost));
+    }
 
     private int RC_GALLERY = 1;
     private int RC_CROP = 2;
@@ -52,14 +77,16 @@ public class MyPage extends AppCompatActivity {
                 R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang,
                 R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang
         };
-
+      
         MyAdapter adapter = new MyAdapter(
                 getApplicationContext(),
-                R.layout.polar_style,       // GridView 항목의 레이아웃 row.xml
-                img);    // 데이터
+                R.layout.polar_style,
+                this);       // GridView 항목의 레이아웃 row.xml
 
-        GridView gv = (GridView)findViewById(R.id.gridview);
+
+        GridView gv = findViewById(R.id.gridview);
         gv.setAdapter(adapter);  // 커스텀 아답타를 GridView 에 적용
+        TextView tv = findViewById(R.id.textNumOfData);
 
         imageButton = (ImageButton) findViewById(R.id.imageView);
         imageButton.setOnClickListener(new View.OnClickListener() {
@@ -155,27 +182,41 @@ public class MyPage extends AppCompatActivity {
 }
 
 class MyAdapter extends BaseAdapter {
+    private final String TAG = "TAGMyAdapter";
+    FirebaseFirestore db;
+
     Context context;
     int layout;
-    int img[];
+    ArrayList<PostingInfo> list;
     LayoutInflater inf;
+    FirebaseStorage storage;
+    StorageReference storageReference;
 
-    public MyAdapter(Context context, int layout, int[] img) {
+    //interface for datapass to MyPage
+    private MyPageDataPass mCallback;
+
+
+    public MyAdapter(Context context, int layout, MyPageDataPass listener) {
+        list = new ArrayList<>();
+        db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
         this.context = context;
         this.layout = layout;
-        this.img = img;
+        mCallback = listener;
         inf = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
+        getPostingDataFromCloud();
     }
 
     @Override
     public int getCount() {
-        return img.length;
+        return list.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return img[position];
+        return list.get(position);
     }
 
     @Override
@@ -183,13 +224,50 @@ class MyAdapter extends BaseAdapter {
         return position;
     }
 
+
+    //이미지 세팅
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView==null)
             convertView = inf.inflate(layout, null);
         ImageView iv = (ImageView)convertView.findViewById(R.id.imagefood);
-        iv.setImageResource(img[position]);
+
+        final PostingInfo singleItem = list.get(position);
+        Log.d(TAG, "downloadImageFromFirebaseStorage : " + singleItem.imagePathInStorage);
+        StorageReference fileReference = storage.getReferenceFromUrl(singleItem.imagePathInStorage);
+        GlideApp.with(context).load(fileReference).into(iv);
+
 
         return convertView;
     }
+
+    //내가 쓴 데이터를 모두 가져온다.
+    private void getPostingDataFromCloud() {
+        Log.d(TAG, "getDataFromFirestore");
+
+        db.collection("포스팅")
+                .whereEqualTo("writerId", FirebaseAuth.getInstance().getCurrentUser().getEmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                //store 정보를 가져오고, id를 따로 저장한다.
+                                PostingInfo postingInfo = document.toObject(PostingInfo.class);
+                                //해당 가게 정보의 post데이터를 가져온다.
+                                list.add(postingInfo);
+                                notifyDataSetChanged();
+                            }
+                            Log.d(TAG, "getPostingData size : " + task.getResult().size());
+                            mCallback.setNumberOfData(task.getResult().size());
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+    }
+
 }
+
