@@ -14,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.util.CollectionUtils.listOf
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design.longSnackbar
@@ -85,5 +86,14 @@ class LoginActivity : AppCompatActivity() {
                 Log.d(TAG, "결과 요청코드 에러")
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if(FirebaseAuth.getInstance().currentUser != null){
+            startActivity(intentFor<SubActivity>().newTask().clearTask())
+        }
+        else return
     }
 }
