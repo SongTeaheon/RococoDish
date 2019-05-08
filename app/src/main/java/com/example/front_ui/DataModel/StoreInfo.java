@@ -10,7 +10,6 @@ public class StoreInfo {
     public float aver_star;
     public String address;
     public List<Float> detail_aver_star;
-    public String postId;//String ID
     private ArrayList<PostingInfo> allItemsInSection;
     public GeoPoint geoPoint;
 

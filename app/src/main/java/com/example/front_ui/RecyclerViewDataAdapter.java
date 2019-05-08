@@ -66,7 +66,6 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
         final String sectionName = list.get(i).getName();
         final float sectionStar = list.get(i).aver_star;
-        String postId = list.get(i).postId;
 
 
         //텍스트 세팅 부분
@@ -74,7 +73,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         itemRowHolder.storeStar.setText(Float.toString(sectionStar));
 
         ArrayList singleSectionItems = list.get(i).getAllItemsInSection();
-        itemListDataAdapter = new SectionListDataAdapter(mContext, postId, singleSectionItems);
+        itemListDataAdapter = new SectionListDataAdapter(mContext, singleSectionItems);
 
         itemRowHolder.recycler_view_list.setHasFixedSize(true);
         itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
@@ -128,7 +127,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     private int radius = 10;
     HashSet<String> dcSet = new HashSet<>();
     private void getCloseStoreIdAndGetData() {
-        CollectionReference geoFirestoreRef = FirebaseFirestore.getInstance().collection("store");
+        CollectionReference geoFirestoreRef = FirebaseFirestore.getInstance().collection("가게");
         GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
         final GeoPoint myPoint = new GeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         //내 위치에서 radius(km)이내에 있는 값을 찾아라
@@ -142,6 +141,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                     Log.d(TAG, String.format("Document %s entered the searc area at [%f,%f] (radius : %d)", documentID, location.getLatitude(), location.getLongitude(), radius));
                     dcSet.add(documentID);
                     getStoreDataFromCloud(documentID);
+
                 }
             }
 
@@ -178,7 +178,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     private void getStoreDataFromCloud(String documentID) {
         Log.d(TAG, "getDataFromFirestore");
 
-        db.collection("store").document(documentID)
+        db.collection("가게").document(documentID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -188,7 +188,6 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                             Log.d(TAG, document.getId() + " => " + document.getData());
                             //store 정보를 가져오고, id를 따로 저장한다.
                             StoreInfo storeInfo = document.toObject(StoreInfo.class);
-                            storeInfo.postId = document.getId();
                             //해당 가게 정보의 post데이터를 가져온다.
                             getPostDataFromCloud(document.getId(), storeInfo);
                             list.add(storeInfo);
@@ -201,10 +200,10 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     }
 
 
-    private void getPostDataFromCloud(String postId, final StoreInfo storeInfo) {
+    private void getPostDataFromCloud(String storeId, final StoreInfo storeInfo) {
 
         Log.d(TAG, "getDataFromFirestore");
-        db.collection("store").document(postId).collection("post")
+        db.collection("가게").document(storeId).collection("포스팅채널")
                 .orderBy("postingTime", Query.Direction.DESCENDING)
                 .limit(12)//최대 12개만 가져오도록
                 .get()
