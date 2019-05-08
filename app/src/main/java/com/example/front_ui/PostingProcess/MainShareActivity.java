@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.R;
 import com.example.front_ui.Utils.Permissions;
@@ -29,6 +30,7 @@ public class MainShareActivity extends AppCompatActivity {
     private static final int VERIFY_PERMISSIONS_REQUEST = 10001;
 
     public PostingInfo postingInfo;
+    public KakaoStoreInfo kakaoStoreInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +129,7 @@ public class MainShareActivity extends AppCompatActivity {
                 LastShareFragment lastShareFragment = new LastShareFragment();
                 Bundle args = new Bundle();
                 args.putByteArray("byteArray", byteArray);
+                args.putParcelable("storeData", kakaoStoreInfo);
                 Log.d(TAG, "성공적으로 바이트어레이 이동");
                 lastShareFragment.setArguments(args);
 
@@ -142,5 +145,8 @@ public class MainShareActivity extends AppCompatActivity {
     }
 
 
+    public void setKakaoStoreInfo(KakaoStoreInfo kakaoInfo){
+        kakaoStoreInfo = kakaoInfo;
+    }
 
 }

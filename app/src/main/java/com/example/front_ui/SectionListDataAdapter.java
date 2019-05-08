@@ -30,13 +30,12 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
 
 
-    public SectionListDataAdapter(Context context,String postId, ArrayList<PostingInfo> mList) {
+    public SectionListDataAdapter(Context context, ArrayList<PostingInfo> mList) {
         this.list = mList;
         this.mContext = context;
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        //getPostDataFromCloud(postId);
     }
 
 

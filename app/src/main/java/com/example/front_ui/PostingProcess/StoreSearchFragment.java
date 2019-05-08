@@ -129,8 +129,10 @@ public class StoreSearchFragment extends Fragment {
                         //선택한 아이템뷰 확인 및 데이터 전달
                         int itemPosition = mRecyclerView.getChildLayoutPosition(view);
                         Log.d(TAG, "item clicked : " + storeInfoArrayList.get(itemPosition).place_name);
-                        Log.d(TAG, "move to Last Share Fragment");
-
+                        Log.d(TAG, "move to Gallery");
+                        //activity로 store정보를 보내준다.
+                        MainShareActivity activity = (MainShareActivity) getActivity();
+                        activity.setKakaoStoreInfo(storeInfoArrayList.get(itemPosition));
                         //선택한 가게 정보 데이터를 bundle에 넣고 다음 프래그먼트로 이동
                         setFragmentAndMove(getContext());
 
@@ -161,7 +163,7 @@ public class StoreSearchFragment extends Fragment {
 //        ft.commit();
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
-                .setCropShape(CropImageView.CropShape.OVAL)
+               // .setCropShape(CropImageView.CropShape.OVAL)
                 .setBorderCornerColor(Color.GRAY)
                 .setAutoZoomEnabled(true)
                 .setFixAspectRatio(true)
