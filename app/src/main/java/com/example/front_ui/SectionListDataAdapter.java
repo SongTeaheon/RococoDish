@@ -103,18 +103,14 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
         Log.d(TAG, "getDataFromFirestore");
         db.collection("가게").document(storeId).collection("포스팅채널")
-                .orderBy("postingTime", Query.Direction.DESCENDING)
-                .limit(12)//최대 12개만 가져오도록
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-
                             //조건에 해당하는게 없는지 확인
                             if (task.getResult().isEmpty())
                                 Log.d(TAG, "task.getResult : " + task.getResult().isEmpty());
-
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 PostingInfo post = document.toObject(PostingInfo.class);
