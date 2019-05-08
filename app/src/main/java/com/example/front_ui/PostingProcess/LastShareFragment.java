@@ -69,13 +69,12 @@ public class LastShareFragment extends Fragment {
     TextView mStarText4;
     EditText text_description;
     EditText text_title;
-    ScrollView sv;
-    RelativeLayout relLay;
     List<Float> detail_aver_star;
     GeoPoint geoPoint;
 
 
     KakaoStoreInfo kakaoStoreInfo;
+    byte[] byteImage;
 
     FirebaseStorage storage;
     FirebaseFirestore db;
@@ -86,8 +85,11 @@ public class LastShareFragment extends Fragment {
         Log.d(TAG, "onCreate!");
         //Store Search Fragment에서 받은 bundle데이터(네이터 api 검색 결과 선택 항목)을 받는다.
         if (getArguments() != null) {
-            //kakaoStoreInfo = getArguments().getParcelable("StoreData");
-//            Log.d(TAG, "kakaoStoreInfo : " + kakaoStoreInfo.place_name);
+            kakaoStoreInfo = getArguments().getParcelable("storeData");
+            byteImage = getArguments().getByteArray("byteArray");
+            Log.d(TAG, "kakaoStoreInfo : " + kakaoStoreInfo.place_name);
+            if(byteImage == null)
+                Log.e(TAG, "no byteImage");
         }
     }
 
@@ -139,10 +141,6 @@ public class LastShareFragment extends Fragment {
                 getActivity().finish();
             }
         });
-
-        //StoreSearchFragment에서 건너온 사진 byteArray를 받음
-        byte[] byteArray = getActivity().getIntent().getByteArrayExtra("byteArray");
-//        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);//가져온 byteArray를 비트맵 이미지로 변경
 
         //Star Rating Bar setup
         setupStarRatingBar();
@@ -213,6 +211,7 @@ public class LastShareFragment extends Fragment {
 
     //사진 upload 후, 사진 업로드가 완료되면 업로드된 url을 가져온 후, db에 다른 정보들과 함께 세팅한다.
     private void postingOnFirebaseDatabase() {
+        Log.d(TAG, "start postingOnFirebaseDatabase");
         //사진 업로드.
         //사진 업로드 끝나면 업로드 onComplete에 setAndSendPosting전달
         //setAndSendPosting(imagePath);
