@@ -1,16 +1,10 @@
 package com.example.front_ui.PostingProcess;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +19,7 @@ import android.widget.TextView;
 
 import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.R;
-import com.example.front_ui.Utils.KakaoApiSearchService;
+import com.example.front_ui.Utils.KakaoApiStoreSearchService;
 import com.example.front_ui.Utils.RecyclerItemClickListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -33,10 +27,6 @@ import com.google.gson.JsonObject;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -45,16 +35,16 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.example.front_ui.Utils.KakaoApiSearchService.API_URL;
+import static com.example.front_ui.Utils.KakaoApiStoreSearchService.API_URL;
 
 public class StoreSearchFragment extends Fragment {
     private final String TAG = "TAGStoreResearchFrag";
     private final String kakaoApiId = "KakaoAK 952900bd9ca440b836d9c490525aef64";
-    private final String code = "FD6";
+    private final String code = "FD6"; //카페는 CE7
 
 
     Retrofit retrofit;
-    KakaoApiSearchService service;
+    KakaoApiStoreSearchService service;
 
     EditText searchWordText;
     String searchWord;
@@ -210,8 +200,8 @@ public class StoreSearchFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        service = retrofit.create(KakaoApiSearchService.class);
-        Call<JsonObject> request = service.getUserRepositories(kakaoApiId, searchWord, code);
+        service = retrofit.create(KakaoApiStoreSearchService.class);
+        Call<JsonObject> request = service.getKakaoStoreInfo(kakaoApiId, searchWord, code);//, code
         request.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

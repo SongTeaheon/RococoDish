@@ -72,25 +72,6 @@ public class SubActivity extends AppCompatActivity {
         myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         myPage_recyclerview.setAdapter(myPageAdapter);
 
-
-        //일단 마이페이지 리사이클러뷰에서 0번째는 플러스 기능, 나머지는 게시물 구체적 보기 창으로 이동
-//        if(position == 0){
-//            myPage_recyclerview.findViewHolderForAdapterPosition(position).itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(getApplicationContext(), "이건 처음 아이템입니다.", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-//        else{
-//            myPage_recyclerview.findViewHolderForAdapterPosition(0).itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(getApplicationContext(), "나머지 아이템입니다.", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-
         //마이페이지 글자 누를시 이벤트
         myPageTextview = findViewById(R.id.myPage_textview_activitySub);
         myPageTextview.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +90,8 @@ public class SubActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
 
 
