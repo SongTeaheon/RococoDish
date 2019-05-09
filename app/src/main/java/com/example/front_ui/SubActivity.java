@@ -1,6 +1,7 @@
 package com.example.front_ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -9,10 +10,12 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,6 +42,7 @@ public class SubActivity extends AppCompatActivity {
     private FusedLocationProviderClient mFusedLocationClient;
     RecyclerView my_recycler_view;
     RecyclerView myPage_recyclerview;
+    NestedScrollView nestedScrollView;
     private Location mCurrentLocation;
     private boolean mLocationPermissionGranted = false;
     ImageView imageView;
@@ -48,14 +52,15 @@ public class SubActivity extends AppCompatActivity {
     private TextView starText;
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate is called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
 
-
         my_recycler_view = (RecyclerView) findViewById(R.id.mrecyclerView);
+        nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
 
         //mCurrentLocation초기화 -> permission안될 경우 때문!!
         mCurrentLocation= new Location("dummyprovider");
@@ -71,6 +76,32 @@ public class SubActivity extends AppCompatActivity {
         Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
         myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         myPage_recyclerview.setAdapter(myPageAdapter);
+
+        my_recycler_view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                nestedScrollView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return true;
+                    }
+                });
+                return false;
+            }
+        });
+
+        myPage_recyclerview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                nestedScrollView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return true;
+                    }
+                });
+                return false;
+            }
+        });
 
 
         //일단 마이페이지 리사이클러뷰에서 0번째는 플러스 기능, 나머지는 게시물 구체적 보기 창으로 이동
@@ -91,8 +122,8 @@ public class SubActivity extends AppCompatActivity {
 //            });
 //        }
 
-        //마이페이지 글자 누를시 이벤트
-        myPageTextview = findViewById(R.id.myPage_textview_activitySub);
+                //마이페이지 글자 누를시 이벤트
+                myPageTextview = findViewById(R.id.myPage_textview_activitySub);
         myPageTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
