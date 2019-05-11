@@ -66,7 +66,8 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
     public void setNumberOfData(int value) {
         Log.d(TAG, "setNumberOfData - callback function");
         numOfMyPost = value;
-        tvOfNum = findViewById(R.id.textNumOfData);
+        if(tvOfNum == null)
+            tvOfNum = findViewById(R.id.textNumOfData);
         tvOfNum.setText(Integer.toString(numOfMyPost));
     }
 

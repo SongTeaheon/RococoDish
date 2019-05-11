@@ -31,6 +31,7 @@
         <activity android:name=".SubActivity"/>
         <activity android:name=".MyPage"/>
         <activity android:name=".PostingProcess.MainShareActivity"/>
+        <activity android:name=".StorePage"/>
 
 
     </application>
