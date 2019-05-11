@@ -14,11 +14,20 @@ import android.widget.Toast;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.PostingProcess.MainShareActivity;
 import com.example.front_ui.Utils.GlideApp;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 
 public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclerview_myPage_Adapter.myPageItemHolder> {
 
@@ -38,14 +47,8 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        getUserPostInfo();
+        getPostingDataFromCloud();
     }
-
-    private void getUserPostInfo() {
-        //storage에서 해당 사용자가 쓴 정보를 가져온다. 그걸 list에 담는다.
-        //만약 첫 번째 데이터를 가져오면,         list.remove를 한 번하고 넣기 시작한다.
-    }
-
 
     @NonNull
     @Override
@@ -63,8 +66,9 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
                     .load(R.drawable.plus)
                     .into(itemRowHolder.imageview);
         }else if(i > 0){
-            PostingInfo postingInfo = list.get(i-1);//노확실
-            //이 경우엔 그냥 평소 넣는대로 함.
+            PostingInfo postingInfo = list.get(i);//노확실
+            StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
+            GlideApp.with(context).load(fileReference).into(itemRowHolder.imageview);
         }
         itemRowHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,5 +108,31 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
             Log.d(TAG, "홀더클래스");
             this.imageview = itemView.findViewById(R.id.imagefood);
         }
+    }
+
+    //내가 쓴 데이터를 모두 가져온다.
+    private void getPostingDataFromCloud() {
+        Log.d(TAG, "getDataFromFirestore");
+
+        db.collection("포스팅")
+                .whereEqualTo("writerId", FirebaseAuth.getInstance().getCurrentUser().getEmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                //store 정보를 가져오고, id를 따로 저장한다.
+                                PostingInfo postingInfo = document.toObject(PostingInfo.class);
+                                //해당 가게 정보의 post데이터를 가져온다.
+                                list.add(postingInfo);
+                                notifyDataSetChanged();
+                            }
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
     }
 }
