@@ -9,9 +9,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -52,6 +55,8 @@ public class StoreSearchFragment extends Fragment {
     RecyclerView mRecyclerView;
     ArrayList<KakaoStoreInfo> storeInfoArrayList;
 
+    InputMethodManager imm;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,36 +65,8 @@ public class StoreSearchFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_store_search, container, false);
         mRecyclerView = view.findViewById(R.id.recyclerview);
+        imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-
-
-
-        //back 버튼
-        ImageView backButton = view.findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onclick : closing the restaurantn research fragment, finish Activity");
-                //back button 기능
-                getActivity().finish();
-
-
-
-            }
-        });
-
-        //next 버튼
-        TextView nextScreen = view.findViewById(R.id.tvNext);
-        nextScreen.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onclick : navigating to gallery fragment : 필요없어질 수도!");
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.relLayout1, new GalleryFragment());
-                ft.addToBackStack(null);
-                ft.commit();
-            }
-        });
 
         //search 버튼(EditText에 있는 단어를 받아서 검색)
         searchWordText = view.findViewById(R.id.searchWord);
@@ -100,8 +77,19 @@ public class StoreSearchFragment extends Fragment {
                 searchWord = searchWordText.getText().toString();
                 Log.d(TAG, "search button clicked. searchWord : "+ searchWord);
                 requestSearchApi(searchWord);
+            }
+        });
 
-
+        searchWordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    searchWord = searchWordText.getText().toString();
+                    Log.d(TAG, "search button clicked. searchWord : "+ searchWord);
+                    requestSearchApi(searchWord);
+                    imm.hideSoftInputFromWindow(searchWordText.getWindowToken(), 0);
+                }
+                return false;
             }
         });
 
@@ -153,7 +141,7 @@ public class StoreSearchFragment extends Fragment {
 //        ft.commit();
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
-               // .setCropShape(CropImageView.CropShape.OVAL)
+                // .setCropShape(CropImageView.CropShape.OVAL)
                 .setBorderCornerColor(Color.GRAY)
                 .setAutoZoomEnabled(true)
                 .setFixAspectRatio(true)

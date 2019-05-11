@@ -196,7 +196,6 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
-                        notifyDataSetChanged();
                     }
                 });
     }
