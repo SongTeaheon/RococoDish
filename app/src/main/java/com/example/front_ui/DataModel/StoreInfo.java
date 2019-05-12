@@ -5,7 +5,7 @@ import com.google.firebase.firestore.GeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StoreInfo {
+public class StoreInfo{
     public String name;
     public String storeId;
     public float aver_star;
