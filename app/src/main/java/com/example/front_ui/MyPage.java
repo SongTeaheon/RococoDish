@@ -5,19 +5,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.CircularProgressDrawable;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,29 +27,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.load.data.mediastore.MediaStoreUtil;
-import com.bumptech.glide.util.Util;
-import com.example.front_ui.Util_Kotlin.Storage;
-import com.example.front_ui.Utils.GlideApp;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.Interface.MyPageDataPass;
+import com.example.front_ui.Util_Kotlin.Storage;
+import com.example.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -79,7 +70,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
     private int RC_CAMERA = 1001;
     public ImageButton imageButton;
     //카메라 uri가져오기용 변수들
-    private Uri imageUri;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -87,6 +78,11 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         setContentView(R.layout.my_page);
         Intent intent = getIntent();
 
+        int img[] = {
+                R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang,
+                R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang
+        };
+      
         MyAdapter adapter = new MyAdapter(
                 getApplicationContext(),
                 R.layout.polar_style,
@@ -99,7 +95,6 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
 
         imageButton = (ImageButton) findViewById(R.id.imageView);
         //킬 때마다 프로필 사진 불러옴
-        final ProgressDialog progressDialog = ProgressDialog.show(this, "로딩중", "잠시만 기다려주세요...");
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
@@ -107,18 +102,10 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(documentSnapshot.get("profileImage") != null){
-                    CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(getApplicationContext());
-                    circularProgressDrawable.setStrokeCap(Paint.Cap.ROUND);
-                    circularProgressDrawable.setCenterRadius(10f);
-                    circularProgressDrawable.setBackgroundColor(R.color.colorMainSearch);
-                    circularProgressDrawable.start();
-
                     String path = documentSnapshot.get("profileImage").toString();
                     GlideApp.with(getApplicationContext())
                             .load(path)
-                            .placeholder(circularProgressDrawable)
                             .into(imageButton);
-                    progressDialog.dismiss();
                 }
             }
         });
@@ -167,27 +154,31 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             imageButton.setClipToOutline(true);
         }
     }
-    private Uri getImageUri(Context applicationContext, Bitmap photo) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        photo.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), photo, "Title", null);
-        return Uri.parse(path);
-    }
 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         //프로필 사진 고르기에서 카메라 촬영 누를시
-        if(requestCode == RC_CAMERA && resultCode == Activity.RESULT_OK && data != null) {
-            Bitmap bmp = (Bitmap) data.getExtras().get("data");
-            Uri uri = getImageUri(this, bmp);
-
-            CropImage.activity(uri)
-                    .setGuidelines(CropImageView.Guidelines.ON)
-                    .setCropShape(CropImageView.CropShape.OVAL)
-                    .setFixAspectRatio(true)
-                    .start(this);
-            Log.d(TAG, "카메라에서 이미지를 받은 후 크롭으로 넘어갑니다.");
+        if(requestCode == RC_CAMERA && resultCode == Activity.RESULT_OK && data != null){
+            //카메라에서 찍은 이미지를 Uri로 바꾸는 과정
+//            Bitmap bmp = (Bitmap) data.getExtras().get("data");
+////            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+////            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+//            String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bmp, "사진", "사진입니다.");
+//            Uri cameraUri = Uri.parse(path);
+            Uri uri = data.getData();
+            if(uri != null){
+                //만든 Uri로 크롭하는 과정
+                CropImage.activity(uri)
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .setCropShape(CropImageView.CropShape.OVAL)
+                        .setFixAspectRatio(true)
+                        .start(this);
+                Log.d(TAG, "카메라에서 이미지를 받은 후 Uri로 변형해서 크롭으로 넘어갑니다.");
+            }
+            else{
+                Toast.makeText(this, "이거 URI NULL임", Toast.LENGTH_LONG).show();
+            }
         }
 
         //프로필 사진 고를 시 앨범에서 사진 가져올 경우
