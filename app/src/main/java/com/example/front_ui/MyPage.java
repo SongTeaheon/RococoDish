@@ -42,6 +42,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.yalantis.ucrop.UCrop;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -120,18 +124,11 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     switch (profiles[which]) {
-//                                        case "사진촬영":
-////                                            Toast.makeText(MyPage.this, "사진촬영", Toast.LENGTH_SHORT).show();
-//                                            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                                            startActivityForResult(cameraIntent, RC_CAMERA);
-//                                            break;
                                         case "앨범에서 사진 선택":
-//                                            Toast.makeText(MyPage.this, "앨범에서 사진 선택", Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                                             startActivityForResult(intent, RC_GALLERY);
                                             break;
                                         case "기본 이미지로 변경":
-//                                            Toast.makeText(MyPage.this, "기본 이미지로 변경", Toast.LENGTH_SHORT).show();
                                             FirebaseFirestore.getInstance().collection("사용자")
                                                     .document(FirebaseAuth.getInstance().getUid())
                                                     .update("profileImage", null);
@@ -161,31 +158,56 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         if(requestCode == RC_GALLERY && resultCode == Activity.RESULT_OK && data != null){
             Uri selectedImageFromGallery = data.getData();
 
-            //크롭 자체 제작(라이브러리 안씀)
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            cropIntent.setDataAndType(selectedImageFromGallery, "image/*");
-            cropIntent.putExtra("crop", "true");
-            cropIntent.putExtra("aspectX", 1);
-            cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX", 128);
-            cropIntent.putExtra("outputY", 128);
-            cropIntent.putExtra("return-data", true);
-            startActivityForResult(cropIntent, RC_CROP);
-            Log.d(TAG, "갤러리에서 이미지를 받은 후 크롭으로 넘어갑니다.");
+            Uri destinationUri = Uri.fromFile(new File(getApplicationContext().getCacheDir(), "IMG_" + System.currentTimeMillis()));
+            UCrop.of(selectedImageFromGallery, destinationUri)
+                    .withAspectRatio(1, 1)
+                    .withMaxResultSize(450, 450)
+                    .start(this);
+
+//            //크롭 자체 제작(라이브러리 안씀)
+//            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+//            cropIntent.setDataAndType(selectedImageFromGallery, "image/*");
+//            cropIntent.putExtra("crop", "true");
+//            cropIntent.putExtra("aspectX", 1);
+//            cropIntent.putExtra("aspectY", 1);
+//            cropIntent.putExtra("outputX", 128);
+//            cropIntent.putExtra("outputY", 128);
+//            cropIntent.putExtra("return-data", true);
+//            startActivityForResult(cropIntent, RC_CROP);
+//            Log.d(TAG, "갤러리에서 이미지를 받은 후 크롭으로 넘어갑니다.");
         }
-        if(requestCode == RC_CROP){
-            if(resultCode == Activity.RESULT_OK){
-                Bundle extras = data.getExtras();
-                final ProgressDialog progressDialog  = ProgressDialog.show(this, "로딩중", "잠시만 기다려주세요...");
-                if(extras != null){
-                    Bitmap bmp = extras.getParcelable("data");
+//        if(requestCode == RC_CROP){
+//            if(resultCode == Activity.RESULT_OK){
+//                Bundle extras = data.getExtras();
+//                final ProgressDialog progressDialog  = ProgressDialog.show(this, "로딩중", "잠시만 기다려주세요...");
+//                if(extras != null){
+//                    Bitmap bmp = extras.getParcelable("data");
+//                    ByteArrayOutputStream outputStream =new ByteArrayOutputStream();
+//                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+//                    byte[] byteArray = outputStream.toByteArray();
+//                    Storage.INSTANCE.uploadProfileImage(byteArray, progressDialog);
+//                    GlideApp.with(this)
+//                            .load(bmp)
+//                            .into(imageButton);
+//                }
+//            }
+//        }
+        if(requestCode == UCrop.REQUEST_CROP && resultCode == Activity.RESULT_OK) {
+            final Uri resultUri = UCrop.getOutput(data);
+            final ProgressDialog progressDialog  = ProgressDialog.show(this, "로딩중", "잠시만 기다려주세요...");
+            if (resultUri != null) {
+                Bitmap bmp = null;
+                try {
+                    bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUri);
                     ByteArrayOutputStream outputStream =new ByteArrayOutputStream();
-                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 60, outputStream);
                     byte[] byteArray = outputStream.toByteArray();
                     Storage.INSTANCE.uploadProfileImage(byteArray, progressDialog);
                     GlideApp.with(this)
                             .load(bmp)
                             .into(imageButton);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }

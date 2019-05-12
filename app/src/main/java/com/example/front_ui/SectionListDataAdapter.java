@@ -1,7 +1,9 @@
 package com.example.front_ui;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -63,9 +65,17 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         final PostingInfo singleItem = list.get(i);
         Log.d(TAG, "downloadImageFromFirebaseStorage : " + singleItem.imagePathInStorage);
 
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(mContext);
+        circularProgressDrawable.setStrokeCap(Paint.Cap.ROUND);
+        circularProgressDrawable.setCenterRadius(10f);
+        circularProgressDrawable.setBackgroundColor(R.color.colorMainSearch);
+        circularProgressDrawable.start();
 
         StorageReference fileReference = storage.getReferenceFromUrl(singleItem.imagePathInStorage);
-        GlideApp.with(mContext).load(fileReference).into(holder.imageView);
+        GlideApp.with(mContext)
+                .load(fileReference)
+                .placeholder(circularProgressDrawable)
+                .into(holder.imageView);
 
         //태완태완 이미지 선택시 반응입니다. 여기가 그 각 포스팅1 글 누르면 발생하는 이벤트 부분입니다.
         holder.view.setOnClickListener(new View.OnClickListener() {

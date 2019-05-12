@@ -39,12 +39,12 @@ import com.example.front_ui.Utils.RecyclerItemClickListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -64,7 +64,6 @@ public class StoreSearchFragment extends Fragment {
     private final String TAG = "TAGStoreResearchFrag";
     private final String kakaoApiId = "KakaoAK 952900bd9ca440b836d9c490525aef64";
     private final String code = "FD6"; //카페는 CE7
-    public static int RC_fromStoreSearchFragment = 12345;
     private final String code_store = "FD6"; //음식점
     private final String code_cafe = "CE7"; //카페
 
@@ -72,8 +71,6 @@ public class StoreSearchFragment extends Fragment {
     private int count_cafe;
     private ArrayList<KakaoStoreInfo> dataList_cafe;
     private ArrayList<KakaoStoreInfo> dataList_store;
-
-
 
 
     Retrofit retrofit;
@@ -173,19 +170,16 @@ public class StoreSearchFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.d(TAG, "StoreSearchFragment에서 크롭에 들어갑니다.");
+        //StoreSearchFragment로부터 갤러리에서 받은 데이터를 크롭으로 옮기는 요청코드
         if(requestCode == 1001 && resultCode == Activity.RESULT_OK){
             Uri galleryUri = data.getData();
-
-            //크롭 자체 제작(라이브러리 안씀)
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-                    cropIntent.setDataAndType(galleryUri, "image/*");
-                    cropIntent.putExtra("crop", "true");
-                    cropIntent.putExtra("aspectX", 1);
-                    cropIntent.putExtra("aspectY", 1);
-                    cropIntent.putExtra("outputX", 128);
-                    cropIntent.putExtra("outputY", 128);
-                    cropIntent.putExtra("return-data", true);
-            startActivityForResult(cropIntent, RC_fromStoreSearchFragment);
+            //destinationUri의 경우는 크롭후 저장되는 위치를 의미, 결국 이 위치에 있는 사진을 result로 반환하기 위함.
+            Uri destinationUri = Uri.fromFile(new File(getContext().getCacheDir(), "IMG_" + System.currentTimeMillis()));
+            UCrop.of(galleryUri, destinationUri)
+                    .withAspectRatio(1, 1)
+                    .withMaxResultSize(600, 600)
+                    .start(getActivity());
         }
     }
 
