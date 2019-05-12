@@ -1,9 +1,14 @@
 package com.example.front_ui.PostingProcess;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +27,7 @@ import android.widget.TextView;
 
 import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.R;
+import com.example.front_ui.Util_Kotlin.Storage;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
 import com.example.front_ui.Utils.RecyclerItemClickListener;
 import com.google.gson.Gson;
@@ -30,6 +36,7 @@ import com.google.gson.JsonObject;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -40,10 +47,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.front_ui.Utils.KakaoApiStoreSearchService.API_URL;
 
+
+
 public class StoreSearchFragment extends Fragment {
     private final String TAG = "TAGStoreResearchFrag";
     private final String kakaoApiId = "KakaoAK 952900bd9ca440b836d9c490525aef64";
     private final String code = "FD6"; //카페는 CE7
+    public static int RC_fromStoreSearchFragment = 12345;
 
 
     Retrofit retrofit;
@@ -129,23 +139,28 @@ public class StoreSearchFragment extends Fragment {
     //선택한 가게 정보 데이터를 bundle에 넣고 다음 프래그먼트로 이동
     //태완태완 : 여기 setFragmentAndMove함수에서 그 갤러리 액티비티로 넘어가야합니다.
     private void setFragmentAndMove(Context context) {
-//        Log.d(TAG, "put data in Fragment");
-//        GalleryFragment fragment = new GalleryFragment();
-//        Bundle args = new Bundle();
-//        args.putParcelable("StoreData", storeInfoArrayList.get(itemPosition));
-//        fragment.setArguments(args);
-//
-//        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-//        ft.replace(R.id.relLayout1, fragment);
-//        ft.addToBackStack(null);
-//        ft.commit();
-        CropImage.activity()
-                .setGuidelines(CropImageView.Guidelines.ON)
-                // .setCropShape(CropImageView.CropShape.OVAL)
-                .setBorderCornerColor(Color.GRAY)
-                .setAutoZoomEnabled(true)
-                .setFixAspectRatio(true)
-                .start((Activity) context);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, 1001);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1001 && resultCode == Activity.RESULT_OK){
+            Uri galleryUri = data.getData();
+
+            //크롭 자체 제작(라이브러리 안씀)
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+                    cropIntent.setDataAndType(galleryUri, "image/*");
+                    cropIntent.putExtra("crop", "true");
+                    cropIntent.putExtra("aspectX", 1);
+                    cropIntent.putExtra("aspectY", 1);
+                    cropIntent.putExtra("outputX", 128);
+                    cropIntent.putExtra("outputY", 128);
+                    cropIntent.putExtra("return-data", true);
+            startActivityForResult(cropIntent, RC_fromStoreSearchFragment);
+        }
     }
 
 //    @Override

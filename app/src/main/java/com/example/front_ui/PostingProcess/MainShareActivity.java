@@ -1,5 +1,6 @@
 package com.example.front_ui.PostingProcess;
 
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,12 +17,15 @@ import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.R;
 import com.example.front_ui.Utils.Permissions;
+import com.google.android.gms.common.api.Response;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import static com.example.front_ui.PostingProcess.StoreSearchFragment.RC_fromStoreSearchFragment;
 
 
 public class MainShareActivity extends AppCompatActivity {
@@ -112,34 +116,34 @@ public class MainShareActivity extends AppCompatActivity {
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult");
+        Log.d(TAG, "onActivityResult_from_MainShareActivity");
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && data != null){
-//            ProgressDialog loading = ProgressDialog.show(this, "로딩중", "잠시만 기다려주세요...");
-            CropImage.ActivityResult result =CropImage.getActivityResult(data);
-            try {
-                Bitmap selectedBmp = MediaStore.Images.Media.getBitmap(getContentResolver(), result.getUri());
-                OutputStream outputStream = new ByteArrayOutputStream();
-                selectedBmp.compress(Bitmap.CompressFormat.JPEG, 60, outputStream);
-                byte[] byteArray = ((ByteArrayOutputStream) outputStream).toByteArray();
-//                Intent passByte = new Intent(getContext(), LastShareFragment.class);
-//                passByte.putExtra("byteArray", byteArray);
-//                startActivity(passByte);
-                //fragment로 데이터 전송 및 변경
-                LastShareFragment lastShareFragment = new LastShareFragment();
-                Bundle args = new Bundle();
-                args.putByteArray("byteArray", byteArray);
-                args.putParcelable("storeData", kakaoStoreInfo);
-                Log.d(TAG, "성공적으로 바이트어레이 이동");
-                lastShareFragment.setArguments(args);
 
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.relLayout1, lastShareFragment).commit();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+        if(requestCode == RC_fromStoreSearchFragment){
+            Log.d(TAG, "요청코드는 받아서 비트맵 변환 시작합니다.");
+            if(resultCode == Activity.RESULT_OK){
+                if(data != null){
+                    Bundle extras = data.getExtras();
+                    if(extras != null){
+                        //갤러리에서 받은 파일을 byteArray로 바꿈
+                        Bitmap bmp = extras.getParcelable("data");
+                        ByteArrayOutputStream outputStream =new ByteArrayOutputStream();
+                        bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                        byte[] byteArray = outputStream.toByteArray();
+
+                        //fragment로 데이터 전송 및 변경
+                        LastShareFragment lastShareFragment = new LastShareFragment();
+                        Bundle args = new Bundle();
+                        args.putByteArray("byteArray", byteArray);
+                        args.putParcelable("storeData", kakaoStoreInfo);
+                        Log.d(TAG, "성공적으로 바이트어레이 이동");
+                        lastShareFragment.setArguments(args);
+
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.relLayout1, lastShareFragment).commit();
+                    }
+                }
             }
         }
     }
