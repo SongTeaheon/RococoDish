@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView1"
         android:layout_width="320dp"
         android:layout_height="320dp"
@@ -28,6 +28,7 @@
         android:textSize="25sp"
         android:gravity="center"
         android:text="음식점 이름"
+        android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

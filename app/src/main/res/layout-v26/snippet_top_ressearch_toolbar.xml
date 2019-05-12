@@ -5,7 +5,7 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/ic_launcher_background">
+        android:background="@color/colorPrimary">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/profileToolbar"
@@ -28,12 +28,14 @@
                     android:id="@+id/tvNext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:background="@color/ic_launcher_background"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/colorPrimary"
                     android:text="Next"
-                    android:textSize="20sp" />
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20dp"
+                    tools:ignore="SpUsage" />
             </RelativeLayout>
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
