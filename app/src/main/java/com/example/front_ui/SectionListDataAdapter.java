@@ -1,6 +1,8 @@
 package com.example.front_ui;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -71,7 +73,14 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //여기서 포스팅2로 넘어가면 됩니다.
+                Intent intent = new Intent(mContext, DishView.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("postingInfo", singleItem);
+                intent.putExtras(bundle);
+
+                mContext.startActivity(intent);
+
                 Toast.makeText(v.getContext(), singleItem.title, Toast.LENGTH_SHORT).show();
             }
         });

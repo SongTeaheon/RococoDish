@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/screen_background_light_transparent" />
 
-    <TextView
+    <Button
         android:id="@+id/toDetail1"
         android:layout_width="0dp"
         android:layout_height="70dp"
