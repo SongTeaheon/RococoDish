@@ -5,16 +5,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.NonNull;
@@ -34,11 +31,7 @@ import com.example.front_ui.Util_Kotlin.Storage;
 import com.example.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
-
 import java.io.ByteArrayOutputStream;
-
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.Interface.MyPageDataPass;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,9 +42,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -75,24 +65,16 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
     private int RC_CROP = 2;
     private int RC_CAMERA = 1001;
     public ImageButton imageButton;
-    //카메라 uri가져오기용 변수들
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_page);
-        Intent intent = getIntent();
 
-        int img[] = {
-                R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang,
-                R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang
-        };
-      
         MyAdapter adapter = new MyAdapter(
                 getApplicationContext(),
                 R.layout.polar_style,
                 this);       // GridView 항목의 레이아웃 row.xml
-
 
         GridView gv = findViewById(R.id.gridview);
         gv.setAdapter(adapter);  // 커스텀 아답타를 GridView 에 적용
@@ -127,7 +109,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             }
         });
         imageButton.setOnClickListener(new View.OnClickListener() {
-            final String[] profiles = new String[] {"사진촬영", "앨범에서 사진 선택", "기본 이미지로 변경"};
+            final String[] profiles = new String[] {"앨범에서 사진 선택", "기본 이미지로 변경"};
             @Override
             public void onClick(final View v) {
                 switch (v.getId()) {
@@ -138,11 +120,11 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     switch (profiles[which]) {
-                                        case "사진촬영":
-//                                            Toast.makeText(MyPage.this, "사진촬영", Toast.LENGTH_SHORT).show();
-                                            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                            startActivityForResult(cameraIntent, RC_CAMERA);
-                                            break;
+//                                        case "사진촬영":
+////                                            Toast.makeText(MyPage.this, "사진촬영", Toast.LENGTH_SHORT).show();
+//                                            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                                            startActivityForResult(cameraIntent, RC_CAMERA);
+//                                            break;
                                         case "앨범에서 사진 선택":
 //                                            Toast.makeText(MyPage.this, "앨범에서 사진 선택", Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -171,39 +153,15 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             imageButton.setClipToOutline(true);//프로필 이미지 동그랗게
         }
     }
-    private Uri getImageUri(Context applicationContext, Bitmap photo) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        photo.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), photo, "Title", null);
-        return Uri.parse(path);
-    }
 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        //프로필 사진 고르기에서 카메라 촬영 누를시
-        if(requestCode == RC_CAMERA && resultCode == Activity.RESULT_OK && data != null) {
-            Bitmap bmp = (Bitmap) data.getExtras().get("data");
-            Uri uri = getImageUri(this, bmp);
-
-            CropImage.activity(uri)
-                    .setGuidelines(CropImageView.Guidelines.ON)
-                    .setCropShape(CropImageView.CropShape.OVAL)
-                    .setFixAspectRatio(true)
-                    .start(this);
-            Log.d(TAG, "카메라에서 이미지를 받은 후 크롭으로 넘어갑니다.");
-        }
 
         //프로필 사진 고를 시 앨범에서 사진 가져올 경우
         if(requestCode == RC_GALLERY && resultCode == Activity.RESULT_OK && data != null){
             Uri selectedImageFromGallery = data.getData();
 
-//            CropImage.activity(selectedImageFromGallery)
-//                    .setGuidelines(CropImageView.Guidelines.ON)
-//                    .setCropShape(CropImageView.CropShape.OVAL)
-//                    .setFixAspectRatio(true)
-//                    .start(this);
-            //크롭 자체 제작
+            //크롭 자체 제작(라이브러리 안씀)
             Intent cropIntent = new Intent("com.android.camera.action.CROP");
             cropIntent.setDataAndType(selectedImageFromGallery, "image/*");
             cropIntent.putExtra("crop", "true");
@@ -215,49 +173,6 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             startActivityForResult(cropIntent, RC_CROP);
             Log.d(TAG, "갤러리에서 이미지를 받은 후 크롭으로 넘어갑니다.");
         }
-        //크롭으로 들어가는 이벤트
-        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
-                Uri resultUri = result.getUri();
-                Log.d(TAG, "크롭 후 uri를 받아서 byte로 만들어줍니다.");
-                try {
-                    Bitmap bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                    ProgressDialog progressDialog
-                            = ProgressDialog.show(this,
-                            "로딩중",
-                            "잠시만 기다려주세요...");
-                    GlideApp.with(this)
-                    .load(bmp)
-                    .into(imageButton);
-                    ByteArrayOutputStream outputStream =new ByteArrayOutputStream();
-                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                    byte[] byteArray = outputStream.toByteArray();
-                    Storage.INSTANCE.uploadProfileImage(byteArray, progressDialog);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
-                Log.d(TAG, "크롭 시 에러발생 : "+error.getMessage());
-            }
-        }
-//        if(requestCode == RC_CROP){
-//            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-//            if(resultCode == Activity.RESULT_OK){
-//                Uri resultUri = result.getUri();
-//                try {
-//                    Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUri);
-//                    GlideApp.with(this)
-//                            .load(bmp)
-//                            .into(imageButton);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
         if(requestCode == RC_CROP){
             if(resultCode == Activity.RESULT_OK){
                 Bundle extras = data.getExtras();
