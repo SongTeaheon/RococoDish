@@ -15,40 +15,50 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.front_ui.DataModel.PostingInfo;
+import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.PostingProcess.MainShareActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+
+import org.imperiumlabs.geofirestore.GeoFirestore;
+import org.imperiumlabs.geofirestore.GeoQuery;
+import org.imperiumlabs.geofirestore.GeoQueryEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 public class SubActivity extends AppCompatActivity {
 
     private static final int REQUEST_LOCATION = 10002;
-    private static final String TAG = "TAG_SubActivity";
+    private static final String TAG = "TAGSubActivity";
     private FusedLocationProviderClient mFusedLocationClient;
     RecyclerView my_recycler_view;
     RecyclerView myPage_recyclerview;
     NestedScrollView nestedScrollView;
     private Location mCurrentLocation;
     private boolean mLocationPermissionGranted = false;
-    ImageView imageView;
     TextView myPageTextview;
-    private ArrayList<PostingInfo> list;
-    private int position;
     private TextView starText;
 
 
@@ -63,9 +73,7 @@ public class SubActivity extends AppCompatActivity {
         nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
 
         //mCurrentLocation초기화 -> permission안될 경우 때문!!
-        mCurrentLocation= new Location("dummyprovider");
-        mCurrentLocation.setLatitude(37.583816);
-        mCurrentLocation.setLongitude(127.058877);
+        mCurrentLocation = new Location("dummyprovider");
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         getLocationPermission(); //Permission완료해야 recyclerview를 불러온다.(그 전에 불러오면 안되기 때문)
@@ -77,6 +85,8 @@ public class SubActivity extends AppCompatActivity {
         myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         myPage_recyclerview.setAdapter(myPageAdapter);
 
+        //마이페이지 글자 누를시 이벤트
+        myPageTextview = findViewById(R.id.myPage_textview_activitySub);
         my_recycler_view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -90,6 +100,7 @@ public class SubActivity extends AppCompatActivity {
             }
         });
 
+      //마이페이지 리사이클러 터치
         myPage_recyclerview.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -103,27 +114,6 @@ public class SubActivity extends AppCompatActivity {
             }
         });
 
-
-        //일단 마이페이지 리사이클러뷰에서 0번째는 플러스 기능, 나머지는 게시물 구체적 보기 창으로 이동
-//        if(position == 0){
-//            myPage_recyclerview.findViewHolderForAdapterPosition(position).itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(getApplicationContext(), "이건 처음 아이템입니다.", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-//        else{
-//            myPage_recyclerview.findViewHolderForAdapterPosition(0).itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(getApplicationContext(), "나머지 아이템입니다.", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-
-                //마이페이지 글자 누를시 이벤트
-                myPageTextview = findViewById(R.id.myPage_textview_activitySub);
         myPageTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,24 +130,51 @@ public class SubActivity extends AppCompatActivity {
 
             }
         });
+
+        //검색 동작.
+        TextView searchText = findViewById(R.id.editTextDescription);
+        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_SEARCH:
+                        // 검색 동작
+                        //kakao api에서 좌표가져오기
+                        //해당 좌표 근처 가게들 불러오기 getCloseStoreIdAndGetData(location) ->recyclerview setting
+                        break;
+                    default:
+                        // 기본 엔터키 동작
+                        return false;
+                }
+                return true;
+            }
+        });
     }
 
 
     //location permission을 가져온다.
     //permission이 있으면 location을 가져온다.
-    private void getLocationPermission(){
+    private void getLocationPermission() {
         Log.d(TAG, "getLocationPermission");
 
         //permission없는 경우 요청, 있는 경우 location을 가져온다.
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
             //permission없는 경우
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_LOCATION);
-        }else{
-            //permission있는 경우
-            getCurrentLocation();
+        } else {
+            //gps켜져있는지 확인
+            final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+            if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                Log.d(TAG, "GPS is disabled");
+                mCurrentLocation.setLatitude(37.583816);
+                mCurrentLocation.setLongitude(127.058877);
+                initRecyclerView(mCurrentLocation);
+            }else {
+                getCurrentLocation();
+            }
             mLocationPermissionGranted = true;
         }
     }
@@ -165,24 +182,23 @@ public class SubActivity extends AppCompatActivity {
     //location을 가져오고 recylcer뷰를 실행한다.
     private void getCurrentLocation() {
         Log.d(TAG, "getCurrentLocation");
-        OnCompleteListener<Location> mCompleteListener = new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if(task.isSuccessful() && task.getResult() != null){
-                    mCurrentLocation = task.getResult();
-                    Log.d(TAG, "getCurrentLocation - success mCurrentLocation lat : "+ mCurrentLocation.getLatitude()+" long : "+ mCurrentLocation.getLongitude());
-                    Toast.makeText(getApplicationContext(), "lat : " + mCurrentLocation.getLatitude() +
-                            "\n lng: " + mCurrentLocation.getLongitude(), Toast.LENGTH_LONG).show();
-                    initRecyclerView();//내 위치를 가져오면 그 때 recyclerview 실행
-                }else{
-                    Log.e(TAG, "getCurrentLocation Exception"+ task.getException());
-                }
-            }
-        };
-
         try {
-            mFusedLocationClient.getLastLocation().addOnCompleteListener(mCompleteListener);
-        }catch(SecurityException e){
+            mFusedLocationClient.getLastLocation()
+                    .addOnCompleteListener(new OnCompleteListener<Location>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Location> task) {
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                mCurrentLocation = task.getResult();
+                                Log.d(TAG, "getCurrentLocation - success mCurrentLocation lat : " + mCurrentLocation.getLatitude() + " long : " + mCurrentLocation.getLongitude());
+                                Toast.makeText(getApplicationContext(), "lat : " + mCurrentLocation.getLatitude() +
+                                        "\n lng: " + mCurrentLocation.getLongitude(), Toast.LENGTH_LONG).show();
+                                initRecyclerView(mCurrentLocation);//내 위치를 가져오면 그 때 recyclerview 실행
+                            } else {
+                                Log.e(TAG, "getCurrentLocation Exception" + task.getException());
+                            }
+                        }
+                    });
+        } catch (SecurityException e) {
             e.printStackTrace();
         }
     }
@@ -201,23 +217,25 @@ public class SubActivity extends AppCompatActivity {
                     getCurrentLocation();
                 } else {
                     //permission거절한 경우
+                    Log.d(TAG, "permission is denied");
                     Toast.makeText(getApplicationContext(), "permission is denied", Toast.LENGTH_LONG).show();
-                    initRecyclerView();
+                    mCurrentLocation.setLatitude(37.583816);
+                    mCurrentLocation.setLongitude(127.058877);
+                    initRecyclerView(mCurrentLocation);//확인필요!!!
                 }
                 return;
             }
         }
     }
 
-    private void initRecyclerView(){
+    //주변 가게 recyclerviewt세팅!
+    private void initRecyclerView(Location locationCenter) {
         Log.d(TAG, "initRecyclerView");
         my_recycler_view.setHasFixedSize(true);
         RecyclerViewDataAdapter adapter = new RecyclerViewDataAdapter(this, mCurrentLocation);
         my_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         my_recycler_view.setAdapter(adapter);
     }
-
-
 
 
 }

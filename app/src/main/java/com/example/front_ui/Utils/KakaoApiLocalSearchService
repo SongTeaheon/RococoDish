@@ -1,0 +1,18 @@
+package com.example.front_ui.Utils;
+
+import com.google.gson.JsonObject;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Query;
+
+public interface KakaoApiLocalSearchService {
+
+    public static final String API_URL = "https://dapi.kakao.com/v2/local/search/";
+
+    @GET("address.json")
+    Call<JsonObject> getKakaoLocalInfo(@Header("Authorization") String id,
+                                         @Query("query") String searchWord);
+
+}

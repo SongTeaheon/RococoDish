@@ -87,11 +87,6 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         setContentView(R.layout.my_page);
         Intent intent = getIntent();
 
-        int img[] = {
-                R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang,
-                R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang, R.mipmap.dalbang
-        };
-      
         MyAdapter adapter = new MyAdapter(
                 getApplicationContext(),
                 R.layout.polar_style,
