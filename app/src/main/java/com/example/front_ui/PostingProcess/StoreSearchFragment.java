@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.example.front_ui.DataModel.KakaoMetaData;
 import com.example.front_ui.DataModel.KakaoStoreInfo;
+import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.R;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
 import com.example.front_ui.Utils.RecyclerItemClickListener;
@@ -35,6 +36,8 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import javax.security.auth.Subject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -254,15 +257,17 @@ public class StoreSearchFragment extends Fragment {
 
     }
 
+    //store와 cafe의 total count를 가져와서 더 많은거 먼저 집어 넣는다.
     private void setDataAndsetRecyclerview(){
         Log.d(TAG, "setRecyclerView count store : " + count_store + " count cafe : " + count_cafe);
         if(count_cafe > count_store){
-            storeInfoArrayList = dataList_cafe;
+            storeInfoArrayList= KakaoInfoArrayListClone(dataList_cafe);
             storeInfoArrayList.addAll(dataList_store);
         }else{
-            storeInfoArrayList = dataList_store;
-            storeInfoArrayList.addAll(dataList_store);
+            storeInfoArrayList = KakaoInfoArrayListClone(dataList_cafe);
+            storeInfoArrayList.addAll(dataList_cafe);
         }
+        Log.d(TAG, "first info : " + storeInfoArrayList.get(0).place_name + " sec : " + storeInfoArrayList.get(1).place_name);
         setRecyclerviewAdapter(storeInfoArrayList);
     }
 
@@ -287,6 +292,7 @@ public class StoreSearchFragment extends Fragment {
         JsonArray jsonArray = (JsonArray) jsonObject.get("documents");
         for(int i=0 ; i<jsonArray.size(); i++){
             KakaoStoreInfo object = gson.fromJson(jsonArray.get(i), KakaoStoreInfo.class);
+            Log.d(TAG, "info  : " + object.place_name);
             dataList.add(object);
         }
         return dataList;
@@ -299,4 +305,19 @@ public class StoreSearchFragment extends Fragment {
         myAdapter.notifyDataSetChanged();//검색을 다른 걸로 하면 다시 세팅!
         mRecyclerView.setAdapter(myAdapter);
     }
+
+
+    public ArrayList<KakaoStoreInfo> KakaoInfoArrayListClone(ArrayList<KakaoStoreInfo> list){
+        ArrayList<KakaoStoreInfo> temp = new ArrayList<>();
+        for(KakaoStoreInfo list_item: list){
+            try {
+                temp.add((KakaoStoreInfo)list_item.clone());
+            } catch (CloneNotSupportedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        return temp;
+    }
+
 }
