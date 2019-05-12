@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +50,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-public class SubActivity extends AppCompatActivity {
+public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final int REQUEST_LOCATION = 10002;
     private static final String TAG = "TAGSubActivity";
@@ -60,6 +62,7 @@ public class SubActivity extends AppCompatActivity {
     private boolean mLocationPermissionGranted = false;
     TextView myPageTextview;
     private TextView starText;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -71,6 +74,9 @@ public class SubActivity extends AppCompatActivity {
 
         my_recycler_view = (RecyclerView) findViewById(R.id.mrecyclerView);
         nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         //mCurrentLocation초기화 -> permission안될 경우 때문!!
         mCurrentLocation = new Location("dummyprovider");
@@ -101,18 +107,31 @@ public class SubActivity extends AppCompatActivity {
         });
 
       //마이페이지 리사이클러 터치
-        myPage_recyclerview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                nestedScrollView.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        return true;
-                    }
-                });
-                return false;
-            }
-        });
+//        myPage_recyclerview.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                nestedScrollView.setOnTouchListener(new View.OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View v, MotionEvent event) {
+//                        return true;
+//                    }
+//                });
+//                return false;
+//            }
+//        });
+//
+//        my_recycler_view.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                nestedScrollView.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//                    return true;
+//                    }
+//                });
+//                return false;
+//            }
+//        });
 
         myPageTextview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,4 +257,19 @@ public class SubActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onRefresh() {
+        // 새로고침 코드
+        my_recycler_view.setHasFixedSize(true);
+        RecyclerViewDataAdapter adapter = new RecyclerViewDataAdapter(this, mCurrentLocation);
+        my_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        my_recycler_view.setAdapter(adapter);
+
+        Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
+        myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        myPage_recyclerview.setAdapter(myPageAdapter);
+
+        // 새로고침 완료
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
 }
