@@ -1,11 +1,14 @@
 package com.example.front_ui.Util_Kotlin
 
+import android.net.Uri
+import android.util.Log
 import com.example.front_ui.DataModel.UserInfo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 
 object Firestore {
+    private val TAG = "TAG_Firestore_Util"
     private val firebaseAuthInstance: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val firestoreInstance: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
     private val currentUserDocRef: DocumentReference
@@ -34,6 +37,11 @@ object Firestore {
             } else {//새로운 유저가 아니고 이미 가입된 유저의 경우는 바로 다음창으로 넘겨줌.
                 onComplete()
             }
+        }
+    }
+    fun profileImageToFirestore(imageUri : Uri){
+        currentUserDocRef.update("profileImage", imageUri.toString()).addOnSuccessListener {
+            Log.d(TAG, "사용자의 프로필 사진 변경이 디비에 적용되었습니다.")
         }
     }
 }

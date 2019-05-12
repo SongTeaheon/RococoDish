@@ -63,16 +63,10 @@ import java.util.UUID;
 public class LastShareFragment extends Fragment {
 
     private final String TAG = "TAGLastShareFragment";
-    RatingBar mRatingBar1;
-    RatingBar mRatingBar2;
-    RatingBar mRatingBar3;
-    RatingBar mRatingBar4;
-    TextView mStarText1;
-    TextView mStarText2;
-    TextView mStarText3;
-    TextView mStarText4;
+    RatingBar mRatingBar;
+    TextView mStarText;
     EditText text_description;
-    EditText text_title;
+    TextView text_title;
     List<Float> detail_aver_star;
     GeoPoint geoPoint;
 
@@ -104,16 +98,9 @@ public class LastShareFragment extends Fragment {
         Log.d(TAG, "onCreateView!");
 
         text_description = view.findViewById(R.id.editTextDescription);
-        text_title = view.findViewById(R.id.editTextTitle);
-        mRatingBar1 = view.findViewById(R.id.ratingBar1);
-        mRatingBar2 = view.findViewById(R.id.ratingBar2);
-        mRatingBar3 = view.findViewById(R.id.ratingBar3);
-        mRatingBar4 = view.findViewById(R.id.ratingBar4);
-        mStarText1 = view.findViewById(R.id.starText1);
-        mStarText2 = view.findViewById(R.id.starText2);
-        mStarText3 = view.findViewById(R.id.starText3);
-        mStarText4 = view.findViewById(R.id.starText4);
-
+        text_title = view.findViewById(R.id.TextTitle);
+        mRatingBar = view.findViewById(R.id.ratingBar);
+        mStarText = view.findViewById(R.id.starText);
         detail_aver_star = new ArrayList<Float>() {};
         String text = text_description.getText().toString();
         storage = FirebaseStorage.getInstance();
@@ -156,34 +143,10 @@ public class LastShareFragment extends Fragment {
     //ratingBar Listener
     private void setupStarRatingBar(){
         //맛
-        mRatingBar1.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+        mRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                setStarText(mRatingBar1, mStarText1);
-            }
-        });
-
-        //가성비
-        mRatingBar2.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                setStarText(mRatingBar2, mStarText2);
-            }
-        });
-
-        //서비스
-        mRatingBar3.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                setStarText(mRatingBar3, mStarText3);
-            }
-        });
-
-        //분위기
-        mRatingBar4.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                setStarText(mRatingBar4, mStarText4);
+                setStarText(mRatingBar, mStarText);
             }
         });
     }
@@ -271,10 +234,7 @@ public class LastShareFragment extends Fragment {
         postingInfo.postingTime = Timestamp.now();
         postingInfo.description = text_description.getText().toString();
         postingInfo.title = text_title.getText().toString();
-        detail_aver_star.add(mRatingBar1.getRating());//맛
-        detail_aver_star.add(mRatingBar2.getRating());//가성비
-        detail_aver_star.add(mRatingBar3.getRating());//서비스
-        detail_aver_star.add(mRatingBar4.getRating());//분위기
+        detail_aver_star.add(mRatingBar.getRating());//맛
         postingInfo.detail_aver_star = detail_aver_star;
         postingInfo.storeName = kakaoStoreInfo.place_name;
         postingInfo.address = kakaoStoreInfo.address_name;

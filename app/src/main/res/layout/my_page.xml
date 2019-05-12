@@ -12,6 +12,7 @@
         android:layout_height="150dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
+        android:src="@drawable/basic_user_image"
         android:contentDescription="@string/todo"
         android:padding="0sp"
         android:scaleType="centerCrop"

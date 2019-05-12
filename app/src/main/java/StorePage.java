@@ -1,13 +1,15 @@
-package com.example.front_ui;
-
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
-public class DishWriteDetail extends AppCompatActivity {
+import com.example.front_ui.R;
+
+public class StorePage extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dish_write_detail);
+        setContentView(R.layout.store_page);
+
     }
 }
