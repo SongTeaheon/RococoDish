@@ -32,6 +32,10 @@
         <activity android:name=".PostingProcess.MainShareActivity"/>
         <activity android:name=".StorePage"/>
         <activity android:name=".SubActivity"/>
+        <activity android:name=".DishView"/>
+        <activity android:name=".DishViewDetail"/>
+
+
         <!--테스트할 코드-->
 
 

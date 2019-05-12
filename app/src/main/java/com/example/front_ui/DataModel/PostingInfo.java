@@ -1,9 +1,13 @@
 package com.example.front_ui.DataModel;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class PostingInfo {
+public class PostingInfo implements Serializable {
     public String storeName;
     public String imagePathInStorage;
     public int numLike;
