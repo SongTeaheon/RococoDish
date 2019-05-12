@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.front_ui.DataModel.KakaoMetaData;
 import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.R;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
@@ -30,6 +31,9 @@ import com.google.gson.JsonObject;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import org.json.JSONObject;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -43,7 +47,15 @@ import static com.example.front_ui.Utils.KakaoApiStoreSearchService.API_URL;
 public class StoreSearchFragment extends Fragment {
     private final String TAG = "TAGStoreResearchFrag";
     private final String kakaoApiId = "KakaoAK 952900bd9ca440b836d9c490525aef64";
-    private final String code = "FD6"; //카페는 CE7
+    private final String code_store = "FD6"; //음식점
+    private final String code_cafe = "CE7"; //카페
+
+    private int count_store;
+    private int count_cafe;
+    private ArrayList<KakaoStoreInfo> dataList_cafe;
+    private ArrayList<KakaoStoreInfo> dataList_store;
+
+
 
 
     Retrofit retrofit;
@@ -68,6 +80,8 @@ public class StoreSearchFragment extends Fragment {
         imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
 
+        storeInfoArrayList = new ArrayList<>();
+
         //search 버튼(EditText에 있는 단어를 받아서 검색)
         searchWordText = view.findViewById(R.id.searchWord);
         Button searchButton = view.findViewById(R.id.searchButton);
@@ -76,6 +90,8 @@ public class StoreSearchFragment extends Fragment {
             public void onClick(View view) {
                 searchWord = searchWordText.getText().toString();
                 Log.d(TAG, "search button clicked. searchWord : "+ searchWord);
+                count_cafe = -1;
+                count_store = -1;
                 requestSearchApi(searchWord);
             }
         });
@@ -86,6 +102,8 @@ public class StoreSearchFragment extends Fragment {
                 if(actionId == EditorInfo.IME_ACTION_SEARCH) {
                     searchWord = searchWordText.getText().toString();
                     Log.d(TAG, "search button clicked. searchWord : "+ searchWord);
+                    count_cafe = -1;
+                    count_store = -1;
                     requestSearchApi(searchWord);
                     imm.hideSoftInputFromWindow(searchWordText.getWindowToken(), 0);
                 }
@@ -189,26 +207,80 @@ public class StoreSearchFragment extends Fragment {
                 .build();
 
         service = retrofit.create(KakaoApiStoreSearchService.class);
-        Call<JsonObject> request = service.getKakaoStoreInfo(kakaoApiId, searchWord, code);//, code
-        request.enqueue(new Callback<JsonObject>() {
+        Call<JsonObject> request_store = service.getKakaoStoreInfo(kakaoApiId, searchWord, code_store);//, code
+        Call<JsonObject> request_cafe = service.getKakaoStoreInfo(kakaoApiId, searchWord, code_cafe);//, code
+
+
+
+        //store listener
+        request_store.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d(TAG, "request enqueue is Successed  ");
-                storeInfoArrayList  = parseJsonToStoreInfo(response.body());
-                setRecyclerviewAdapter(storeInfoArrayList);
+                Log.d(TAG, "request_store enqueue is Successed  ");
+                count_store = getCountFromApi(response.body());
+                dataList_store = parseJsonToStoreInfo(response.body());
+
+                //cafe완료된면
+                if(count_cafe >= 0){
+                    setDataAndsetRecyclerview();
+
+                }
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d(TAG, "request enqueue is failed : w : " + t.toString());
+                Log.d(TAG, "request_store enqueue is failed : w : " + t.toString());
                 t.printStackTrace();
             }
         });
 
+        //cafe listener
+        request_cafe.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Log.d(TAG, "request_cafe enqueue is Successed  ");
+                count_cafe = getCountFromApi(response.body());
+                dataList_cafe = parseJsonToStoreInfo(response.body());
+                //store완료된면
+                if(count_store >= 0){
+                    setDataAndsetRecyclerview();
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.d(TAG, "request_store enqueue is failed : w : " + t.toString());
+                t.printStackTrace();
+            }
+        });
 
     }
 
+    private void setDataAndsetRecyclerview(){
+        Log.d(TAG, "setRecyclerView count store : " + count_store + " count cafe : " + count_cafe);
+        if(count_cafe > count_store){
+            storeInfoArrayList = dataList_cafe;
+            storeInfoArrayList.addAll(dataList_store);
+        }else{
+            storeInfoArrayList = dataList_store;
+            storeInfoArrayList.addAll(dataList_store);
+        }
+        setRecyclerviewAdapter(storeInfoArrayList);
+    }
+
+
+    //kakao api에서 total count를 받아온다.
+    private int getCountFromApi(JsonObject jsonObject) {
+        Gson gson = new Gson();
+
+        JsonObject jsonObject_meta = (JsonObject) jsonObject.get("meta");
+        KakaoMetaData metaOb = gson.fromJson(jsonObject_meta, KakaoMetaData.class);
+        int total_count = Integer.parseInt(metaOb.getTotal_count());
+
+        Log.d(TAG, "meta data of store info.  total count: " +  metaOb.getTotal_count());
+        return total_count;
+    }
     //kakao api에서 받아온 jsonObject를 파싱해서 ArrayList<>로 변경
     private ArrayList<KakaoStoreInfo> parseJsonToStoreInfo(JsonObject jsonObject) {
+        Log.d(TAG, "parseJsonToStoreInfo");
         ArrayList<KakaoStoreInfo> dataList = new ArrayList<>();
         Gson gson = new Gson();
 
@@ -218,12 +290,13 @@ public class StoreSearchFragment extends Fragment {
             dataList.add(object);
         }
         return dataList;
-
     }
 
     //recycler view를 네이버 api에서 가져온 리스트와 함께 어댑터 세팅
     private void setRecyclerviewAdapter(ArrayList<KakaoStoreInfo> storeInfoArrayList) {
+
         StoreSearchRecyclerViewAdapter myAdapter = new StoreSearchRecyclerViewAdapter(getActivity(), storeInfoArrayList);
+        myAdapter.notifyDataSetChanged();//검색을 다른 걸로 하면 다시 세팅!
         mRecyclerView.setAdapter(myAdapter);
     }
 }
