@@ -32,7 +32,6 @@
         <activity android:name=".PostingProcess.MainShareActivity"/>
         <activity android:name=".StorePage"/>
         <activity android:name=".SubActivity"/>
-        <!--테스트할 코드-->
 
 
 

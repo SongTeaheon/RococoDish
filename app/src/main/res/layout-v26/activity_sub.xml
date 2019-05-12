@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:background="@color/colorWhite">
 
     <!--나중에 가장 윗부분을 마이페이지로 가도록 구성해야함-->
 
@@ -19,7 +20,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
-        android:hint="장소, 태그 검색"
+        android:hint="지역 검색"
+        android:textColorHint="@color/colorAccent"
         android:paddingLeft="10dp"
         android:paddingTop="5dp"
         android:paddingRight="10dp"
@@ -69,7 +71,8 @@
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/colorWhite">
 
                 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/myPage_cardview_activitySub"
@@ -82,7 +85,8 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:background="@color/colorPrimary">
 
                         <TextView
                             android:id="@+id/myPage_textview_activitySub"
@@ -93,6 +97,7 @@
                             android:layout_marginTop="@dimen/spacing_small"
                             android:layout_marginBottom="@dimen/spacing_small"
                             android:text="마이페이지"
+                            android:textColor="@color/colorAccent"
                             android:textSize="18dp"
                             tools:ignore="SpUsage" />
 
@@ -105,6 +110,7 @@
                             android:layout_marginEnd="@dimen/spacing_large"
                             android:layout_marginBottom="@dimen/spacing_small"
                             android:text="평균별점"
+                            android:textColor="@color/colorAccent"
                             android:textSize="18dp"
                             tools:ignore="SpUsage" />
 
@@ -114,6 +120,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/mrecyclerView"
+                    android:background="@color/colorWhite"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="true"
@@ -125,6 +132,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/myPage_recyclerview_activitySub"
+                    android:background="@color/colorWhite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="true"
