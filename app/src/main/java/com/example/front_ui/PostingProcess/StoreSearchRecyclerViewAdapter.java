@@ -56,11 +56,9 @@ public class StoreSearchRecyclerViewAdapter extends RecyclerView.Adapter<StoreSe
         TextView tv_address;
 
         tv_title = viewHolder.view.findViewById(R.id.tv_title);
-        tv_category = viewHolder.view.findViewById(R.id.tv_category);
         tv_address = viewHolder.view.findViewById(R.id.tv_address);
 
         tv_title.setText(kakaoStoreInfoArray.get(i).place_name);
-        tv_category.setText(kakaoStoreInfoArray.get(i).category_group_name);
         tv_address.setText(kakaoStoreInfoArray.get(i).address_name);
     }
 

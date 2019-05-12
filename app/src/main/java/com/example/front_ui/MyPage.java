@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
@@ -49,6 +50,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -256,12 +258,21 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
 //                }
 //            }
 //        }
-        if(requestCode == RC_CROP && resultCode == Activity.RESULT_OK){
-            Uri cropUri = data.getData();
-            GlideApp.with(this)
-                    .load(cropUri)
-                    .into(imageButton);
-
+        if(requestCode == RC_CROP){
+            if(resultCode == Activity.RESULT_OK){
+                Bundle extras = data.getExtras();
+                final ProgressDialog progressDialog  = ProgressDialog.show(this, "로딩중", "잠시만 기다려주세요...");
+                if(extras != null){
+                    Bitmap bmp = extras.getParcelable("data");
+                    ByteArrayOutputStream outputStream =new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                    byte[] byteArray = outputStream.toByteArray();
+                    Storage.INSTANCE.uploadProfileImage(byteArray, progressDialog);
+                    GlideApp.with(this)
+                            .load(bmp)
+                            .into(imageButton);
+                }
+            }
         }
     }
 }
