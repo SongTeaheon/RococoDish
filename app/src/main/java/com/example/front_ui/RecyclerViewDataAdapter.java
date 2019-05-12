@@ -1,7 +1,9 @@
 package com.example.front_ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -63,7 +65,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     }
 
     @Override
-    public void onBindViewHolder(ItemRowHolder itemRowHolder, int i) {
+    public void onBindViewHolder(ItemRowHolder itemRowHolder, final int i) {
         Log.d(TAG, "onBindViewHolder");
 
         final String sectionName = list.get(i).getName();
@@ -87,6 +89,14 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         itemRowHolder.touchStore.setOnClickListener(new View.OnClickListener() { // 각 가게별 상단 바를 터치 했을 때 이벤트 설정
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(mContext, StorePage.class);
+
+                Log.d(TAG, "name : " + list.get(i).getName() + " averStar : " + list.get(i).getAver_star() + " docId : " + list.get(i).getStoreId());
+                intent.putExtra("storeName", list.get(i).getName());
+                intent.putExtra("averStar", list.get(i).getAver_star());
+                intent.putExtra("documentId", list.get(i).getStoreId());
+
+                mContext.startActivity(intent);
                 Toast.makeText(v.getContext(), "click event on more, "+sectionName , Toast.LENGTH_SHORT).show();
             }
         });

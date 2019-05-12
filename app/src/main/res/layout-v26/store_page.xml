@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/colorPrimary">
 
         <TextView
             android:id="@+id/storeName"
@@ -22,7 +23,9 @@
             android:layout_marginTop="@dimen/spacing_small"
             android:layout_marginBottom="@dimen/spacing_small"
             android:text="가게이름"
-            android:textSize="20sp" />
+            android:textColor="@color/colorAccent"
+            android:textSize="20dp"
+            tools:ignore="SpUsage" />
 
         <TextView
             android:id="@+id/storeStar"
@@ -33,7 +36,9 @@
             android:layout_marginEnd="@dimen/spacing_large"
             android:layout_marginBottom="@dimen/spacing_small"
             android:text="평균별점"
-            android:textSize="20sp" />
+            android:textColor="@color/colorAccent"
+            android:textSize="20dp"
+            tools:ignore="SpUsage" />
 
     </RelativeLayout>
 

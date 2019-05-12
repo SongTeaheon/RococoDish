@@ -34,8 +34,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:gravity="center"
-                android:textSize="25sp"
-                android:hint="음식점 이름"/>
+                android:textSize="25dp"
+                android:text="음식점 이름"
+                android:textColor="@color/colorAccent"
+                tools:ignore="SpUsage" />
 
             <LinearLayout
                 android:id="@+id/linLayout"
@@ -58,7 +60,8 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="평점"
-                        android:textSize="18sp" />
+                        android:textColor="@color/colorAccent"
+                        android:textSize="18dp" />
 
                     <RatingBar
                         android:id="@+id/ratingBar"
@@ -78,7 +81,8 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="평가없음" />
+                        android:text="평가없음"
+                        android:textColor="@color/colorAccent" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -92,7 +96,9 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="1dp"
-                android:textSize="15sp"
+                android:textSize="18dp"
+                android:textColor="@color/colorAccent"
+                tools:ignore="SpUsage"
                 android:text="음식점에 대한 자세한 내용" />
         </RelativeLayout>
     </ScrollView>

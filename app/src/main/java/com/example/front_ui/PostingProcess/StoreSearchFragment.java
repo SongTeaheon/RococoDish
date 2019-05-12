@@ -12,10 +12,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -56,6 +58,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static com.example.front_ui.Utils.KakaoApiStoreSearchService.API_URL;
 
 
@@ -71,6 +75,7 @@ public class StoreSearchFragment extends Fragment {
     private int count_cafe;
     private ArrayList<KakaoStoreInfo> dataList_cafe;
     private ArrayList<KakaoStoreInfo> dataList_store;
+    ConstraintLayout constraint;
 
 
     Retrofit retrofit;
@@ -93,7 +98,7 @@ public class StoreSearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_store_search, container, false);
         mRecyclerView = view.findViewById(R.id.recyclerview);
         imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-
+        constraint = view.findViewById(R.id.constraint_tv);
 
         storeInfoArrayList = new ArrayList<>();
 
@@ -240,7 +245,6 @@ public class StoreSearchFragment extends Fragment {
                 //cafe완료된면
                 if(count_cafe >= 0){
                     setDataAndsetRecyclerview();
-
                 }
             }
             @Override
@@ -274,14 +278,34 @@ public class StoreSearchFragment extends Fragment {
     //store와 cafe의 total count를 가져와서 더 많은거 먼저 집어 넣는다.
     private void setDataAndsetRecyclerview(){
         Log.d(TAG, "setRecyclerView count store : " + count_store + " count cafe : " + count_cafe);
-        if(count_cafe > count_store){
-            storeInfoArrayList= KakaoInfoArrayListClone(dataList_cafe);
-            storeInfoArrayList.addAll(dataList_store);
+        //아무 데이터도 안올라가면 textview를 보인다.
+        if(dataList_store == null && dataList_cafe == null){
+            Log.d(TAG, "no data");
+            constraint.setVisibility(VISIBLE);
         }else{
-            storeInfoArrayList = KakaoInfoArrayListClone(dataList_cafe);
-            storeInfoArrayList.addAll(dataList_cafe);
+            constraint.setVisibility(INVISIBLE);
         }
-        Log.d(TAG, "first info : " + storeInfoArrayList.get(0).place_name + " sec : " + storeInfoArrayList.get(1).place_name);
+
+        try {
+            if(count_cafe > count_store){
+                if(dataList_cafe != null) {
+                    storeInfoArrayList = KakaoInfoArrayListClone(dataList_cafe);
+                }
+                if(dataList_store != null) {
+                    storeInfoArrayList.addAll(dataList_store);
+                }
+            }else{
+                if(dataList_cafe != null) {
+                    storeInfoArrayList = KakaoInfoArrayListClone(dataList_store);
+                }
+                if(dataList_store != null) {
+                    storeInfoArrayList.addAll(dataList_cafe);
+                }
+            }
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
         setRecyclerviewAdapter(storeInfoArrayList);
     }
 
@@ -308,6 +332,9 @@ public class StoreSearchFragment extends Fragment {
             KakaoStoreInfo object = gson.fromJson(jsonArray.get(i), KakaoStoreInfo.class);
             Log.d(TAG, "info  : " + object.place_name);
             dataList.add(object);
+        }
+        if(dataList.isEmpty()){
+            return null;
         }
         return dataList;
     }

@@ -27,6 +27,8 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.front_ui.Util_Kotlin.Storage;
 import com.example.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -76,7 +78,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         setContentView(R.layout.my_page);
 
         MyAdapter adapter = new MyAdapter(
-                getApplicationContext(),
+                this,
                 R.layout.polar_style,
                 this);       // GridView 항목의 레이아웃 row.xml
 
@@ -270,7 +272,21 @@ class MyAdapter extends BaseAdapter {
         StorageReference fileReference = storage.getReferenceFromUrl(singleItem.imagePathInStorage);
         GlideApp.with(context).load(fileReference).into(iv);
 
+//태완태완 이미지 선택시 반응입니다. 여기가 그 각 포스팅1 글 누르면 발생하는 이벤트 부분입니다.
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, DishView.class);
 
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("postingInfo", singleItem);
+                intent.putExtras(bundle);
+
+                context.startActivity(intent);
+
+                Toast.makeText(v.getContext(), singleItem.title, Toast.LENGTH_SHORT).show();
+            }
+        });
         return convertView;
     }
 

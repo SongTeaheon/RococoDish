@@ -291,18 +291,17 @@ public class LastShareFragment extends Fragment {
                             if(task.getResult().isEmpty()) {
                                 Log.d(TAG, "task.getResult : " + task.getResult().isEmpty());
                                 putNewStoreInfo(storeInfo, postingInfo);
-                            }
+                            }else {
+                                //있으면 업데이트 해준다.
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, "get document!! : " + document.getId() + " => " + document.getData());
+                                    Map<String, Object> storeInfo = document.getData();
+                                    //postingInfo에 따라 별점 데이터를 바꾸어 준다.
+                                    storeInfo = changeStarInfo(storeInfo, postingInfo, document.getId());
 
-
-                            //있으면 업데이트 해준다.
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, "get document!! : " + document.getId() + " => " + document.getData());
-                                Map<String, Object> storeInfo = document.getData();
-                                //postingInfo에 따라 별점 데이터를 바꾸어 준다.
-                                storeInfo = changeStarInfo(storeInfo, postingInfo, document.getId());
-
-                                //해당 도큐먼트의 내용을 바뀐 별점 내용으로 바꾸어주고, collection에 postingInfo를 넣어준다.
-                                updatesFirestore(storeInfo, document.getId(), postingInfo);
+                                    //해당 도큐먼트의 내용을 바뀐 별점 내용으로 바꾸어주고, collection에 postingInfo를 넣어준다.
+                                    updatesFirestore(storeInfo, document.getId(), postingInfo);
+                                }
                             }
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
@@ -316,9 +315,39 @@ public class LastShareFragment extends Fragment {
 
     //postingInfo의 별점을 storeInfo에 넣어준다.
     //평점 바꾸어주는 코드 필요
+    int postingCntofStore = 0;
     private Map<String,Object> changeStarInfo(Map<String,Object> storeInfo, PostingInfo postingInfo, String id) {
 
-        storeInfo.put("aver_star", postingInfo.aver_star);
+        Log.d(TAG, "changeStarInfo.");
+        //이미 해당 가게의 포스팅 개수를 가져온다.
+        db.collection("가게")
+                .document(id)
+                .collection("포스팅채널")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if(task.getResult().isEmpty()) {
+                                Log.d(TAG, "posting count of Store : " + postingCntofStore);
+                            }else {
+                                //있으면 업데이트 해준다.
+                                postingCntofStore = task.getResult().size();
+                                Log.d(TAG, "posting count of Store : " + postingCntofStore);
+                            }
+                        } else {
+                            Log.w(TAG, "Error getting posting count of store.", task.getException());
+                        }
+                    }
+                });
+
+        float aver_star_before = Float.parseFloat((String)storeInfo.get("aver_star"));
+        float aver_star_after = aver_star_before * postingCntofStore + postingInfo.aver_star;
+        aver_star_after = aver_star_before/(postingCntofStore+1);
+        Log.d(TAG, "aver_star before : " + aver_star_before);
+        Log.d(TAG, "aver_star after : " + aver_star_after);
+
+        storeInfo.put("aver_star", aver_star_after);
         return storeInfo;
     }
 

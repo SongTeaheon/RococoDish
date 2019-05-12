@@ -260,6 +260,8 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
         // 새로고침 코드
+        getCurrentLocation();
+
         my_recycler_view.setHasFixedSize(true);
         RecyclerViewDataAdapter adapter = new RecyclerViewDataAdapter(this, mCurrentLocation);
         my_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
