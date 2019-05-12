@@ -29,7 +29,6 @@ public class StoreSearchRecyclerViewAdapter extends RecyclerView.Adapter<StoreSe
     }
 
 
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public View view;
         public ViewHolder(View v) {
