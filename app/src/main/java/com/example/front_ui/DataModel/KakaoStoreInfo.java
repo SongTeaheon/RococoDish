@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 
 //StoreSearch Fragment에서 LastShareFragment로 데이터를 전달하기 위해 parcelable구현
-public class KakaoStoreInfo implements Parcelable {
+public class KakaoStoreInfo implements Parcelable, Cloneable {
 
     public String id;
     public String place_name;
@@ -82,6 +82,9 @@ public class KakaoStoreInfo implements Parcelable {
         }
     };
 
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 
     /*
     public String title;
