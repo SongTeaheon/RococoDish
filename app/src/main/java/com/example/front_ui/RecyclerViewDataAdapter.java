@@ -69,12 +69,12 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         Log.d(TAG, "onBindViewHolder");
 
         final String sectionName = list.get(i).getName();
-        final float sectionStar = list.get(i).aver_star;
+        final double sectionStar = list.get(i).aver_star;
 
 
         //텍스트 세팅 부분
         itemRowHolder.storeName.setText(sectionName);
-        itemRowHolder.storeStar.setText(Float.toString(sectionStar));
+        itemRowHolder.storeStar.setText(Double.toString(sectionStar));
 
         itemListDataAdapter = new SectionListDataAdapter(mContext, list.get(i).getStoreId());
 

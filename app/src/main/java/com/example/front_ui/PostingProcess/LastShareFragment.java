@@ -67,7 +67,7 @@ public class LastShareFragment extends Fragment {
     TextView mStarText;
     EditText text_description;
     TextView text_title;
-    List<Float> detail_aver_star;
+    List<Double> detail_aver_star;
     GeoPoint geoPoint;
 
 
@@ -101,7 +101,7 @@ public class LastShareFragment extends Fragment {
         text_title = view.findViewById(R.id.TextTitle);
         mRatingBar = view.findViewById(R.id.ratingBar);
         mStarText = view.findViewById(R.id.starText);
-        detail_aver_star = new ArrayList<Float>() {};
+        detail_aver_star = new ArrayList<Double>() {};
         String text = text_description.getText().toString();
         storage = FirebaseStorage.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -234,7 +234,7 @@ public class LastShareFragment extends Fragment {
         postingInfo.postingTime = Timestamp.now();
         postingInfo.description = text_description.getText().toString();
         postingInfo.title = text_title.getText().toString();
-        detail_aver_star.add(mRatingBar.getRating());//맛
+        detail_aver_star.add((double)mRatingBar.getRating());//맛
         postingInfo.detail_aver_star = detail_aver_star;
         postingInfo.storeName = kakaoStoreInfo.place_name;
         postingInfo.address = kakaoStoreInfo.address_name;
@@ -341,8 +341,8 @@ public class LastShareFragment extends Fragment {
                     }
                 });
 
-        float aver_star_before = Float.parseFloat((String)storeInfo.get("aver_star"));
-        float aver_star_after = aver_star_before * postingCntofStore + postingInfo.aver_star;
+        double aver_star_before = (double)storeInfo.get("aver_star");
+        double aver_star_after = aver_star_before * postingCntofStore + postingInfo.aver_star;
         aver_star_after = aver_star_before/(postingCntofStore+1);
         Log.d(TAG, "aver_star before : " + aver_star_before);
         Log.d(TAG, "aver_star after : " + aver_star_after);
