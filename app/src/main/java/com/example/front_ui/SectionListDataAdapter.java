@@ -18,8 +18,11 @@ import android.widget.Toast;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -28,8 +31,12 @@ import com.google.firebase.storage.StorageReference;
 import com.example.front_ui.DataModel.PostingInfo;
 //import com.songtaeheon.posting.Utils.GlideApp;
 
+import org.w3c.dom.DOMConfiguration;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+
+import javax.annotation.Nullable;
 
 public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListDataAdapter.SingleItemRowHolder> { // 가로 리사이클러뷰를 위한 어뎁터
 
@@ -61,7 +68,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     }
 
     @Override
-    public void onBindViewHolder(SingleItemRowHolder holder, int i) {
+    public void onBindViewHolder(final SingleItemRowHolder holder, int i) {
         Log.d(TAG, "onBindViewHolder");
 
         final PostingInfo singleItem = list.get(i);
@@ -83,13 +90,36 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, DishView.class);
+                final Intent intent = new Intent(mContext, DishView.class);
 
-                Bundle bundle = new Bundle();
+                final Bundle bundle = new Bundle();
                 bundle.putSerializable("postingInfo", singleItem);
-                intent.putExtras(bundle);
-
-                mContext.startActivity(intent);
+                //그전에 이 게시물이 몇 번째이고 이를 통해 디비의 문서 uuid를 가져온다.
+                final int position = holder.getAdapterPosition();
+                Log.d(TAG, "클릭한 행의 가게 아이디는 "+singleItem.storeId);
+                FirebaseFirestore.getInstance()
+                        .collection("가게")
+                        .document(singleItem.storeId)
+                        .collection("포스팅채널")
+                        .orderBy("postingTime", Query.Direction.DESCENDING)//역순으로 정렬(최신이 앞에 오게)
+                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                if(e != null) return;
+                                if(queryDocumentSnapshots.getDocuments().size() != 0){
+                                    String docId = queryDocumentSnapshots.getDocuments().get(position).getId();
+                                    Log.d(TAG, "도큐먼트 아이디는 "+ docId);
+                                    bundle.putString("docId", docId);
+                                    bundle.putString("storeId", singleItem.storeId);
+                                    intent.putExtras(bundle);
+                                    mContext.startActivity(intent);
+                                }
+                                else{
+                                    Log.d(TAG, "아이템 클릭시 나타낼 것이 아무것도 없습니다.");
+                                    return;
+                                }
+                            }
+                        });
 
                 Toast.makeText(v.getContext(), singleItem.title, Toast.LENGTH_SHORT).show();
             }
@@ -122,6 +152,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
         Log.d(TAG, "getDataFromFirestore");
         db.collection("가게").document(storeId).collection("포스팅채널")
+                .orderBy("postingTime", Query.Direction.DESCENDING)//가게별로 데이터를 불러올 때 시간순으로 불러올 수 있게 수정했습니다.(테헌님이 쓴 코드, 태완 수정완료)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
