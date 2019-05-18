@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -69,12 +70,12 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         Log.d(TAG, "onBindViewHolder");
 
         final String sectionName = list.get(i).getName();
-        final float sectionStar = list.get(i).aver_star;
+        final double sectionStar = list.get(i).aver_star;
 
 
         //텍스트 세팅 부분
         itemRowHolder.storeName.setText(sectionName);
-        itemRowHolder.storeStar.setText(Float.toString(sectionStar));
+        itemRowHolder.storeStar.setText(Double.toString(sectionStar));
 
         itemListDataAdapter = new SectionListDataAdapter(mContext, list.get(i).getStoreId());
 
@@ -198,10 +199,14 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                             DocumentSnapshot document = task.getResult();
                             Log.d(TAG, document.getId() + " => " + document.getData());
                             //store 정보를 가져오고, id를 따로 저장한다.
-                            StoreInfo storeInfo = document.toObject(StoreInfo.class);
-                            storeInfo.setStoreId(documentID);
-                            //해당 가게 정보의 post데이터를 가져온다.
-                            list.add(storeInfo);
+                            if(document.getData() != null) {
+                                StoreInfo storeInfo = document.toObject(StoreInfo.class);
+                                storeInfo.setStoreId(documentID);
+                                //해당 가게 정보의 post데이터를 가져온다.
+                                //소수점 한자리로 반올림.
+                                storeInfo.aver_star = MathUtil.roundOnePlace(storeInfo.aver_star);
+                                list.add(storeInfo);
+                            }
 
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
