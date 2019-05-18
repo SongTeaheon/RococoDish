@@ -297,10 +297,9 @@ public class LastShareFragment extends Fragment {
                                     Log.d(TAG, "get document!! : " + document.getId() + " => " + document.getData());
                                     Map<String, Object> storeInfo = document.getData();
                                     //postingInfo에 따라 별점 데이터를 바꾸어 준다.
-                                    storeInfo = changeStarInfo(storeInfo, postingInfo, document.getId());
+                                    changeStarInfo(storeInfo, postingInfo, document.getId());
 
                                     //해당 도큐먼트의 내용을 바뀐 별점 내용으로 바꾸어주고, collection에 postingInfo를 넣어준다.
-                                    updatesFirestore(storeInfo, document.getId(), postingInfo);
                                 }
                             }
                         } else {
@@ -316,7 +315,7 @@ public class LastShareFragment extends Fragment {
     //postingInfo의 별점을 storeInfo에 넣어준다.
     //평점 바꾸어주는 코드 필요
     int postingCntofStore = 0;
-    private Map<String,Object> changeStarInfo(Map<String,Object> storeInfo, PostingInfo postingInfo, String id) {
+    private void changeStarInfo(final Map<String,Object> storeInfo, final PostingInfo postingInfo, final String id) {
 
         Log.d(TAG, "changeStarInfo.");
         //이미 해당 가게의 포스팅 개수를 가져온다.
@@ -334,6 +333,14 @@ public class LastShareFragment extends Fragment {
                                 //있으면 업데이트 해준다.
                                 postingCntofStore = task.getResult().size();
                                 Log.d(TAG, "posting count of Store : " + postingCntofStore);
+                                double aver_star_before = (double)storeInfo.get("aver_star");
+                                double aver_star_after = aver_star_before * postingCntofStore + postingInfo.aver_star;
+                                aver_star_after = aver_star_after/(postingCntofStore+1);
+                                Log.d(TAG, "aver_star before : " + aver_star_before);
+                                Log.d(TAG, "aver_star after : " + aver_star_after);
+
+                                storeInfo.put("aver_star", aver_star_after);
+                                updatesFirestore(storeInfo, id, postingInfo);
                             }
                         } else {
                             Log.w(TAG, "Error getting posting count of store.", task.getException());
@@ -341,14 +348,7 @@ public class LastShareFragment extends Fragment {
                     }
                 });
 
-        double aver_star_before = (double)storeInfo.get("aver_star");
-        double aver_star_after = aver_star_before * postingCntofStore + postingInfo.aver_star;
-        aver_star_after = aver_star_before/(postingCntofStore+1);
-        Log.d(TAG, "aver_star before : " + aver_star_before);
-        Log.d(TAG, "aver_star after : " + aver_star_after);
 
-        storeInfo.put("aver_star", aver_star_after);
-        return storeInfo;
     }
 
     //add new store info and posting info in dataBase!!!!

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -202,6 +203,8 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                                 StoreInfo storeInfo = document.toObject(StoreInfo.class);
                                 storeInfo.setStoreId(documentID);
                                 //해당 가게 정보의 post데이터를 가져온다.
+                                //소수점 한자리로 반올림.
+                                storeInfo.aver_star = MathUtil.roundOnePlace(storeInfo.aver_star);
                                 list.add(storeInfo);
                             }
 
