@@ -286,26 +286,40 @@ public class StoreSearchFragment extends Fragment {
             constraint.setVisibility(INVISIBLE);
         }
 
-        try {
-            if(count_cafe > count_store){
-                if(dataList_cafe != null) {
-                    storeInfoArrayList = KakaoInfoArrayListClone(dataList_cafe);
-                }
-                if(dataList_store != null) {
+        if(count_cafe > count_store){
+            try{
+            if(dataList_cafe != null) {
+                storeInfoArrayList = KakaoInfoArrayListClone(dataList_cafe);
+            }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+
+            try {
+                if (dataList_store != null) {
                     storeInfoArrayList.addAll(dataList_store);
                 }
-            }else{
-                if(dataList_cafe != null) {
-                    storeInfoArrayList = KakaoInfoArrayListClone(dataList_store);
-                }
-                if(dataList_store != null) {
-                    storeInfoArrayList.addAll(dataList_cafe);
-                }
-            }
-        } catch (Exception e) {
-
+            }catch(Exception e){
             e.printStackTrace();
+            }
+        }else{
+            try{
+                if(dataList_cafe != null) {
+                storeInfoArrayList = KakaoInfoArrayListClone(dataList_store);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            try{
+                if(dataList_store != null) {
+                  storeInfoArrayList.addAll(dataList_cafe);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
+
         setRecyclerviewAdapter(storeInfoArrayList);
     }
 
