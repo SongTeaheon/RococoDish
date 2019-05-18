@@ -76,8 +76,8 @@ public class StoreSearchFragment extends Fragment {
 
     private int count_store;
     private int count_cafe;
-    private ArrayList<KakaoStoreInfo> dataList_cafe;
-    private ArrayList<KakaoStoreInfo> dataList_store;
+    private ArrayList<KakaoStoreInfo> dataList_cafe =null;
+    private ArrayList<KakaoStoreInfo> dataList_store = null;
     ConstraintLayout constraint;
 
 
@@ -241,12 +241,16 @@ public class StoreSearchFragment extends Fragment {
         request_store.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d(TAG, "request_store enqueue is Successed  ");
-                count_store = getCountFromApi(response.body());
-                dataList_store = parseJsonToStoreInfo(response.body());
-
+                if(response.body() != null) {
+                    Log.d(TAG, "request_store enqueue is Successed  ");
+                    count_store = getCountFromApi(response.body());
+                    dataList_store = parseJsonToStoreInfo(response.body());
+                }else{
+                    count_store = 0;
+                    dataList_store = null;
+                }
                 //cafe완료된면
-                if(count_cafe >= 0){
+                if (count_cafe >= 0) {
                     setDataAndsetRecyclerview();
                 }
             }
@@ -261,11 +265,16 @@ public class StoreSearchFragment extends Fragment {
         request_cafe.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d(TAG, "request_cafe enqueue is Successed  ");
-                count_cafe = getCountFromApi(response.body());
-                dataList_cafe = parseJsonToStoreInfo(response.body());
+                if(response.body() != null) {
+                    Log.d(TAG, "request_cafe enqueue is Successed  ");
+                    count_cafe = getCountFromApi(response.body());
+                    dataList_cafe = parseJsonToStoreInfo(response.body());
+                }else{
+                    count_cafe = 0;
+                    dataList_cafe = null;
+                }
                 //store완료된면
-                if(count_store >= 0){
+                if (count_store >= 0) {
                     setDataAndsetRecyclerview();
                 }
             }
@@ -285,43 +294,25 @@ public class StoreSearchFragment extends Fragment {
         if(dataList_store == null && dataList_cafe == null){
             Log.d(TAG, "no data");
             constraint.setVisibility(VISIBLE);
+            constraint.bringToFront();
         }else{
+            //데이터가 둘 다 혹은 둘 중에 하나라도 있으면 textview안보이게 한다.
             constraint.setVisibility(INVISIBLE);
-        }
-
-        if(count_cafe > count_store){
-            try{
-            if(dataList_cafe != null) {
+            //개수 비교해서 큰 쪽 먼저??
+            if(count_cafe > count_store){
                 storeInfoArrayList = KakaoInfoArrayListClone(dataList_cafe);
-            }
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-
-
-            try {
                 if (dataList_store != null) {
                     storeInfoArrayList.addAll(dataList_store);
                 }
-            }catch(Exception e){
-            e.printStackTrace();
-            }
-        }else{
-            try{
-                if(dataList_cafe != null) {
+            }else{
                 storeInfoArrayList = KakaoInfoArrayListClone(dataList_store);
+                if(dataList_cafe != null) {
+                    storeInfoArrayList.addAll(dataList_cafe);
                 }
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            try{
-                if(dataList_store != null) {
-                  storeInfoArrayList.addAll(dataList_cafe);
-                }
-            }catch(Exception e){
-                e.printStackTrace();
             }
         }
+
+
 
         setRecyclerviewAdapter(storeInfoArrayList);
     }

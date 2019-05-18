@@ -96,7 +96,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 bundle.putSerializable("postingInfo", singleItem);
                 //그전에 이 게시물이 몇 번째이고 이를 통해 디비의 문서 uuid를 가져온다.
                 final int position = holder.getAdapterPosition();
-                Log.d(TAG, "클릭한 행의 가게 아이디는 "+singleItem.storeId);
+                Log.d(TAG, "클릭한 행의 가게 아이디는 "+singleItem.storeId + " index는 :" + position);
                 FirebaseFirestore.getInstance()
                         .collection("가게")
                         .document(singleItem.storeId)

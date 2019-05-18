@@ -198,10 +198,12 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                             DocumentSnapshot document = task.getResult();
                             Log.d(TAG, document.getId() + " => " + document.getData());
                             //store 정보를 가져오고, id를 따로 저장한다.
-                            StoreInfo storeInfo = document.toObject(StoreInfo.class);
-                            storeInfo.setStoreId(documentID);
-                            //해당 가게 정보의 post데이터를 가져온다.
-                            list.add(storeInfo);
+                            if(document.getData() != null) {
+                                StoreInfo storeInfo = document.toObject(StoreInfo.class);
+                                storeInfo.setStoreId(documentID);
+                                //해당 가게 정보의 post데이터를 가져온다.
+                                list.add(storeInfo);
+                            }
 
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
