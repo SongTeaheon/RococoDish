@@ -14,11 +14,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.front_ui.DataModel.PostingInfo;
+import com.example.front_ui.Utils.DishViewUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,17 +35,20 @@ public class DishView extends AppCompatActivity {
 
     private final String TAG = "TAGDishView";
     Button buttonToDetail;
-    FloatingActionButton delete;
+    Button deleteButton;
     ImageView imageView;
+    FirebaseFirestore db;
     FirebaseStorage storage;
-    StorageReference storageReference;
+    PostingInfo postingInfo;
+
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dish_view);
 
+        db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
 
         buttonToDetail = (Button) findViewById(R.id.toDetail1);
         imageView = (ImageView) findViewById(R.id.imageView1);
@@ -51,8 +56,9 @@ public class DishView extends AppCompatActivity {
         Intent intent = this.getIntent();
         final Bundle bundle = intent.getExtras();
 
-        PostingInfo postingInfo = (PostingInfo)bundle.getSerializable("postingInfo");
-        Log.d(TAG, "posting Info description " + postingInfo.description +"storage path " + postingInfo.imagePathInStorage);
+        postingInfo = (PostingInfo)bundle.getSerializable("postingInfo");
+        Log.d(TAG, "posting Info description " + postingInfo.description +"storage path " + postingInfo.imagePathInStorage
+        + " storeId : " + postingInfo.getStoreId() +" postingid : " + postingInfo.postingId);
 
         StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
         GlideApp.with(this).load(fileReference).into(imageView);
@@ -64,78 +70,24 @@ public class DishView extends AppCompatActivity {
             }
         });
         //우측 상단의 삭제 버튼을 누를 경우 디비를 삭제시킴(포스팅과 포스팅채널 둘다)
-        delete = findViewById(R.id.deletePosting_floatingBtn);
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String postingUuid = bundle.getString("docId");
-                final String storeId = bundle.getString("storeId");
-                Log.d(TAG, "받은 도큐먼트 UUID : "+postingUuid);
-                Log.d(TAG, "받은 가게 UUID : "+storeId);
+        if(postingInfo.getWriterId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+            Log.d(TAG, "내 게시물!!!");
+            deleteButton = findViewById(R.id.delete_button);
+            deleteButton.setVisibility(View.VISIBLE);
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "delete button clicked");
+                    String storeId = postingInfo.getStoreId();
+                    String postingId = postingInfo.getPostingId();
+                    String imagePath = postingInfo.getImagePathInStorage();
+                    double postingAverStar = postingInfo.getAver_star();
+                    DishViewUtils.deletePosting(db, storage, storeId, postingId, imagePath, postingAverStar);
 
-                final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-                //포스팅 컬렉션에서 삭제
-                firestore.collection("포스팅")
-                        .document(postingUuid)
-                        .delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                final ProgressDialog progressDialog = ProgressDialog.show(
-                                        DishView.this,
-                                        "Loading",
-                                        "Please wait...");
-                                if(task.isSuccessful()){
-                                    Log.d(TAG, "해당 포스팅 삭제 완료");
-//                                    finish();
+                }
+            });
+        }
 
-                                    firestore.collection("가게")
-                                            .document(storeId)
-                                            .collection("포스팅채널")
-                                            .document(postingUuid)
-                                            .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.d(TAG, "해당 포스팅채널 삭제 완료");
-                                            firestore.collection("가게")
-                                                    .document(storeId)
-                                                    .collection("포스팅채널").get()
-                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                            if(task.isSuccessful()){
-                                                                int count = 0;
-                                                                for(DocumentSnapshot dc : task.getResult()){
-                                                                    count++;
-                                                                }
-                                                                if(count == 0){
-                                                                    firestore.collection("가게")
-                                                                            .document(storeId).delete();
-                                                                }
-                                                            }
-                                                        }
-                                                    });
-                                            progressDialog.dismiss();
-                                            finish();
-                                        }
-                                    })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.d(TAG, "해당 포스팅채널 삭제 실패 : "+e.getMessage());
-                                                }
-                                            });
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "해당 포스팅 삭제 실패"+ e.getMessage());
-
-                            }
-                        });
-            }
-        });
     }
 
     public void moveToDetail() {
