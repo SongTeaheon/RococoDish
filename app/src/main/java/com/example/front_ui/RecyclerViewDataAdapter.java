@@ -143,13 +143,14 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
         final GeoPoint myPoint = new GeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         //내 위치에서 radius(km)이내에 있는 값을 찾아라
-        GeoQuery geoQuery = geoFirestore.queryAtLocation(myPoint, radius);
+        final GeoQuery geoQuery = geoFirestore.queryAtLocation(myPoint, radius);
+        geoQuery.removeAllListeners();
 
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             //내 위치에서 radius만큼 떨어진 곳에 가게들이 있을 떄! -> 데이터를 가져온다.
             @Override
             public void onKeyEntered(String documentID, GeoPoint location) {
-                if(!dcSet.contains(documentID)) {
+                if(!dcSet.contains(documentID) && (radius < 500 && dcSet.size() < 50)) {
                     Log.d(TAG, String.format("Document %s entered the searc area at [%f,%f] (radius : %d)", documentID, location.getLatitude(), location.getLongitude(), radius));
                     dcSet.add(documentID);
                     getStoreDataFromCloud(documentID, radius);
@@ -207,8 +208,8 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                                 storeInfo.aver_star = MathUtil.roundOnePlace(storeInfo.aver_star);
                                 Log.d(TAG, "가게이름 : " + storeInfo.name + " radius : " + radius);
                                 list.add(storeInfo);
+                                notifyDataSetChanged();
                             }
-                            notifyDataSetChanged();
 
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());

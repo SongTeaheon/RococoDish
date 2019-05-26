@@ -1,5 +1,7 @@
 package com.example.front_ui;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -45,13 +47,14 @@ public class DishView extends AppCompatActivity {
     FirebaseFirestore db;
     FirebaseStorage storage;
     PostingInfo postingInfo;
-
+    Context mContext;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dish_view);
 
+        mContext = this;
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
@@ -95,7 +98,7 @@ public class DishView extends AppCompatActivity {
                     String postingId = postingInfo.getPostingId();
                     String imagePath = postingInfo.getImagePathInStorage();
                     double postingAverStar = postingInfo.getAver_star();
-                    DishViewUtils.deletePosting(db, storage, storeId, postingId, imagePath, postingAverStar);
+                    DishViewUtils.deletePosting(mContext,  db, storage, storeId, postingId, imagePath, postingAverStar);
 
                 }
             });

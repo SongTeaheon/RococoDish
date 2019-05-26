@@ -1,5 +1,7 @@
 package com.example.front_ui.Utils;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -27,7 +29,8 @@ public class DishViewUtils {
     static boolean isDeleteDone = false;
 
     //포스팅 삭제 과정!!!
-    public static void deletePosting(final FirebaseFirestore db,
+    public static void deletePosting(Context context,
+                                     final FirebaseFirestore db,
                                      FirebaseStorage storage,
                                      final String storeDocId,
                                      String postingDocId,
@@ -98,6 +101,7 @@ public class DishViewUtils {
                 });
 
         //평점 업데이트
+        ((Activity)context).finish();
 
     }
 
