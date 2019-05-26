@@ -1,6 +1,8 @@
 package com.example.front_ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +22,8 @@ import com.example.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -34,7 +38,9 @@ import com.example.front_ui.DataModel.PostingInfo;
 import org.w3c.dom.DOMConfiguration;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 
 import javax.annotation.Nullable;
 
@@ -46,6 +52,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     FirebaseFirestore db;
     FirebaseStorage storage;
     StorageReference storageReference;
+    private String uuid;
 
     public SectionListDataAdapter(Context context, String storeId) {
         this.mContext = context;
@@ -68,7 +75,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     }
 
     @Override
-    public void onBindViewHolder(final SingleItemRowHolder holder, int i) {
+    public void onBindViewHolder(final SingleItemRowHolder holder, final int i) {
         Log.d(TAG, "onBindViewHolder");
 
         final PostingInfo singleItem = list.get(i);
@@ -91,37 +98,14 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             @Override
             public void onClick(View v) {
                 final Intent intent = new Intent(mContext, DishView.class);
-
                 final Bundle bundle = new Bundle();
-                bundle.putSerializable("postingInfo", singleItem);
-                //그전에 이 게시물이 몇 번째이고 이를 통해 디비의 문서 uuid를 가져온다.
-                final int position = holder.getAdapterPosition();
-                Log.d(TAG, "클릭한 행의 가게 아이디는 "+singleItem.storeId + " index는 :" + position);
-                FirebaseFirestore.getInstance()
-                        .collection("가게")
-                        .document(singleItem.storeId)
-                        .collection("포스팅채널")
-                        .orderBy("postingTime", Query.Direction.DESCENDING)//역순으로 정렬(최신이 앞에 오게)
-                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                            @Override
-                            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                                if(e != null) return;
-                                if(queryDocumentSnapshots.getDocuments().size() != 0){
-                                    String docId = queryDocumentSnapshots.getDocuments().get(position).getId();
-                                    Log.d(TAG, "도큐먼트 아이디는 "+ docId);
-                                    bundle.putString("docId", docId);
-                                    bundle.putString("storeId", singleItem.storeId);
-                                    intent.putExtras(bundle);
-                                    mContext.startActivity(intent);
-                                }
-                                else{
-                                    Log.d(TAG, "아이템 클릭시 나타낼 것이 아무것도 없습니다.");
-                                    return;
-                                }
-                            }
-                        });
 
-                Toast.makeText(v.getContext(), singleItem.title, Toast.LENGTH_SHORT).show();
+                bundle.putSerializable("postingInfo", singleItem);
+
+                intent.putExtras(bundle);
+                mContext.startActivity(intent);
+
+//                Toast.makeText(v.getContext(), singleItem.title, Toast.LENGTH_SHORT).show();
             }
         });
     }
