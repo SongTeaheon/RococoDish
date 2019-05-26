@@ -68,7 +68,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     @Override
     public void onBindViewHolder(ItemRowHolder itemRowHolder, final int i) {
         Log.d(TAG, "onBindViewHolder");
-
+        Log.d(TAG, "storeId : " + list.get(i).getStoreId());
         final String sectionName = list.get(i).getName();
         final double sectionStar = list.get(i).aver_star;
 
@@ -188,7 +188,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
 
     private void getStoreDataFromCloud(final String documentID, final int radius) {
-        Log.d(TAG, "getDataFromFirestore");
+        Log.d(TAG, "getDataFromFirestore, documentID : " + documentID);
 
         db.collection("가게").document(documentID)
                 .get()
@@ -208,6 +208,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                                 Log.d(TAG, "가게이름 : " + storeInfo.name + " radius : " + radius);
                                 list.add(storeInfo);
                             }
+                            notifyDataSetChanged();
 
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());

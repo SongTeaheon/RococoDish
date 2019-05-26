@@ -55,6 +55,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     private String uuid;
 
     public SectionListDataAdapter(Context context, String storeId) {
+        Log.d(TAG, "SectionListDataAdapter");
         this.mContext = context;
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
