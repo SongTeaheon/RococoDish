@@ -39,7 +39,10 @@ import com.example.front_ui.Interface.MyPageDataPass;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -262,7 +265,7 @@ class MyAdapter extends BaseAdapter {
 
     //이미지 세팅
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         if (convertView==null)
             convertView = inf.inflate(layout, null);
         ImageView iv = (ImageView)convertView.findViewById(R.id.imagefood);
@@ -276,9 +279,9 @@ class MyAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, DishView.class);
+                final Intent intent = new Intent(context, DishView.class);
+                final Bundle bundle = new Bundle();
 
-                Bundle bundle = new Bundle();
                 bundle.putSerializable("postingInfo", singleItem);
                 intent.putExtras(bundle);
 

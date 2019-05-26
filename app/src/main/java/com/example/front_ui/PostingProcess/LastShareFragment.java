@@ -6,6 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.Editable;
+import android.text.Spannable;
+import android.text.Spanned;
+import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +69,7 @@ public class LastShareFragment extends Fragment {
     RatingBar mRatingBar;
     TextView mStarText;
     EditText text_description;
+    EditText tags;
     TextView text_title;
     List<Double> detail_aver_star;
     GeoPoint geoPoint;
@@ -74,6 +80,8 @@ public class LastShareFragment extends Fragment {
 
     FirebaseStorage storage;
     FirebaseFirestore db;
+    Spannable mspanable;
+    int hashTagIsComing = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,6 +122,52 @@ public class LastShareFragment extends Fragment {
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 fm.popBackStackImmediate();
 
+            }
+        });
+        //해쉬태그 처리
+        tags = (EditText)view.findViewById(R.id.hashTag);
+        mspanable = tags.getText();
+
+        tags.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String startChar = null;
+
+                try{
+                    startChar = Character.toString(s.charAt(start));
+                    Log.i(TAG, "새로운 태그의 첫글자 : "+startChar);
+                }catch (Exception e){
+                    startChar = "";
+                }
+                if (startChar.equals("#")){
+                    changeTheColor(s.toString().substring(start), start, start + count);
+                    hashTagIsComing++;
+                }
+                if(startChar.equals(" ")){
+                    hashTagIsComing = 0;
+                }
+                if(hashTagIsComing != 0){
+                    changeTheColor(s.toString().substring(start), start, start + count);
+                    hashTagIsComing++;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            private void changeTheColor(String s, int start, int end) {
+                mspanable.setSpan(
+                        new ForegroundColorSpan(
+                                getResources().getColor(R.color.colorAccent)),
+                        start,
+                        end,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         });
 
@@ -231,6 +285,7 @@ public class LastShareFragment extends Fragment {
         postingInfo.writerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         postingInfo.postingTime = Timestamp.now();
         postingInfo.description = text_description.getText().toString();
+        postingInfo.hashTags = tags.getText().toString();
         postingInfo.title = text_title.getText().toString();
         detail_aver_star.add((double)mRatingBar.getRating());//맛
         postingInfo.detail_aver_star = detail_aver_star;

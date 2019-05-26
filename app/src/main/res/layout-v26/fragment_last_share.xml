@@ -96,20 +96,33 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/linLayout"
                 android:layout_alignParentBottom="true"
-                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="86dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="-70dp"
                 android:ems="10"
                 android:hint="음식점에 대한 자세한 내용을 입력해주세요!"
-                android:textSize="18dp"
-                android:textColorHint="@color/colorAccent"
+                android:importantForAutofill="no"
                 android:inputType="textMultiLine"
-                tools:ignore="SpUsage"
-                android:importantForAutofill="no" />
+                android:textColorHint="@color/colorAccent"
+                android:textSize="18dp"
+                tools:ignore="SpUsage" />
         </RelativeLayout>
+
     </ScrollView>
 
+    <EditText
+        android:id="@+id/hashTag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/scrollView"
+        android:layout_alignBottom="@+id/scrollView"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="해쉬태그 #을 하고 써주세요."/>
 
 
 </RelativeLayout>

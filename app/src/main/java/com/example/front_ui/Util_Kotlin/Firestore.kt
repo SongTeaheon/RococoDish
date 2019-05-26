@@ -27,6 +27,8 @@ object Firestore {
                         firebaseAuthInstance.currentUser?.email.toString(),
                         firebaseAuthInstance.currentUser?.displayName.toString(),
                         null,
+                        null,
+                        null,
                         0
                 )
                 //이렇게 만든 정보를 파이어스토어에 넣어줌(여기서 파이어스토어는 위에서 언급한 DB와 같음)
@@ -39,9 +41,14 @@ object Firestore {
             }
         }
     }
+    //마이페이지에서 이미지 업로드하는 메서드
     fun profileImageToFirestore(imageUri : Uri){
         currentUserDocRef.update("profileImage", imageUri.toString()).addOnSuccessListener {
             Log.d(TAG, "사용자의 프로필 사진 변경이 디비에 적용되었습니다.")
         }
+    }
+
+    fun uploadPosting(){
+
     }
 }
