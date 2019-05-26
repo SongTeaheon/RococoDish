@@ -4,14 +4,23 @@ public class UserInfo {
     public String eMail;
     public String nickname;
     public String profileImage;
-    public int totalLike;
+    public String follower;
+    public String following;
+    public int postingNum;
     //망할 깃헙 테스트
 
-    public UserInfo(String eMail, String nickName, String profileImage, int totalLike) {
+    public UserInfo(String eMail,
+                    String nickName,
+                    String profileImage,
+                    String follower,
+                    String following,
+                    int postingNum) {
         this.eMail = eMail;
         this.nickname = nickName;
         this.profileImage = profileImage;
-        this.totalLike = totalLike;
+        this.follower = follower;
+        this.following = following;
+        this.postingNum = postingNum;
     }
 
     public UserInfo() {

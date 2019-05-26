@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,11 +22,25 @@ public class PostingInfo implements Serializable {
     public String writerId;
     public float aver_star;
     public List<Double> detail_aver_star; //{맛, 가성비, 서비스, 분위기}
+    public String hashTags;
 
     public PostingInfo() {
     }
 
-    public PostingInfo(String storeName, String imagePathInStorage, int numLike, Object postingTime, String title, Map<String, Boolean> tag, String description, String writerName, String address, String storeId, String writerId, float aver_star, List<Double> detail_aver_star) {
+    public PostingInfo(String storeName,
+                       String imagePathInStorage,
+                       int numLike,
+                       Object postingTime,
+                       String title,
+                       Map<String, Boolean> tag,
+                       String description,
+                       String writerName,
+                       String address,
+                       String storeId,
+                       String writerId,
+                       float aver_star,
+                       List<Double> detail_aver_star,
+                       String hashTags) {
         this.storeName = storeName;
         this.imagePathInStorage = imagePathInStorage;
         this.numLike = numLike;
@@ -40,6 +55,7 @@ public class PostingInfo implements Serializable {
         this.aver_star = aver_star;
         this.detail_aver_star = detail_aver_star;
         this.storeId = storeId;
+        this.hashTags = hashTags;
     }
 
 
@@ -145,5 +161,8 @@ public class PostingInfo implements Serializable {
 
     public void setDetail_aver_star(List<Double> detail_aver_star) {
         this.detail_aver_star = detail_aver_star;
+    }
+    public void setHashTags(String hashTags){
+        this.hashTags = hashTags;
     }
 }
