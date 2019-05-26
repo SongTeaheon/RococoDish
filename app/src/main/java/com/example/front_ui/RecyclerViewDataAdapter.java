@@ -152,7 +152,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                 if(!dcSet.contains(documentID)) {
                     Log.d(TAG, String.format("Document %s entered the searc area at [%f,%f] (radius : %d)", documentID, location.getLatitude(), location.getLongitude(), radius));
                     dcSet.add(documentID);
-                    getStoreDataFromCloud(documentID);
+                    getStoreDataFromCloud(documentID, radius);
 
                 }
             }
@@ -172,7 +172,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
             public void onGeoQueryReady() {
                 Log.d(TAG, "All initial data has been loaded and events have been fired!" + radius +" size : "+ dcSet.size()+"mypoint "+myPoint.getLatitude()+" "+ myPoint.getLongitude());
                 //가게 수가 50개가 넘거나 반경이 100km가 넘으면 STOP
-                if(dcSet.size() < 50 && radius < 100) {
+                if(dcSet.size() < 50 && radius < 500) {
                     radius += 10;
                     getCloseStoreIdAndGetData();
                 }
@@ -187,7 +187,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
 
 
-    private void getStoreDataFromCloud(final String documentID) {
+    private void getStoreDataFromCloud(final String documentID, final int radius) {
         Log.d(TAG, "getDataFromFirestore");
 
         db.collection("가게").document(documentID)
@@ -205,6 +205,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                                 //해당 가게 정보의 post데이터를 가져온다.
                                 //소수점 한자리로 반올림.
                                 storeInfo.aver_star = MathUtil.roundOnePlace(storeInfo.aver_star);
+                                Log.d(TAG, "가게이름 : " + storeInfo.name + " radius : " + radius);
                                 list.add(storeInfo);
                             }
 

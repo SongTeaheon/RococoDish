@@ -20,6 +20,7 @@ public class PostingInfo implements Serializable {
     public String address;
     public String storeId;
     public String writerId;
+    public String postingId;
     public float aver_star;
     public List<Double> detail_aver_star; //{맛, 가성비, 서비스, 분위기}
     public String hashTags;
@@ -161,6 +162,14 @@ public class PostingInfo implements Serializable {
 
     public void setDetail_aver_star(List<Double> detail_aver_star) {
         this.detail_aver_star = detail_aver_star;
+    }
+
+    public String getPostingId() {
+        return postingId;
+    }
+
+    public void setPostingId(String postingId) {
+        this.postingId = postingId;
     }
     public void setHashTags(String hashTags){
         this.hashTags = hashTags;

@@ -298,8 +298,7 @@ class MyAdapter extends BaseAdapter {
         Log.d(TAG, "getDataFromFirestore");
 
         db.collection("포스팅")
-                .whereEqualTo("writerId", FirebaseAuth.getInstance().getCurrentUser().getEmail())
-//                .orderBy("postingTime")
+                .whereEqualTo("writerId", FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

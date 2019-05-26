@@ -13,6 +13,7 @@ public class StoreInfo{
     public String name;
     public String storeId;
     public double aver_star;
+    public int postingNum;
     public String address;
     public List<Double> detail_aver_star;
     private ArrayList<PostingInfo> allItemsInSection;
@@ -86,26 +87,15 @@ public class StoreInfo{
         this.storeId = storeId;
     }
 
-//    @Override
-//    public int describeContents() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public void writeToParcel(Parcel dest, int i) {
-//        dest.writeString(name);
-//        dest.writeString(storeId);
-//        dest.writeFloat(aver_star);
-//        dest.writeString(address);
-//        dest.writeO(detail_aver_star);
-//        dest.writeTypedObject(geoPoint);
-//
-//        public String name;
-//        public String storeId;
-//        public float aver_star;
-//        public String address;
-//        public List<Float> detail_aver_star;
-//        private ArrayList<PostingInfo> allItemsInSection;
-//        public GeoPoint geoPoint;
-//    }
+    public int getPostingNum() {
+        return postingNum;
+    }
+
+    public void setPostingNum(int postingNum) {
+        this.postingNum = postingNum;
+    }
+
+    public void setAver_star(double aver_star) {
+        this.aver_star = aver_star;
+    }
 }

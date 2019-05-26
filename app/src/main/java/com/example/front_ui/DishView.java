@@ -19,7 +19,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.front_ui.DataModel.PostingInfo;
+import com.example.front_ui.Utils.DishViewUtils;
 import com.example.front_ui.Utils.GlideApp;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -29,17 +40,20 @@ public class DishView extends AppCompatActivity {
 
     private final String TAG = "TAGDishView";
     Button buttonToDetail;
-    FloatingActionButton delete;
+    Button deleteButton;
     ImageView imageView;
+    FirebaseFirestore db;
     FirebaseStorage storage;
-    StorageReference storageReference;
+    PostingInfo postingInfo;
+
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dish_view);
 
+        db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
 
         buttonToDetail = (Button) findViewById(R.id.toDetail1);
         imageView = (ImageView) findViewById(R.id.imageView1);
@@ -47,8 +61,10 @@ public class DishView extends AppCompatActivity {
         //LastFragmentShare에서 받은 아이템 정보를 갖고옴.
         Intent intent = this.getIntent();
         final Bundle bundle = intent.getExtras();
-        final PostingInfo postingInfo = (PostingInfo)bundle.getSerializable("postingInfo");
-        Log.d(TAG, "posting Info description " + postingInfo.description +"storage path " + postingInfo.imagePathInStorage);
+
+        postingInfo = (PostingInfo)bundle.getSerializable("postingInfo");
+        Log.d(TAG, "posting Info description " + postingInfo.description +"storage path " + postingInfo.imagePathInStorage
+        + " storeId : " + postingInfo.getStoreId() +" postingid : " + postingInfo.postingId);
 
         //해쉬태그 처리
         TextView hashTag = (TextView) findViewById(R.id.hashTag_textView_dishView);
@@ -66,6 +82,24 @@ public class DishView extends AppCompatActivity {
                 moveToDetail();
             }
         });
+        //우측 상단의 삭제 버튼을 누를 경우 디비를 삭제시킴(포스팅과 포스팅채널 둘다)
+        if(postingInfo.getWriterId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+            Log.d(TAG, "내 게시물!!!");
+            deleteButton = findViewById(R.id.delete_button);
+            deleteButton.setVisibility(View.VISIBLE);
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "delete button clicked");
+                    String storeId = postingInfo.getStoreId();
+                    String postingId = postingInfo.getPostingId();
+                    String imagePath = postingInfo.getImagePathInStorage();
+                    double postingAverStar = postingInfo.getAver_star();
+                    DishViewUtils.deletePosting(db, storage, storeId, postingId, imagePath, postingAverStar);
+
+                }
+            });
+        }
 
     }
 
