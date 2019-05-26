@@ -47,4 +47,8 @@ object Firestore {
             Log.d(TAG, "사용자의 프로필 사진 변경이 디비에 적용되었습니다.")
         }
     }
+
+    fun uploadPosting(){
+
+    }
 }

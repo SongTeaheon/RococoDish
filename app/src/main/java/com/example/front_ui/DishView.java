@@ -44,17 +44,18 @@ public class DishView extends AppCompatActivity {
         buttonToDetail = (Button) findViewById(R.id.toDetail1);
         imageView = (ImageView) findViewById(R.id.imageView1);
 
+        //LastFragmentShare에서 받은 아이템 정보를 갖고옴.
         Intent intent = this.getIntent();
         final Bundle bundle = intent.getExtras();
-
         final PostingInfo postingInfo = (PostingInfo)bundle.getSerializable("postingInfo");
         Log.d(TAG, "posting Info description " + postingInfo.description +"storage path " + postingInfo.imagePathInStorage);
 
         //해쉬태그 처리
         TextView hashTag = (TextView) findViewById(R.id.hashTag_textView_dishView);
-        String str = postingInfo.hashTags;
-        setTags(hashTag, postingInfo.hashTags);
-
+        //해쉬태그가 있을 경우에만 실행
+        if(postingInfo.hashTags != null){
+            setTags(hashTag, postingInfo.hashTags);
+        }
 
         StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
         GlideApp.with(this).load(fileReference).into(imageView);
