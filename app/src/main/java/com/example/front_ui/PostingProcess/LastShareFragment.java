@@ -230,7 +230,7 @@ public class LastShareFragment extends Fragment {
          * */
         //1. set the Posting data!!
         final PostingInfo postingInfo = new PostingInfo();
-        postingInfo.writerId = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        postingInfo.writerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         postingInfo.postingTime = Timestamp.now();
         postingInfo.description = text_description.getText().toString();
         postingInfo.title = text_title.getText().toString();
