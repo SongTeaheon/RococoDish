@@ -7,32 +7,46 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite">
 
-    <ImageButton
-        android:id="@+id/imageView"
+    <!--<ImageButton-->
+        <!--android:id="@+id/imageView"-->
+        <!--android:layout_width="150dp"-->
+        <!--android:layout_height="150dp"-->
+        <!--android:layout_marginStart="32dp"-->
+        <!--android:layout_marginTop="32dp"-->
+        <!--android:src="@drawable/basic_user_image"-->
+        <!--android:contentDescription="@string/todo"-->
+        <!--android:padding="0sp"-->
+        <!--android:visibility="invisible"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--app:srcCompat="@android:drawable/screen_background_light_transparent" />-->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circleImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        android:src="@drawable/basic_user_image"
-        android:contentDescription="@string/todo"
-        android:padding="0sp"
-        android:scaleType="centerCrop"
+        android:layout_marginBottom="32dp"
+        app:civ_border_color="@color/colorAccent"
+        app:civ_border_overlay="true"
+        app:civ_border_width="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/gridview"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/screen_background_light_transparent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="96dp"
         android:gravity="center"
         android:text="추 억"
-        android:textSize="20dp"
         android:textColor="@color/colorAccent"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/circleImage"
+        app:layout_constraintStart_toEndOf="@+id/circleImage"
+        app:layout_constraintTop_toTopOf="@+id/circleImage"
         tools:ignore="SpUsage" />
 
     <TextView
@@ -40,13 +54,13 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="96dp"
         android:gravity="center"
         android:text="0"
-        android:textSize="20dp"
         android:textColor="@color/colorAccent"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView"
         tools:ignore="SpUsage" />
 
     <GridView
@@ -55,12 +69,25 @@
         android:layout_height="500dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/corner_background"
         android:gravity="center"
         android:numColumns="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/follow_btn_myPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="visible"
+        android:text="팔로우"
+        app:layout_constraintBottom_toTopOf="@+id/textNumOfData"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

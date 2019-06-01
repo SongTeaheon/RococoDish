@@ -1,23 +1,15 @@
 package com.example.front_ui.PostingProcess;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,33 +19,20 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.front_ui.DataModel.KakaoMetaData;
-import com.example.front_ui.DataModel.KakaoMetaData;
 import com.example.front_ui.DataModel.KakaoStoreInfo;
-import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.R;
-import com.example.front_ui.Util_Kotlin.Storage;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
 import com.example.front_ui.Utils.RecyclerItemClickListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.yalantis.ucrop.UCrop;
-import com.yalantis.ucrop.UCropActivity;
-import com.yalantis.ucrop.UCropFragment;
-import com.yalantis.ucrop.view.UCropView;
-
-import java.io.ByteArrayOutputStream;
-import org.json.JSONObject;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
-import javax.security.auth.Subject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
