@@ -11,8 +11,8 @@
 
     <!--나중에 가장 윗부분을 마이페이지로 가도록 구성해야함-->
 
-    <EditText
-        android:id="@+id/editTextDescription"
+    <Button
+        android:id="@+id/search_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -46,9 +46,9 @@
         android:dividerHeight="0.5dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/swipe_layout"
-        app:layout_constraintEnd_toEndOf="@+id/editTextDescription"
-        app:layout_constraintStart_toStartOf="@+id/editTextDescription"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDescription"
+        app:layout_constraintEnd_toEndOf="@+id/search_btn"
+        app:layout_constraintStart_toStartOf="@+id/search_btn"
+        app:layout_constraintTop_toBottomOf="@+id/search_btn"
         app:layout_constraintVertical_bias="0.0" />
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -58,7 +58,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDescription">
+        app:layout_constraintTop_toBottomOf="@+id/search_btn">
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/nestedScrollView"

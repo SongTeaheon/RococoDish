@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.example.front_ui.DataModel.KakaoMetaData;
 import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.R;
+import com.example.front_ui.Utils.JsonParsing;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
 import com.example.front_ui.Utils.RecyclerItemClickListener;
 import com.google.gson.Gson;
@@ -49,7 +50,6 @@ import static com.example.front_ui.Utils.KakaoApiStoreSearchService.API_URL;
 public class StoreSearchFragment extends Fragment {
     private final String TAG = "TAGStoreResearchFrag";
     private final String kakaoApiId = "KakaoAK 952900bd9ca440b836d9c490525aef64";
-    private final String code = "FD6"; //카페는 CE7
     private final String code_store = "FD6"; //음식점
     private final String code_cafe = "CE7"; //카페
 
@@ -57,6 +57,7 @@ public class StoreSearchFragment extends Fragment {
     private int count_cafe;
     private ArrayList<KakaoStoreInfo> dataList_cafe =null;
     private ArrayList<KakaoStoreInfo> dataList_store = null;
+
     ConstraintLayout constraint;
 
 
@@ -222,8 +223,8 @@ public class StoreSearchFragment extends Fragment {
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if(response.body() != null) {
                     Log.d(TAG, "request_store enqueue is Successed  ");
-                    count_store = getCountFromApi(response.body());
-                    dataList_store = parseJsonToStoreInfo(response.body());
+                    count_store = JsonParsing.getCountFromApi(response.body());
+                    dataList_store = JsonParsing.parseJsonToStoreInfo(response.body());
                 }else{
                     count_store = 0;
                     dataList_store = null;
@@ -246,8 +247,8 @@ public class StoreSearchFragment extends Fragment {
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if(response.body() != null) {
                     Log.d(TAG, "request_cafe enqueue is Successed  ");
-                    count_cafe = getCountFromApi(response.body());
-                    dataList_cafe = parseJsonToStoreInfo(response.body());
+                    count_cafe = JsonParsing.getCountFromApi(response.body());
+                    dataList_cafe = JsonParsing.parseJsonToStoreInfo(response.body());
                 }else{
                     count_cafe = 0;
                     dataList_cafe = null;
@@ -297,34 +298,7 @@ public class StoreSearchFragment extends Fragment {
     }
 
 
-    //kakao api에서 total count를 받아온다.
-    private int getCountFromApi(JsonObject jsonObject) {
-        Gson gson = new Gson();
 
-        JsonObject jsonObject_meta = (JsonObject) jsonObject.get("meta");
-        KakaoMetaData metaOb = gson.fromJson(jsonObject_meta, KakaoMetaData.class);
-        int total_count = Integer.parseInt(metaOb.getTotal_count());
-
-        Log.d(TAG, "meta data of store info.  total count: " +  metaOb.getTotal_count());
-        return total_count;
-    }
-    //kakao api에서 받아온 jsonObject를 파싱해서 ArrayList<>로 변경
-    private ArrayList<KakaoStoreInfo> parseJsonToStoreInfo(JsonObject jsonObject) {
-        Log.d(TAG, "parseJsonToStoreInfo");
-        ArrayList<KakaoStoreInfo> dataList = new ArrayList<>();
-        Gson gson = new Gson();
-
-        JsonArray jsonArray = (JsonArray) jsonObject.get("documents");
-        for(int i=0 ; i<jsonArray.size(); i++){
-            KakaoStoreInfo object = gson.fromJson(jsonArray.get(i), KakaoStoreInfo.class);
-            Log.d(TAG, "info  : " + object.place_name);
-            dataList.add(object);
-        }
-        if(dataList.isEmpty()){
-            return null;
-        }
-        return dataList;
-    }
 
     //recycler view를 네이버 api에서 가져온 리스트와 함께 어댑터 세팅
     private void setRecyclerviewAdapter(ArrayList<KakaoStoreInfo> storeInfoArrayList) {

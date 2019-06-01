@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,62 +17,43 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Adapter;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.front_ui.DataModel.SearchedData;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
-import com.google.gson.JsonObject;
 
-import org.imperiumlabs.geofirestore.GeoFirestore;
-import org.imperiumlabs.geofirestore.GeoQuery;
-import org.imperiumlabs.geofirestore.GeoQueryEventListener;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
+    private static final int SEARCH_REQUEST_CODE = 10003;
     private static final int REQUEST_LOCATION = 10002;
     private static final String TAG = "TAGSubActivity";
+
+
+
     private FusedLocationProviderClient mFusedLocationClient;
     RecyclerView my_recycler_view;
     RecyclerView myPage_recyclerview;
     NestedScrollView nestedScrollView;
     private Location mCurrentLocation;
+    private Location searchLocation;
+
     private boolean mLocationPermissionGranted = false;
     TextView myPageTextview;
     private TextView starText;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    TextView searchText;
+    Button search_btn;
 
-    Retrofit retrofit;
-    KakaoApiStoreSearchService service;
-    private final String kakaoApiId = "KakaoAK 952900bd9ca440b836d9c490525aef64";
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -159,23 +141,12 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         });
 
         //검색 동작.
-        searchText = findViewById(R.id.editTextDescription);
-        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        search_btn = findViewById(R.id.search_btn);
+        search_btn.setOnClickListener(new View.OnClickListener(){
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                switch (actionId) {
-                    case EditorInfo.IME_ACTION_SEARCH:
-                        // 검색 동작
-                        //kakao api에서 좌표가져오기
-                        Log.d(TAG, "editorInfo.IME_ACTION_SEARCH IS CLICKED");
-                        //해당 좌표 근처 가게들 불러오기 getCloseStoreIdAndGetData(location) ->recyclerview setting
-                    default:
-                        // 기본 엔터키 동작
-                        Log.d(TAG, "ENTER BUTTON IS CLICKED");
-                        String searchWord = searchText.getText().toString();
-                        requestSearchApi(searchWord);
-                        return false;
-                }
+            public void onClick(View view) {
+                Intent intent = new Intent(SubActivity.this, MainSearchActivity.class);
+                startActivityForResult(intent, SEARCH_REQUEST_CODE);
             }
         });
     }
@@ -232,6 +203,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         }
     }
 
+
     //permission요청 결과
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -261,7 +233,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     private void initRecyclerView(Location locationCenter) {
         Log.d(TAG, "initRecyclerView");
         my_recycler_view.setHasFixedSize(true);
-        RecyclerViewDataAdapter adapter = new RecyclerViewDataAdapter(this, mCurrentLocation);
+        RecyclerViewDataAdapter adapter = new RecyclerViewDataAdapter(this, locationCenter);
         my_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         my_recycler_view.setAdapter(adapter);
     }
@@ -287,46 +259,28 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 
 
 
-    //검색 기능 구현
-    private void requestSearchApi(String searchWord){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl(KakaoApiStoreSearchService.API_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        if(resultCode != RESULT_OK){
+            Log.e(TAG, "something wrong in onActivityResult");
+        }
+        switch ( requestCode ){
+            case SEARCH_REQUEST_CODE:
+                Log.d(TAG, "back from search page ");
+                SearchedData item = (SearchedData) data.getSerializableExtra("SearchedData");
+                double x = Double.parseDouble(item.x);
+                double y = Double.parseDouble(item.y);
+                searchLocation = new Location("dummyprovider");
+                searchLocation.setLongitude(x);
+                searchLocation.setLatitude(y);
 
-        service = retrofit.create(KakaoApiStoreSearchService.class);
-        Call<JsonObject> request_local = service.getKakaoLocalInfo(kakaoApiId, searchWord);//, code
-        Call<JsonObject> request_store = service.getKakaoStoreInfo(kakaoApiId, searchWord);//, code
+                Log.d(TAG, "x, y, name : " + x +" " + y + " " + item.getPlace_name());
 
-        //store listener
-        request_store.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if(response.body() != null) {
-                    Log.d(TAG, "request_store enqueue is Successed. data : " + response.body().toString());
-                }
-            }
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d(TAG, "request_store enqueue is failed : w : " + t.toString());
-                t.printStackTrace();
-            }
-        });
-
-        request_local.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if(response.body() != null) {
-                    Log.d(TAG, "request_local enqueue is Successed. data : " + response.body().toString());
-                }
-            }
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d(TAG, "request_local enqueue is failed : w : " + t.toString());
-                t.printStackTrace();
-            }
-        });
-
+                initRecyclerView(searchLocation);
+        }
     }
+
+
+
 }
