@@ -43,12 +43,11 @@ public class DishView extends AppCompatActivity {
     FirebaseFirestore db;
     FirebaseStorage storage;
     PostingInfo postingInfo;
-    Context mContext;
     CircleImageView profileImage;
     TextView profileName;
     @Nullable
     String userImage;
-
+    Context mContext;
 
 
     protected void onCreate(Bundle savedInstanceState) {
