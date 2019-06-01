@@ -50,6 +50,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
     public RecyclerViewDataAdapter(Context context, Location cLocation) {
         Log.d(TAG, "adpater constructor called");
+        Log.d(TAG, "x, y : " + cLocation.getLongitude() + " " + cLocation.getLatitude());
         list= new ArrayList<>();
         this.mContext = context;
         db = FirebaseFirestore.getInstance();
@@ -136,7 +137,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
 
     //내 위치 주변 10km 가게 찾기.
-    private int radius = 10;
+    private int radius = 5;
     HashSet<String> dcSet = new HashSet<>(); //중복x
     private void getCloseStoreIdAndGetData() {
         CollectionReference geoFirestoreRef = FirebaseFirestore.getInstance().collection("가게");
@@ -150,7 +151,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
             //내 위치에서 radius만큼 떨어진 곳에 가게들이 있을 떄! -> 데이터를 가져온다.
             @Override
             public void onKeyEntered(String documentID, GeoPoint location) {
-                if(!dcSet.contains(documentID) && (radius < 500 && dcSet.size() < 50)) {
+                if(!dcSet.contains(documentID) && (radius < 50 && dcSet.size() < 50)) {
                     Log.d(TAG, String.format("Document %s entered the searc area at [%f,%f] (radius : %d)", documentID, location.getLatitude(), location.getLongitude(), radius));
                     dcSet.add(documentID);
                     getStoreDataFromCloud(documentID, radius);
@@ -173,8 +174,8 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
             public void onGeoQueryReady() {
                 Log.d(TAG, "All initial data has been loaded and events have been fired!" + radius +" size : "+ dcSet.size()+"mypoint "+myPoint.getLatitude()+" "+ myPoint.getLongitude());
                 //가게 수가 50개가 넘거나 반경이 100km가 넘으면 STOP
-                if(dcSet.size() < 50 && radius < 500) {
-                    radius += 10;
+                if(dcSet.size() < 50 && radius < 50) {
+                    radius += 5;
                     getCloseStoreIdAndGetData();
                 }
             }

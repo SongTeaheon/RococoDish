@@ -103,7 +103,7 @@ public class LastShareFragment extends Fragment {
         View view =inflater.inflate(R.layout.fragment_last_share, container, false);
         Log.d(TAG, "onCreateView!");
 
-        text_description = view.findViewById(R.id.editTextDescription);
+        text_description = view.findViewById(R.id.search_btn);
         text_title = view.findViewById(R.id.TextTitle);
         mRatingBar = view.findViewById(R.id.ratingBar);
         mStarText = view.findViewById(R.id.starText);
@@ -283,6 +283,7 @@ public class LastShareFragment extends Fragment {
         //1. set the Posting data!!
         final PostingInfo postingInfo = new PostingInfo();
         postingInfo.writerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        postingInfo.writerName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         postingInfo.postingTime = Timestamp.now();
         postingInfo.description = text_description.getText().toString();
         postingInfo.hashTags = tags.getText().toString();

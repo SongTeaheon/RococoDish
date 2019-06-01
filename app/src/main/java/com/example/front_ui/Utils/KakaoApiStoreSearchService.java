@@ -21,8 +21,16 @@ public interface KakaoApiStoreSearchService {
                                        @Query("query") String searchWord,
                                        @Query("category_group_code") String code);
 
+
+    @GET("keyword.json")
+    Call<JsonObject> getKakaoStoreInfo(@Header("Authorization") String id,
+                                       @Query("query") String searchWord,
+                                       @Query("category_group_code") String code,
+                                       @Query("size") String size);
+
     @GET("address.json")
     Call<JsonObject> getKakaoLocalInfo(@Header("Authorization") String id,
                                        @Query("query") String searchWord);
+
 
 }
