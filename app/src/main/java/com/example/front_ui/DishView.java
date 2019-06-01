@@ -47,7 +47,6 @@ public class DishView extends AppCompatActivity {
     TextView profileName;
     @Nullable
     String userImage;
-
     Context mContext;
 
 
