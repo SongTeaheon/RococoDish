@@ -5,14 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,22 +21,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.front_ui.DataModel.PostingInfo;
+import com.example.front_ui.KotlinCode.PostToMyPage;
 import com.example.front_ui.Utils.DishViewUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DishView extends AppCompatActivity {
 
@@ -48,6 +44,11 @@ public class DishView extends AppCompatActivity {
     FirebaseStorage storage;
     PostingInfo postingInfo;
     Context mContext;
+    CircleImageView profileImage;
+    TextView profileName;
+    @Nullable
+    String userImage;
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,9 @@ public class DishView extends AppCompatActivity {
         buttonToDetail = (Button) findViewById(R.id.toDetail1);
         imageView = (ImageView) findViewById(R.id.imageView1);
 
+        /**
+         LastShareFragment 에서 singleitem 을 받음
+         * **/
         //LastFragmentShare에서 받은 아이템 정보를 갖고옴.
         Intent intent = this.getIntent();
         final Bundle bundle = intent.getExtras();
@@ -69,7 +73,9 @@ public class DishView extends AppCompatActivity {
         Log.d(TAG, "posting Info description " + postingInfo.description +"storage path " + postingInfo.imagePathInStorage
         + " storeId : " + postingInfo.getStoreId() +" postingid : " + postingInfo.postingId);
 
-        //해쉬태그 처리
+        /**
+         해쉬태그
+         **/
         TextView hashTag = (TextView) findViewById(R.id.hashTag_textView_dishView);
         //해쉬태그가 있을 경우에만 실행
         if(postingInfo.hashTags != null){
@@ -103,7 +109,60 @@ public class DishView extends AppCompatActivity {
                 }
             });
         }
+        /**
+         * 포스팅 작성자의 프로필 정보(이미지, 이름) 불러오기 + 우측 상단에 띄우기
+         * **/
+        profileImage = findViewById(R.id.profile_imageview_dishView);
+        profileName = findViewById(R.id.profileNam_dishView);
 
+        FirebaseFirestore.getInstance()
+                .collection("사용자")
+                .document(postingInfo.writerId)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //프로필 이미지 업로드
+                        userImage = (String) document.get("profileImage");
+                        if(userImage != null){
+                            GlideApp.with(getApplicationContext())
+                                    .load(userImage)
+                                    .into(profileImage);
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "프로필 이미지가 없네요", Toast.LENGTH_SHORT).show();
+                            GlideApp.with(getApplicationContext())
+                                    .load(R.drawable.basic_user_image)
+                                    .into(profileImage);
+                        }
+                        //프로필 이름 업로드
+                        String userName = (String) document.get("nickname");
+                        profileName.setText(userName);
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+        /**
+         * 작성자의 프로필을 클릭시 작성자 마이페이지 이동 + postingInfo 다음 액티비티로 넘겨주기
+         * **/
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(DishView.this, PostToMyPage.class);
+                final Bundle bundle = new Bundle();
+                bundle.putSerializable("allPostingInfo", postingInfo);
+                intent.putExtra("writerImage", userImage);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
     public void moveToDetail() {
