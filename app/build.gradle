@@ -49,17 +49,18 @@ dependencies {
     //glide(사진 붙이기)라이브러리
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    apply plugin: 'kotlin-kapt'
+    kapt "android.arch.lifecycle:compiler:1.1.1"
+    kapt 'com.github.bumptech.glide:compiler:4.9.0'
 
-
-
-    //카카오 api라이브러리
+    //카카오 api라이브러리(http전용)
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 
     //사진 동그랗게 라이브러리
     implementation 'de.hdodenhof:circleimageview:2.0.0'
 
-    //코틀린 라이브러리?
+    //코틀린 라이브러리
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     //앙코 라이브러리

@@ -207,8 +207,8 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                                 storeInfo.aver_star = MathUtil.roundOnePlace(storeInfo.aver_star);
                                 Log.d(TAG, "가게이름 : " + storeInfo.name + " radius : " + radius);
                                 list.add(storeInfo);
+                                notifyDataSetChanged();
                             }
-
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
