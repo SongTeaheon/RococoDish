@@ -23,13 +23,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.front_ui.Util_Kotlin.Storage;
+import com.example.front_ui.KotlinCode.Storage;
 import com.example.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -39,10 +40,7 @@ import com.example.front_ui.Interface.MyPageDataPass;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -53,6 +51,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 //interface for datapass to MyPage
 public class MyPage extends AppCompatActivity implements MyPageDataPass {
@@ -71,14 +71,16 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
     }
 
     private int RC_GALLERY = 1;
-    private int RC_CROP = 2;
-    private int RC_CAMERA = 1001;
-    public ImageButton imageButton;
-
+//    public ImageButton imageButton;
+    private CircleImageView circleImageView;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_page);
+
+        //본인 마이페이지이니까 팔로우 버튼 숨김
+        Button follow = (Button) findViewById(R.id.follow_btn_myPage);
+        follow.setVisibility(View.GONE);
 
         MyAdapter adapter = new MyAdapter(
                 this,
@@ -89,7 +91,8 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         gv.setAdapter(adapter);  // 커스텀 아답타를 GridView 에 적용
         TextView tv = findViewById(R.id.textNumOfData);
 
-        imageButton = (ImageButton) findViewById(R.id.imageView);
+//        imageButton = (ImageButton) findViewById(R.id.imageView);
+        circleImageView = findViewById(R.id.circleImage);
         //킬 때마다 프로필 사진 불러옴
         final ProgressDialog progressDialog = ProgressDialog.show(this, "로딩중", "잠시만 기다려주세요...");
         FirebaseFirestore.getInstance()
@@ -109,7 +112,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                     GlideApp.with(getApplicationContext())
                             .load(path)
                             .placeholder(circularProgressDrawable)
-                            .into(imageButton);
+                            .into(circleImageView);
                     progressDialog.dismiss();
                 }
                 else{//프로필 사진이 없을 경우 걍 로딩 없앰.
@@ -117,12 +120,12 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                 }
             }
         });
-        imageButton.setOnClickListener(new View.OnClickListener() {
+        circleImageView.setOnClickListener(new View.OnClickListener() {
             final String[] profiles = new String[] {"앨범에서 사진 선택", "기본 이미지로 변경"};
             @Override
             public void onClick(final View v) {
                 switch (v.getId()) {
-                    case R.id.imageView :
+                    case R.id.circleImage :
                         new AlertDialog.Builder(MyPage.this)
                             .setTitle("프로필")
                             .setItems(profiles, new DialogInterface.OnClickListener() {
@@ -150,10 +153,10 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             }
         });
 
-        imageButton.setBackground(new ShapeDrawable(new OvalShape()));
-        if(Build.VERSION.SDK_INT >= 22) {
-            imageButton.setClipToOutline(true);//프로필 이미지 동그랗게
-        }
+//        imageButton.setBackground(new ShapeDrawable(new OvalShape()));
+//        if(Build.VERSION.SDK_INT >= 22) {
+//            imageButton.setClipToOutline(true);//프로필 이미지 동그랗게
+//        }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -168,35 +171,8 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                     .withAspectRatio(1, 1)
                     .withMaxResultSize(450, 450)
                     .start(this);
-
-//            //크롭 자체 제작(라이브러리 안씀)
-//            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-//            cropIntent.setDataAndType(selectedImageFromGallery, "image/*");
-//            cropIntent.putExtra("crop", "true");
-//            cropIntent.putExtra("aspectX", 1);
-//            cropIntent.putExtra("aspectY", 1);
-//            cropIntent.putExtra("outputX", 128);
-//            cropIntent.putExtra("outputY", 128);
-//            cropIntent.putExtra("return-data", true);
-//            startActivityForResult(cropIntent, RC_CROP);
-//            Log.d(TAG, "갤러리에서 이미지를 받은 후 크롭으로 넘어갑니다.");
         }
-//        if(requestCode == RC_CROP){
-//            if(resultCode == Activity.RESULT_OK){
-//                Bundle extras = data.getExtras();
-//                final ProgressDialog progressDialog  = ProgressDialog.show(this, "로딩중", "잠시만 기다려주세요...");
-//                if(extras != null){
-//                    Bitmap bmp = extras.getParcelable("data");
-//                    ByteArrayOutputStream outputStream =new ByteArrayOutputStream();
-//                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-//                    byte[] byteArray = outputStream.toByteArray();
-//                    Storage.INSTANCE.uploadProfileImage(byteArray, progressDialog);
-//                    GlideApp.with(this)
-//                            .load(bmp)
-//                            .into(imageButton);
-//                }
-//            }
-//        }
+
         if(requestCode == UCrop.REQUEST_CROP && resultCode == Activity.RESULT_OK) {
             final Uri resultUri = UCrop.getOutput(data);
             final ProgressDialog progressDialog  = ProgressDialog.show(this, "로딩중", "잠시만 기다려주세요...");
@@ -210,7 +186,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                     Storage.INSTANCE.uploadProfileImage(byteArray, progressDialog);
                     GlideApp.with(this)
                             .load(bmp)
-                            .into(imageButton);
+                            .into(circleImageView);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

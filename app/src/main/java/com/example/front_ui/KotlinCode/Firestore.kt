@@ -1,4 +1,4 @@
-package com.example.front_ui.Util_Kotlin
+package com.example.front_ui.KotlinCode
 
 import android.net.Uri
 import android.util.Log
@@ -47,8 +47,8 @@ object Firestore {
             Log.d(TAG, "사용자의 프로필 사진 변경이 디비에 적용되었습니다.")
         }
     }
-
-    fun uploadPosting(){
+    //내가 상대방을 팔로우할 경우
+    fun newFollower(){
 
     }
 }
