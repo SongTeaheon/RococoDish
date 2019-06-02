@@ -12,15 +12,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class DishViewUtils {
@@ -45,6 +49,7 @@ public class DishViewUtils {
         * */
 
         Log.d(TAG, "firebase delete posting");
+
         //posting colletion에서 삭제
         db.collection("포스팅").document(postingDocId)
                 .delete()
@@ -88,8 +93,8 @@ public class DishViewUtils {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        checkStoreDataDelete(db, storeDocId);
-                        changeStarAndDeleteStoreData(db, postingAverStar, storeDocId );
+                        checkStoreDataDelete(db, storeDocId);//store도 같이 지워야하는지 확인!
+                        changeStarAndDeleteStoreData(db, postingAverStar, storeDocId );//평점 바꾼다.
                         Log.d(TAG, "Posting Data DocumentSnapshot in store collection successfully deleted!");
                     }
                 })
@@ -100,7 +105,8 @@ public class DishViewUtils {
                     }
                 });
 
-        //평점 업데이트
+        //사용자 posting Num 변경.
+        subtractUserPostingNum(db);
         ((Activity)context).finish();
 
     }
@@ -197,5 +203,31 @@ public class DishViewUtils {
                 Log.w(TAG, "Transaction failure.", e);
             }
         });
+    }
+
+    private static void subtractUserPostingNum(final FirebaseFirestore db){
+
+        final String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Log.d(TAG, "updateUserPosting num. user uid : " + userUid);
+        db.collection("사용자")
+                .document(userUid)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        long postingNum = (long)documentSnapshot.get("postingNum") - 1;
+                        Log.d(TAG, "updateUserPostingNum. new num : " + postingNum);
+
+                        Map<String, Long> data = new HashMap<>();
+                        data.put("postingNum", postingNum);
+
+                        db.collection("사용자").document(userUid)
+                                .set(data, SetOptions.merge());
+                    }
+                });
+
+
+
+
     }
 }
