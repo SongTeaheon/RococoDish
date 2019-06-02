@@ -150,10 +150,11 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                                 list.add(post);
                             }
                             //post데이터가 들어오면 리사이클러뷰를 refresh한다.
-                            notifyDataSetChanged();
+//                            notifyDataSetChanged();
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
+                        notifyDataSetChanged();
                     }
                 });
 
