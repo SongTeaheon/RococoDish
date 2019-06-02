@@ -79,7 +79,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         setContentView(R.layout.my_page);
 
         //본인 마이페이지이니까 팔로우 버튼 숨김
-        Button follow = (Button) findViewById(R.id.follow_btn_myPage);
+        Button follow = (Button) findViewById(R.id.followToggle);
         follow.setVisibility(View.GONE);
 
         MyAdapter adapter = new MyAdapter(

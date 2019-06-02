@@ -77,17 +77,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/follow_btn_myPage"
+    <me.rishabhkhanna.customtogglebutton.CustomToggleButton
+        android:id="@+id/followToggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        android:visibility="visible"
-        android:text="팔로우"
+        android:textOff="팔로우"
+        android:textOn="팔로잉"
+        app:borderWidth="2dp"
+        app:checkedColor="#333"
+        app:checkedTextColor="#fff"
         app:layout_constraintBottom_toTopOf="@+id/textNumOfData"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:radius="20dp"
+        app:uncheckedColor="#444"
+        app:uncheckedTextColor="#000"></me.rishabhkhanna.customtogglebutton.CustomToggleButton>
 
 </android.support.constraint.ConstraintLayout>
