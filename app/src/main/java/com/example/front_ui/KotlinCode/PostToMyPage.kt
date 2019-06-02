@@ -25,6 +25,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.my_page.*
 import kotlinx.android.synthetic.main.polar_style.view.*
+import org.jetbrains.anko.sdk27.coroutines.onCheckedChange
 import org.jetbrains.anko.toast
 import org.w3c.dom.Document
 
@@ -73,17 +74,70 @@ class PostToMyPage : AppCompatActivity() {
         val writerId = postingInfo.writerId
         val adapter = PostToMyPageAdapter(this, writerId, textNumOfData)
         gridview.adapter = adapter
+
         /**
-         * 팔로우 기능
+         * 팔로우 클릭시 내 서브컬렉션 팔로잉 추가, 상대방 팔로워 추가
          * **/
-        //본인 계정 마이페이지 갈 경우 팔로우버튼 숨김
+        //본인 마이페이지일 경우엔 팔로우 버튼 숨긷
         if(FirebaseAuth.getInstance().uid == postingInfo.writerId){
-            follow_btn_myPage.visibility = View.GONE
+            followToggle.visibility = View.GONE
         }
-        //팔로우 버튼 누를시
-        follow_btn_myPage
+        //디비에 이미 팔로우한 사람의 경우엔 토글 모양을 미리 바꿔줌.
+        followToggle.visibility = View.INVISIBLE
+        FirebaseFirestore.getInstance().collection("사용자")
+                .document(FirebaseAuth.getInstance().uid!!)
+                .collection("팔로잉")
+                .document(postingInfo.writerId)
+                .get().addOnSuccessListener {
+                    Log.d(TAG, "파이어스토어 '사용자 -> 팔로잉'에 접근합니다.")
+                    if (it["팔로우 여부"] == true) {
+                        followToggle?.setChecked(true)
+                        Log.d(TAG, "팔로우 버튼 -> 팔로잉 버튼")
+                    } else {
+                        followToggle?.setChecked(false)
+                        Log.d(TAG, "팔로우 버튼 변경 X")
+                    }
+                    followToggle.visibility = View.VISIBLE
+                }
+        //팔로우 버튼 on/off에 따른 이벤트 바로 반영
+        followToggle.onCheckedChange { buttonView, isChecked ->
+            val userToFollowing = FirebaseFirestore.getInstance()
+                    .collection("사용자")
+                    .document(FirebaseAuth.getInstance().uid!!)
+                    .collection("팔로잉")
+                    .document(postingInfo.writerId)
+            val userToFollower = FirebaseFirestore.getInstance()
+                    .collection("사용자")
+                    .document(postingInfo.writerId)
+                    .collection("팔로워")
+                    .document(FirebaseAuth.getInstance().uid!!)
+
+            if(isChecked){
+                Log.d(TAG, "팔로우 버튼 클릭됨")
+                //본인 사용자 서브 콜렉션에 팔로잉 추가
+                userToFollowing
+                        .set(mapOf("팔로우 여부" to true)).addOnSuccessListener {
+                            Log.d(TAG, "팔로우 버튼을 눌러서 '사용자->팔로잉' 디비에 업로드 완료")
+                        }
+                //상대방 사용자 서브 콜렉션에 팔로워 추가
+                userToFollower
+                        .set(mapOf("팔로워 여부" to true)).addOnSuccessListener {
+                            Log.d(TAG, "팔로우 버튼을 눌러서 '사용자->팔로워' 디비에 업로드 완료")
+                        }
+            }
+            else{
+                Log.d(TAG, "팔로우 버튼 클릭 해제됨")
+                userToFollowing.delete().addOnSuccessListener {
+                    Log.d(TAG, "팔로우 버튼 해제해서 '사용자->팔로잉' 디비 삭제 완료")
+                }
+                userToFollower.delete().addOnSuccessListener {
+                    Log.d(TAG, "팔로우 버튼 해제해서 '사용자->팔로워' 디비 삭제 완료")
+                }
+            }
+        }
     }
 }
+
 class PostToMyPageAdapter(val context : Context,
                           val writerId : String,
                           val textview : TextView) : BaseAdapter(){
