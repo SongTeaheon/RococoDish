@@ -262,9 +262,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-//        if(resultCode != RESULT_OK){
-//            Log.e(TAG, "something wrong in onActivityResult");
-//        }
+
         switch ( resultCode ){
             case RESULT_OK:
                 Log.d(TAG, "back from search page ");
