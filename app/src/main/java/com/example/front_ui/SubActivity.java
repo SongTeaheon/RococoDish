@@ -262,11 +262,9 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        if(resultCode != RESULT_OK){
-            Log.e(TAG, "something wrong in onActivityResult");
-        }
-        switch ( requestCode ){
-            case SEARCH_REQUEST_CODE:
+
+        switch ( resultCode ){
+            case RESULT_OK:
                 Log.d(TAG, "back from search page ");
                 SearchedData item = (SearchedData) data.getSerializableExtra("SearchedData");
                 double x = Double.parseDouble(item.x);
@@ -278,6 +276,9 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                 Log.d(TAG, "x, y, name : " + x +" " + y + " " + item.getPlace_name());
 
                 initRecyclerView(searchLocation);
+                break;
+            case RESULT_CANCELED:
+                initRecyclerView(mCurrentLocation);
         }
     }
 

@@ -33,11 +33,13 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -46,6 +48,7 @@ import com.google.firebase.storage.UploadTask;
 import org.imperiumlabs.geofirestore.GeoFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -179,7 +182,7 @@ public class LastShareFragment extends Fragment {
                 Log.d(TAG, "onclick : share!!!!!");
                 //이미지, 가게정보, 태그 등을 파이어베이스로 올리는 함수 실행
                 postingOnFirebaseDatabase();
-
+                updateUserPostingNum();
                 //다끝나면 액티비티 종료
                 getActivity().finish();
             }
@@ -482,5 +485,34 @@ public class LastShareFragment extends Fragment {
                         Log.w(TAG, "포스팅 collection setting. Error adding document", e);
                     }
                 });
+    }
+
+    /*
+    * 사용자 데이터 게시글 수 업데이트
+    * */
+    void updateUserPostingNum(){
+
+        final String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Log.d(TAG, "updateUserPosting num. user uid : " + userUid);
+        db.collection("사용자")
+                .document(userUid)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        long postingNum = (long)documentSnapshot.get("postingNum") + 1;
+                        Log.d(TAG, "updateUserPostingNum. new num : " + postingNum);
+
+                        Map<String, Long> data = new HashMap<>();
+                        data.put("postingNum", postingNum);
+
+                        db.collection("사용자").document(userUid)
+                                .set(data, SetOptions.merge());
+                    }
+                });
+
+
+
+
     }
 }
