@@ -10,6 +10,11 @@
     <color name="colorMainSearchIcon">#CDB745</color>
     <color name="colorGray">#80E2E2E2</color>
     <color name="colorNone">#00000000</color>
+    <color name="MainColor">#FF6E6E</color>
+    <color name="LightGrey">#ECEFF0</color>
+    <color name="Black">#000000</color>
+    <color name="Grey">#7F7F7F</color>
+    <color name="GGrey">#464747</color>
 
     <color name="color1">#FFF4CA</color>
     <color name="color2">#FFE1D9</color>

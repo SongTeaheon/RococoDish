@@ -43,12 +43,12 @@ public class DishView extends AppCompatActivity {
 
     private final String TAG = "TAGDishView";
     Button buttonToDetail;
-    Button deleteButton;
+    TextView deleteButton;
     ImageView imageView;
     FirebaseFirestore db;
     FirebaseStorage storage;
     PostingInfo postingInfo;
-    CircleImageView profileImage;
+    ImageView profileImage;
     TextView profileName;
     @Nullable
     String userImage;
@@ -63,7 +63,6 @@ public class DishView extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        buttonToDetail = (Button) findViewById(R.id.toDetail1);
         imageView = (ImageView) findViewById(R.id.imageView1);
 
         /**
@@ -80,11 +79,11 @@ public class DishView extends AppCompatActivity {
         /**
          해쉬태그
          **/
-        TextView hashTag = (TextView) findViewById(R.id.hashTag_textView_dishView);
+        //TextView hashTag = (TextView) findViewById(R.id.hashTag_textView_dishView);
         //해쉬태그가 있을 경우에만 실행
-        if(postingInfo.hashTags != null){
-            setTags(hashTag, postingInfo.hashTags);
-        }
+       // if(postingInfo.hashTags != null){
+        //    setTags(hashTag, postingInfo.hashTags);
+       // }
 
         StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
         GlideApp.with(this).load(fileReference).into(imageView);

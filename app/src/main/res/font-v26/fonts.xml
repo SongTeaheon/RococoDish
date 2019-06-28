@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <font
+        android:fontStyle="normal"
+        android:font="@font/bmjua"
+        app:fontStyle="normal"
+        app:font="@font/bmjua"
+        />
+
+    <font
+        android:fontStyle="normal"
+        android:font="@font/bmhanna_11yrs"
+        app:fontStyle="normal"
+        app:font="@font/bmhanna_11yrs"
+        />
+    <font
+        android:fontStyle="normal"
+        android:font="@font/bmhannapro"
+        app:fontStyle="normal"
+        app:font="@font/bmhannapro"
+        />
+
+</font-family>
