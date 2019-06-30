@@ -417,18 +417,19 @@ public class LastShareFragment extends Fragment {
     }
 
     //add new store info and posting info in dataBase!!!!
-    private void putNewStoreInfo(final StoreInfo storeInfo, final PostingInfo postingInfo) {
-        db.collection("가게").add(storeInfo)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+    private void putNewStoreInfo(StoreInfo storeInfo, final PostingInfo postingInfo) {
+        final String docUUID = UUID.randomUUID().toString();
+        storeInfo.setStoreId(docUUID);
+        db.collection("가게").document(docUUID).set(storeInfo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "store컬렉션 내부 post컬렉션 내부 포스팅 ID: " + docUUID);
                         //만든 storeInfo에 geoPoint를 세팅한다.
                         CollectionReference geoFirestoreRef = FirebaseFirestore.getInstance().collection("가게");
                         GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
-                        geoFirestore.setLocation(documentReference.getId(), geoPoint);
-                        geoFirestore.setLocation(documentReference.getId(), geoPoint, new GeoFirestore.CompletionListener() {
+                        geoFirestore.setLocation(docUUID, geoPoint);
+                        geoFirestore.setLocation(docUUID, geoPoint, new GeoFirestore.CompletionListener() {
                             @Override
                             public void onComplete(Exception exception) {//setLocation이 성공했는지 확인
 
@@ -439,15 +440,16 @@ public class LastShareFragment extends Fragment {
                         });
 
                         //store collection document내부에 post컬렉션에 데이터를 넣는다.
-                        putPostingInfo(documentReference.getId(), postingInfo);
+                        putPostingInfo(docUUID, postingInfo);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
+                        Log.w(TAG, "가게 내부 포스팅 채널. Error writing document on putPosting", e);
                     }
                 });
+
     }
 
     private void putPostingInfo(String storeId, PostingInfo postingInfo){

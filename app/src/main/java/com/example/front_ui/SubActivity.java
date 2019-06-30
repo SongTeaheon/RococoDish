@@ -145,7 +145,9 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         search_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+//                Intent intent = new Intent(SubActivity.this, MainSearchActivity.class);
                 Intent intent = new Intent(SubActivity.this, MainSearchActivity.class);
+
                 startActivityForResult(intent, SEARCH_REQUEST_CODE);
             }
         });
