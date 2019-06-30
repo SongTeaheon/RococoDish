@@ -172,22 +172,40 @@
                     app:layout_constraintTop_toBottomOf="@+id/cardview_image"
                     tools:ignore="SpUsage" />
 
-                <TextView
-                    android:id="@+id/textViewContets"
+                <LinearLayout
+                    android:id="@+id/description_box_dishView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    android:fontFamily="@font/bmhanna_11yrs"
-                    android:text="게시글 내용"
-                    android:textColor="@color/Black"
-                    android:textSize="14dp"
+                    android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewAddress"
-                    tools:ignore="SpUsage" />
+                    app:layout_constraintTop_toBottomOf="@+id/textViewAddress">
+
+                    <TextView
+                        android:id="@+id/hashTag_textview_dishView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/bmhanna_11yrs"
+                        android:text="#해쉬태그"
+                        android:textColor="@color/MainColor"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/desc_textview_dishView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/bmhanna_11yrs"
+                        android:text="내용이 들어가는 부분입니다."
+                        android:textColor="#000"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/like_imageview_dishView"
@@ -196,7 +214,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewContets"
+                    app:layout_constraintTop_toBottomOf="@+id/description_box_dishView"
                     app:srcCompat="@mipmap/ic_grey_heart" />
 
                 <ImageView
@@ -206,7 +224,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     app:layout_constraintStart_toEndOf="@+id/like_imageview_dishView"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewContets"
+                    app:layout_constraintTop_toBottomOf="@+id/description_box_dishView"
                     app:srcCompat="@mipmap/ic_bookmark" />
 
                 <ImageView
@@ -216,7 +234,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     app:layout_constraintStart_toEndOf="@+id/imageView4"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewContets"
+                    app:layout_constraintTop_toBottomOf="@+id/description_box_dishView"
                     app:srcCompat="@mipmap/ic_share" />
 
                 <ImageView
@@ -226,7 +244,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewContets"
+                    app:layout_constraintTop_toBottomOf="@+id/description_box_dishView"
                     app:srcCompat="@mipmap/qna" />
 
             </android.support.constraint.ConstraintLayout>
