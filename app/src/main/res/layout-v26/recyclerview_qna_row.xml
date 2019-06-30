@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardElevation="5dp"
-    android:layout_marginBottom="1dp"
-    android:layout_marginLeft="2dp"
-    android:layout_marginRight="2dp"
-    android:layout_marginStart="2dp"
-    android:layout_marginEnd="2dp"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
 
 
-        <ImageView
-            android:id="@+id/imageViewProfile"
+        <android.support.v7.widget.CardView
+            android:id="@+id/image_cardview"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rounding_corner"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="7dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imageViewProfile"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/rounding_corner"
+                android:scaleType="centerCrop" />
+        </android.support.v7.widget.CardView>
 
         <TextView
             android:id="@+id/qna_Q"
@@ -39,7 +41,8 @@
             android:fontFamily="@font/bmhannapro"
             android:textColor="@color/Black"
             android:textSize="16dp"
-            app:layout_constraintStart_toEndOf="@+id/imageViewProfile"
+            app:layout_constraintBottom_toTopOf="@+id/qna_A"
+            app:layout_constraintStart_toEndOf="@+id/image_cardview"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpUsage"
             tools:text="Q. " />
@@ -54,7 +57,7 @@
             android:fontFamily="@font/bmhannapro"
             android:textColor="@color/Grey"
             android:textSize="16dp"
-            app:layout_constraintStart_toEndOf="@+id/imageViewProfile"
+            app:layout_constraintStart_toEndOf="@+id/image_cardview"
             app:layout_constraintTop_toBottomOf="@+id/qna_Q"
             tools:ignore="SpUsage"
             tools:text="A. " />
@@ -68,6 +71,7 @@
             android:text="질문을 등록해주세요."
             android:textColor="@color/Black"
             android:textSize="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/text_A"
             app:layout_constraintStart_toEndOf="@+id/qna_Q"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpUsage" />
@@ -87,4 +91,4 @@
 
     </android.support.constraint.ConstraintLayout>
 
-</android.support.v7.widget.CardView>
+</LinearLayout>
