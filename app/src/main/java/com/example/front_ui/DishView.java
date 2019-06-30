@@ -1,6 +1,5 @@
 package com.example.front_ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -18,13 +17,12 @@ import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
-import com.example.front_ui.DataModel.UserInfo;
 import com.example.front_ui.KotlinCode.PostToMyPage;
 import com.example.front_ui.Utils.DishViewUtils;
 import com.example.front_ui.Utils.GlideApp;
@@ -32,20 +30,22 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DishView extends AppCompatActivity {
 
@@ -64,6 +64,14 @@ public class DishView extends AppCompatActivity {
     RecyclerView commentRecy;
     CommentAdapter commentAdapter;
     Boolean isLiked;
+    ImageView commentProfile;
+    String myProfilePath;
+    EditText commentEdit;
+    ImageView commentSend;
+    ArrayList<CommentInfo> commentList = new ArrayList<>();
+    final String myUid = FirebaseAuth.getInstance().getUid();
+    TextView hashTagText;
+    TextView descText;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +103,23 @@ public class DishView extends AppCompatActivity {
        // if(postingInfo.hashTags != null){
         //    setTags(hashTag, postingInfo.hashTags);
        // }
+        hashTagText = findViewById(R.id.hashTag_textview_dishView);
+        if(postingInfo.hashTags != null){
+            setTags(hashTagText, postingInfo.hashTags);
+        }
+        else{
+            setTags(hashTagText, "태그가 없습니다.");
+        }
+        /**
+         * 게시물 내용 설정
+         * **/
+        descText = findViewById(R.id.desc_textview_dishView);
+        if(postingInfo.description != null){
+            descText.setText(postingInfo.description);
+        }
+        else{
+            descText.setText("게시물 내용이 없습니다.");
+        }
 
         StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
         GlideApp.with(this).load(fileReference).into(imageView);
@@ -141,6 +166,7 @@ public class DishView extends AppCompatActivity {
                     if (document.exists()) {
                         //프로필 이미지 업로드
                         userImage = (String) document.get("profileImage");
+
                         if(userImage != null){
                             GlideApp.with(getApplicationContext())
                                     .load(userImage)
@@ -164,9 +190,11 @@ public class DishView extends AppCompatActivity {
                 }
             }
         });
+
         /**
          * 작성자의 프로필을 클릭시 작성자 마이페이지 이동 + postingInfo 다음 액티비티로 넘겨주기
          * **/
+
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,12 +206,11 @@ public class DishView extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         /**
          * 좋아요 기능 구현
          * */
         likeFunc();
-
-        //클릭
 
 
         /**
@@ -194,7 +221,90 @@ public class DishView extends AppCompatActivity {
         /**
          * 댓글 부분 질문 작성 부분
          * */
+        //좌측 내 프로필 이미지 넣기
+        commentProfile = (ImageView) findViewById(R.id.myProfile_commentInput);
+        commentEdit = (EditText) findViewById(R.id.comment_edittext_commentInput);
+        commentSend = (ImageView) findViewById(R.id.send_imageview_commentInput);
 
+        final CollectionReference commentRef = FirebaseFirestore.getInstance().collection("포스팅")
+                .document(postingInfo.postingId).collection("댓글");
+
+
+        //하단 댓글 입력칸 좌측에 프로필 사진 넣기
+        FirebaseFirestore.getInstance()
+                .collection("사용자")
+                .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        assert documentSnapshot != null;
+
+                        myProfilePath = documentSnapshot.get("profileImage").toString();
+
+                        GlideApp.with(getApplicationContext())
+                                .load(myProfilePath)
+                                .into(commentProfile);
+
+                        //내 프로필 사진 가져온 후 댓글 달기 가능
+                        uploadComment(commentRef, myProfilePath);
+
+                    }
+                });
+
+        //실시간 댓글 가져오기
+        realTimeFetchComment(commentRef);
+
+
+    }
+    public void realTimeFetchComment(CollectionReference commentRef){
+        //실시간 댓글 가져오기
+        commentRef
+                .orderBy("time", Query.Direction.ASCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        assert e != null;
+                        assert queryDocumentSnapshots != null;
+
+                        for(DocumentChange snapshot : queryDocumentSnapshots.getDocumentChanges()){
+                            switch (snapshot.getType()){
+                                case ADDED:
+                                    String imagePath = snapshot.getDocument().getData().get("imgPath").toString();
+                                    String question = snapshot.getDocument().getData().get("question").toString();
+                                    String answer = snapshot.getDocument().getData().get("answer").toString();
+
+                                    commentList.add(new CommentInfo(myUid, imagePath, question, answer, 0));
+                                    commentAdapter.notifyItemChanged(commentList.size()+1);
+                            }
+                        }
+                    }
+                });
+
+    }
+
+    public void uploadComment(final CollectionReference commentRef,
+                              final String profilePath){
+        //댓글 전송 시 리사이클러뷰 업로드
+
+
+        //댓글 업로드하기
+        commentSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String commentDesc = commentEdit.getText().toString();
+                commentEdit.getText().clear();
+
+                commentRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        final String documentId = UUID.randomUUID().toString();
+                        final long commentTime = System.currentTimeMillis();
+                        commentRef.document(documentId).set(new CommentInfo(myUid, profilePath, commentDesc, "답변이 아직 없습니다.", commentTime));
+                    }
+                });
+
+            }
+        });
     }
 
     public void likeFunc(){
@@ -222,19 +332,19 @@ public class DishView extends AppCompatActivity {
                     likeClick(likeImage, likeRef, isLiked);
 
                 }
-                //완전 처음 게시물에 들어갔을 경우
+                //완전 처음 게시물에 들어갔을 경우(좋아요 부분을 디비에 만들어야함.)
                 else{
 
                     HashMap map = new HashMap();
                     map.put("isLiked", false);
                     likeRef.set(map);
 
-                    isLiked = documentSnapshot.getBoolean("isLiked");
-                    likeClick(likeImage, likeRef, isLiked);
+                    likeClick(likeImage, likeRef, false);//오류 수정함
                 }
             }
         });
     }
+
     //좋아요 클릭부분만
     public void likeClick(final ImageView likeImage,
                           final DocumentReference likeRef,
@@ -254,15 +364,14 @@ public class DishView extends AppCompatActivity {
     }
     //댓글 부분 리사이클러뷰 설정
     public void commentRecyclerviewInit(){
-        ArrayList<CommentInfo> list = new ArrayList<>();
-        Long longTime = System.currentTimeMillis();
-        list.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
-        list.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
-        list.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
-        list.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
-        list.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
-        list.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
-        commentAdapter = new CommentAdapter(this, list);
+//        Long longTime = System.currentTimeMillis();
+//        commentList.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
+//        commentList.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
+//        commentList.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
+//        commentList.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
+//        commentList.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
+//        commentList.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
+        commentAdapter = new CommentAdapter(this, commentList);
         commentRecy = findViewById(R.id.comment_recyclerview);
         RecyclerView.LayoutManager lm = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         commentRecy.setLayoutManager(lm);
