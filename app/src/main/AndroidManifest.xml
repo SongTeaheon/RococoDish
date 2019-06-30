@@ -38,7 +38,8 @@
         <activity android:name=".PostingProcess.MainShareActivity"/>
         <activity android:name=".StorePage"/>
         <activity android:name=".SubActivity"/>
-        <activity android:name=".DishView"/>
+        <activity android:name=".DishView"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".DishViewDetail"/>
 
 
