@@ -78,7 +78,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         itemRowHolder.storeName.setText(sectionName);
         itemRowHolder.storeStar.setText(Double.toString(sectionStar));
 
-        itemListDataAdapter = new SectionListDataAdapter(mContext, list.get(i).getStoreId());
+        itemListDataAdapter = new SectionListDataAdapter(mContext, list.get(i));
 
         itemRowHolder.recycler_view_list.setHasFixedSize(true);
         itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));

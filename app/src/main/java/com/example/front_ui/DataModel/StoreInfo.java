@@ -13,6 +13,7 @@ import java.util.List;
 
 public class StoreInfo{
     public String name;
+    public String kakaoId;
     public String storeId;
     public double aver_star;
     public int postingNum;
@@ -101,7 +102,19 @@ public class StoreInfo{
         this.aver_star = aver_star;
     }
 
+    public String getKakaoId() {
+        return kakaoId;
+    }
 
+    public void setKakaoId(String kakaoId) {
+        this.kakaoId = kakaoId;
+    }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
+    public void setDetail_aver_star(List<Double> detail_aver_star) {
+        this.detail_aver_star = detail_aver_star;
+    }
 }
