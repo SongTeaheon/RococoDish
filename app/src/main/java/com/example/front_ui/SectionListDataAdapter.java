@@ -54,12 +54,14 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     FirebaseStorage storage;
     StorageReference storageReference;
     StoreInfo storeInfo;
+    double distance;
     private String uuid;
 
-    public SectionListDataAdapter(Context context, StoreInfo storeInfo) {
+    public SectionListDataAdapter(Context context, StoreInfo storeInfo, double distance) {
         Log.d(TAG, "SectionListDataAdapter");
         this.mContext = context;
         this.storeInfo = storeInfo;
+        this.distance = distance;
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -107,11 +109,9 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
                 SerializableStoreInfo serializableStoreInfo = new SerializableStoreInfo(storeInfo);
 
-//                bundlePosting.putSerializable("postingInfo", singleItem);
-//                bundleStore.putSerializable("storeInfo", serializableStoreInfo);
-
                 intent.putExtra("postingInfo", singleItem);
                 intent.putExtra("storeInfo", serializableStoreInfo);
+                intent.putExtra("distance", distance);
                 mContext.startActivity(intent);
             }
         });

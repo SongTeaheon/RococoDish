@@ -30,6 +30,7 @@ import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.KotlinCode.PostToMyPage;
 import com.example.front_ui.Utils.DishViewUtils;
 import com.example.front_ui.Utils.GlideApp;
+import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -85,6 +86,7 @@ public class DishView extends AppCompatActivity {
     TextView hashTagText;
     TextView descText;
     TextView tvScore;
+    TextView tvDistance;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +124,9 @@ public class DishView extends AppCompatActivity {
         storeInfo = (SerializableStoreInfo)intent.getSerializableExtra("storeInfo");
         Log.d(TAG, "store Info id : " + storeInfo.getStoreId() + " store name : " + storeInfo.getName() + " store map :" + storeInfo.getLat()+", "+storeInfo.getLon() +
                 " star :  " + storeInfo.getAver_star());
+        double distance = (double)intent.getDoubleExtra("distance", 0.0);
+        Log.d(TAG, "거리(미터단위) : " + distance);
+
         /**
          지도로 넘어가기
          **/
@@ -171,7 +176,10 @@ public class DishView extends AppCompatActivity {
         tvStoreName.setText(storeInfo.getName());
         tvAddress.setText(storeInfo.getAddress());
         tvScore = findViewById(R.id.textViewScore);
-        tvScore.setText(Double.toString(storeInfo.getAver_star()));
+        tvScore.setText(Double.toString(postingInfo.getAver_star()));
+        tvDistance = findViewById(R.id.textDistance);
+
+        tvDistance.setText(MathUtil.adjustedDistance(distance)+"!");
 
 
 
