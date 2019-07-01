@@ -24,7 +24,7 @@ public class MathUtil {
             long resDis = Math.round(distance);
             distanceStr = String.valueOf(resDis) + "m";
         }else {
-            disKm = Math.round(distance/100)/10;
+            disKm = Math.round(distance/100.)/10.;
             distanceStr = Double.toString(disKm) + "km";
         }
         Log.d("MathUtil", " : " + distance + " to " + distanceStr);
