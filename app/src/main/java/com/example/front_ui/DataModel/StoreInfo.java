@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.firebase.firestore.GeoPoint;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,4 +100,8 @@ public class StoreInfo{
     public void setAver_star(double aver_star) {
         this.aver_star = aver_star;
     }
+
+
+
+
 }
