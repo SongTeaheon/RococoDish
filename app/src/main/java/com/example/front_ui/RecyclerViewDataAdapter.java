@@ -72,13 +72,15 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         Log.d(TAG, "storeId : " + list.get(i).getStoreId());
         final String sectionName = list.get(i).getName();
         final double sectionStar = list.get(i).aver_star;
-
+        double distance = getDistanceFromMe(list.get(i).getGeoPoint());//내 위치로부터의 거리 측정.
+        Log.d(TAG, "get distance : " + distance);
 
         //텍스트 세팅 부분
         itemRowHolder.storeName.setText(sectionName);
         itemRowHolder.storeStar.setText(Double.toString(sectionStar));
+        //to do : distance 표시
 
-        itemListDataAdapter = new SectionListDataAdapter(mContext, list.get(i).getStoreId());
+        itemListDataAdapter = new SectionListDataAdapter(mContext, list.get(i), distance);
 
         itemRowHolder.recycler_view_list.setHasFixedSize(true);
         itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
@@ -140,6 +142,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     private int radius = 5;
     HashSet<String> dcSet = new HashSet<>(); //중복x
     private void getCloseStoreIdAndGetData() {
+
         CollectionReference geoFirestoreRef = FirebaseFirestore.getInstance().collection("가게");
         GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
         final GeoPoint myPoint = new GeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
@@ -216,6 +219,17 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                         }
                     }
                 });
+    }
+
+    private double getDistanceFromMe(GeoPoint geoPoint){
+        double distance;
+        Location location = new Location("dummyprovider");
+        location.setLatitude(geoPoint.getLatitude());
+        location.setLongitude(geoPoint.getLongitude());
+
+        distance = mCurrentLocation.distanceTo(location);
+
+        return distance;
     }
 
 }

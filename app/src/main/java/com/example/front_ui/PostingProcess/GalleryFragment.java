@@ -73,7 +73,7 @@ public class GalleryFragment extends Fragment {
         // 태완태완 next 버튼 태완님 여기 건드리시면 됩니다. 여기서 이 nextScreen버튼 누르면 사진크롭화면으로 넘어가야합니당
         //지금은 LastShareFragment로 넘어가고 있습니다.
         //태완님 그 사진크롭 끝나면 LastShareFragment로 넘어가야합니다.
-        TextView nextScreen = view.findViewById(R.id.tvNext);
+        TextView nextScreen = view.findViewById(R.id.tvStore);
         nextScreen.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {

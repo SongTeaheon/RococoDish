@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -52,16 +53,20 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     FirebaseFirestore db;
     FirebaseStorage storage;
     StorageReference storageReference;
+    StoreInfo storeInfo;
+    double distance;
     private String uuid;
 
-    public SectionListDataAdapter(Context context, String storeId) {
+    public SectionListDataAdapter(Context context, StoreInfo storeInfo, double distance) {
         Log.d(TAG, "SectionListDataAdapter");
         this.mContext = context;
+        this.storeInfo = storeInfo;
+        this.distance = distance;
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         list = new ArrayList<>();
-        getPostDataFromCloud(storeId);
+        getPostDataFromCloud(storeInfo.getStoreId());
     }
 
 
@@ -99,11 +104,14 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             @Override
             public void onClick(View v) {
                 final Intent intent = new Intent(mContext, DishView.class);
-                final Bundle bundle = new Bundle();
+                final Bundle bundlePosting = new Bundle();
+                final Bundle bundleStore = new Bundle();
 
-                bundle.putSerializable("postingInfo", singleItem);
+                SerializableStoreInfo serializableStoreInfo = new SerializableStoreInfo(storeInfo);
 
-                intent.putExtras(bundle);
+                intent.putExtra("postingInfo", singleItem);
+                intent.putExtra("storeInfo", serializableStoreInfo);
+                intent.putExtra("distance", distance);
                 mContext.startActivity(intent);
             }
         });

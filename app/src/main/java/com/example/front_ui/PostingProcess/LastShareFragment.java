@@ -175,7 +175,7 @@ public class LastShareFragment extends Fragment {
         });
 
         //share 버튼
-        TextView completeButton = view.findViewById(R.id.tvNext);
+        TextView completeButton = view.findViewById(R.id.tvStore);
         completeButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
