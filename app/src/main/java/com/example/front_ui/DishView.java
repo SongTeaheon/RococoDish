@@ -480,8 +480,8 @@ public class DishView extends AppCompatActivity {
 
                         @Override
                         public void updateDrawState(TextPaint ds) {
-                            // link color
-                            ds.setColor(Color.parseColor("#80FF909A"));
+                            // link color = #80FF909A 옅은 색
+                            ds.setColor(Color.parseColor("#FF6E6E"));
                             ds.setUnderlineText(false);
                         }
                     }, start, i, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

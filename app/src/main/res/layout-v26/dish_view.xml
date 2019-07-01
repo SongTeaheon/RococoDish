@@ -192,8 +192,8 @@
                         android:layout_marginTop="8dp"
                         android:fontFamily="@font/bmhanna_11yrs"
                         android:text="#해쉬태그"
-                        android:textColor="@color/MainColor"
-                        android:textSize="14sp" />
+                        android:textColor="#000"
+                        android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/desc_textview_dishView"
@@ -203,7 +203,7 @@
                         android:fontFamily="@font/bmhanna_11yrs"
                         android:text="내용이 들어가는 부분입니다."
                         android:textColor="#000"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
 
                 </LinearLayout>
 
