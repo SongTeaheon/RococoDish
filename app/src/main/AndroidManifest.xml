@@ -20,8 +20,7 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".KotlinCode.LoginActivity">
-
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,7 +33,7 @@
         </activity>
         <activity android:name=".SignInActivity"/>
         <activity android:name=".MyPage"/>
-        <activity android:name=".KotlinCode.PostToMyPage"/>
+        <activity android:name=".PostToMyPage"/>
         <activity android:name=".PostingProcess.MainShareActivity"/>
         <activity android:name=".StorePage"/>
         <activity android:name=".SubActivity"/>

@@ -1,4 +1,4 @@
-package com.example.front_ui.KotlinCode
+package com.example.front_ui
 
 import android.app.ProgressDialog
 import com.google.firebase.auth.FirebaseAuth

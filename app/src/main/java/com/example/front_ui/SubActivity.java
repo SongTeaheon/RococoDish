@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -29,7 +30,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
@@ -61,6 +62,17 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         Log.d(TAG, "onCreate is called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         my_recycler_view = (RecyclerView) findViewById(R.id.mrecyclerView);
         nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
