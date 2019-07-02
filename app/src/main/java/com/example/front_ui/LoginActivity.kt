@@ -63,7 +63,7 @@ class LoginActivity : AppCompatActivity() {
 
                     Firestore.loginFirstTime {
                         //여기서 onComplete()역할을 알 수 있다.(이 함수를 실행시키고 나서 이어서 할 이벤트를 적어주게 함.)
-//                        startActivity(intentFor<SubActivity>().newTask().clearTask())//이건 단순히 MainActivitry로 넘어가는 intent입니다.
+                        startActivity(intentFor<SubActivity>().newTask().clearTask())//이건 단순히 MainActivitry로 넘어가는 intent입니다.
                         Log.d(TAG, "로그인 완료(DB에 업로드 완료) 후 서브액티비티로 이동했습니다.")
                         progressDialog.dismiss()//로딩창을 꺼줍니다.
                     }
