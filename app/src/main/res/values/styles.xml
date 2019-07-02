@@ -8,6 +8,15 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_rating_bar_control</item>
+        <item name="android:numStars">5</item>
+        <item name="android:rating">4.5</item>
+        <item name="android:max">5</item>
+        <item name="android:stepSize">0.5</item>
+        <item name="android:isIndicator">false</item>
+    </style>
+
     <style name="CustomTheme" parent="FirebaseUI">
         <!-- Required for sign-in flow styling -->
         <!--<item name="colorPrimary">@color/material_green_500</item>-->

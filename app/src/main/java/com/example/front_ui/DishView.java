@@ -449,10 +449,6 @@ public class DishView extends AppCompatActivity {
         commentRecy.setAdapter(commentAdapter);
     }
 
-    public void moveToDetail() {
-        Intent intent = new Intent(this, DishViewDetail.class);
-        startActivity(intent);
-    }
     //디비에 있는 "해쉬태그" 정보를 받아서 #부분만 색깔을 칠해주는 메서드(무조건 #이 있는 스트링만 받아야함.)
     //추가로 해쉬태그 누를시 이벤트도 생성 가능
     private void setTags(TextView pTextView, String pTagString) {

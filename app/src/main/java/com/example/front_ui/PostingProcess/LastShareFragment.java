@@ -106,12 +106,11 @@ public class LastShareFragment extends Fragment {
         View view =inflater.inflate(R.layout.fragment_last_share, container, false);
         Log.d(TAG, "onCreateView!");
 
-        text_description = view.findViewById(R.id.search_btn);
-        text_title = view.findViewById(R.id.TextTitle);
+//        text_description = view.findViewById(R.id.search_btn);
         mRatingBar = view.findViewById(R.id.ratingBar);
         mStarText = view.findViewById(R.id.starText);
         detail_aver_star = new ArrayList<Double>() {};
-        String text = text_description.getText().toString();
+//        String text = text_description.getText().toString();
         storage = FirebaseStorage.getInstance();
         db = FirebaseFirestore.getInstance();
 
@@ -175,7 +174,7 @@ public class LastShareFragment extends Fragment {
         });
 
         //share 버튼
-        TextView completeButton = view.findViewById(R.id.tvStore);
+        ImageView completeButton = view.findViewById(R.id.imageViewComplete);
         completeButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -209,24 +208,19 @@ public class LastShareFragment extends Fragment {
 
     private void setStarText(RatingBar b, TextView v){ //변경
         v.setText(String.valueOf(v));
-        switch ((int) b.getRating()) {
-            case 1:
-                v.setText("최악이에요!");
-                break;
-            case 2:
-                v.setText("별로에요...");
-                break;
-            case 3:
-                v.setText("괜찮았어요!");
-                break;
-            case 4:
-                v.setText("좋았어요!!");
-                break;
-            case 5:
-                v.setText("정말 최고입니다!!");
-                break;
-            default:
-                v.setText("");
+        float i = (float) b.getRating();
+        if (i == 1) {
+            v.setText("1.0");
+        } else if (i == 2) {
+            v.setText("2.0");
+        } else if (i == 3) {
+            v.setText("3.0");
+        } else if (i == 4) {
+            v.setText("4.0");
+        } else if (i == 5) {
+            v.setText("5.0");
+        } else {
+            v.setText("");
         }
     }
 
@@ -288,9 +282,7 @@ public class LastShareFragment extends Fragment {
         postingInfo.writerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         postingInfo.writerName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         postingInfo.postingTime = Timestamp.now();
-        postingInfo.description = text_description.getText().toString();
         postingInfo.hashTags = tags.getText().toString();
-        postingInfo.title = text_title.getText().toString();
         detail_aver_star.add((double)mRatingBar.getRating());//맛
         postingInfo.detail_aver_star = detail_aver_star;
         postingInfo.storeName = kakaoStoreInfo.place_name;

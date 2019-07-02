@@ -40,8 +40,6 @@
         <activity android:name=".SubActivity"/>
         <activity android:name=".DishView"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".DishViewDetail"/>
-
 
 
         <!--테스트할 코드-->
