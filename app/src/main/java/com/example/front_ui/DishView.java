@@ -3,6 +3,7 @@ package com.example.front_ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,8 +26,12 @@ import android.widget.Toast;
 import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.PostToMyPage;
+import com.example.front_ui.DataModel.SerializableStoreInfo;
+import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.PostToMyPage;
 import com.example.front_ui.Utils.DishViewUtils;
 import com.example.front_ui.Utils.GlideApp;
+import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -50,14 +56,22 @@ import java.util.UUID;
 public class DishView extends AppCompatActivity {
 
     private final String TAG = "TAGDishView";
-    Button buttonToDetail;
     TextView deleteButton;
+    TextView editButton;
+    TextView tvAddress;
+    ImageView backButton;
+    TextView tvStoreName;
+
+
+
     ImageView imageView;
     FirebaseFirestore db;
     FirebaseStorage storage;
     PostingInfo postingInfo;
+    SerializableStoreInfo storeInfo;
     ImageView profileImage;
     TextView profileName;
+
     @Nullable
     String userImage;
     Context mContext;
@@ -71,6 +85,8 @@ public class DishView extends AppCompatActivity {
     final String myUid = FirebaseAuth.getInstance().getUid();
     TextView hashTagText;
     TextView descText;
+    TextView tvScore;
+    TextView tvDistance;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,17 +99,51 @@ public class DishView extends AppCompatActivity {
 
         imageView = (ImageView) findViewById(R.id.imageView1);
 
+
+        /*
+         * backbutton 뒤로가기 버튼
+         * */
+        backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
         /**
          LastShareFragment 에서 singleitem 을 받음
          * **/
         //LastFragmentShare에서 받은 아이템 정보를 갖고옴.
         Intent intent = this.getIntent();
-        final Bundle bundle = intent.getExtras();
 
-        postingInfo = (PostingInfo)bundle.getSerializable("postingInfo");
+        postingInfo = (PostingInfo)intent.getSerializableExtra("postingInfo");
         Log.d(TAG, "posting Info description " + postingInfo.description +"storage path " + postingInfo.imagePathInStorage
         + " storeId : " + postingInfo.getStoreId() +" postingid : " + postingInfo.postingId);
+        storeInfo = (SerializableStoreInfo)intent.getSerializableExtra("storeInfo");
+        Log.d(TAG, "store Info id : " + storeInfo.getStoreId() + " store name : " + storeInfo.getName() + " store map :" + storeInfo.getLat()+", "+storeInfo.getLon() +
+                " star :  " + storeInfo.getAver_star());
+        double distance = (double)intent.getDoubleExtra("distance", 0.0);
+        Log.d(TAG, "거리(미터단위) : " + distance);
 
+        /**
+         지도로 넘어가기
+         **/
+        tvAddress = findViewById(R.id.textViewAddress);
+        tvAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "show the kakao map");
+                Toast.makeText(getApplicationContext(), "address is clicked", Toast.LENGTH_LONG).show();
+                //daummaps://place?id=7813422 이거 할라면 게시글 쓸 때,
+                //daummaps://look?p=37.537229,127.005515
+                //daummaps://search?q=맛집&p=37.537229,127.005515이걸로 안될라나
+                String url = "daummaps://search?q=맛집&p=37.537229,127.005515";
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+            }
+        });
         /**
          해쉬태그
          **/
@@ -109,6 +159,9 @@ public class DishView extends AppCompatActivity {
         else{
             setTags(hashTagText, "태그가 없습니다.");
         }
+
+
+
         /**
          * 게시물 내용 설정
          * **/
@@ -119,32 +172,51 @@ public class DishView extends AppCompatActivity {
         else{
             descText.setText("게시물 내용이 없습니다.");
         }
+        tvStoreName = findViewById(R.id.tvStore);
+        tvStoreName.setText(storeInfo.getName());
+        tvAddress.setText(storeInfo.getAddress());
+        tvScore = findViewById(R.id.textViewScore);
+        tvScore.setText(Double.toString(postingInfo.getAver_star()));
+        tvDistance = findViewById(R.id.textDistance);
+
+        tvDistance.setText(MathUtil.adjustedDistance(distance)+"!");
+
+
+
 
         StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
         GlideApp.with(this).load(fileReference).into(imageView);
 
-        //여기서 버튼 객체가 null값으로 잡잡혀서 에러가 는거 보면 그냥 지우는게 맞을 듯합니다.
-//        buttonToDetail.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                moveToDetail();
-//            }
-//        });
         //우측 상단의 삭제 버튼을 누를 경우 디비를 삭제시킴(포스팅과 포스팅채널 둘다)
+        /*
+        * 삭제 및 수정 버튼 처리
+        * */
         if(postingInfo.getWriterId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
             Log.d(TAG, "내 게시물!!!");
             deleteButton = findViewById(R.id.delete_button);
+            editButton = findViewById(R.id.edit_button);
             deleteButton.setVisibility(View.VISIBLE);
+            editButton.setVisibility(View.VISIBLE);
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "delete button clicked");
+                    Toast.makeText(getApplicationContext(), "삭제하시겠습니까? 버튼 추가하", Toast.LENGTH_LONG).show();
+
                     String storeId = postingInfo.getStoreId();
                     String postingId = postingInfo.getPostingId();
                     String imagePath = postingInfo.getImagePathInStorage();
                     double postingAverStar = postingInfo.getAver_star();
                     DishViewUtils.deletePosting(mContext,  db, storage, storeId, postingId, imagePath, postingAverStar);
 
+                }
+            });
+
+            editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "edit button clicked");
+                    Toast.makeText(getApplicationContext(), "edit button clicked", Toast.LENGTH_LONG).show();
                 }
             });
         }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+
 import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.DataModel.SearchedData;
 import com.example.front_ui.PostingProcess.MainShareActivity;
@@ -42,6 +43,9 @@ public class MainSearchActivity extends AppCompatActivity {
     Retrofit retrofit;
     KakaoApiStoreSearchService service;
     private final String kakaoApiId = "KakaoAK 952900bd9ca440b836d9c490525aef64";
+
+
+
 
     private final String school_code = "SC4";
     private final String subway_code = "SW8";
@@ -115,7 +119,7 @@ public class MainSearchActivity extends AppCompatActivity {
 
 
     /*
-    * 검색 기능!
+    * 검색 기능! - 지역 검색
     * */
     private void requestSearchApi(final String searchWord){
 
@@ -242,6 +246,7 @@ public class MainSearchActivity extends AppCompatActivity {
         //recyclerview 세팅 필요!!!
 
     }
+
 
 
 }

@@ -108,33 +108,6 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
             }
         });
 
-      //마이페이지 리사이클러 터치
-//        myPage_recyclerview.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                nestedScrollView.setOnTouchListener(new View.OnTouchListener() {
-//                    @Override
-//                    public boolean onTouch(View v, MotionEvent event) {
-//                        return true;
-//                    }
-//                });
-//                return false;
-//            }
-//        });
-//
-//        my_recycler_view.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                nestedScrollView.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    return true;
-//                    }
-//                });
-//                return false;
-//            }
-//        });
-
         myPageTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,7 +130,9 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         search_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+//                Intent intent = new Intent(SubActivity.this, MainSearchActivity.class);
                 Intent intent = new Intent(SubActivity.this, MainSearchActivity.class);
+
                 startActivityForResult(intent, SEARCH_REQUEST_CODE);
             }
         });
