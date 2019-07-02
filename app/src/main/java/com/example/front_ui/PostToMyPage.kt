@@ -1,4 +1,4 @@
-package com.example.front_ui.KotlinCode
+package com.example.front_ui
 
 import android.content.Context
 import android.content.Intent
@@ -12,22 +12,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import android.widget.Toast
 import com.example.front_ui.DataModel.PostingInfo
-import com.example.front_ui.DishView
-import com.example.front_ui.Interface.MyPageDataPass
-import com.example.front_ui.R
 import com.example.front_ui.Utils.GlideApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.my_page.*
 import kotlinx.android.synthetic.main.polar_style.view.*
 import org.jetbrains.anko.sdk27.coroutines.onCheckedChange
 import org.jetbrains.anko.toast
-import org.w3c.dom.Document
 
 class PostToMyPage : AppCompatActivity() {
 
