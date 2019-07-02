@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
-import com.example.front_ui.KotlinCode.PostToMyPage;
+import com.example.front_ui.PostToMyPage;
 import com.example.front_ui.Utils.DishViewUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -65,7 +65,6 @@ public class DishView extends AppCompatActivity {
     CommentAdapter commentAdapter;
     Boolean isLiked;
     ImageView commentProfile;
-    String myProfilePath;
     EditText commentEdit;
     ImageView commentSend;
     ArrayList<CommentInfo> commentList = new ArrayList<>();
@@ -239,14 +238,19 @@ public class DishView extends AppCompatActivity {
                     public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
                         assert documentSnapshot != null;
 
-                        myProfilePath = documentSnapshot.get("profileImage").toString();
-
-                        GlideApp.with(getApplicationContext())
-                                .load(myProfilePath)
-                                .into(commentProfile);
+                        if(documentSnapshot.get("profileImage") == null){
+                            GlideApp.with(getApplicationContext())
+                                    .load(R.drawable.basic_user_image)
+                                    .into(commentProfile);
+                        }
+                        else{
+                            GlideApp.with(getApplicationContext())
+                                    .load(documentSnapshot.get("profileImage").toString())
+                                    .into(commentProfile);
+                        }
 
                         //내 프로필 사진 가져온 후 댓글 달기 가능
-                        uploadComment(commentRef, myProfilePath);
+                        uploadComment(commentRef, documentSnapshot.get("profileImage").toString());
 
                     }
                 });
