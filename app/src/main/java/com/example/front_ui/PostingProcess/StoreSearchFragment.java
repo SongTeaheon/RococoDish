@@ -165,7 +165,7 @@ public class StoreSearchFragment extends Fragment {
             //destinationUri의 경우는 크롭후 저장되는 위치를 의미, 결국 이 위치에 있는 사진을 result로 반환하기 위함.
             Uri destinationUri = Uri.fromFile(new File(getContext().getCacheDir(), "IMG_" + System.currentTimeMillis()));
             UCrop.of(galleryUri, destinationUri)
-                    .withAspectRatio(1, 1)
+                    .withAspectRatio(4, 3)
                     .withMaxResultSize(600, 600)
                     .start(getActivity());
         }

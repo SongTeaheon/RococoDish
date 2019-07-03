@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.front_ui.DataModel.SearchedData;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -269,6 +270,14 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-
+        if(FirebaseAuth.getInstance().getCurrentUser().getUid() == null){
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(SubActivity.this, LoginActivity.class));
+            finish();
+        }
+    }
 }

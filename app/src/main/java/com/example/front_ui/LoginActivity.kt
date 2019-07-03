@@ -83,13 +83,4 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
-
-    override fun onStart() {
-        super.onStart()
-
-        if(FirebaseAuth.getInstance().currentUser != null){
-            startActivity(intentFor<SubActivity>().newTask().clearTask())
-        }
-        else return
-    }
 }
