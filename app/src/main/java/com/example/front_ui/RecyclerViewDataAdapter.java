@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.front_ui.Utils.LocationUtil;
 import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -72,7 +73,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         Log.d(TAG, "storeId : " + list.get(i).getStoreId());
         final String sectionName = list.get(i).getName();
         final double sectionStar = list.get(i).aver_star;
-        double distance = getDistanceFromMe(list.get(i).getGeoPoint());//내 위치로부터의 거리 측정.
+        double distance = LocationUtil.getDistanceFromMe(mCurrentLocation, list.get(i).getGeoPoint());//내 위치로부터의 거리 측정.
         Log.d(TAG, "get distance : " + distance);
 
         //텍스트 세팅 부분
@@ -221,15 +222,6 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                 });
     }
 
-    private double getDistanceFromMe(GeoPoint geoPoint){
-        double distance;
-        Location location = new Location("dummyprovider");
-        location.setLatitude(geoPoint.getLatitude());
-        location.setLongitude(geoPoint.getLongitude());
 
-        distance = mCurrentLocation.distanceTo(location);
-
-        return distance;
-    }
 
 }

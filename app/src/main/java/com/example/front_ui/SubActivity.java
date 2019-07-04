@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.front_ui.DataModel.SearchedData;
+import com.example.front_ui.Interface.MyPageDataPass;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -34,7 +35,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 
-public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     private static final int SEARCH_REQUEST_CODE = 10003;
     private static final int REQUEST_LOCATION = 10002;
@@ -113,6 +114,9 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SubActivity.this, MyPage.class);
+                intent.putExtra("latitude", mCurrentLocation.getLatitude());
+                intent.putExtra("longitude", mCurrentLocation.getLongitude());
+                Log.d(TAG, "lat : " + mCurrentLocation.getLatitude() + ", long : " + mCurrentLocation.getLongitude());
                 startActivity(intent);
             }
         });
@@ -280,4 +284,5 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
             finish();
         }
     }
+
 }
