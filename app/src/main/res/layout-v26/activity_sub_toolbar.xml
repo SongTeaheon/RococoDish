@@ -18,13 +18,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <!--android:id="@+id/hamburgerButton" 원래는 이거임-->
                 <ImageView
-                    android:id="@+id/backButton"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:id="@+id/myPage_textview_activitySub"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="20dp"
-                    android:src="@mipmap/ic_back" />
+                    android:src="@mipmap/ic_hamburger" />
 
                 <!--가게이름 10글자 넘어가면 안되게 해야함...ㅜㅜ-->
                 <TextView
@@ -34,37 +35,22 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="0dp"
-                    android:fontFamily="@font/bmhanna_11yrs"
+                    android:fontFamily="@font/bmjua"
                     android:gravity="center"
-                    android:text="가게이름"
-                    android:textColor="@android:color/black"
-                    android:textSize="24dp"
-                    tools:ignore="SpUsage" />
-
-                <TextView
-                    android:id="@+id/edit_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_toStartOf="@+id/delete_button"
-                    android:fontFamily="@font/bmhanna_11yrs"
-                    android:text="수정"
+                    android:text="ROCOCO DISH"
                     android:textColor="@color/MainColor"
-                    android:textSize="20dp"
-                    android:visibility="invisible"
+                    android:textSize="26dp"
                     tools:ignore="SpUsage" />
 
-                <TextView
-                    android:id="@+id/delete_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+
+                <ImageView
+                    android:id="@+id/search_btn"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_search"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="16dp"
-                    android:fontFamily="@font/bmhanna_11yrs"
-                    android:text="삭제"
-                    android:textColor="@color/MainColor"
-                    android:textSize="20dp"
-                    android:visibility="invisible"
                     tools:ignore="SpUsage" />
 
             </RelativeLayout>

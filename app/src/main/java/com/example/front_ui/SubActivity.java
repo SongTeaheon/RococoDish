@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,10 +51,10 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     private Location searchLocation;
 
     private boolean mLocationPermissionGranted = false;
-    TextView myPageTextview;
+    ImageView myPageTextview;
     private TextView starText;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    Button search_btn;
+    ImageView search_btn;
 
 
 
