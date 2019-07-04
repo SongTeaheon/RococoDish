@@ -115,7 +115,7 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
         Log.d(TAG, "getDataFromFirestore");
 
         db.collection("포스팅")
-                .whereEqualTo("writerId", FirebaseAuth.getInstance().getCurrentUser().getEmail())
+                .whereEqualTo("writerId", FirebaseAuth.getInstance().getUid())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
