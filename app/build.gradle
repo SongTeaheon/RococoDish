@@ -93,7 +93,10 @@ dependencies {
 
     //토글스위치
     implementation 'me.rishabhkhanna:CustomToggle:1.0.0'
+
+
 }
+
 repositories {
     mavenCentral()
 }

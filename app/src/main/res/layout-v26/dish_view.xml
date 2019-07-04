@@ -250,6 +250,20 @@
                     app:layout_constraintTop_toBottomOf="@+id/description_box_dishView"
                     app:srcCompat="@mipmap/qna" />
 
+                <TextView
+                    android:id="@+id/likeNum_textview_dishView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/MainColor"
+                    android:fontFamily="@font/bmhanna_11yrs"
+                    android:textSize="9sp"
+                    android:text="좋아하는 사람 0명"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/like_imageview_dishView"
+                    app:layout_constraintTop_toBottomOf="@+id/like_imageview_dishView" />
+
             </android.support.constraint.ConstraintLayout>
 
             <android.support.v7.widget.RecyclerView
