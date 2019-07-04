@@ -287,7 +287,7 @@ public class DishView extends AppCompatActivity {
         /**
          * 하단에 질문과 답 리사이클러뷰 설정
          * **/
-        commentRecyclerviewInit();
+        commentRecyclerviewInit(postingInfo);
 
         /**
          * 댓글 부분 질문 작성 부분
@@ -330,6 +330,11 @@ public class DishView extends AppCompatActivity {
         //실시간 댓글 가져오기
         realTimeFetchComment(commentRef);
 
+        /**
+         * 하단 질문에 대한 답변 처리
+         * **/
+
+
 
     }
     public void realTimeFetchComment(CollectionReference commentRef){
@@ -351,6 +356,8 @@ public class DishView extends AppCompatActivity {
 
                                     commentList.add(new CommentInfo(myUid, imagePath, question, answer, 0));
                                     commentAdapter.notifyItemChanged(commentList.size()+1);
+                                case MODIFIED:
+                                    commentAdapter.notifyDataSetChanged();
                             }
                         }
                     }
@@ -415,10 +422,25 @@ public class DishView extends AppCompatActivity {
                     map.put("isLiked", false);
                     likeRef.set(map);
 
-                    likeClick(likeImage, likeRef, false);//오류 수정함
+                    likeClick(likeImage, likeRef, false);
                 }
             }
         });
+        //좋아요 개수 보여주기
+        final TextView likesText = findViewById(R.id.likeNum_textview_dishView);
+
+        FirebaseFirestore.getInstance()
+                .collection("포스팅")
+                .document(postingInfo.postingId)
+                .collection("좋아요")
+                .whereEqualTo("isLiked", true)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        assert queryDocumentSnapshots != null;
+                        likesText.setText("좋아하는 사람 "+queryDocumentSnapshots.getDocuments().size()+ "명");
+                    }
+                });
     }
 
     //좋아요 클릭부분만
@@ -439,15 +461,8 @@ public class DishView extends AppCompatActivity {
         });
     }
     //댓글 부분 리사이클러뷰 설정
-    public void commentRecyclerviewInit(){
-//        Long longTime = System.currentTimeMillis();
-//        commentList.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
-//        commentList.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
-//        commentList.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
-//        commentList.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
-//        commentList.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
-//        commentList.add(new CommentInfo(postingInfo.imagePathInStorage, "질문입니다.", "답변입니다.",longTime));
-        commentAdapter = new CommentAdapter(this, commentList);
+    public void commentRecyclerviewInit(PostingInfo postingInfo){
+        commentAdapter = new CommentAdapter(this, commentList, postingInfo);
         commentRecy = findViewById(R.id.comment_recyclerview);
         RecyclerView.LayoutManager lm = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         commentRecy.setLayoutManager(lm);
@@ -476,7 +491,7 @@ public class DishView extends AppCompatActivity {
                         @Override
                         public void onClick(View widget) {
                             Log.d(TAG, "현재 누른 태그 = " + tag);
-                            Toast.makeText(DishView.this, "태그 = "+tag, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DishView.this, "누르면 이 태그로 검색 ->"+tag, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
