@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -26,6 +27,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 public class DishViewUtils {
 
@@ -66,6 +69,7 @@ public class DishViewUtils {
                     }
                 });
 
+        //TODO: 포스팅 경로아래에 좋아요와 댓글 서브컬렉션 삭제도 필요
 
 
         //storage에서 삭제.

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     private ArrayList<CommentInfo> list;
     private Context context;
+    private String TAG = "TAGCommentAdapter";
 
 
 
@@ -94,12 +96,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         commentViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-//                Toast.makeText(context, "길게 눌렀네요~", Toast.LENGTH_SHORT).show();
+
                 final String[] otherCommentOptions = new String[] {"질문에 답변달기", "닫기"};
                 final String[] meCommentOptions = new String[] {"수정하기", "삭제하기", "닫기"};
 
+                String commentWriterId = list.get(i).getCommentWriterId();
+
+                Log.d(TAG, list.get(i).getCommentWriterId());
+
                 //내가 쓴 글일 경우
-                if(list.get(i).getCommenWriterId() == FirebaseAuth.getInstance().getUid()){
+                if(commentWriterId.equals(FirebaseAuth.getInstance().getUid())){
                     new AlertDialog.Builder(context)
                             .setTitle("내가 쓴 글")
                             .setItems(meCommentOptions, new DialogInterface.OnClickListener() {
@@ -141,6 +147,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             }
         });
 
+        //댓글 올라오는 애니메이션
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.up_from_bottom);
         commentViewHolder.itemView.startAnimation(animation);
 

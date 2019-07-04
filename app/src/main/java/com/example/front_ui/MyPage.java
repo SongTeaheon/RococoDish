@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.front_ui.DataModel.SerializableStoreInfo;
+import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,16 +37,22 @@ import com.example.front_ui.Interface.MyPageDataPass;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.yalantis.ucrop.UCrop;
 
+import org.w3c.dom.Document;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -250,15 +258,26 @@ class MyAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 final Intent intent = new Intent(context, DishView.class);
-                final Bundle bundle = new Bundle();
 
-                bundle.putSerializable("postingInfo", singleItem);
-                intent.putExtras(bundle);
+                db.collection("가게")
+                        .document(singleItem.storeId)
+                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
 
-                context.startActivity(intent);
+                                StoreInfo storeInfo = documentSnapshot.toObject(StoreInfo.class);
+                                SerializableStoreInfo serializableStoreInfo= new SerializableStoreInfo(storeInfo);
 
-                Toast.makeText(v.getContext(), singleItem.title, Toast.LENGTH_SHORT).show();
+                                intent.putExtra("postingInfo", singleItem);
+                                intent.putExtra("storeInfo", serializableStoreInfo);
+                                context.startActivity(intent);
+
+                                Toast.makeText(context, storeInfo.name, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
             }
         });
         return convertView;
