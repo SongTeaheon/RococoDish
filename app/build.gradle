@@ -93,7 +93,14 @@ dependencies {
 
     //토글스위치
     implementation 'me.rishabhkhanna:CustomToggle:1.0.0'
+
+    //새로운 드로워
+    implementation 'com.yarolegovich:sliding-root-nav:1.1.0'
+
+
+
 }
+
 repositories {
     mavenCentral()
 }

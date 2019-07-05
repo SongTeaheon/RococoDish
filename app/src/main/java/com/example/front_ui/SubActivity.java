@@ -2,25 +2,31 @@ package com.example.front_ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +39,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.yarolegovich.slidingrootnav.SlidingRootNav;
+import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
+import com.yarolegovich.slidingrootnav.SlidingRootNavLayout;
+
+import java.util.Objects;
 
 
 public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
@@ -54,7 +65,12 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     TextView myPageTextview;
     private TextView starText;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    Button search_btn;
+    ImageView search_btn;
+    Toolbar pageViewToolbar;
+    SlidingRootNav slidingRootNav;
+    TextView logOutText;
+    TextView userNameText;
+
 
 
 
@@ -65,8 +81,25 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        pageViewToolbar = findViewById(R.id.pageViewToolbar);
+        setSupportActionBar(pageViewToolbar);
+
+        /**
+         * 네비게이션 드로워 설정들
+         * **/
+        slidingRootNav = new SlidingRootNavBuilder(this)
+                .withMenuLayout(R.layout.activity_sub_drawer)
+                .withToolbarMenuToggle(pageViewToolbar)
+//                .withRootViewScale(0.7f)
+//                .withRootViewElevation(10)
+//                .withRootViewYTranslation(4)
+//                .withContentClickableWhenMenuOpened(true)
+//                .withSavedState(savedInstanceState)
+                .inject();
+
+        //로그아웃 기능
+        logOutText = findViewById(R.id.logOut_textview_drawer);
+        logOutText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
@@ -75,6 +108,34 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                 finish();
             }
         });
+
+        //사용자 이름 띄우기
+        userNameText = findViewById(R.id.userName_textview_drawer);
+        userNameText.setText(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName());
+
+        //마이페이지 글자 누를시 이벤트
+        myPageTextview = findViewById(R.id.myPage_textview_activitySub);
+        myPageTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SubActivity.this, MyPage.class);
+                intent.putExtra("latitude", mCurrentLocation.getLatitude());
+                intent.putExtra("longitude", mCurrentLocation.getLongitude());
+                startActivity(intent);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        slidingRootNav.closeMenu();
+                    }
+                }, 1000);//1초 텀두고 메뉴를 닫아줌.(텀을 안두면 intent이동이랑 멤뉴 닫는거랑 겹쳐서 앱 속도 느려짐.)
+            }
+        });
+
+
+        /**
+         * 가게 리사이클러뷰 설정
+         * **/
+
 
         my_recycler_view = (RecyclerView) findViewById(R.id.mrecyclerView);
         nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
@@ -96,7 +157,6 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         myPage_recyclerview.setAdapter(myPageAdapter);
 
         //마이페이지 글자 누를시 이벤트
-        myPageTextview = findViewById(R.id.myPage_textview_activitySub);
         my_recycler_view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -107,17 +167,6 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                     }
                 });
                 return false;
-            }
-        });
-
-        myPageTextview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SubActivity.this, MyPage.class);
-                intent.putExtra("latitude", mCurrentLocation.getLatitude());
-                intent.putExtra("longitude", mCurrentLocation.getLongitude());
-                Log.d(TAG, "lat : " + mCurrentLocation.getLatitude() + ", long : " + mCurrentLocation.getLongitude());
-                startActivity(intent);
             }
         });
 
@@ -285,4 +334,24 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         }
     }
 
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+
+        new AlertDialog.Builder(this)
+                .setMessage("정말 종료하시겠습니까?")
+                .setCancelable(false)
+                .setPositiveButton("종료", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+    }
 }

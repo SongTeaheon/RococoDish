@@ -73,12 +73,16 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         Log.d(TAG, "storeId : " + list.get(i).getStoreId());
         final String sectionName = list.get(i).getName();
         final double sectionStar = list.get(i).aver_star;
+        String address = list.get(i).getAddress();
         double distance = LocationUtil.getDistanceFromMe(mCurrentLocation, list.get(i).getGeoPoint());//내 위치로부터의 거리 측정.
+        String distanceStr = MathUtil.adjustedDistance(distance);
         Log.d(TAG, "get distance : " + distance);
 
         //텍스트 세팅 부분
         itemRowHolder.storeName.setText(sectionName);
         itemRowHolder.storeStar.setText(Double.toString(sectionStar));
+        itemRowHolder.storeDistance.setText(distanceStr);
+        itemRowHolder.storeAddress.setText(address);
         //to do : distance 표시
 
         itemListDataAdapter = new SectionListDataAdapter(mContext, list.get(i), distance);
@@ -118,6 +122,8 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         public CardView touchStore;
         public TextView storeName;
         public TextView storeStar;
+        public TextView storeDistance;
+        public TextView storeAddress;
         public RecyclerView recycler_view_list;
 
 
@@ -130,6 +136,8 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
             this.recycler_view_list = (RecyclerView) view.findViewById(R.id.recyclerView);
             storeName = (TextView) view.findViewById(R.id.storeName);
             storeStar = (TextView) view.findViewById(R.id.storeStar);
+            storeDistance = view.findViewById(R.id.storeDistance);
+            storeAddress = view.findViewById(R.id.storeAddress);
 
 
         }

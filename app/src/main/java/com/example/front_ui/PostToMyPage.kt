@@ -13,6 +13,8 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import com.example.front_ui.DataModel.PostingInfo
+import com.example.front_ui.DataModel.SerializableStoreInfo
+import com.example.front_ui.DataModel.StoreInfo
 import com.example.front_ui.Utils.GlideApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -138,6 +140,7 @@ class PostToMyPageAdapter(val context : Context,
     private var list = arrayListOf<PostingInfo>()
     private val storage : FirebaseStorage by lazy { FirebaseStorage.getInstance() }
     private val TAG = "TAGPostToMyPageAdapter"
+    private val db : FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
 
     init {
         getDataFromFirestore(writerId){
@@ -158,10 +161,24 @@ class PostToMyPageAdapter(val context : Context,
         //클릭시 이벤트
         view.setOnClickListener {
             val intent = Intent(context, DishView::class.java)
-            val bundle = Bundle()
-            bundle.putSerializable("postingInfo", singleItem)
-            intent.putExtras(bundle)
-            context.startActivity(intent)
+//            val bundle = Bundle()
+//            bundle.putSerializable("postingInfo", singleItem)
+//            intent.putExtras(bundle)
+//            context.startActivity(intent)
+
+            db.collection("가게")
+                    .document(singleItem.storeId)
+                    .addSnapshotListener { snapshot, exception ->
+                        if(exception != null) return@addSnapshotListener
+                        if(snapshot != null){
+                            val storeInfo = snapshot?.toObject(StoreInfo::class.java)
+                            val serializableStoreInfo = SerializableStoreInfo(storeInfo)
+
+                            intent.putExtra("postingInfo", singleItem)
+                            intent.putExtra("storeInfo", serializableStoreInfo)
+                            context.startActivity(intent)
+                        }
+                    }
         }
         return view
     }
