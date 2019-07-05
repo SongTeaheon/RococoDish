@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.front_ui.DataModel.SearchedData;
+import com.example.front_ui.Interface.MyPageDataPass;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -45,7 +46,7 @@ import com.yarolegovich.slidingrootnav.SlidingRootNavLayout;
 import java.util.Objects;
 
 
-public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     private static final int SEARCH_REQUEST_CODE = 10003;
     private static final int REQUEST_LOCATION = 10002;
@@ -118,6 +119,8 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SubActivity.this, MyPage.class);
+                intent.putExtra("latitude", mCurrentLocation.getLatitude());
+                intent.putExtra("longitude", mCurrentLocation.getLongitude());
                 startActivity(intent);
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -153,6 +156,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         myPage_recyclerview.setAdapter(myPageAdapter);
 
+        //마이페이지 글자 누를시 이벤트
         my_recycler_view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

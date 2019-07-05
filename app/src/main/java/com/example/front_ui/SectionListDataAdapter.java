@@ -104,9 +104,6 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             @Override
             public void onClick(View v) {
                 final Intent intent = new Intent(mContext, DishView.class);
-                final Bundle bundlePosting = new Bundle();
-                final Bundle bundleStore = new Bundle();
-
                 SerializableStoreInfo serializableStoreInfo = new SerializableStoreInfo(storeInfo);
 
                 intent.putExtra("postingInfo", singleItem);
