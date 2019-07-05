@@ -139,7 +139,14 @@ public class DishView extends AppCompatActivity {
                 //daummaps://place?id=7813422 이거 할라면 게시글 쓸 때,
                 //daummaps://look?p=37.537229,127.005515
                 //daummaps://search?q=맛집&p=37.537229,127.005515이걸로 안될라나
-                String url = "daummaps://search?q=맛집&p=37.537229,127.005515";
+                String storeName = storeInfo.getName();
+//                String url = "daummaps://search?q="+storeName+"&p=37.537229,127.005515";
+                String url;
+                if(storeInfo.getKakaoId() != null){
+                    url = "daummaps://place?id=" + storeInfo.getKakaoId();
+                }else{
+                    url = "daummaps://look?p="+storeInfo.getLat() +","+storeInfo.getLon();
+                }
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
             }

@@ -304,6 +304,7 @@ public class LastShareFragment extends Fragment {
         float y = Float.parseFloat(kakaoStoreInfo.y);
         geoPoint = new GeoPoint(y, x);
         StoreInfo storeInfo = new StoreInfo(kakaoStoreInfo.place_name, aver_star, kakaoStoreInfo.address_name, detail_aver_star, new GeoPoint(y, x));
+        storeInfo.setKakaoId(kakaoStoreInfo.id);
         checkStoreData(storeInfo, postingInfo);
 
 
