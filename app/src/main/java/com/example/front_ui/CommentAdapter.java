@@ -102,7 +102,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         final String commentDocId = queryDocumentSnapshots.getDocuments().get(i).getId();
 
-                        commentViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                        commentViewHolder.answer.setOnLongClickListener(new View.OnLongClickListener() {
                             @Override
                             public boolean onLongClick(View v) {
                                 Dialog_Answer dialog_answer = new Dialog_Answer(context, postingInfo, commentDocId);
