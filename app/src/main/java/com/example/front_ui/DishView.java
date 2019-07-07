@@ -16,20 +16,15 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
-import com.example.front_ui.PostToMyPage;
 import com.example.front_ui.DataModel.SerializableStoreInfo;
-import com.example.front_ui.DataModel.StoreInfo;
-import com.example.front_ui.PostToMyPage;
-import com.example.front_ui.Utils.DishViewUtils;
+import com.example.front_ui.Utils.DeleteUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -214,7 +209,7 @@ public class DishView extends AppCompatActivity {
                     String postingId = postingInfo.getPostingId();
                     String imagePath = postingInfo.getImagePathInStorage();
                     double postingAverStar = postingInfo.getAver_star();
-                    DishViewUtils.deletePosting(mContext,  db, storage, storeId, postingId, imagePath, postingAverStar);
+                    DeleteUtils.deletePosting(mContext,  db, storage, storeId, postingId, imagePath, postingAverStar);
 
                 }
             });

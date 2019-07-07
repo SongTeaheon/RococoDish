@@ -97,8 +97,12 @@ dependencies {
     //새로운 드로워
     implementation 'com.yarolegovich:sliding-root-nav:1.1.0'
 
+
     //페이스북 쉬머 로딩 레이아웃
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
+
+    //Algolia api
+    implementation 'com.algolia:algoliasearch-android:3.+'
 
 
 }

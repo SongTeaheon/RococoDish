@@ -42,7 +42,6 @@ public class StoreInfo{
     }
 
 
-
     public String getName() {
         return name;
     }
