@@ -30,7 +30,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-public class DishViewUtils {
+public class DeleteUtils {
 
     public static String TAG = "TAGDishViewUtilsForFirebase";
     static boolean isDeleteDone = false;
@@ -70,7 +70,7 @@ public class DishViewUtils {
                 });
 
         //TODO: 포스팅 경로아래에 좋아요와 댓글 서브컬렉션 삭제도 필요
-
+        //TODO: Algolia 삭제도 같이 필요
 
         //storage에서 삭제.
         StorageReference deleteRef = storage.getReferenceFromUrl(imagePath);
@@ -209,6 +209,7 @@ public class DishViewUtils {
         });
     }
 
+    //postingNum--
     private static void subtractUserPostingNum(final FirebaseFirestore db){
 
         final String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();

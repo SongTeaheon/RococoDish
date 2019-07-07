@@ -24,6 +24,7 @@ import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.R;
+import com.example.front_ui.Utils.AlgoliaUtils;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -410,10 +411,13 @@ public class LastShareFragment extends Fragment {
     }
 
     //add new store info and posting info in dataBase!!!!
-    private void putNewStoreInfo(StoreInfo storeInfo, final PostingInfo postingInfo) {
+    private void putNewStoreInfo(final StoreInfo storeInfo, final PostingInfo postingInfo) {
         final String docUUID = UUID.randomUUID().toString();
         storeInfo.setStoreId(docUUID);
-        db.collection("가게").document(docUUID).set(storeInfo)
+
+        db.collection("가게")
+                .document(docUUID)
+                .set(storeInfo)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -431,6 +435,9 @@ public class LastShareFragment extends Fragment {
                                 }
                             }
                         });
+
+                        //algoia에 데이터 추가
+                        AlgoliaUtils.addObject(storeInfo);
 
                         //store collection document내부에 post컬렉션에 데이터를 넣는다.
                         putPostingInfo(docUUID, postingInfo);
