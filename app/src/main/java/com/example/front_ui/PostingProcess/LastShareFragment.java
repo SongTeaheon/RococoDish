@@ -286,7 +286,7 @@ public class LastShareFragment extends Fragment {
         detail_aver_star.add((double)mRatingBar.getRating());//맛
         postingInfo.detail_aver_star = detail_aver_star;
         postingInfo.storeName = kakaoStoreInfo.place_name;
-        postingInfo.address = kakaoStoreInfo.address_name;
+        postingInfo.address = kakaoStoreInfo.road_address_name;
 
         //평균값 설정.
         float sum =0 ;
@@ -304,6 +304,7 @@ public class LastShareFragment extends Fragment {
         float y = Float.parseFloat(kakaoStoreInfo.y);
         geoPoint = new GeoPoint(y, x);
         StoreInfo storeInfo = new StoreInfo(kakaoStoreInfo.place_name, aver_star, kakaoStoreInfo.address_name, detail_aver_star, new GeoPoint(y, x));
+        storeInfo.setKakaoId(kakaoStoreInfo.id);
         checkStoreData(storeInfo, postingInfo);
 
 

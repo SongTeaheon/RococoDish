@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Utils.GlideApp;
+import com.example.front_ui.Utils.LocationUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import java.io.ByteArrayOutputStream;
@@ -63,6 +65,8 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
     private final String TAG = "TAGMyPage";
     int numOfMyPost = 0;
     TextView tvOfNum;
+    double currentLatitude;
+    double currentLongtitude;
 
     @Override
     public void setNumberOfData(int value) {
@@ -81,6 +85,13 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_page);
 
+        //현재 위치 정보를 가져온다.
+        Intent intent = this.getIntent();
+        currentLatitude = intent.getDoubleExtra("latitude", 0.0);
+        currentLongtitude = intent.getDoubleExtra("longitude", 0.0);
+
+
+
         //본인 마이페이지이니까 팔로우 버튼 숨김
         Button follow = (Button) findViewById(R.id.followToggle);
         follow.setVisibility(View.GONE);
@@ -88,7 +99,9 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         MyAdapter adapter = new MyAdapter(
                 this,
                 R.layout.polar_style,
-                this);       // GridView 항목의 레이아웃 row.xml
+                this,
+                currentLatitude,
+                currentLongtitude);       // GridView 항목의 레이아웃 row.xml
 
         GridView gv = findViewById(R.id.gridview);
         gv.setAdapter(adapter);  // 커스텀 아답타를 GridView 에 적용
@@ -208,16 +221,21 @@ class MyAdapter extends BaseAdapter {
     LayoutInflater inf;
     FirebaseStorage storage;
     StorageReference storageReference;
+    double currentLatitude;
+    double currentLongtitude;
 
     //interface for datapass to MyPage
     private MyPageDataPass mCallback;
 
 
-    public MyAdapter(Context context, int layout, MyPageDataPass listener) {
+    public MyAdapter(Context context, int layout, MyPageDataPass listener, double lat, double lon) {
         list = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+
+        currentLatitude = lat;
+        currentLongtitude = lon;
         this.context = context;
         this.layout = layout;
         mCallback = listener;
@@ -269,9 +287,11 @@ class MyAdapter extends BaseAdapter {
 
                                 StoreInfo storeInfo = documentSnapshot.toObject(StoreInfo.class);
                                 SerializableStoreInfo serializableStoreInfo= new SerializableStoreInfo(storeInfo);
-
+                                double distance = LocationUtil.getDistanceFromMe(currentLatitude, currentLongtitude, storeInfo.getGeoPoint());
                                 intent.putExtra("postingInfo", singleItem);
                                 intent.putExtra("storeInfo", serializableStoreInfo);
+                                intent.putExtra("distance", distance);
+
                                 context.startActivity(intent);
 
                                 Toast.makeText(context, storeInfo.name, Toast.LENGTH_SHORT).show();
