@@ -100,18 +100,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        final String commentDocId = queryDocumentSnapshots.getDocuments().get(i).getId();
+                        if(queryDocumentSnapshots != null){
+                            final String commentDocId = queryDocumentSnapshots.getDocuments().get(i).getId();
 
-                        commentViewHolder.answer.setOnLongClickListener(new View.OnLongClickListener() {
-                            @Override
-                            public boolean onLongClick(View v) {
-                                Dialog_Answer dialog_answer = new Dialog_Answer(context, postingInfo, commentDocId);
-                                dialog_answer.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialog_answer.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                dialog_answer.show();
-                                return false;
-                            }
-                        });
+                            commentViewHolder.answer.setOnLongClickListener(new View.OnLongClickListener() {
+                                @Override
+                                public boolean onLongClick(View v) {
+                                    Dialog_Answer dialog_answer = new Dialog_Answer(context, postingInfo, commentDocId);
+                                    dialog_answer.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog_answer.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    dialog_answer.show();
+                                    return false;
+                                }
+                            });
+                        }
                     }
                 });
 
