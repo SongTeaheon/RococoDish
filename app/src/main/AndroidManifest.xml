@@ -15,21 +15,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainSearchActivity"></activity>
+        <activity android:name=".AlgoliaTest.StoreNameSearchAcitivity"></activity>
+        <activity android:name=".AlgoliaTest.StoreSearchActivity" />
+        <activity android:name=".MainSearchActivity" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".MainActivity">
-
-
-        </activity>
-        <activity android:name=".SignInActivity"/>
-        <activity android:name=".MyPage"/>
-        <activity android:name=".PostToMyPage"/>
-        <activity android:name=".PostingProcess.MainShareActivity"/>
-        <activity android:name=".StorePage"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".SignInActivity" />
+        <activity android:name=".MyPage" />
+        <activity android:name=".PostToMyPage" />
+        <activity android:name=".PostingProcess.MainShareActivity" />
+        <activity android:name=".StorePage" />
         <activity android:name=".SubActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,12 +36,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DishView"
-            android:windowSoftInputMode="stateHidden"/>
-
-
-        <!--테스트할 코드-->
-
+        <activity
+            android:name=".DishView"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

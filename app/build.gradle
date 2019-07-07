@@ -97,6 +97,8 @@ dependencies {
     //새로운 드로워
     implementation 'com.yarolegovich:sliding-root-nav:1.1.0'
 
+    //Algolia api
+    implementation 'com.algolia:algoliasearch-android:3.+'
 
 
 }
