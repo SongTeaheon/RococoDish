@@ -72,6 +72,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relLayout1">
 
+
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
@@ -86,6 +87,9 @@
                 android:layout_height="match_parent"
                 android:background="@color/colorWhite">
 
+
+
+                <!--오늘 뭐먹지 부분-->
                 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/myPage_cardview_activitySub"
                     android:layout_width="match_parent"
@@ -117,9 +121,20 @@
                             tools:ignore="SpUsage" />
 
                     </RelativeLayout>
-
                 </android.support.v7.widget.CardView>
 
+                <!--마이페이지 리사이클러뷰-->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/myPage_recyclerview_activitySub"
+                    android:background="@color/colorWhite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="true"
+                    app:layout_constraintEnd_toEndOf="@+id/mrecyclerView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/myPage_cardview_activitySub" />
+
+                <!--가게 목록-->
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/mrecyclerView"
                     android:background="@color/colorWhite"
@@ -132,15 +147,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/myPage_recyclerview_activitySub"
                     app:layout_constraintVertical_bias="1.0" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/myPage_recyclerview_activitySub"
-                    android:background="@color/colorWhite"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="true"
-                    app:layout_constraintEnd_toEndOf="@+id/mrecyclerView"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/myPage_cardview_activitySub" />
+
             </android.support.constraint.ConstraintLayout>
         </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
