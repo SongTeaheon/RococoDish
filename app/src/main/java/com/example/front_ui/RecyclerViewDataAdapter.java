@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.front_ui.Utils.LocationUtil;
 import com.example.front_ui.Utils.MathUtil;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -45,6 +46,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     FirebaseFirestore db;
     SectionListDataAdapter itemListDataAdapter;
     private Location mCurrentLocation;
+    private ShimmerFrameLayout shimmerFrameLayout;
 
 
 

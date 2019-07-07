@@ -34,6 +34,7 @@ import com.example.front_ui.AlgoliaTest.StoreNameSearchAcitivity;
 import com.example.front_ui.DataModel.SearchedData;
 import com.example.front_ui.Interface.MyPageDataPass;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -72,6 +73,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     TextView logOutText;
     TextView userNameText;
     RecyclerViewDataAdapter recyclerViewDataAdapter;
+    ShimmerFrameLayout shimmerFrameLayout;
 
 
 
@@ -83,6 +85,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
 
+        //툴바 설정
         pageViewToolbar = findViewById(R.id.pageViewToolbar);
         setSupportActionBar(pageViewToolbar);
 
@@ -201,6 +204,22 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                 startActivityForResult(intent, SEARCH_REQUEST_CODE);
             }
         });
+
+        /**
+         * 페이스북 쉬머 로딩 레이아웃
+         * **/
+
+        shimmerFrameLayout = findViewById(R.id.shimmerFrame_activitySub);
+//        shimmerFrameLayout.setVisibility(View.VISIBLE);
+//        shimmerFrameLayout.startShimmer();
+//        shimmerFrameLayout.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                shimmerFrameLayout.setVisibility(View.GONE);
+//                shimmerFrameLayout.stopShimmer();
+//                return false;
+//            }
+//        });
     }
 
 
