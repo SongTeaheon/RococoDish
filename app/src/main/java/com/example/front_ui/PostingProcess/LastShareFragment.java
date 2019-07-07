@@ -437,7 +437,7 @@ public class LastShareFragment extends Fragment {
                         });
 
                         //algoia에 데이터 추가
-                        AlgoliaUtils.addObject(storeInfo);
+                        AlgoliaUtils.addObject("store", storeInfo);
 
                         //store collection document내부에 post컬렉션에 데이터를 넣는다.
                         putPostingInfo(docUUID, postingInfo);
