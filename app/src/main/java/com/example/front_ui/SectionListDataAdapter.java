@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.CircularProgressDrawable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -88,9 +89,9 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         Log.d(TAG, "downloadImageFromFirebaseStorage : " + singleItem.imagePathInStorage);
 
         CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(mContext);
-        circularProgressDrawable.setStrokeCap(Paint.Cap.ROUND);
-        circularProgressDrawable.setCenterRadius(10f);
-        circularProgressDrawable.setBackgroundColor(R.color.colorMainSearch);
+//        circularProgressDrawable.setStrokeCap(Paint.Cap.SQUARE);
+        circularProgressDrawable.setCenterRadius(50f);
+        circularProgressDrawable.setStrokeWidth(10f);
         circularProgressDrawable.start();
 
         StorageReference fileReference = storage.getReferenceFromUrl(singleItem.imagePathInStorage);
@@ -104,6 +105,9 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             @Override
             public void onClick(View v) {
                 final Intent intent = new Intent(mContext, DishView.class);
+//                final Bundle bundlePosting = new Bundle();
+//                final Bundle bundleStore = new Bundle();
+
                 SerializableStoreInfo serializableStoreInfo = new SerializableStoreInfo(storeInfo);
 
                 intent.putExtra("postingInfo", singleItem);
@@ -155,7 +159,6 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                                 list.add(post);
                             }
                             //post데이터가 들어오면 리사이클러뷰를 refresh한다.
-//                            notifyDataSetChanged();
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }

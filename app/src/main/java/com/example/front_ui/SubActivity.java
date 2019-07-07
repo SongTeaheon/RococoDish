@@ -70,6 +70,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     SlidingRootNav slidingRootNav;
     TextView logOutText;
     TextView userNameText;
+    RecyclerViewDataAdapter recyclerViewDataAdapter;
 
 
 
@@ -90,11 +91,6 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         slidingRootNav = new SlidingRootNavBuilder(this)
                 .withMenuLayout(R.layout.activity_sub_drawer)
                 .withToolbarMenuToggle(pageViewToolbar)
-//                .withRootViewScale(0.7f)
-//                .withRootViewElevation(10)
-//                .withRootViewYTranslation(4)
-//                .withContentClickableWhenMenuOpened(true)
-//                .withSavedState(savedInstanceState)
                 .inject();
 
         //로그아웃 기능
@@ -110,8 +106,8 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         });
 
         //사용자 이름 띄우기
-        userNameText = findViewById(R.id.userName_textview_drawer);
-        userNameText.setText(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName());
+//        userNameText = findViewById(R.id.userName_textview_drawer);
+//        userNameText.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
         //마이페이지 글자 누를시 이벤트
         myPageTextview = findViewById(R.id.myPage_textview_activitySub);
@@ -208,13 +204,16 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         } else {
             //gps켜져있는지 확인
             final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+            //gps가 꺼져있다면
             if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
                 Log.d(TAG, "GPS is disabled");
                 mCurrentLocation.setLatitude(37.583816);
                 mCurrentLocation.setLongitude(127.058877);
                 initRecyclerView(mCurrentLocation);
-            }else {
-                getCurrentLocation();
+            }
+            //gps가 켜져있다면
+            else {
+                getCurrentLocation();//위치좌표를 불러온다.
             }
             mLocationPermissionGranted = true;
         }
@@ -274,9 +273,10 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     private void initRecyclerView(Location locationCenter) {
         Log.d(TAG, "initRecyclerView");
         my_recycler_view.setHasFixedSize(true);
-        RecyclerViewDataAdapter adapter = new RecyclerViewDataAdapter(this, locationCenter);
+        //가게 안에 목록 가져오는 리사이클러뷰
+        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter);
         my_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        my_recycler_view.setAdapter(adapter);
+        my_recycler_view.setAdapter(recyclerViewDataAdapter);
     }
 
 
@@ -286,15 +286,16 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         getCurrentLocation();
 
         my_recycler_view.setHasFixedSize(true);
-        RecyclerViewDataAdapter adapter = new RecyclerViewDataAdapter(this, mCurrentLocation);
+        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, mCurrentLocation);
         my_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        my_recycler_view.setAdapter(adapter);
+        my_recycler_view.setAdapter(recyclerViewDataAdapter);
 
         Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
         myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         myPage_recyclerview.setAdapter(myPageAdapter);
 
         // 새로고침 완료
+        recyclerViewDataAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
@@ -332,26 +333,37 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
             startActivity(new Intent(SubActivity.this, LoginActivity.class));
             finish();
         }
+        else{
+            userNameText = findViewById(R.id.userName_textview_drawer);
+            userNameText.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        }
     }
 
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
 
-        new AlertDialog.Builder(this)
-                .setMessage("정말 종료하시겠습니까?")
-                .setCancelable(false)
-                .setPositiveButton("종료", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
-                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+        //드로워가 열려있으면 취소버튼 누르면 닫히고
+        if(slidingRootNav.isMenuOpened()){
+            slidingRootNav.closeMenu();
+        }
+        //이미 닫혀있는 상태에서 취소 누르면 종료할 건지 다이얼로그 뜨게함.
+        else{
+            new AlertDialog.Builder(this)
+                    .setMessage("정말 종료하시겠습니까?")
+                    .setCancelable(true)
+                    .setPositiveButton("종료", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
+        }
     }
 }
