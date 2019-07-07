@@ -213,6 +213,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                                 Log.d(TAG, "가게이름 : " + storeInfo.name + " radius : " + radius);
                                 list.add(storeInfo);
                                 notifyDataSetChanged();
+//                                notifyItemChanged(list.size()+1);//이 부분 수정하니까 깜빡이는 부분 사라짐.
                             }
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
