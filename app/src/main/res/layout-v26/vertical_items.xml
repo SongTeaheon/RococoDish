@@ -57,7 +57,7 @@
                         tools:ignore="SpUsage" />
 
                     <TextView
-                        android:id="@+id/storeAdderss"
+                        android:id="@+id/storeAddress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/storeName"
