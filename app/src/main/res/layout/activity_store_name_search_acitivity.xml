@@ -42,6 +42,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="클릭금지"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/listview_storeSearch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/editText_storeNameSearch"

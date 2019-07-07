@@ -15,8 +15,11 @@ import android.widget.ListView;
 import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Query;
+import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.Interface.AlgoliaSearchPredicate;
 import com.example.front_ui.R;
 import com.example.front_ui.Utils.AlgoliaUtils;
+import com.example.front_ui.Utils.JsonParsing;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -58,29 +61,41 @@ public class StoreNameSearchAcitivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Query query = new Query(editable.toString())
-                        .setAttributesToRetrieve("name", "storeId")
-                        .setHitsPerPage(50);
-                AlgoliaUtils.storeIndex.searchAsync(query, new CompletionHandler() {
-                    @Override
-                    public void requestCompleted(JSONObject content, AlgoliaException error) {
-                        Log.d(TAG, "query result : " + content.toString());
-                        try {
-                            JSONArray hits = content.getJSONArray("hits");
-                            List<String> list = new ArrayList<>();
-                            for(int k = 0; k < hits.length(); k++){
-                                JSONObject jsonObject = hits.getJSONObject(k);
-                                String description = jsonObject.getString("name");
-                                list.add(description);
+                AlgoliaUtils.searchStore("store", "name", editable.toString(), new AlgoliaSearchPredicate() {
+                            @Override
+                            public void gettingJSONArrayCompleted(JSONArray jsonArray) {
+                                List<StoreInfo> storeList =  JsonParsing.getStoreListFromJsonList(jsonArray);
+                                ArrayList<String> nameList = new ArrayList<>();
+                                for(int i = 0; i < storeList.size(); i++){
+                                    nameList.add(storeList.get(i).getName());
+                                }
+                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, nameList);
+                                listView.setAdapter(adapter);
                             }
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, list);
-                            listView.setAdapter(adapter);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
+                        });
+//                Query query = new Query(editable.toString())
+//                        .setAttributesToRetrieve("name", "storeId")
+//                        .setHitsPerPage(50);
+//                AlgoliaUtils.storeIndex.searchAsync(query, new CompletionHandler() {
+//                    @Override
+//                    public void requestCompleted(JSONObject content, AlgoliaException error) {
+//                        Log.d(TAG, "query result : " + content.toString());
+//                        try {
+//                            JSONArray hits = content.getJSONArray("hits");
+//                            List<String> list = new ArrayList<>();
+//                            for(int k = 0; k < hits.length(); k++){
+//                                JSONObject jsonObject = hits.getJSONObject(k);
+//                                String storeName = jsonObject.getString("name");
+//                                list.add(storeName);
+//                            }
+//                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, list);
+//                            listView.setAdapter(adapter);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                    }
+//                });
             }
         });
 
@@ -107,7 +122,9 @@ public class StoreNameSearchAcitivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getString("name"));
-                                AlgoliaUtils.addObject(document.getId(), document.getString("name"));
+                                StoreInfo storeInfo = document.toObject(StoreInfo.class);
+
+                                AlgoliaUtils.addObject("store", storeInfo);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());

@@ -1,10 +1,14 @@
 package com.example.front_ui;
 
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +48,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -76,7 +81,7 @@ public class DishView extends AppCompatActivity {
     ImageView commentProfile;
     EditText commentEdit;
     ImageView commentSend;
-    ArrayList<CommentInfo> commentList = new ArrayList<>();
+    List<CommentInfo> commentList = new ArrayList<>();
     final String myUid = FirebaseAuth.getInstance().getUid();
     TextView hashTagText;
     TextView descText;
@@ -114,6 +119,7 @@ public class DishView extends AppCompatActivity {
         Intent intent = this.getIntent();
 
         postingInfo = (PostingInfo)intent.getSerializableExtra("postingInfo");
+        Log.d(TAG, "postingID : " + postingInfo.getPostingId());
         Log.d(TAG, "posting Info description " + postingInfo.description +"storage path " + postingInfo.imagePathInStorage
         + " storeId : " + postingInfo.getStoreId() +" postingid : " + postingInfo.postingId);
         storeInfo = (SerializableStoreInfo)intent.getSerializableExtra("storeInfo");
@@ -203,13 +209,31 @@ public class DishView extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "delete button clicked");
-                    Toast.makeText(getApplicationContext(), "삭제하시겠습니까? 버튼 추가하", Toast.LENGTH_LONG).show();
+                    new AlertDialog.Builder(DishView.this)
+                            .setMessage("정말 삭제하시겠습니까?")
+                            .setCancelable(true)
+                            .setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String storeId = postingInfo.getStoreId();
+                                    String postingId = postingInfo.getPostingId();
+                                    String imagePath = postingInfo.getImagePathInStorage();
+                                    double postingAverStar = postingInfo.getAver_star();
+                                    commentList.clear();
+                                    Log.d(TAG, "size : " + commentList.size());
+                                    commentAdapter.notifyDataSetChanged();
+                                    DeleteUtils.deletePosting(mContext,  db, storage, storeId, postingId, imagePath, postingAverStar);
+                                }
+                            })
+                            .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
 
-                    String storeId = postingInfo.getStoreId();
-                    String postingId = postingInfo.getPostingId();
-                    String imagePath = postingInfo.getImagePathInStorage();
-                    double postingAverStar = postingInfo.getAver_star();
-                    DeleteUtils.deletePosting(mContext,  db, storage, storeId, postingId, imagePath, postingAverStar);
+
+
 
                 }
             });

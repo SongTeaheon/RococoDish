@@ -23,21 +23,6 @@
         <!--toolbar-->
     </RelativeLayout>
 
-    <!--페이스북 쉬머 로딩 레이아웃-->
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmerFrame_activitySub"
-        android:orientation="vertical"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swipe_layout">
-        <include layout="@layout/activity_sub_shimmer" />
-    </com.facebook.shimmer.ShimmerFrameLayout>
-
-
     <!--<Button-->
         <!--android:id="@+id/search_btn"-->
         <!--android:layout_width="match_parent"-->

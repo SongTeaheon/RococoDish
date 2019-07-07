@@ -6,13 +6,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.algolia.search.saas.Index;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.Interface.AlgoliaSearchPredicate;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -24,8 +27,15 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -49,9 +59,12 @@ public class DeleteUtils {
         * 1. posting collection에서 삭제
         * 2. storage에서 사진 삭제
         * 3. 가게 컬렉션 내부 포스팅 삭제 -> 가게데이터삭제(포스팅게시글이 없는경우), 평균 별점 업데이트
+        * 4. posting collection의 서브 컬렉션 삭제.
         * */
 
+
         Log.d(TAG, "firebase delete posting");
+
 
         //posting colletion에서 삭제
         db.collection("포스팅").document(postingDocId)
@@ -70,7 +83,10 @@ public class DeleteUtils {
                 });
 
         //TODO: 포스팅 경로아래에 좋아요와 댓글 서브컬렉션 삭제도 필요
-        //TODO: Algolia 삭제도 같이 필요
+        //포스팅 경로 아래에 좋아요, 댓글 삭제.
+        deleteSubCollectionData("포스팅", postingDocId, "좋아요");
+        deleteSubCollectionData("포스팅", postingDocId, "댓글");
+
 
         //storage에서 삭제.
         StorageReference deleteRef = storage.getReferenceFromUrl(imagePath);
@@ -111,11 +127,13 @@ public class DeleteUtils {
 
         //사용자 posting Num 변경.
         subtractUserPostingNum(db);
+
         ((Activity)context).finish();
+
 
     }
 
-    //해당 가게에 posting 데이터가 한 개뿐이었다가 지워지는 경우, store데이터도 같이 지워준다.
+    //해당 가게에 posting 데이터가 한 개뿐이었다가 지워지는 경우, store데이터도 같이 지워준다.(deleteStoreData()
     private static void checkStoreDataDelete(final FirebaseFirestore db, final String storeDocId){
         //가게 컬렉션 데이터 개수 확인 1개면 store data 삭제
         db.collection("가게")
@@ -146,7 +164,7 @@ public class DeleteUtils {
     }
 
     //가게 데이터 삭제
-    private static void deleteStoreData(FirebaseFirestore db, String storeDocId){
+    private static void deleteStoreData(FirebaseFirestore db, final String storeDocId){
         Log.d(TAG, "가게 데이터 삭제");
         db.collection("가게")
                 .document(storeDocId)
@@ -155,6 +173,8 @@ public class DeleteUtils {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Store Data DocumentSnapshot in store collection successfully deleted!");
+                        //삭제하면서 algolia에서 id로 검색해서 지워준다.
+                        deleteStoreInAlgolia(storeDocId);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -163,6 +183,34 @@ public class DeleteUtils {
                         Log.w(TAG, "Error deleting store data document in store collection", e);
                     }
                 });
+    }
+
+    //algolia에서 가게 데이터를 지운다.
+    private static void deleteStoreInAlgolia(String storeFirebaseId){
+
+        final Index index = AlgoliaUtils.client.getIndex("store");
+
+        //1. 먼저 가게 데이터를 찾는다.
+        AlgoliaUtils.searchStore("store", "storeId", storeFirebaseId, new AlgoliaSearchPredicate() {
+            @Override
+            public void gettingJSONArrayCompleted(JSONArray jsonArray) {
+                for(int k = 0; k < jsonArray.length(); k++){
+                    String jsonStr = null;
+                    try {
+                        JSONObject jsonObject = jsonArray.getJSONObject(k);
+                        String idStr = jsonObject.getString("objectID");
+                        Log.d(TAG, "algolia 삭제! objectId" + idStr );
+                        index.deleteObjectAsync(idStr, null);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Gson gson = new Gson();
+                    StoreInfo storeInfo = gson.fromJson(jsonStr, StoreInfo.class);
+
+                }
+            }
+        });
     }
 
 
@@ -234,5 +282,49 @@ public class DeleteUtils {
 
 
 
+    }
+
+    //posting컬렉션 내부 좋아요 및 댓글 컬렉션 데이터 가져오기. 삭제하기
+    private static void deleteLikeAndCommentCollection(){
+
+    }
+
+    //subcollection 을 모두 지운다. -collectionName_1st - documentId - collectionName_2nd
+    public static void deleteSubCollectionData(final String collectionName_1st,final String documentId,  final String collectionName_2nd){
+        FirebaseFirestore db;
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference collectionReference = db.collection(collectionName_1st).document(documentId).collection(collectionName_2nd);
+
+        // 데이터를 모두 가져온다.
+        collectionReference.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Log.d(TAG, "DocumentSnapshot successfully deleted!" + collectionName_1st + " - " + documentId + " - "+ collectionName_2nd + " - " + document.getId());
+
+                                //가져온 데이터 모두 삭제.
+                                collectionReference.document(document.getId())
+                                        .delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "DocumentSnapshot successfully deleted! " + collectionName_2nd);
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error deleting document", e);
+                                            }
+                                        });
+
+                            }
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
     }
 }

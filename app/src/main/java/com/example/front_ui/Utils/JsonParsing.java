@@ -6,11 +6,17 @@ import com.example.front_ui.DataModel.KakaoLocalInfo;
 import com.example.front_ui.DataModel.KakaoMetaData;
 import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.DataModel.SearchedData;
+import com.example.front_ui.DataModel.StoreInfo;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class JsonParsing {
 
@@ -77,5 +83,25 @@ public class JsonParsing {
         }
 
         return dataList;
+    }
+
+
+    public static List<StoreInfo> getStoreListFromJsonList(JSONArray jsonArray){
+        List<StoreInfo> list = new ArrayList<>();
+        for(int k = 0; k < jsonArray.length(); k++){
+            String jsonStr = null;
+            try {
+                JSONObject jsonObject = jsonArray.getJSONObject(k);
+                jsonStr = jsonObject.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            Gson gson = new Gson();
+            StoreInfo storeInfo = gson.fromJson(jsonStr, StoreInfo.class);
+
+            list.add(storeInfo);
+        }
+        return list;
     }
 }
