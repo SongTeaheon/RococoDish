@@ -26,6 +26,15 @@ public class AlgoliaUtils {
 
     }
 
+    public static void addObject(String storeId, String storeName){
+        Map<String, Object> storeMap = new HashMap<>();
+        storeMap.put("name", storeName);
+        storeMap.put("storeId", storeId);
+
+        storeIndex.addObjectAsync(new JSONObject(storeMap), null);
+
+    }
+
 
 
 }

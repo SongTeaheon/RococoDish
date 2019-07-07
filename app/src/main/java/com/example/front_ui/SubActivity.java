@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.front_ui.AlgoliaTest.StoreNameSearchAcitivity;
 import com.example.front_ui.DataModel.SearchedData;
 import com.example.front_ui.Interface.MyPageDataPass;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
@@ -92,6 +93,20 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                 .withMenuLayout(R.layout.activity_sub_drawer)
                 .withToolbarMenuToggle(pageViewToolbar)
                 .inject();
+
+
+        /*
+        * 임시 기능입니다. 임시가게이름 검색!
+        * */
+        TextView tv_storeSearch = findViewById(R.id.textview_storesearch);
+        tv_storeSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SubActivity.this, StoreNameSearchAcitivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         //로그아웃 기능
         logOutText = findViewById(R.id.logOut_textview_drawer);
