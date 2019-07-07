@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.Utils.GlideApp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -25,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -32,14 +35,14 @@ import javax.annotation.Nullable;
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
 
     private PostingInfo postingInfo;
-    private ArrayList<CommentInfo> list;
+    private List<CommentInfo> list;
     private Context context;
     private String TAG = "TAGCommentAdapter";
 
 
 
     public CommentAdapter(Context context,
-                          ArrayList<CommentInfo> list,
+                          List<CommentInfo> list,
                           PostingInfo postingInfo){
 
         this.list = list;
@@ -92,28 +95,30 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
 
 
-        //답변 부분 꾸욱 누르면 답변 수정할 수 있는 다이얼로그 창이 나옴.
-        FirebaseFirestore.getInstance().collection("포스팅")
-                .document(postingInfo.postingId)
-                .collection("댓글")
-                .orderBy("time", Query.Direction.ASCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        final String commentDocId = queryDocumentSnapshots.getDocuments().get(i).getId();
-
-                        commentViewHolder.answer.setOnLongClickListener(new View.OnLongClickListener() {
-                            @Override
-                            public boolean onLongClick(View v) {
-                                Dialog_Answer dialog_answer = new Dialog_Answer(context, postingInfo, commentDocId);
-                                dialog_answer.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialog_answer.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                dialog_answer.show();
-                                return false;
-                            }
-                        });
-                    }
-                });
+//        //답변 부분 꾸욱 누르면 답변 수정할 수 있는 다이얼로그 창이 나옴.
+//        FirebaseFirestore.getInstance().collection("포스팅")
+//                .document(postingInfo.postingId)
+//                .collection("댓글")
+//                .orderBy("time", Query.Direction.ASCENDING)
+//                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+////                            final String commentDocId = queryDocumentSnapshots.getDocuments().get(i).getId();
+//                        DocumentSnapshot ds = queryDocumentSnapshots.getDocuments().get(i);
+//                            final String commentDocId = ds.getId();
+//
+//                            commentViewHolder.answer.setOnLongClickListener(new View.OnLongClickListener() {
+//                                @Override
+//                                public boolean onLongClick(View v) {
+//                                    Dialog_Answer dialog_answer = new Dialog_Answer(context, postingInfo, commentDocId);
+//                                    dialog_answer.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                                    dialog_answer.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                                    dialog_answer.show();
+//                                    return false;
+//                                }
+//                            });
+//                    }
+//                });
 
 
         //질문을 꾸욱 길게 누르면 다이얼로그 뜨게함.
@@ -184,4 +189,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     public int getItemCount() {
         return list.size();
     }
+
+
 }

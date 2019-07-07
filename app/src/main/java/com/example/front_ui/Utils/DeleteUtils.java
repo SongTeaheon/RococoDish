@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -61,7 +62,9 @@ public class DeleteUtils {
         * 4. posting collection의 서브 컬렉션 삭제.
         * */
 
+
         Log.d(TAG, "firebase delete posting");
+
 
         //posting colletion에서 삭제
         db.collection("포스팅").document(postingDocId)
@@ -80,6 +83,10 @@ public class DeleteUtils {
                 });
 
         //TODO: 포스팅 경로아래에 좋아요와 댓글 서브컬렉션 삭제도 필요
+        //포스팅 경로 아래에 좋아요, 댓글 삭제.
+        deleteSubCollectionData("포스팅", postingDocId, "좋아요");
+        deleteSubCollectionData("포스팅", postingDocId, "댓글");
+
 
         //storage에서 삭제.
         StorageReference deleteRef = storage.getReferenceFromUrl(imagePath);
@@ -120,7 +127,9 @@ public class DeleteUtils {
 
         //사용자 posting Num 변경.
         subtractUserPostingNum(db);
+
         ((Activity)context).finish();
+
 
     }
 
@@ -273,5 +282,49 @@ public class DeleteUtils {
 
 
 
+    }
+
+    //posting컬렉션 내부 좋아요 및 댓글 컬렉션 데이터 가져오기. 삭제하기
+    private static void deleteLikeAndCommentCollection(){
+
+    }
+
+    //subcollection 을 모두 지운다. -collectionName_1st - documentId - collectionName_2nd
+    public static void deleteSubCollectionData(final String collectionName_1st,final String documentId,  final String collectionName_2nd){
+        FirebaseFirestore db;
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference collectionReference = db.collection(collectionName_1st).document(documentId).collection(collectionName_2nd);
+
+        // 데이터를 모두 가져온다.
+        collectionReference.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Log.d(TAG, "DocumentSnapshot successfully deleted!" + collectionName_1st + " - " + documentId + " - "+ collectionName_2nd + " - " + document.getId());
+
+                                //가져온 데이터 모두 삭제.
+                                collectionReference.document(document.getId())
+                                        .delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "DocumentSnapshot successfully deleted! " + collectionName_2nd);
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error deleting document", e);
+                                            }
+                                        });
+
+                            }
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
     }
 }
