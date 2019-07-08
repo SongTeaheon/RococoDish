@@ -156,7 +156,6 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 
         //mCurrentLocation초기화 -> permission안될 경우 때문!!
         mCurrentLocation = new Location("dummyprovider");
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         getLocationPermission(); //Permission완료해야 recyclerview를 불러온다.(그 전에 불러오면 안되기 때문)
 
@@ -270,7 +269,19 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //permission허용한 경우
-                    getCurrentLocation();
+                    //gps켜져있는지 확인
+                    final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+                    //gps가 꺼져있다면
+                    if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                        Log.d(TAG, "GPS is disabled");
+                        mCurrentLocation.setLatitude(37.583816);
+                        mCurrentLocation.setLongitude(127.058877);
+                        initRecyclerView(mCurrentLocation);
+                    }
+                    //gps가 켜져있다면
+                    else {
+                        getCurrentLocation();//위치좌표를 불러온다.
+                    }
                 } else {
                     //permission거절한 경우
                     Log.d(TAG, "permission is denied");
