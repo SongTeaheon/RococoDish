@@ -66,7 +66,7 @@ public class DeleteUtils {
         Log.d(TAG, "firebase delete posting");
 
 
-        //posting colletion에서 삭제
+        //posting colletion에서 삭제(필드만 삭제)
         db.collection("포스팅").document(postingDocId)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
