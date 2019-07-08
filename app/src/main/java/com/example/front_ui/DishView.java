@@ -223,6 +223,7 @@ public class DishView extends AppCompatActivity {
                                     Log.d(TAG, "size : " + commentList.size());
                                     commentAdapter.notifyDataSetChanged();
                                     DeleteUtils.deletePosting(mContext,  db, storage, storeId, postingId, imagePath, postingAverStar);
+//                                    finish();
                                 }
                             })
                             .setNegativeButton("취소", new DialogInterface.OnClickListener() {

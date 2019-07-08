@@ -280,27 +280,35 @@ class MyAdapter extends BaseAdapter {
                 final Intent intent = new Intent(context, DishView.class);
 
                 db.collection("가게")
-                        .document(singleItem.storeId)
-                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        .document(singleItem.getStoreId())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
-                            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                        StoreInfo storeInfo = document.toObject(StoreInfo.class);
+                                        Log.d(TAG, "storeInfo : " + storeInfo.getName());
+                                        SerializableStoreInfo serializableStoreInfo = new SerializableStoreInfo(storeInfo);
+                                        double distance = LocationUtil.getDistanceFromMe(currentLatitude, currentLongtitude, storeInfo.getGeoPoint());
+                                        intent.putExtra("postingInfo", singleItem);
+                                        intent.putExtra("storeInfo", serializableStoreInfo);
+                                        intent.putExtra("distance", distance);
 
-                                if(documentSnapshot != null){
-                                    StoreInfo storeInfo = documentSnapshot.toObject(StoreInfo.class);
-                                    SerializableStoreInfo serializableStoreInfo= new SerializableStoreInfo(storeInfo);
-                                    double distance = LocationUtil.getDistanceFromMe(currentLatitude, currentLongtitude, storeInfo.getGeoPoint());
-                                    intent.putExtra("postingInfo", singleItem);
-                                    intent.putExtra("storeInfo", serializableStoreInfo);
-                                    intent.putExtra("distance", distance);
+                                        context.startActivity(intent);
 
-                                    context.startActivity(intent);
+                                        Toast.makeText(context, storeInfo.name, Toast.LENGTH_SHORT).show();
 
-                                    Toast.makeText(context, storeInfo.name, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Log.d(TAG, "No such document");
+                                    }
+                                } else {
+                                    Log.d(TAG, "get failed with ", task.getException());
                                 }
-
                             }
                         });
-
             }
         });
         return convertView;
