@@ -285,16 +285,19 @@ class MyAdapter extends BaseAdapter {
                             @Override
                             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
 
-                                StoreInfo storeInfo = documentSnapshot.toObject(StoreInfo.class);
-                                SerializableStoreInfo serializableStoreInfo= new SerializableStoreInfo(storeInfo);
-                                double distance = LocationUtil.getDistanceFromMe(currentLatitude, currentLongtitude, storeInfo.getGeoPoint());
-                                intent.putExtra("postingInfo", singleItem);
-                                intent.putExtra("storeInfo", serializableStoreInfo);
-                                intent.putExtra("distance", distance);
+                                if(documentSnapshot != null){
+                                    StoreInfo storeInfo = documentSnapshot.toObject(StoreInfo.class);
+                                    SerializableStoreInfo serializableStoreInfo= new SerializableStoreInfo(storeInfo);
+                                    double distance = LocationUtil.getDistanceFromMe(currentLatitude, currentLongtitude, storeInfo.getGeoPoint());
+                                    intent.putExtra("postingInfo", singleItem);
+                                    intent.putExtra("storeInfo", serializableStoreInfo);
+                                    intent.putExtra("distance", distance);
 
-                                context.startActivity(intent);
+                                    context.startActivity(intent);
 
-                                Toast.makeText(context, storeInfo.name, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, storeInfo.name, Toast.LENGTH_SHORT).show();
+                                }
+
                             }
                         });
 
