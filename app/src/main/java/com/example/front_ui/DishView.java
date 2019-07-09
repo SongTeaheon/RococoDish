@@ -21,6 +21,9 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -409,8 +412,10 @@ public class DishView extends AppCompatActivity {
 
     //좋아요 기능(클릭 함수까지 포함.)
     public void likeFunc(){
+
         //포스팅 -> 컬렉션 좋아요 -> 좋아요 한 사람의 uid 도큐먼트 -> isLiked를 bool값으로 true일 경우 빨간색 아예 도큐먼트가 없을 경우는 빈 하트
         final ImageView likeImage = findViewById(R.id.like_imageview_dishView);
+
         //좋아요 했으면 빨간색으로 설정
         final DocumentReference likeRef = FirebaseFirestore.getInstance().collection("포스팅")
                 .document(postingInfo.postingId)
@@ -475,6 +480,21 @@ public class DishView extends AppCompatActivity {
     public void likeClick(final ImageView likeImage,
                           final DocumentReference likeRef,
                           final boolean isLiked){
+
+        //좋아요 애니메이션 적용부분
+        ScaleAnimation scaleAnimation = new ScaleAnimation(
+                0.7f, 1.0f, 0.7f, 1.0f, Animation.RELATIVE_TO_SELF, 0.7f);
+        scaleAnimation.setDuration(500);
+        BounceInterpolator bounceInterpolator = new BounceInterpolator();
+        scaleAnimation.setInterpolator(bounceInterpolator);
+        //likeImage가 어떤 drawable을 가질 때마다 애니메이션을 적용해줌.(결국 이미지가 변경될 때마다 bounce애니메이션 적용함.)
+        if(likeImage.getDrawable().equals(R.drawable.ic_like)){
+            likeImage.startAnimation(scaleAnimation);
+        }
+        else {
+            likeImage.startAnimation(scaleAnimation);
+        }
+
 
         //클릭에 따른 좋아요 색 변경
         likeImage.setOnClickListener(new View.OnClickListener() {
