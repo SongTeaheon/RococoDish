@@ -199,6 +199,7 @@ public class DishView extends AppCompatActivity {
         /*
         * 삭제 및 수정 버튼 처리
         * */
+
         if(postingInfo.getWriterId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
             Log.d(TAG, "내 게시물!!!");
             deleteButton = findViewById(R.id.delete_button);
@@ -208,6 +209,7 @@ public class DishView extends AppCompatActivity {
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Log.d(TAG, "delete button clicked");
                     new AlertDialog.Builder(DishView.this)
                             .setMessage("정말 삭제하시겠습니까?")
@@ -232,10 +234,6 @@ public class DishView extends AppCompatActivity {
                                     dialog.dismiss();
                                 }
                             }).show();
-
-
-
-
                 }
             });
 
@@ -247,6 +245,7 @@ public class DishView extends AppCompatActivity {
                 }
             });
         }
+
         /**
          * 포스팅 작성자의 프로필 정보(이미지, 이름) 불러오기 + 우측 상단에 띄우기
          * **/
@@ -310,7 +309,6 @@ public class DishView extends AppCompatActivity {
          * */
         likeFunc();
 
-
         /**
          * 하단에 질문과 답 리사이클러뷰 설정
          * **/
@@ -356,14 +354,8 @@ public class DishView extends AppCompatActivity {
 
         //실시간 댓글 가져오기
         realTimeFetchComment(commentRef);
-
-        /**
-         * 하단 질문에 대한 답변 처리
-         * **/
-
-
-
     }
+
     public void realTimeFetchComment(CollectionReference commentRef){
         //실시간 댓글 가져오기
         commentRef
@@ -394,8 +386,6 @@ public class DishView extends AppCompatActivity {
 
     public void uploadComment(final CollectionReference commentRef,
                               final String profilePath){
-        //댓글 전송 시 리사이클러뷰 업로드
-
 
         //댓글 업로드하기
         commentSend.setOnClickListener(new View.OnClickListener() {
@@ -417,6 +407,7 @@ public class DishView extends AppCompatActivity {
         });
     }
 
+    //좋아요 기능(클릭 함수까지 포함.)
     public void likeFunc(){
         //포스팅 -> 컬렉션 좋아요 -> 좋아요 한 사람의 uid 도큐먼트 -> isLiked를 bool값으로 true일 경우 빨간색 아예 도큐먼트가 없을 경우는 빈 하트
         final ImageView likeImage = findViewById(R.id.like_imageview_dishView);
@@ -425,7 +416,6 @@ public class DishView extends AppCompatActivity {
                 .document(postingInfo.postingId)
                 .collection("좋아요")
                 .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-
         //좋아요 여부와 색변경
         likeRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -444,12 +434,23 @@ public class DishView extends AppCompatActivity {
                 }
                 //완전 처음 게시물에 들어갔을 경우(좋아요 부분을 디비에 만들어야함.)
                 else{
+                    FirebaseFirestore.getInstance().collection("포스팅")
+                            .document(postingInfo.postingId)
+                            .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                @Override
+                                public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                                    assert documentSnapshot != null;
 
-                    HashMap map = new HashMap();
-                    map.put("isLiked", false);
-                    likeRef.set(map);
+                                    if(documentSnapshot.exists()){
+                                        HashMap map = new HashMap();
+                                        map.put("isLiked", false);
+                                        likeRef.set(map);
 
-                    likeClick(likeImage, likeRef, false);
+
+                                        likeClick(likeImage, likeRef, false);
+                                    }
+                                }
+                            });
                 }
             }
         });
@@ -536,5 +537,6 @@ public class DishView extends AppCompatActivity {
         pTextView.setMovementMethod(LinkMovementMethod.getInstance());
         pTextView.setText(string);
     }
+
 }
 

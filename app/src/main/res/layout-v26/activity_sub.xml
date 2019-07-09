@@ -23,6 +23,17 @@
         <!--toolbar-->
     </RelativeLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addPosting_fab_subActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/ic_add_black_24dp"
+        android:tint="@color/MainColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!--<Button-->
         <!--android:id="@+id/search_btn"-->
         <!--android:layout_width="match_parent"-->

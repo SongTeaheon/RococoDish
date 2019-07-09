@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.example.front_ui.AlgoliaTest.StoreNameSearchAcitivity;
 import com.example.front_ui.DataModel.SearchedData;
 import com.example.front_ui.Interface.MyPageDataPass;
+import com.example.front_ui.PostingProcess.MainShareActivity;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -72,6 +73,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     TextView logOutText;
     TextView userNameText;
     RecyclerViewDataAdapter recyclerViewDataAdapter;
+    FloatingActionButton addPosting;
 
 
 
@@ -83,6 +85,17 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
 
+        //우측 하단 포스팅 추가 버튼
+        addPosting = findViewById(R.id.addPosting_fab_subActivity);
+        addPosting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SubActivity.this, MainShareActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //툴바 설정
         pageViewToolbar = findViewById(R.id.pageViewToolbar);
         setSupportActionBar(pageViewToolbar);
 

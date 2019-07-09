@@ -63,7 +63,7 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
         Log.d(TAG, "onBindviewHolder position : " + i);
         if(i == 0){
             GlideApp.with(context)
-                    .load(R.drawable.plus)
+                    .load(R.drawable.ic_star)
                     .into(itemRowHolder.imageview);
         }else if(i > 0){
             PostingInfo postingInfo = list.get(i);//노확실
@@ -76,13 +76,10 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
                 int pos = itemRowHolder.getAdapterPosition();
                 if(pos == 0){
                     //글 작성으로 이동
-                    Toast.makeText(context, "포스팅 가즈아", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(context, MainShareActivity.class);
-                    context.startActivity(intent);
+                    Toast.makeText(context, "우측 하단 플러스 버튼 이용해주세요.", Toast.LENGTH_SHORT).show();
                 }else{
-                    //해당 가게 화면으로 이동
+                    //TODO : 해당 게시물 화면으로 이동하면 됩니다.
                 }
-                Toast.makeText(v.getContext(), "여기다가 디비에 있는 이미지 끌어와서 글라이드로 붙이면 될듯", Toast.LENGTH_SHORT).show();
             }
         });
     }
