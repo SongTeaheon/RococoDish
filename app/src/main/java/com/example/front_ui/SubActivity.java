@@ -127,7 +127,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -369,7 +369,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 
         if(FirebaseAuth.getInstance().getCurrentUser() == null){
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(SubActivity.this, LoginActivity.class));
+            startActivity(new Intent(SubActivity.this, SignUpActivity.class));
             finish();
         }
         else{
