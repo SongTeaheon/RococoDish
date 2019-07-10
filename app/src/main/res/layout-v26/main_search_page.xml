@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include layout="@layout/page_view_my_toolbar" />
+        <include layout="@layout/main_search_page_toolbar" />
         <!--toolbar-->
     </RelativeLayout>
 
@@ -177,12 +177,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewDay">
+                    app:layout_constraintTop_toBottomOf="@+id/textViewAddress">
 
                     <!--둘 중에 필요한 부분을 남겨주세요~!!-->
                     <TextView
@@ -191,21 +192,21 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:fontFamily="@font/bmhanna_11yrs"
-                        android:text="내용이 들어가는 부분입니다."
-                        android:textColor="@color/Black"
-                        android:textSize="16dp"
+                        android:text="#해쉬태그"
+                        android:textColor="#000"
+                        android:textSize="14dp"
                         tools:ignore="SpUsage" />
 
-                    <!--<TextView-->
-                    <!--android:id="@+id/desc_textview_dishView"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginTop="8dp"-->
-                    <!--android:fontFamily="@font/bmhannaair"-->
-                    <!--android:text="내용이 들어가는 부분입니다."-->
-                    <!--android:textColor="#000"-->
-                    <!--android:textSize="14dp"-->
-                    <!--tools:ignore="SpUsage" />-->
+                    <TextView
+                        android:id="@+id/desc_textview_dishView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/bmhanna_11yrs"
+                        android:text="내용이 들어가는 부분입니다."
+                        android:textColor="#000"
+                        android:textSize="14dp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
 
@@ -262,19 +263,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/like_imageview_dishView"
                     app:layout_constraintTop_toBottomOf="@+id/like_imageview_dishView"
-                    tools:ignore="SpUsage" />
-
-                <TextView
-                    android:id="@+id/textViewDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:text="게시한 날짜/시간"
-                    android:textSize="10dp"
-                    android:textColor="@color/Grey"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewAddress"
                     tools:ignore="SpUsage" />
 
             </android.support.constraint.ConstraintLayout>

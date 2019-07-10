@@ -169,7 +169,7 @@ public class DishView extends AppCompatActivity {
             setTags(hashTagText, postingInfo.hashTags);
         }
         else{
-            setTags(hashTagText, "태그가 없습니다.");
+            setTags(hashTagText, "게시물 내용이 없습니다.");
         }
 
 
@@ -177,13 +177,14 @@ public class DishView extends AppCompatActivity {
         /**
          * 게시물 내용 설정
          * **/
-        descText = findViewById(R.id.desc_textview_dishView);
-        if(postingInfo.description != null){
-            descText.setText(postingInfo.description);
-        }
-        else{
-            descText.setText("게시물 내용이 없습니다.");
-        }
+//        descText = findViewById(R.id.desc_textview_dishView);
+//        if(postingInfo.description != null){
+//            descText.setText(postingInfo.description);
+//        }
+//        else{
+//            descText.setText("게시물 내용이 없습니다.");
+//        }
+
         tvStoreName = findViewById(R.id.tvStore);
         tvStoreName.setText(storeInfo.getName());
         tvAddress.setText(storeInfo.getAddress());
