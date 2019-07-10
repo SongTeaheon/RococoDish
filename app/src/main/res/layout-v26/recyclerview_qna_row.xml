@@ -3,28 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
+        android:layout_width="390dp"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        tools:layout_editor_absoluteX="5dp"
-        tools:layout_editor_absoluteY="5dp">
+        android:layout_margin="5dp">
         <!--이미지 들어가는 부분-->
         <android.support.v7.widget.CardView
             android:id="@+id/image_cardview"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_margin="10dp"
+            android:layout_marginStart="16dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="7dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="@+id/cardview2">
+
             <ImageView
                 android:id="@+id/imageViewProfile"
                 android:layout_width="match_parent"
@@ -32,57 +31,52 @@
                 android:scaleType="centerCrop" />
         </android.support.v7.widget.CardView>
 
-        <TextView
-            android:id="@+id/qna_Q"
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardview2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_marginStart="16dp"
-            android:fontFamily="@font/bmhannapro"
-            android:textColor="@color/Black"
-            android:textSize="16dp"
+            app:cardCornerRadius="17dp"
+            app:cardElevation="2dp"
+            app:layout_constraintBottom_toTopOf="@+id/userCommnet_textview_comment"
             app:layout_constraintStart_toEndOf="@+id/image_cardview"
-            app:layout_constraintTop_toTopOf="@+id/text_Q"
-            tools:ignore="SpUsage"
-            tools:text="Q. " />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/userName_textview_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/bmjua"
+                android:layout_margin="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="유저이름" />
+        </android.support.v7.widget.CardView>
 
         <TextView
-            android:id="@+id/qna_A"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
-            android:fontFamily="@font/bmhannapro"
-            android:textColor="@color/Grey"
-            android:textSize="16dp"
-            app:layout_constraintStart_toEndOf="@+id/image_cardview"
-            app:layout_constraintTop_toTopOf="@+id/text_A"
-            tools:ignore="SpUsage"
-            tools:text="A. " />
-
-        <TextView
-            android:id="@+id/text_Q"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/bmhannapro"
-            android:text="질문을 등록해주세요."
-            android:textColor="@color/Black"
-            android:textSize="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/text_A"
-            app:layout_constraintStart_toEndOf="@+id/qna_Q"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/text_A"
+            android:id="@+id/userCommnet_textview_comment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/bmhannapro"
-            android:text="답변을 기다리는 중입니다."
-            android:textColor="@color/Grey"
-            android:textSize="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/bmhanna_11yrs"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/image_cardview"
+            app:layout_constraintTop_toBottomOf="@+id/cardview2" />
+
+        <TextView
+            android:id="@+id/commentTime_textview_comment"
+            android:layout_width="wrap_content"
+            android:textSize="8sp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/qna_A"
-            app:layout_constraintTop_toBottomOf="@+id/text_Q" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/userCommnet_textview_comment" />
 
     </android.support.constraint.ConstraintLayout>
 
