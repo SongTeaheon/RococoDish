@@ -36,6 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginBottom="4dp"
             app:cardCornerRadius="17dp"
             app:cardElevation="2dp"
             app:layout_constraintBottom_toTopOf="@+id/userCommnet_textview_comment"
@@ -46,11 +47,12 @@
                 android:id="@+id/userName_textview_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/bmjua"
                 android:layout_margin="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:text="유저이름" />
+                android:fontFamily="@font/bmjua"
+                android:text="유저이름"
+                android:textSize="12sp" />
         </android.support.v7.widget.CardView>
 
         <TextView
@@ -60,6 +62,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
+            android:textSize="11sp"
             android:fontFamily="@font/bmhanna_11yrs"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

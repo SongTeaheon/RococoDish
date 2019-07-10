@@ -72,13 +72,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         //시간 부분
         Long time = list.get(i).getTime();
         Date date = new Date(time);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM월 dd일 hh시 mm분 ss초");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM월 dd일 / hh:mm / ss초");
         String result = dateFormat.format(date);
         commentViewHolder.time.setText(result);
 
 
         //유저 이름 부분
-        commentViewHolder.userName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        commentViewHolder.userName.setText(list.get(i).getWriterName());
 
         //댓글 부분
         commentViewHolder.userComment.setText(list.get(i).getComment());

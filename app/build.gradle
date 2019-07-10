@@ -104,6 +104,9 @@ dependencies {
     //Algolia api
     implementation 'com.algolia:algoliasearch-android:3.+'
 
+    //아이폰처럼 스와이프해서 창을 닫는 라이브러리
+//    implementation 'com.gongwen:swipeback:1.0.2'
+    implementation 'com.github.liuguangqiang.swipeback:library:1.0.2@aar'
 
 }
 
