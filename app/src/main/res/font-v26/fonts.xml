@@ -21,5 +21,11 @@
         app:fontStyle="normal"
         app:font="@font/bmhannapro"
         />
+    <font
+        android:fontStyle="normal"
+        android:font="@font/bmhannaair"
+        app:fontStyle="normal"
+        app:font="@font/bmhannaair"
+        />
 
 </font-family>

@@ -14,38 +14,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.constraint.ConstraintLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <!--android:id="@+id/hamburgerButton" 원래는 이거임-->
-                <!--<ImageView-->
-                    <!--android:id="@+id/myPage_textview_activitySub"-->
-                    <!--android:layout_width="26dp"-->
-                    <!--android:layout_height="26dp"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:layout_marginEnd="20dp"-->
-                    <!--android:src="@mipmap/ic_hamburger" />-->
+                <ImageView
+                    android:id="@+id/backButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp"
+                    android:src="@mipmap/ic_back" />
 
-                <!--가게이름 10글자 넘어가면 안되게 해야함...ㅜㅜ-->
-                <TextView
-                    android:id="@+id/tvStore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="35dp"
+                <EditText
+                    android:id="@+id/searchStore"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_toStartOf="@+id/search_btn"
+                    android:layout_toEndOf="@+id/backButton"
                     android:fontFamily="@font/bmjua"
-                    android:gravity="center"
-                    android:text="ROCOCO DISH"
-                    android:textColor="@color/MainColor"
-                    android:textSize="26dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/search_btn"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:hint="가게, 지역, 태그, 이름으로 검색"
+                    android:textColor="@android:color/black"
+                    android:textSize="18dp"
                     tools:ignore="SpUsage" />
-
 
                 <ImageView
                     android:id="@+id/search_btn"
@@ -59,7 +52,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-            </android.support.constraint.ConstraintLayout>
+            </RelativeLayout>
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
