@@ -25,6 +25,7 @@ import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.R;
 import com.example.front_ui.Utils.AlgoliaUtils;
+import com.example.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -86,6 +87,7 @@ public class LastShareFragment extends Fragment {
     FirebaseFirestore db;
     Spannable mspanable;
     int hashTagIsComing = 0;
+    ImageView postingImage;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,6 +100,7 @@ public class LastShareFragment extends Fragment {
             Log.d(TAG, "kakaoStoreInfo : " + kakaoStoreInfo.place_name);
             if(byteImage == null)
                 Log.e(TAG, "no byteImage");
+
         }
     }
 
@@ -112,6 +115,7 @@ public class LastShareFragment extends Fragment {
         mStarText = view.findViewById(R.id.starText);
         detail_aver_star = new ArrayList<Double>() {};
 //        String text = text_description.getText().toString();
+        postingImage = view.findViewById(R.id.imageView1);
         storage = FirebaseStorage.getInstance();
         db = FirebaseFirestore.getInstance();
 
@@ -127,6 +131,15 @@ public class LastShareFragment extends Fragment {
 
             }
         });
+
+        //크롭해서 받은 바이트 이미지를 넣어줌
+        byteImage = getArguments().getByteArray("byteArray");
+        if(byteImage != null){
+            GlideApp.with(this)
+                    .load(byteImage)
+                    .into(postingImage);
+        }
+
         //해쉬태그 처리
         tags = (EditText)view.findViewById(R.id.hashTag);
         mspanable = tags.getText();
