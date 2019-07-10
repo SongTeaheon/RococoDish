@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -49,11 +48,15 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.liuguangqiang.swipeback.SwipeBackActivity;
+import com.liuguangqiang.swipeback.SwipeBackLayout;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
 
 
 public class DishView extends AppCompatActivity {
@@ -91,7 +94,6 @@ public class DishView extends AppCompatActivity {
     TextView descText;
     TextView tvScore;
     TextView tvDistance;
-
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,11 +161,6 @@ public class DishView extends AppCompatActivity {
         /**
          해쉬태그
          **/
-        //TextView hashTag = (TextView) findViewById(R.id.hashTag_textView_dishView);
-        //해쉬태그가 있을 경우에만 실행
-       // if(postingInfo.hashTags != null){
-        //    setTags(hashTag, postingInfo.hashTags);
-       // }
         hashTagText = findViewById(R.id.hashTag_textview_dishView);
         if(postingInfo.hashTags != null){
             setTags(hashTagText, postingInfo.hashTags);
@@ -230,7 +227,6 @@ public class DishView extends AppCompatActivity {
                                     Log.d(TAG, "size : " + commentList.size());
                                     commentAdapter.notifyDataSetChanged();
                                     DeleteUtils.deletePosting(mContext,  db, storage, storeId, postingId, imagePath, postingAverStar);
-//                                    finish();
                                 }
                             })
                             .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -374,11 +370,8 @@ public class DishView extends AppCompatActivity {
                         for(DocumentChange snapshot : queryDocumentSnapshots.getDocumentChanges()){
                             switch (snapshot.getType()){
                                 case ADDED:
-                                    String imagePath = snapshot.getDocument().getData().get("imgPath").toString();
-                                    String comment = snapshot.getDocument().getData().get("comment").toString();
-                                    Long time = (Long) snapshot.getDocument().getData().get("time");
-
-                                    commentList.add(new CommentInfo(myUid, myName, imagePath, comment, time));
+                                    CommentInfo commentInfo = snapshot.getDocument().toObject(CommentInfo.class);
+                                    commentList.add(commentInfo);
                                     commentAdapter.notifyItemChanged(commentList.size()+1);
                             }
                         }
@@ -402,7 +395,8 @@ public class DishView extends AppCompatActivity {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         final String documentId = UUID.randomUUID().toString();
                         final long commentTime = System.currentTimeMillis();
-                        commentRef.document(documentId).set(new CommentInfo(myUid, myName, profilePath, commentDesc, commentTime));
+                        commentRef.document(documentId)
+                                .set(new CommentInfo(myUid, myName, profilePath, commentDesc, commentTime));
                     }
                 });
 
