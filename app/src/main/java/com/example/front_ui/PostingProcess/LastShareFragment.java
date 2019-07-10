@@ -286,9 +286,6 @@ public class LastShareFragment extends Fragment {
 
     private void setAndSendPosting(String imagePathInStorage) {
 
-
-
-
         /*
         * 함수 구조
         * 1. set the Posting data into postingInfo

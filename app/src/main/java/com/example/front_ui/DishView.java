@@ -86,6 +86,7 @@ public class DishView extends AppCompatActivity {
     ImageView commentSend;
     List<CommentInfo> commentList = new ArrayList<>();
     final String myUid = FirebaseAuth.getInstance().getUid();
+    final String myName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
     TextView hashTagText;
     TextView descText;
     TextView tvScore;
@@ -373,13 +374,11 @@ public class DishView extends AppCompatActivity {
                             switch (snapshot.getType()){
                                 case ADDED:
                                     String imagePath = snapshot.getDocument().getData().get("imgPath").toString();
-                                    String question = snapshot.getDocument().getData().get("question").toString();
-                                    String answer = snapshot.getDocument().getData().get("answer").toString();
+                                    String comment = snapshot.getDocument().getData().get("comment").toString();
+                                    Long time = (Long) snapshot.getDocument().getData().get("time");
 
-                                    commentList.add(new CommentInfo(myUid, imagePath, question, answer, 0));
+                                    commentList.add(new CommentInfo(myUid, myName, imagePath, comment, time));
                                     commentAdapter.notifyItemChanged(commentList.size()+1);
-                                case MODIFIED:
-                                    commentAdapter.notifyDataSetChanged();
                             }
                         }
                     }
@@ -402,7 +401,7 @@ public class DishView extends AppCompatActivity {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         final String documentId = UUID.randomUUID().toString();
                         final long commentTime = System.currentTimeMillis();
-                        commentRef.document(documentId).set(new CommentInfo(myUid, profilePath, commentDesc, "답변이 아직 없습니다.", commentTime));
+                        commentRef.document(documentId).set(new CommentInfo(myUid, myName, profilePath, commentDesc, commentTime));
                     }
                 });
 
