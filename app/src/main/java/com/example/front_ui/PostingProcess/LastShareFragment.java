@@ -247,6 +247,7 @@ public class LastShareFragment extends Fragment {
         String filename = UUID.nameUUIDFromBytes(byteImage).toString();
         final StorageReference imagesRef = storageRef.child("images/"+uploadDir+"/"+filename+".jpg");
 
+        //이미지 파이어스토어에 저장
         UploadTask uploadTask = imagesRef.putBytes(byteImage);
         //get upload Url
         Task<Uri> urlTask = uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -284,6 +285,10 @@ public class LastShareFragment extends Fragment {
     }
 
     private void setAndSendPosting(String imagePathInStorage) {
+
+
+
+
         /*
         * 함수 구조
         * 1. set the Posting data into postingInfo
@@ -301,6 +306,23 @@ public class LastShareFragment extends Fragment {
         postingInfo.detail_aver_star = detail_aver_star;
         postingInfo.storeName = kakaoStoreInfo.place_name;
         postingInfo.address = kakaoStoreInfo.road_address_name;
+
+        //TODO : 파이어스토어 넣을시에 태그는 맵으로 변환시킴
+        String postingDesc = tags.getText().toString();
+        if(!postingDesc.isEmpty()) {
+            String[] postingDescList = postingDesc.split(" ");//띄어쓰기 단위로 게시물 내용을 나눠줌.
+            Map<String, Boolean> tagMap = new HashMap<>();
+            for (String i : postingDescList) {
+                if (!i.isEmpty() && i.trim().startsWith("#")) {//빈건 버리고, 띄어쓰기단위별로 이중띄어쓰기 된 거 없애고 #로 시작하는 것만 가져옴.
+                    if (i.length() > 1) { //샵# 하나만 있는 것도 배제(if문 중첩을 한 이유는 처리속도 높일려고.)
+                        tagMap.put(i.substring(1, i.length()), true);//#부분 제외하고 바로 맵에 집어넣음.
+                    }
+                }
+            }
+            if (!tagMap.isEmpty()) {
+                postingInfo.tag = tagMap;//만든 맵을 바로 객체에 집어넣음.
+            }
+        }
 
         //평균값 설정.
         float sum =0 ;
