@@ -181,7 +181,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/hashTag"
                     android:inputType="text"
-                    android:hint="갸악"/>
+                    android:hint="적지 마시오."/>
 
             </android.support.constraint.ConstraintLayout>
 

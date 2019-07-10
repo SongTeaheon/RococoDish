@@ -171,38 +171,6 @@ public class StoreSearchFragment extends Fragment {
         }
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        Log.d(TAG, "onActivityResult");
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && data != null){
-//            ProgressDialog loading = ProgressDialog.show(getContext(), "로딩중", "잠시만 기다려주세요...");
-//            CropImage.ActivityResult result =CropImage.getActivityResult(data);
-//            try {
-//                Bitmap selectedBmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), result.getUri());
-//                OutputStream outputStream = new ByteArrayOutputStream();
-//                selectedBmp.compress(Bitmap.CompressFormat.JPEG, 60, outputStream);
-//                byte[] byteArray = ((ByteArrayOutputStream) outputStream).toByteArray();
-////                Intent passByte = new Intent(getContext(), LastShareFragment.class);
-////                passByte.putExtra("byteArray", byteArray);
-////                startActivity(passByte);
-//                //fragment로 데이터 전송 및 변경
-//                LastShareFragment fragment = new LastShareFragment();
-//                Bundle args = new Bundle();
-//                args.putByteArray("byteArray", byteArray);
-//                fragment.setArguments(args);
-//
-//                FragmentTransaction fragmentTransaction = getFragmentManager()
-//                        .beginTransaction()
-//                        .replace(R.id.relLayout1, fragment);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
     //네이버 api 검색 실행. 성공하면 정보 받아서 리사이클러뷰 어댑터로 넘긴다.
     private void requestSearchApi(String searchWord){
 
