@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!--이 레이아웃으로 감싸는 이유는 이미지가 항상 위에 있게 하기 위함.-->
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="60dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!--이미지 들어가는 부분-->
+            <android.support.v7.widget.CardView
+                android:id="@+id/image_cardview"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="10dp">
+
+                <ImageView
+                    android:id="@+id/imageViewProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop" />
+            </android.support.v7.widget.CardView>
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/userName_textview_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/bmjua"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/relativeLayout"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="dasdasdasd" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_speak"
+            android:tint="@color/MainColor"
+            app:layout_constraintStart_toEndOf="@+id/relativeLayout"
+            app:layout_constraintTop_toBottomOf="@+id/userName_textview_comment" />
+
+        <TextView
+            android:id="@+id/userCommnet_textview_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/bmhanna_11yrs"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toTopOf="@+id/commentTime_textview_comment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView3"
+            app:layout_constraintTop_toBottomOf="@+id/userName_textview_comment"
+            tools:text="dasdasdasdasdasdasdasdasdasda" />
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_hourglass"
+            android:tint="@color/MainColor"
+            app:layout_constraintBottom_toBottomOf="@+id/commentTime_textview_comment"
+            app:layout_constraintEnd_toStartOf="@+id/commentTime_textview_comment"
+            app:layout_constraintTop_toTopOf="@+id/commentTime_textview_comment" />
+
+        <TextView
+            android:id="@+id/commentTime_textview_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:textSize="8sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="ㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁ" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <!--대댓이 달리는 부분-->
+    <android.support.v7.widget.RecyclerView
+        android:background="#e6e6e6"
+        android:id="@+id/cocoment_recyclerview"
+        android:nestedScrollingEnabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
