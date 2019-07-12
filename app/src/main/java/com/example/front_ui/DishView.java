@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.ScaleAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,7 +49,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,7 +83,6 @@ public class DishView extends AppCompatActivity {
     Boolean isLiked;
     ImageView commentProfile;
     List<CommentInfo> commentList = new ArrayList<>();
-    List<CommentInfo> cocomentList = new ArrayList<>();
     final String myUid = FirebaseAuth.getInstance().getUid();
     final String myName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
     TextView hashTagText;
@@ -338,13 +337,13 @@ public class DishView extends AppCompatActivity {
                             GlideApp.with(getApplicationContext())
                                     .load(R.drawable.basic_user_image)
                                     .into(commentProfile);
+
                         }
                         else{
                             GlideApp.with(getApplicationContext())
                                     .load(documentSnapshot.get("profileImage").toString())
                                     .into(commentProfile);
                         }
-
                         //내 프로필 사진 가져온 후 댓글 달기 가능
                         uploadComment(commentRef, documentSnapshot.get("profileImage").toString());
 
@@ -369,8 +368,8 @@ public class DishView extends AppCompatActivity {
         commentAdapter.getDocIdListener(new commentAdapterToDishView() {
             @Override
             public void sendGetCommentDocId(final String docId) {
-                //TODO : 만약 도큐먼트 아이디를 제대로 받았다면 대댓작성하게 UI를 변경한다.
 
+                //만약 도큐먼트 아이디를 제대로 받았다면 대댓작성하게 UI를 변경한다.
                 if(docId != null){
                     //대댓 작성창과 이미지를 보이게 하고, 기존 댓글 작성창과 이미지를 없앤다.
                     cocomentEditText.setVisibility(View.VISIBLE);
@@ -378,8 +377,21 @@ public class DishView extends AppCompatActivity {
                     commentEdit.setVisibility(View.GONE);
                     commentSend.setVisibility(View.GONE);
 
-                    //TODO : 변경한 UI에서 작성을 누르면 업로드를 시작한다.
-                    //작성 버튼 누름
+                    //AlertDialog에서 작성버튼 누르면 키보드 올라가게 함.
+                    final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+                    //TODO: 대댓글 취소할시 키보드가 내려가면 댓글작성으로 바뀌어야함.
+                    //대댓글 쓰려다가 취소버튼 누를 경우
+//                    if(cocomentEditText.getVisibility() == View.VISIBLE){
+//                        commentEdit.setVisibility(View.VISIBLE);
+//                        commentSend.setVisibility(View.VISIBLE);
+//                        cocomentEditText.setVisibility(View.GONE);
+//                        cocomentSend.setVisibility(View.GONE);
+//
+//                    }
+
+                    //변경한 UI에서 작성을 누르면 업로드를 시작한다.
                     cocomentSend.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -388,6 +400,8 @@ public class DishView extends AppCompatActivity {
                             }
                             //글자를 넣었을 경우엔 이제 글을 파이어스토어에 업로드한다.
                             else{
+                                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);//키보드 내려줌.
+
                                 String cocoment = cocomentEditText.getText().toString();//대댓 내용
                                 cocomentEditText.getText().clear();//대댓쓴걸 지워준다.
 
@@ -413,15 +427,11 @@ public class DishView extends AppCompatActivity {
                                                 cocoment,
                                                 System.currentTimeMillis(),
                                                 false));
-
                             }
                         }
                     });
                 }
-
-                //TODO : 데이터 패치 같은 경우는 실시간으로 한다.
-                //패티는 뷰홀더에서 처리함. 댓글에 대해 각각 해야해서 뷰홀더안에서 해야함.
-
+                //데이터 패치는 뷰홀더에서 처리함. 댓글에 대해 각각 해야해서 뷰홀더안에서 해야함.
             }
         });
 
@@ -501,7 +511,7 @@ public class DishView extends AppCompatActivity {
 
                 if(documentSnapshot.exists()){
 
-                    int img = documentSnapshot.getBoolean("isLiked")? R.drawable.ic_like : R.mipmap.ic_grey_heart;
+                    int img = documentSnapshot.getBoolean("isLiked")? R.mipmap.ic_heart : R.mipmap.ic_grey_heart;
                     likeImage.setImageResource(img);
 
                     isLiked = documentSnapshot.getBoolean("isLiked");

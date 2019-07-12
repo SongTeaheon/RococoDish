@@ -90,7 +90,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         //시간 부분
         Long time = parentList.get(i).getTime();
         Date date = new Date(time);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM월 dd일 / hh:mm / ss초");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM월 dd일 - hh시 mm분 ss초");
         String result = dateFormat.format(date);
         commentViewHolder.time.setText(result);
 
@@ -186,14 +186,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                     }
                 });
 
-//        //대댓 더미 데이터
-//        childList.add(new CommentInfo("", "", "유저1", "R.drawable.basic_user_image", "안녕 난 대댓이야", 0, false));
-//        childList.add(new CommentInfo("", "", "유저2", "R.drawable.basic_user_image", "안녕 난 대댓이야", 0, false));
-//        childList.add(new CommentInfo("", "", "유저3", "R.drawable.basic_user_image", "안녕 난 대댓이야", 0, false));
-
-        //댓글 올라오는 애니메이션
-        Animation animation = AnimationUtils.loadAnimation(context, R.anim.up_from_bottom);
-        commentViewHolder.itemView.startAnimation(animation);
+//        //댓글 올라오는 애니메이션
+//        Animation animation = AnimationUtils.loadAnimation(context, R.anim.up_from_bottom);
+//        commentViewHolder.itemView.startAnimation(animation);
 
 
     }

@@ -41,7 +41,7 @@
                     android:gravity="center_vertical"
                     android:textColor="@color/GGrey"
                     android:textSize="20dp"
-                    android:background="@drawable/searchEditText"
+                    android:background="@drawable/search_edittext"
                     tools:ignore="SpUsage" />
 
                 <ImageView
