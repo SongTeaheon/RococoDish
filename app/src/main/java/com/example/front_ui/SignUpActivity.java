@@ -84,7 +84,7 @@ public class SignUpActivity extends AppCompatActivity {
                             userRef.set(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.d(TAG, String.format("새로운 유저 등록(%d)에 성공했습니다.", newUser.nickname));
+                                    Log.d(TAG, "새로운 유저 등록에 성공했습니다.");
                                     startActivity(new Intent(SignUpActivity.this, SubActivity.class));
                                     finish();
                                     progressDialog.dismiss();
