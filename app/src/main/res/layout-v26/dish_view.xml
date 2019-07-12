@@ -295,7 +295,7 @@
                 app:layout_constraintVertical_bias="0.0" />
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"/>
+                android:layout_height="65dp"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
@@ -335,9 +335,24 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:ems="10"
-                    android:hint="질문하기"
+                    android:hint="댓글달기"
                     android:inputType="textMultiLine"
                     android:textSize="12dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/myProfile_commentInput"
+                    app:layout_constraintEnd_toStartOf="@+id/send_imageview_commentInput"
+                    app:layout_constraintStart_toEndOf="@+id/myProfile_commentInput"
+                    app:layout_constraintTop_toTopOf="@+id/myProfile_commentInput"
+                    tools:ignore="SpUsage" />
+
+                <EditText
+                    android:id="@+id/cocoment_edittext_cocommentInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="대댓글 달기"
+                    android:inputType="textMultiLine"
+                    android:textSize="12sp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/myProfile_commentInput"
                     app:layout_constraintEnd_toStartOf="@+id/send_imageview_commentInput"
                     app:layout_constraintStart_toEndOf="@+id/myProfile_commentInput"
@@ -357,6 +372,22 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_send"
+                    android:focusable="true" />
+
+                <ImageView
+                    android:id="@+id/send_imageview_cocomentInput"
+                    android:visibility="gone"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:clickable="true"
+                    android:layout_marginTop="8dp"
+                    android:tint="@color/MainColor"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_speak"
                     android:focusable="true" />
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>

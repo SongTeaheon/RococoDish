@@ -48,8 +48,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.liuguangqiang.swipeback.SwipeBackActivity;
-import com.liuguangqiang.swipeback.SwipeBackLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,7 +75,6 @@ public class DishView extends AppCompatActivity {
     SerializableStoreInfo storeInfo;
     ImageView profileImage;
     TextView profileName;
-
     @Nullable
     String userImage;
     Context mContext;
@@ -85,15 +82,17 @@ public class DishView extends AppCompatActivity {
     CommentAdapter commentAdapter;
     Boolean isLiked;
     ImageView commentProfile;
-    EditText commentEdit;
-    ImageView commentSend;
     List<CommentInfo> commentList = new ArrayList<>();
+    List<CommentInfo> cocomentList = new ArrayList<>();
     final String myUid = FirebaseAuth.getInstance().getUid();
     final String myName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
     TextView hashTagText;
-    TextView descText;
     TextView tvScore;
     TextView tvDistance;
+    EditText commentEdit;//댓글 작성창
+    ImageView commentSend;//댓글 업로드 버튼
+    EditText cocomentEditText;//대댓글 작성창
+    ImageView cocomentSend;//대댓글 업로드 버튼
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,9 +196,8 @@ public class DishView extends AppCompatActivity {
         StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
         GlideApp.with(this).load(fileReference).into(imageView);
 
-        //우측 상단의 삭제 버튼을 누를 경우 디비를 삭제시킴(포스팅과 포스팅채널 둘다)
-        /*
-        * 삭제 및 수정 버튼 처리
+        /**
+        * 게시물 삭제 및 수정 버튼 처리
         * */
 
         if(postingInfo.getWriterId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
@@ -355,6 +353,78 @@ public class DishView extends AppCompatActivity {
 
         //실시간 댓글 가져오기
         realTimeFetchComment(commentRef);
+
+
+        /**
+         * 대댓 처리부분
+         * **/
+        cocomentEditText = findViewById(R.id.cocoment_edittext_cocommentInput);//대댓 작성창
+        cocomentSend = findViewById(R.id.send_imageview_cocomentInput);//대댓 작성 버튼
+
+        //아래 링크는 어댑터 클래스와 액티비티간 상호작용을 위한 인터페이스 사용법을 다룸.
+        //https://stackoverflow.com/questions/32720702/how-to-call-a-mainactivity-method-from-viewholder-in-recyclerview-adapter
+        //위 사용법을 활용해서 어댑터에서 특정 행위가 생기면 액티비티로 데이터를 보내주는 거 구현
+
+        //5. 데이터를 받고자 하는 액티비티에서 리스너를 실행
+        commentAdapter.getDocIdListener(new commentAdapterToDishView() {
+            @Override
+            public void sendGetCommentDocId(final String docId) {
+                //TODO : 만약 도큐먼트 아이디를 제대로 받았다면 대댓작성하게 UI를 변경한다.
+
+                if(docId != null){
+                    //대댓 작성창과 이미지를 보이게 하고, 기존 댓글 작성창과 이미지를 없앤다.
+                    cocomentEditText.setVisibility(View.VISIBLE);
+                    cocomentSend.setVisibility(View.VISIBLE);
+                    commentEdit.setVisibility(View.GONE);
+                    commentSend.setVisibility(View.GONE);
+
+                    //TODO : 변경한 UI에서 작성을 누르면 업로드를 시작한다.
+                    //작성 버튼 누름
+                    cocomentSend.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(cocomentEditText.getText().toString().isEmpty()){
+                                Toast.makeText(DishView.this, "빈칸을 채워주세요.", Toast.LENGTH_SHORT).show();
+                            }
+                            //글자를 넣었을 경우엔 이제 글을 파이어스토어에 업로드한다.
+                            else{
+                                String cocoment = cocomentEditText.getText().toString();//대댓 내용
+                                cocomentEditText.getText().clear();//대댓쓴걸 지워준다.
+
+                                //댓글 컬렉션 안에 서브컬렉션 대댓글 안에 필드로 넣음.
+                                String uuid = UUID.randomUUID().toString();
+
+                                //UI 원래상태로 돌림.
+                                commentEdit.setVisibility(View.VISIBLE);
+                                cocomentEditText.setVisibility(View.GONE);
+                                commentSend.setVisibility(View.VISIBLE);
+                                cocomentSend.setVisibility(View.GONE);
+
+                                //TODO : 대댓글에서 프로필 이미지 처리하는 것만 남음.ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
+                                commentRef
+                                        .document(docId)
+                                        .collection("대댓글")
+                                        .document(uuid)
+                                        .set(new CommentInfo(
+                                                uuid,
+                                                myUid,
+                                                myName,
+                                                "",
+                                                cocoment,
+                                                System.currentTimeMillis(),
+                                                false));
+
+                            }
+                        }
+                    });
+                }
+
+                //TODO : 데이터 패치 같은 경우는 실시간으로 한다.
+                //패티는 뷰홀더에서 처리함. 댓글에 대해 각각 해야해서 뷰홀더안에서 해야함.
+
+            }
+        });
+
     }
 
     public void realTimeFetchComment(CollectionReference commentRef){
@@ -387,19 +457,26 @@ public class DishView extends AppCompatActivity {
         commentSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String commentDesc = commentEdit.getText().toString();
-                commentEdit.getText().clear();
 
-                commentRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        final String documentId = UUID.randomUUID().toString();
-                        final long commentTime = System.currentTimeMillis();
-                        commentRef.document(documentId)
-                                .set(new CommentInfo(myUid, myName, profilePath, commentDesc, commentTime));
-                    }
-                });
+                if(commentEdit.getText().toString().isEmpty()){
+                    Toast.makeText(DishView.this, "빈칸을 채워주세요.", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    final String commentDesc = commentEdit.getText().toString();
+                    commentEdit.getText().clear();
 
+                    //파이어스토어에 업로드
+                    commentRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            final String documentId = UUID.randomUUID().toString();//필드로 저장하기 위해 변수에 값으로 넣음.
+                            final long commentTime = System.currentTimeMillis();
+                            commentRef.document(documentId)
+                                    .set(new CommentInfo(documentId, myUid, myName, profilePath, commentDesc, commentTime, false));
+                        }
+                    });
+
+                }
             }
         });
     }
@@ -508,6 +585,7 @@ public class DishView extends AppCompatActivity {
         commentRecy = findViewById(R.id.comment_recyclerview);
         RecyclerView.LayoutManager lm = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         commentRecy.setLayoutManager(lm);
+//        ((SimpleItemAnimator) commentRecy.getItemAnimator()).setSupportsChangeAnimations(false);
         commentRecy.setAdapter(commentAdapter);
     }
 
@@ -551,6 +629,5 @@ public class DishView extends AppCompatActivity {
         pTextView.setMovementMethod(LinkMovementMethod.getInstance());
         pTextView.setText(string);
     }
-
 }
 
