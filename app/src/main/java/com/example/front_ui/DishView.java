@@ -85,6 +85,7 @@ public class DishView extends AppCompatActivity {
     List<CommentInfo> commentList = new ArrayList<>();
     final String myUid = FirebaseAuth.getInstance().getUid();
     final String myName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+    String myProfileImgPath;
     TextView hashTagText;
     TextView tvScore;
     TextView tvDistance;
@@ -92,6 +93,12 @@ public class DishView extends AppCompatActivity {
     ImageView commentSend;//댓글 업로드 버튼
     EditText cocomentEditText;//대댓글 작성창
     ImageView cocomentSend;//대댓글 업로드 버튼
+
+    DishViewProfileImgPass dishViewProfileImgPass;
+
+    public void OnProfileImgGetListener(DishViewProfileImgPass _dishViewProfileImgPass){
+        dishViewProfileImgPass = _dishViewProfileImgPass;
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -259,20 +266,15 @@ public class DishView extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+
                         //프로필 이미지 업로드
                         userImage = (String) document.get("profileImage");
-
                         if(userImage != null){
                             GlideApp.with(getApplicationContext())
                                     .load(userImage)
                                     .into(profileImage);
                         }
-                        else{
-                            Toast.makeText(getApplicationContext(), "프로필 이미지가 없네요", Toast.LENGTH_SHORT).show();
-                            GlideApp.with(getApplicationContext())
-                                    .load(R.drawable.basic_user_image)
-                                    .into(profileImage);
-                        }
+
                         //프로필 이름 업로드
                         String userName = (String) document.get("nickname");
                         profileName.setText(userName);
@@ -324,7 +326,7 @@ public class DishView extends AppCompatActivity {
                 .document(postingInfo.postingId).collection("댓글");
 
 
-        //하단 댓글 입력칸 좌측에 프로필 사진 넣기
+        //하단 댓글 작성창 좌측에 프로필 사진 넣기(댓글이랑 대댓에 다 적용)
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
@@ -333,22 +335,42 @@ public class DishView extends AppCompatActivity {
                     public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
                         assert documentSnapshot != null;
 
-                        if(documentSnapshot.get("profileImage") == null){
-                            GlideApp.with(getApplicationContext())
-                                    .load(R.drawable.basic_user_image)
-                                    .into(commentProfile);
+                        String profileImagePath = documentSnapshot.get("profileImage").toString();
 
-                        }
-                        else{
+                        //여기서  내 프로필 이미지를 모든 구간에 배포함.(팔요할 때 리스너로 받으면 됨.)
+                        dishViewProfileImgPass.passProfileImgPath(profileImagePath);
+
+                        if(profileImagePath != null){
                             GlideApp.with(getApplicationContext())
                                     .load(documentSnapshot.get("profileImage").toString())
                                     .into(commentProfile);
+
+                            //내 프로필 사진 가져온 후 댓글 달기 가능
+                            uploadComment(commentRef, profileImagePath);
                         }
-                        //내 프로필 사진 가져온 후 댓글 달기 가능
-                        uploadComment(commentRef, documentSnapshot.get("profileImage").toString());
+
 
                     }
                 });
+        //댓글 업로드 시 내 프로필 사진 적용
+        OnProfileImgGetListener(new DishViewProfileImgPass() {
+            @Override
+            public void passProfileImgPath(String imgPath) {
+
+                myProfileImgPath = imgPath;//대댓에 들어가는 용도(전역변수로 해서 들어감. 리스너 안에 리스너안에서 파이어스토어 업로드가 작동을 안해서 전역변수로 접근함.)
+
+                if(imgPath != null){
+                    GlideApp.with(getApplicationContext())
+                            .load(imgPath)
+                            .into(commentProfile);
+
+                    uploadComment(commentRef, imgPath);
+                }
+                else{
+                    Log.d(TAG, "프로필경로가 없습니다.");
+                }
+            }
+        });
 
         //실시간 댓글 가져오기
         realTimeFetchComment(commentRef);
@@ -383,15 +405,9 @@ public class DishView extends AppCompatActivity {
 
                     //TODO: 대댓글 취소할시 키보드가 내려가면 댓글작성으로 바뀌어야함.
                     //대댓글 쓰려다가 취소버튼 누를 경우
-//                    if(cocomentEditText.getVisibility() == View.VISIBLE){
-//                        commentEdit.setVisibility(View.VISIBLE);
-//                        commentSend.setVisibility(View.VISIBLE);
-//                        cocomentEditText.setVisibility(View.GONE);
-//                        cocomentSend.setVisibility(View.GONE);
-//
-//                    }
 
-                    //변경한 UI에서 작성을 누르면 업로드를 시작한다.
+
+                    //변경한 UI에서 작성을 누르면 업로드를 시작
                     cocomentSend.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -414,7 +430,7 @@ public class DishView extends AppCompatActivity {
                                 commentSend.setVisibility(View.VISIBLE);
                                 cocomentSend.setVisibility(View.GONE);
 
-                                //TODO : 대댓글에서 프로필 이미지 처리하는 것만 남음.ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
+                                //TODO : 대댓글에서 프로필 이미지 처리
                                 commentRef
                                         .document(docId)
                                         .collection("대댓글")
@@ -423,7 +439,7 @@ public class DishView extends AppCompatActivity {
                                                 uuid,
                                                 myUid,
                                                 myName,
-                                                "",
+                                                myProfileImgPath,
                                                 cocoment,
                                                 System.currentTimeMillis(),
                                                 false));

@@ -67,6 +67,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
     TextView tvOfNum;
     double currentLatitude;
     double currentLongtitude;
+    static final String basicProfile = "https://firebasestorage.googleapis.com/v0/b/rococodish.appspot.com/o/user6.png?alt=media&token=f6f73ce5-bfe1-4dac-bbf2-29fb94706e09";
 
     @Override
     public void setNumberOfData(int value) {
@@ -155,7 +156,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                                         case "기본 이미지로 변경":
                                             FirebaseFirestore.getInstance().collection("사용자")
                                                     .document(FirebaseAuth.getInstance().getUid())
-                                                    .update("profileImage", null);
+                                                    .update("profileImage", basicProfile);
                                             Intent mintent = new Intent(getApplicationContext(), MyPage.class);
                                             startActivity(mintent);
                                             finish();

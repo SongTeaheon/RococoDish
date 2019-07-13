@@ -154,7 +154,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             }
         });
 
-        //대댓글 가져오기
+        //대댓글 화면에 띄우기
         FirebaseFirestore.getInstance()
                 .collection("포스팅")
                 .document(postingInfo.postingId)
