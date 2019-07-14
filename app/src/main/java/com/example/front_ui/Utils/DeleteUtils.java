@@ -82,7 +82,6 @@ public class DeleteUtils {
                     }
                 });
 
-        //TODO: 포스팅 경로아래에 좋아요와 댓글 서브컬렉션 삭제도 필요
         //포스팅 경로 아래에 좋아요, 댓글 삭제.
         deleteSubCollectionData("포스팅", postingDocId, "좋아요");
         deleteSubCollectionData("포스팅", postingDocId, "댓글");
@@ -281,11 +280,6 @@ public class DeleteUtils {
 
 
 
-
-    }
-
-    //posting컬렉션 내부 좋아요 및 댓글 컬렉션 데이터 가져오기. 삭제하기
-    private static void deleteLikeAndCommentCollection(){
 
     }
 

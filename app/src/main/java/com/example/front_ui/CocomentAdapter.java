@@ -79,6 +79,9 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM월 dd일 - hh시 mm분 ss초");
         String result = dateFormat.format(date);
         cocomentViewHolder.time.setText(result);
+
+
+        //TODO : 꾸욱 누르면 대댓글 삭제
     }
 
     @Override
