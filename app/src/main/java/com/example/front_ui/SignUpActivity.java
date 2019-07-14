@@ -76,7 +76,7 @@ public class SignUpActivity extends AppCompatActivity {
                             final UserInfo newUser = new UserInfo(
                                     auth.getCurrentUser().getEmail(),
                                     auth.getCurrentUser().getDisplayName(),
-                                    null,
+                                    MyPage.basicProfile,
                                     null,
                                     null,
                                     0);
