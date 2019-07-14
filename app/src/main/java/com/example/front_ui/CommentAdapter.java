@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,18 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
+import com.example.front_ui.Utils.DeleteUtils;
 import com.example.front_ui.Utils.GlideApp;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,6 +47,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     private Context context;
     private String TAG = "TAGCommentAdapter";
     private commentAdapterToDishView commentAdapterToDishView;//2. 인터페이스를 변수로 가져옴.
+    private String myUid = FirebaseAuth.getInstance().getUid();
 
     //3. DishView에서 사용할 수 있는 리스너를 만들어줌.(데이터를 받아야하니까)
     public void getDocIdListener(commentAdapterToDishView _commentAdapterToDishView){
@@ -128,33 +138,104 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         //긴 클릭 => 대댓 적을 수 있게함.(여기선 파이어스토어에 업로드만 함. 패치는 DishView에서 실시간으로 하면 자동으로 추가됨.)
         final String docId = parentList.get(i).getDocUuid();//해당 댓글에 대해서만 UUID를 가져옴.
+
+        //다이얼로그 옵션 리스트
+        final String[] meCommentOptions = new String[] {"대댓글 달기", "수정", "삭제", "취소"};
+        final String[] otherCommentOptions = new String[] {"대댓글 달기", "취소"};
+
+        //댓글 경로
+        final DocumentReference commentRef = FirebaseFirestore.getInstance()
+                .collection("포스팅")
+                .document(postingInfo.postingId)
+                .collection("댓글")
+                .document(docId);
+
+        /**
+         * 댓글을 길게 누를 경우
+         * **/
         commentViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                //댓글 서브컬렉션의 서브컬렉션 만들기
-                //TODO: 글을 작성할 수 있는 부분 설정
-                //TODO : 작성 버튼을 누를시 상단 docId를 통해 파이어스토어에 저장.
-                new AlertDialog.Builder(context)
-                        .setMessage("대댓을 작성하시겠습니까?")
-                        .setPositiveButton("작성", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //4. 특정 시점에서 인터페이스 내 메서드를 실행.(데이터를 보냄.)
-                                //인터페이스 자체를 변수로 가져와서 그 안에 메서드를 실행, 파라미터(보낼 데이터)로 댓글 도큐먼트 아이디 가져옴.
-                                commentAdapterToDishView.sendGetCommentDocId(docId);
-                            }
-                        })
-                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+
+                //내가 작성한 댓글의 경우우
+               if(parentList.get(i).getCommentWriterId().equals(myUid)){
+                    new AlertDialog.Builder(context)
+                            .setTitle("내가 쓴 글")
+                            .setItems(meCommentOptions, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (meCommentOptions[which]){
+                                        case "대댓글 달기":
+                                            //댓글 도큐먼트 아이디를 DishView에 넘김(거기서 리스너로 받으면 됨.)
+                                            commentAdapterToDishView.sendGetCommentDocId(docId);
+                                            break;
+                                        case "수정":
+                                            Toast.makeText(context, "추후에 넣을 예정", Toast.LENGTH_SHORT).show();
+                                            //TODO : 댓글 내용만 update하면됨.
+                                            break;
+                                        case "삭제":
+                                            //우선 대댓글 삭제해주고
+                                            commentRef
+                                                    .collection("대댓글")
+                                                    .get()
+                                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                        @Override
+                                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                            //대댓이 있다면
+                                                            if (!queryDocumentSnapshots.getDocuments().isEmpty()){
+                                                                for(DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
+
+                                                                    commentRef
+                                                                            .collection("대댓글")
+                                                                            .document(dc.getId())
+                                                                            .delete();
+                                                                    //대댓글 삭제 후 댓글 삭제
+                                                                    commentRef.delete();
+                                                                    //TODO: 삭제 후 리사이클러뷰 UI반영
+                                                                    
+                                                                }
+                                                            }
+                                                            else{
+                                                                //대댓글이 없으면 댓글만 삭제
+                                                                commentRef.delete();
+                                                                notifyItemChanged(i);
+                                                            }
+                                                        }
+                                                    });
+
+                                            break;
+                                        case "취소":
+                                            dialog.dismiss();
+                                    }
+                                }
+                            }).show();
+                }
+                else{
+                    new AlertDialog.Builder(context)
+                            .setTitle("남이 쓴 글")
+                            .setItems(otherCommentOptions, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (otherCommentOptions[which]){
+                                        case "대댓글 달기":
+                                            //댓글 도큐먼트 아이디를 DishView에 넘김(거기서 리스너로 받으면 됨.)
+                                            commentAdapterToDishView.sendGetCommentDocId(docId);
+                                            break;
+                                        case "취소":
+                                            dialog.dismiss();
+                                    }
+                                }
+                            }).show();
+                }
+
                 return false;
             }
         });
 
-        //대댓글 화면에 띄우기
+
+        /**
+         * 댓글을 화면에 띄우기 Comments Fetch
+         * **/
         FirebaseFirestore.getInstance()
                 .collection("포스팅")
                 .document(postingInfo.postingId)
