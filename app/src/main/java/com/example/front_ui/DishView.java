@@ -94,11 +94,11 @@ public class DishView extends AppCompatActivity {
     EditText cocomentEditText;//대댓글 작성창
     ImageView cocomentSend;//대댓글 업로드 버튼
 
-    DishViewProfileImgPass dishViewProfileImgPass;
+//    DishViewProfileImgPass dishViewProfileImgPass;
 
-    public void OnProfileImgGetListener(DishViewProfileImgPass _dishViewProfileImgPass){
-        dishViewProfileImgPass = _dishViewProfileImgPass;
-    }
+//    public void OnProfileImgGetListener(DishViewProfileImgPass _dishViewProfileImgPass){
+//        dishViewProfileImgPass = _dishViewProfileImgPass;
+//    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -338,7 +338,7 @@ public class DishView extends AppCompatActivity {
                         String profileImagePath = documentSnapshot.get("profileImage").toString();
 
                         //여기서  내 프로필 이미지를 모든 구간에 배포함.(팔요할 때 리스너로 받으면 됨.)
-                        dishViewProfileImgPass.passProfileImgPath(profileImagePath);
+//                        dishViewProfileImgPass.passProfileImgPath(profileImagePath);
 
                         if(profileImagePath != null){
                             GlideApp.with(getApplicationContext())
@@ -352,25 +352,25 @@ public class DishView extends AppCompatActivity {
 
                     }
                 });
-        //댓글 업로드 시 내 프로필 사진 적용
-        OnProfileImgGetListener(new DishViewProfileImgPass() {
-            @Override
-            public void passProfileImgPath(String imgPath) {
-
-                myProfileImgPath = imgPath;//대댓에 들어가는 용도(전역변수로 해서 들어감. 리스너 안에 리스너안에서 파이어스토어 업로드가 작동을 안해서 전역변수로 접근함.)
-
-                if(imgPath != null){
-                    GlideApp.with(getApplicationContext())
-                            .load(imgPath)
-                            .into(commentProfile);
-
-                    uploadComment(commentRef, imgPath);
-                }
-                else{
-                    Log.d(TAG, "프로필경로가 없습니다.");
-                }
-            }
-        });
+//        //댓글 업로드 시 내 프로필 사진 적용
+//        OnProfileImgGetListener(new DishViewProfileImgPass() {
+//            @Override
+//            public void passProfileImgPath(String imgPath) {
+//
+//                myProfileImgPath = imgPath;//대댓에 들어가는 용도(전역변수로 해서 들어감. 리스너 안에 리스너안에서 파이어스토어 업로드가 작동을 안해서 전역변수로 접근함.)
+//
+//                if(imgPath != null){
+//                    GlideApp.with(getApplicationContext())
+//                            .load(imgPath)
+//                            .into(commentProfile);
+//
+//                    uploadComment(commentRef, imgPath);
+//                }
+//                else{
+//                    Log.d(TAG, "프로필경로가 없습니다.");
+//                }
+//            }
+//        });
 
         //실시간 댓글 가져오기
         realTimeFetchComment(commentRef);
