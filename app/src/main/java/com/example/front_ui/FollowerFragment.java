@@ -1,0 +1,83 @@
+package com.example.front_ui;
+
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.example.front_ui.DataModel.FollowInfo;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class FollowerFragment extends Fragment {
+
+    RecyclerView followerRecycler;
+    FollowAdapter followAdapter;
+    List<FollowInfo> followerList = new ArrayList<>();
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_follower, container, false);
+
+        followerRecycler = view.findViewById(R.id.followerList_recyclerview_followerFrag);
+        followAdapter = new FollowAdapter(getActivity(), followerList);
+        followerRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
+        followerRecycler.setAdapter(followAdapter);
+
+        return view;
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //마이페이지에서 왔을 때
+        FirebaseFirestore.getInstance()
+                .collection("사용자")
+                .document(FirebaseAuth.getInstance().getUid())
+                .collection("팔로워")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(!queryDocumentSnapshots.getDocuments().isEmpty()){
+                            for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
+
+                                String followerUid = dc.getId();
+
+                                //유저의 프로필 정보 가져오기
+                                FirebaseFirestore.getInstance()
+                                        .collection("사용자")
+                                        .document(followerUid)
+                                        .get()
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                String imagePath = documentSnapshot.get("profileImage").toString();
+                                                String name = documentSnapshot.get("nickname").toString();
+                                                String email = documentSnapshot.get("eMail").toString();
+
+                                                followerList.add(new FollowInfo(imagePath, name, email));
+                                                followAdapter.notifyItemChanged(followerList.size());
+                                            }
+                                        });
+                            }
+                        }
+                    }
+                });
+
+    }
+}

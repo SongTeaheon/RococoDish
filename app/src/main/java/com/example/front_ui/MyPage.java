@@ -67,6 +67,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
     TextView tvOfNum;
     double currentLatitude;
     double currentLongtitude;
+    TextView followText;
     static final String basicProfile = "https://firebasestorage.googleapis.com/v0/b/rococodish.appspot.com/o/user6.png?alt=media&token=f6f73ce5-bfe1-4dac-bbf2-29fb94706e09";
 
     @Override
@@ -91,7 +92,15 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         currentLatitude = intent.getDoubleExtra("latitude", 0.0);
         currentLongtitude = intent.getDoubleExtra("longitude", 0.0);
 
-
+        //팔로우 글자 누르면 팔로우 리스트 창 이동
+        followText = findViewById(R.id.follow_textview);
+        followText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyPage.this, FollowActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //본인 마이페이지이니까 팔로우 버튼 숨김
         Button follow = (Button) findViewById(R.id.followToggle);
