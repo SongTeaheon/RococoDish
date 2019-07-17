@@ -23,7 +23,7 @@ import java.util.List;
 public class FollowingFragment extends Fragment {
 
     RecyclerView followingRecycler;
-    FollowAdapter followAdapter;
+    FollowRecyAdapter followRecyAdapter;
     List<FollowInfo> followingList = new ArrayList<>();
 
     @Nullable
@@ -32,9 +32,9 @@ public class FollowingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_following, container, false);
 
         followingRecycler = view.findViewById(R.id.followingList_recyclerview_followingFrag);
-        followAdapter = new FollowAdapter(getActivity(), followingList);
+        followRecyAdapter = new FollowRecyAdapter(getActivity(), followingList);
         followingRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
-        followingRecycler.setAdapter(followAdapter);
+        followingRecycler.setAdapter(followRecyAdapter);
 
         return view;
 
@@ -44,10 +44,13 @@ public class FollowingFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        String userUUID = getArguments().getString("userUUID");
+
+
         //마이페이지에서 왔을 때
         FirebaseFirestore.getInstance()
                 .collection("사용자")
-                .document(FirebaseAuth.getInstance().getUid())
+                .document(userUUID)
                 .collection("팔로잉")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -69,9 +72,10 @@ public class FollowingFragment extends Fragment {
                                                 String imagePath = documentSnapshot.get("profileImage").toString();
                                                 String name = documentSnapshot.get("nickname").toString();
                                                 String email = documentSnapshot.get("eMail").toString();
+                                                String uid = documentSnapshot.getId();
 
-                                                followingList.add(new FollowInfo(imagePath, name, email));
-                                                followAdapter.notifyItemChanged(followingList.size());
+                                                followingList.add(new FollowInfo(imagePath, name, email, uid));
+                                                followRecyAdapter.notifyItemChanged(followingList.size());
                                             }
                                         });
                             }

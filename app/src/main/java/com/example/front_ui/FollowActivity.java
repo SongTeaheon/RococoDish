@@ -1,5 +1,6 @@
 package com.example.front_ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -18,16 +19,19 @@ public class FollowActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_follow);
 
+        Intent intent = getIntent();
+        String userUUID = intent.getStringExtra("userUUID");
+
         followViewPager = findViewById(R.id.follow_viewpager_followActivity);
         followTabLayout = findViewById(R.id.follow_tablayout_followActivity);
 
-        initViewPager();
+        initViewPager(userUUID);
         initTabLayout();
 
 
     }
-    public void initViewPager(){
-        followViewPagerAdapter = new FollowViewPagerAdapter(getSupportFragmentManager());
+    public void initViewPager(String userUUID){
+        followViewPagerAdapter = new FollowViewPagerAdapter(getSupportFragmentManager(), userUUID);
         followViewPager.setAdapter(followViewPagerAdapter);
     }
     public void initTabLayout(){

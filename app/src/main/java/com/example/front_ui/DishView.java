@@ -295,11 +295,15 @@ public class DishView extends AppCompatActivity {
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent intent = new Intent(DishView.this, PostToMyPage.class);
-                final Bundle bundle = new Bundle();
-                bundle.putSerializable("allPostingInfo", postingInfo);
-                intent.putExtra("writerImage", userImage);
-                intent.putExtras(bundle);
+//                final Intent intent = new Intent(DishView.this, PostToMyPage.class);
+//                final Bundle bundle = new Bundle();
+//                bundle.putSerializable("allPostingInfo", postingInfo);
+//                intent.putExtra("writerImage", userImage);
+//                intent.putExtras(bundle);
+                //TODO: 기존에 있던 PostToMyPage를 MyPage하나로 통합
+                Intent intent = new Intent(DishView.this, MyPage.class);
+                intent.putExtra("userUUID", postingInfo.writerId);
+                Log.d(TAG, "들어왔씁니다.");
                 startActivity(intent);
             }
         });
@@ -460,7 +464,9 @@ public class DishView extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        assert e != null;
+                        if(e != null){
+                            Log.d(TAG, e.getMessage());
+                        }
                         assert queryDocumentSnapshots != null;
 
                         for(DocumentChange snapshot : queryDocumentSnapshots.getDocumentChanges()){

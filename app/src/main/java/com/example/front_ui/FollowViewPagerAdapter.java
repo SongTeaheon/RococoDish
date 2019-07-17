@@ -1,5 +1,6 @@
 package com.example.front_ui;
 
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,17 +8,27 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class FollowViewPagerAdapter extends FragmentPagerAdapter {
 
-    public FollowViewPagerAdapter(FragmentManager fm) {
+    String userUUID;
+
+    public FollowViewPagerAdapter(FragmentManager fm, String userUUID) {
         super(fm);
+        this.userUUID = userUUID;
     }
 
     @Override
     public Fragment getItem(int i) {
+        Bundle bundle = new Bundle();
         switch (i){
             case 0:
-                return new FollowerFragment();
+                FollowerFragment followerFragment = new FollowerFragment();
+                bundle.putString("userUUID", userUUID);
+                followerFragment.setArguments(bundle);
+                return followerFragment;
             default:
-                return new FollowingFragment();
+                FollowingFragment followingFragment = new FollowingFragment();
+                bundle.putString("userUUID", userUUID);
+                followingFragment.setArguments(bundle);
+                return followingFragment;
         }
     }
 

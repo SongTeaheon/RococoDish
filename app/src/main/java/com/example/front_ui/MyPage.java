@@ -22,16 +22,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.LocationUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.common.collect.ImmutableMap;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import java.io.ByteArrayOutputStream;
 import com.example.front_ui.DataModel.PostingInfo;
@@ -87,10 +91,17 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_page);
 
+
+        /**
+         * 이전 창에서 데이터 가져옴.
+         * **/
         //현재 위치 정보를 가져온다.
         Intent intent = this.getIntent();
         currentLatitude = intent.getDoubleExtra("latitude", 0.0);
         currentLongtitude = intent.getDoubleExtra("longitude", 0.0);
+
+        //이전 페이지에서 uuid를 가져옴.
+        final String userUUID = intent.getStringExtra("userUUID");
 
         //팔로우 글자 누르면 팔로우 리스트 창 이동
         followText = findViewById(R.id.follow_textview);
@@ -98,20 +109,105 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MyPage.this, FollowActivity.class);
+                intent.putExtra("userUUID", userUUID);
                 startActivity(intent);
             }
         });
 
-        //본인 마이페이지이니까 팔로우 버튼 숨김
-        Button follow = (Button) findViewById(R.id.followToggle);
-        follow.setVisibility(View.GONE);
+        /**
+         * 팔로우 버튼 처리
+         * **/
+        final ToggleButton follow = findViewById(R.id.followToggle);
+        if(userUUID.equals(FirebaseAuth.getInstance().getUid())){
+            follow.setVisibility(View.GONE);
+        }
+        else{
+
+            //팔로우 화면표시용
+            follow.setVisibility(View.INVISIBLE);
+            FirebaseFirestore.getInstance().collection("사용자")
+                    .document(FirebaseAuth.getInstance().getUid())
+                    .collection("팔로잉")
+                    .document(userUUID)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if(documentSnapshot.exists()) {
+                                Log.d(TAG, "파이어스토어 '사용자 -> 팔로잉'에 접근합니다.");
+                                if (documentSnapshot.getBoolean("팔로우 여부") == true) {
+                                    follow.setChecked(true);
+                                    Log.d(TAG, "팔로우 버튼 -> 팔로잉 버튼");
+                                } else {
+                                    follow.setChecked(false);
+                                    Log.d(TAG, "팔로우 버튼 변경 X");
+                                }
+                                follow.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+            //팔로우 버튼 누르기 이벤트 처리
+            //TODO : 다방면의 테스트 필요(일단 개인 테스팅은 통과)
+            follow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    DocumentReference followingRef = FirebaseFirestore.getInstance()
+                            .collection("사용자")
+                            .document(FirebaseAuth.getInstance().getUid())
+                            .collection("팔로잉")
+                            .document(userUUID);
+                    DocumentReference followerRef = FirebaseFirestore.getInstance()
+                            .collection("사용자")
+                            .document(userUUID)
+                            .collection("팔로워")
+                            .document(FirebaseAuth.getInstance().getUid());
+
+                    if(isChecked){
+                        Log.d(TAG, "팔로우 버튼 클릭됨");
+
+                        //본인 사용자 -> 서브컬렉션 팔로잉 -> 도큐먼트 필드 추가
+                        followingRef.set(ImmutableMap.of("팔로우 여부", true)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "팔로우 버튼을 눌러서 '사용자->팔로잉' 디비에 업로드 완료");
+                            }
+                        });
+
+                        //상대방 사용자 -> 서브컬렉션 팔로워 -> 도큐먼트 필드 추가
+                        followerRef.set(ImmutableMap.of("팔로워 여부", true)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "팔로우 버튼을 눌러서 '사용자->팔로워' 디비에 업로드 완료");
+                            }
+                        });
+                    }
+                    else{
+                        Log.d(TAG, "팔로우 버튼 클릭 해제됨");
+                        //삭제 부분
+                        followerRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "팔로우 버튼 해제해서 '사용자->팔로잉' 디비 삭제 완료");
+                            }
+                        });
+                        followerRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "팔로우 버튼 해제해서 '사용자->팔로워' 디비 삭제 완료");
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
 
         MyAdapter adapter = new MyAdapter(
                 this,
                 R.layout.polar_style,
                 this,
                 currentLatitude,
-                currentLongtitude);       // GridView 항목의 레이아웃 row.xml
+                currentLongtitude, userUUID);       // GridView 항목의 레이아웃 row.xml
 
         GridView gv = findViewById(R.id.gridview);
         gv.setAdapter(adapter);  // 커스텀 아답타를 GridView 에 적용
@@ -121,9 +217,10 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         circleImageView = findViewById(R.id.circleImage);
         //킬 때마다 프로필 사진 불러옴
         final ProgressDialog progressDialog = ProgressDialog.show(this, "로딩중", "잠시만 기다려주세요...");
+
         FirebaseFirestore.getInstance()
                 .collection("사용자")
-                .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                .document(userUUID)
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -164,7 +261,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                                             break;
                                         case "기본 이미지로 변경":
                                             FirebaseFirestore.getInstance().collection("사용자")
-                                                    .document(FirebaseAuth.getInstance().getUid())
+                                                    .document(userUUID)
                                                     .update("profileImage", basicProfile);
                                             Intent mintent = new Intent(getApplicationContext(), MyPage.class);
                                             startActivity(mintent);
@@ -233,12 +330,13 @@ class MyAdapter extends BaseAdapter {
     StorageReference storageReference;
     double currentLatitude;
     double currentLongtitude;
+    String userUUID;
 
     //interface for datapass to MyPage
     private MyPageDataPass mCallback;
 
 
-    public MyAdapter(Context context, int layout, MyPageDataPass listener, double lat, double lon) {
+    public MyAdapter(Context context, int layout, MyPageDataPass listener, double lat, double lon, String userUUID) {
         list = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -246,12 +344,13 @@ class MyAdapter extends BaseAdapter {
 
         currentLatitude = lat;
         currentLongtitude = lon;
+        this.userUUID = userUUID;
         this.context = context;
         this.layout = layout;
         mCallback = listener;
         inf = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
-        getPostingDataFromCloud();
+        getPostingDataFromCloud(userUUID);
     }
 
     @Override
@@ -325,11 +424,11 @@ class MyAdapter extends BaseAdapter {
     }
 
     //내가 쓴 데이터를 모두 가져온다.
-    private void getPostingDataFromCloud() {
+    private void getPostingDataFromCloud(String userUUID) {
         Log.d(TAG, "getDataFromFirestore");
 
         db.collection("포스팅")
-                .whereEqualTo("writerId", FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .whereEqualTo("writerId", userUUID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

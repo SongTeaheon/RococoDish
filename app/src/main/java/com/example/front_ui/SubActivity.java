@@ -133,16 +133,13 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
             }
         });
 
-        //사용자 이름 띄우기
-//        userNameText = findViewById(R.id.userName_textview_drawer);
-//        userNameText.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-
         //마이페이지 글자 누를시 이벤트
         myPageTextview = findViewById(R.id.myPage_textview_activitySub);
         myPageTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SubActivity.this, MyPage.class);
+                intent.putExtra("userUUID", FirebaseAuth.getInstance().getUid());
                 intent.putExtra("latitude", mCurrentLocation.getLatitude());
                 intent.putExtra("longitude", mCurrentLocation.getLongitude());
                 startActivity(intent);
