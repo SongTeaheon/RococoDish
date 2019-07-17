@@ -1,6 +1,7 @@
 package com.example.front_ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,12 +16,12 @@ import com.example.front_ui.Utils.GlideApp;
 
 import java.util.List;
 
-public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.FollowViewHolder> {
+public class FollowRecyAdapter extends RecyclerView.Adapter<FollowRecyAdapter.FollowViewHolder> {
 
     Context context;
     List<FollowInfo> followerList;
 
-    public FollowAdapter(Context context, List<FollowInfo> followerList){
+    public FollowRecyAdapter(Context context, List<FollowInfo> followerList){
         this.context = context;
         this.followerList = followerList;
     }
@@ -48,7 +49,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.FollowView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FollowViewHolder followViewHolder, int i) {
+    public void onBindViewHolder(@NonNull FollowViewHolder followViewHolder, final int i) {
 
         if(followerList.get(i).getProfileImagePath() != null){
             GlideApp.with(context)
@@ -64,6 +65,11 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.FollowView
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "추후에 기능추가예정", Toast.LENGTH_SHORT).show();
+                //TODO : 클릭시 해당 유저 마이페이지로 이동
+
+                Intent intent = new Intent(context, MyPage.class);
+                intent.putExtra("userUUID", followerList.get(i).getUserUID());
+                context.startActivity(intent);
             }
         });
     }
