@@ -96,6 +96,7 @@ public class DishView extends AppCompatActivity {
 
     DishViewProfileImgPass dishViewProfileImgPass;
 
+    //프로필 경로 받는 리스너
     public void OnProfileImgGetListener(DishViewProfileImgPass _dishViewProfileImgPass){
         dishViewProfileImgPass = _dishViewProfileImgPass;
     }
@@ -574,7 +575,21 @@ public class DishView extends AppCompatActivity {
                     @Override
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
                         assert queryDocumentSnapshots != null;
-                        likesText.setText("좋아하는 사람 "+queryDocumentSnapshots.getDocuments().size()+ "명");
+                        int likes = queryDocumentSnapshots.getDocuments().size();
+                        likesText.setText("좋아하는 사람 "+likes+ "명");
+
+                        //TODO : 들어올 때 좋아요 개수 업데이트보다 나갈 때 좋아요 개수 업데이트가 좋지 않을까....근데 어렵다...
+                        //좋아요 개수 디비에 업데이트트
+                       FirebaseFirestore.getInstance()
+                                .collection("포스팅")
+                                .document(postingInfo.postingId)
+                                .update("numLike", likes)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "좋아요 개수를 디비에 업데이트했습니다.");
+                                    }
+                                });
                     }
                 });
     }
