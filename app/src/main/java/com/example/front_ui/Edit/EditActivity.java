@@ -2,6 +2,7 @@ package com.example.front_ui.Edit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -104,13 +105,15 @@ public class EditActivity extends AppCompatActivity {
                 Log.d(TAG, "onclick : share!!!!!");
                 //다끝나면 액티비티 종료
                 //TODO::가게평점 변경 필요. 데이터가 다시 되돌아가야함..........
-                changeData();
+                sendDataToLocalBrdcast();  //local broad cast을 통해 수정사항을 전달한다.
+                changeDataOnFirebase();    //firebase에 변경 사항 변경
                 EditActivity.this.finish();
             }
         });
     }
 
-    void changeData(){
+    //firebase에 변경 사항 변경
+    void changeDataOnFirebase(){
         Map<String, Object> data = new HashMap<>();
         data.put("hashTags", description.getText().toString());
         data.put("aver_star", Float.parseFloat(starText.getText().toString()));
@@ -120,6 +123,19 @@ public class EditActivity extends AppCompatActivity {
         db.collection("가게").document(storeInfo.getStoreId())
                 .collection("포스팅채널").document(postingInfo.getPostingId())
                 .set(data, SetOptions.merge());
+    }
 
+    //local broad cast을 통해 수정사항을 전달한다.
+    void sendDataToLocalBrdcast(){
+        Log.d(TAG, "sendDataToLocalBrdCast : " + postingInfo.getPostingId());
+        Intent intent = new Intent(postingInfo.getPostingId());//intent filter는 postingId!!!
+        intent.putExtra("hashTags", description.getText().toString());
+        intent.putExtra("aver_star", Float.parseFloat(starText.getText().toString()));
+
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+        //받는 곳.
+        //1. subactivity에서 dishview가 켜졌으면, SectionListDataAdapter와 dishView
+        //2. MyPage에서 dishView가 켜졌으면, SectionListDataAdapter와 myPage와 dishView
+        //3. 가게페이지에서 켜졌으면, SectionListDataAdapter와 storePage와 dishView
     }
 }
