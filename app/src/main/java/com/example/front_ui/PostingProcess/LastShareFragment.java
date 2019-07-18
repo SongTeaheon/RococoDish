@@ -63,7 +63,7 @@ import java.util.UUID;
 * setAndSendPosting() : 데이터 세팅(store, posting) + checkStoreData
 * checkStoreData() : 해당 가게가 있는지 확인. 없으면 putNewStoreInfo, 있으면 changeStarInfo
 * putNewStoreInfo() : store데이터를 db에 보낸다. + putPostingInfo
-* updatesFirestore() : store데이터의 별점 변경. +  putPostingInfo
+* changeStarAndUpdateStoreData() : store데이터의 별점 변경. +  putPostingInfo
 * putPostingInfo() : 포스팅 정보를 올린다.
  */
 
@@ -77,7 +77,6 @@ public class LastShareFragment extends Fragment {
     EditText text_description;
     EditText tags;
     TextView text_title;
-    List<Double> detail_aver_star;
     GeoPoint geoPoint;
     TextView storeName;
 
@@ -117,7 +116,6 @@ public class LastShareFragment extends Fragment {
         mStarText = view.findViewById(R.id.starText);
         storeName = view.findViewById(R.id.tvStore);
         storeName.setText(kakaoStoreInfo.place_name);
-        detail_aver_star = new ArrayList<Double>() {};
 //        String text = text_description.getText().toString();
         postingImage = view.findViewById(R.id.imageView1);
         storage = FirebaseStorage.getInstance();
@@ -272,8 +270,7 @@ public class LastShareFragment extends Fragment {
         postingInfo.writerName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         postingInfo.postingTime = Timestamp.now();
         postingInfo.hashTags = tags.getText().toString();
-        detail_aver_star.add((double)mRatingBar.getRating());//맛
-        postingInfo.detail_aver_star = detail_aver_star;
+        postingInfo.aver_star = (float)mRatingBar.getRating();
         postingInfo.storeName = kakaoStoreInfo.place_name;
         postingInfo.address = kakaoStoreInfo.address_name;
 
@@ -294,14 +291,6 @@ public class LastShareFragment extends Fragment {
             }
         }
 
-        //평균값 설정.
-        float sum =0 ;
-        for(int i=0 ; i<detail_aver_star.size(); i++ ) {
-            sum += detail_aver_star.get(i);
-        }
-
-        float aver_star = sum/detail_aver_star.size();
-        postingInfo.aver_star = aver_star;
         postingInfo.imagePathInStorage = imagePathInStorage;
 
         //2. 해당 가게 정보가 이미 올라와있으면 받아온다. 없으면 새로 넣는다.
@@ -309,7 +298,7 @@ public class LastShareFragment extends Fragment {
         float x = Float.parseFloat(kakaoStoreInfo.x);
         float y = Float.parseFloat(kakaoStoreInfo.y);
         geoPoint = new GeoPoint(y, x);
-        StoreInfo storeInfo = new StoreInfo(kakaoStoreInfo.place_name, aver_star, kakaoStoreInfo.address_name, detail_aver_star, new GeoPoint(y, x));
+        StoreInfo storeInfo = new StoreInfo(kakaoStoreInfo.place_name, (float)mRatingBar.getRating(), kakaoStoreInfo.address_name, new GeoPoint(y, x));
         storeInfo.setKakaoId(kakaoStoreInfo.id);
         checkStoreData(storeInfo, postingInfo);
 
@@ -321,9 +310,6 @@ public class LastShareFragment extends Fragment {
                 "description : "  + postingInfo.description +"\n"+
                 "writerId : "  + postingInfo.writerId +"\n"+
                 "aver_star : "  + postingInfo.aver_star +"\n");
-        for(int i=0 ; i<detail_aver_star.size(); i++ ) {
-            Log.d(TAG, "detail_aver_star ["+ i +"] : " + detail_aver_star.get(i));
-        }
 
     }
 
@@ -379,9 +365,9 @@ public class LastShareFragment extends Fragment {
             public Void apply(Transaction transaction) throws FirebaseFirestoreException {
                 Map<String,Object> storeInfo = transaction.get(storeRef).getData();
 
-
                 long postingNum = (long)storeInfo.get("postingNum");
-                double aver_star = (double)storeInfo.get("aver_star");
+                Object tempAverStar = storeInfo.get("aver_star");
+                double aver_star = (double)tempAverStar;
                 // Compute new number of ratings
                 long newNumRatings = postingNum + 1;
 

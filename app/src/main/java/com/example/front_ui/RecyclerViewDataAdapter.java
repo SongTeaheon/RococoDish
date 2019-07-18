@@ -2,9 +2,11 @@ package com.example.front_ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.front_ui.Edit.BroadcastUtils;
 import com.example.front_ui.Utils.LocationUtil;
 import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -71,10 +74,21 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     public void onBindViewHolder(ItemRowHolder itemRowHolder, final int i) {
         Log.d(TAG, "onBindViewHolder");
         Log.d(TAG, "storeId : " + list.get(i).getStoreId());
-        final String sectionName = list.get(i).getName();
-        final double sectionStar = list.get(i).aver_star;
-        String address = list.get(i).getAddress();
-        double distance = LocationUtil.getDistanceFromMe(mCurrentLocation, list.get(i).getGeoPoint());//내 위치로부터의 거리 측정.
+        final StoreInfo singleItem = list.get(i);
+
+        //데이터 수정이 일어난 데이터가 클릭되면 수정된 데이터를 여기에서 반영해야함1!! receive 필터 아이디는 postingId
+//        LocalBroadcastManager
+//                .getInstance(mContext)
+//                .registerReceiver(BroadcastUtils.getBrdCastReceiver_store(singleItem),
+//                        new IntentFilter(singleItem.getStoreId()));
+//        Log.d(TAG, "data check : aver_store_star : " + singleItem.getAver_star());
+
+        final String sectionName = singleItem.getName();
+        final double sectionStar = singleItem.aver_star;
+        Log.d(TAG, "data check : aver_store_star : " + sectionStar);
+
+        String address = singleItem.getAddress();
+        double distance = LocationUtil.getDistanceFromMe(mCurrentLocation, singleItem.getGeoPoint());//내 위치로부터의 거리 측정.
         String distanceStr = MathUtil.adjustedDistance(distance);
         Log.d(TAG, "get distance : " + distance);
 
@@ -85,7 +99,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         itemRowHolder.storeAddress.setText(address);
         //to do : distance 표시
 
-        itemListDataAdapter = new SectionListDataAdapter(mContext, list.get(i), distance);
+        itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance);
 
         itemRowHolder.recycler_view_list.setHasFixedSize(true);
         itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
@@ -100,10 +114,10 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, StorePage.class);
 
-                Log.d(TAG, "name : " + list.get(i).getName() + " averStar : " + list.get(i).getAver_star() + " docId : " + list.get(i).getStoreId());
-                intent.putExtra("storeName", list.get(i).getName());
-                intent.putExtra("averStar", list.get(i).getAver_star());
-                intent.putExtra("documentId", list.get(i).getStoreId());
+                Log.d(TAG, "name : " + singleItem.getName() + " averStar : " + singleItem.getAver_star() + " docId : " + singleItem.getStoreId());
+                intent.putExtra("storeName", singleItem.getName());
+                intent.putExtra("averStar", singleItem.getAver_star());
+                intent.putExtra("documentId", singleItem.getStoreId());
 
                 mContext.startActivity(intent);
                 Toast.makeText(v.getContext(), "click event on more, "+sectionName , Toast.LENGTH_SHORT).show();
