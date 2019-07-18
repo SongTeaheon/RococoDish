@@ -13,6 +13,7 @@ public class PostingInfo implements Serializable {
     public String imagePathInStorage;
     public int numLike;
     public Object postingTime;
+    public Object editTime;
     public String title;
     public Map<String, Boolean> tag;
     public String description;
@@ -22,7 +23,6 @@ public class PostingInfo implements Serializable {
     public String writerId;
     public String postingId;
     public float aver_star;
-    public List<Double> detail_aver_star; //{맛, 가성비, 서비스, 분위기}
     public String hashTags;
 
     public PostingInfo() {
@@ -40,7 +40,6 @@ public class PostingInfo implements Serializable {
                        String storeId,
                        String writerId,
                        float aver_star,
-                       List<Double> detail_aver_star,
                        String hashTags) {
         this.storeName = storeName;
         this.imagePathInStorage = imagePathInStorage;
@@ -54,7 +53,6 @@ public class PostingInfo implements Serializable {
         this.storeId = storeId;
         this.writerId = writerId;
         this.aver_star = aver_star;
-        this.detail_aver_star = detail_aver_star;
         this.storeId = storeId;
         this.hashTags = hashTags;
     }
@@ -156,14 +154,6 @@ public class PostingInfo implements Serializable {
         this.aver_star = aver_star;
     }
 
-    public List<Double> getDetail_aver_star() {
-        return detail_aver_star;
-    }
-
-    public void setDetail_aver_star(List<Double> detail_aver_star) {
-        this.detail_aver_star = detail_aver_star;
-    }
-
     public String getPostingId() {
         return postingId;
     }
@@ -173,5 +163,9 @@ public class PostingInfo implements Serializable {
     }
     public void setHashTags(String hashTags){
         this.hashTags = hashTags;
+    }
+
+    public String getHashTags() {
+        return hashTags;
     }
 }

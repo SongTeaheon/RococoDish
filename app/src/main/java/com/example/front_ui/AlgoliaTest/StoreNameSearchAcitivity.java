@@ -16,6 +16,7 @@ import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Query;
 import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.DataModel.UserInfo;
 import com.example.front_ui.Interface.AlgoliaSearchPredicate;
 import com.example.front_ui.R;
 import com.example.front_ui.Utils.AlgoliaUtils;
@@ -125,6 +126,24 @@ public class StoreNameSearchAcitivity extends AppCompatActivity {
                                 StoreInfo storeInfo = document.toObject(StoreInfo.class);
 
                                 AlgoliaUtils.addObject("store", storeInfo);
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+        db.collection("사용자")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getString("nickname"));
+                                UserInfo userInfo = document.toObject(UserInfo.class);
+
+                                AlgoliaUtils.addObject("user", userInfo);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.front_ui.DataModel.UserInfo;
+import com.example.front_ui.Utils.AlgoliaUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.common.api.Response;
@@ -80,6 +81,8 @@ public class SignUpActivity extends AppCompatActivity {
                                     null,
                                     null,
                                     0);
+
+                            AlgoliaUtils.addObject("user", newUser);
 
                             userRef.set(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
