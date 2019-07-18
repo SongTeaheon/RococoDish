@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StoreInfo{
+public class StoreInfo {
     public String name;
     public String kakaoId;
     public String storeId;

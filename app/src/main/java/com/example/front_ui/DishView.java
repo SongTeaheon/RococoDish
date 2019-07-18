@@ -335,12 +335,6 @@ public class DishView extends AppCompatActivity {
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                final Intent intent = new Intent(DishView.this, PostToMyPage.class);
-//                final Bundle bundle = new Bundle();
-//                bundle.putSerializable("allPostingInfo", postingInfo);
-//                intent.putExtra("writerImage", userImage);
-//                intent.putExtras(bundle);
-                //TODO: 기존에 있던 PostToMyPage를 MyPage하나로 통합
                 Intent intent = new Intent(DishView.this, MyPage.class);
                 intent.putExtra("userUUID", postingInfo.writerId);
                 Log.d(TAG, "들어왔씁니다.");
@@ -474,7 +468,6 @@ public class DishView extends AppCompatActivity {
                                 commentSend.setVisibility(View.VISIBLE);
                                 cocomentSend.setVisibility(View.GONE);
 
-                                //TODO : 대댓글에서 프로필 이미지 처리
                                 commentRef
                                         .document(docId)
                                         .collection("대댓글")
@@ -626,7 +619,6 @@ public class DishView extends AppCompatActivity {
 
                         likesText.setText("좋아하는 사람 "+queryDocumentSnapshots.getDocuments().size()+ "명");
 
-                        //TODO : 슬라이싱으로 좋아요 개수 가져오자. + 창 나갈 때 좋아요 디비에 저장
                         //좋아요 개수 디비에 업데이트트
                         String like_text = likesText.getText().toString();
                         int likes = Integer.valueOf(like_text.substring(8, like_text.length()-1));//슬라이싱으로 좋아요 개수만 정수로 가져옴.
@@ -637,23 +629,6 @@ public class DishView extends AppCompatActivity {
                 });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        //todo: 창이 꺼질때 좋아요 개수를 디비에 저장함.
-        FirebaseFirestore.getInstance()
-                .collection("포스팅")
-                .document(postingInfo.postingId)
-                .update("numLike", gloabal_like)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "좋아요 개수를 디비에 업데이트했습니다.");
-                    }
-                });
-
-    }
 
     //좋아요 클릭부분만
     public void likeClick(final ImageView likeImage,
@@ -765,6 +740,17 @@ public class DishView extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
+
+        FirebaseFirestore.getInstance()
+                .collection("포스팅")
+                .document(postingInfo.postingId)
+                .update("numLike", gloabal_like)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "좋아요 개수를 디비에 업데이트했습니다.");
+                    }
+                });
     }
 }
 

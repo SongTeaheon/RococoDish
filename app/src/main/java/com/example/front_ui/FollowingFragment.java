@@ -13,8 +13,11 @@ import android.view.ViewGroup;
 import com.example.front_ui.DataModel.FollowInfo;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -65,10 +68,9 @@ public class FollowingFragment extends Fragment {
                                 FirebaseFirestore.getInstance()
                                         .collection("사용자")
                                         .document(followerUid)
-                                        .get()
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                             @Override
-                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
                                                 String imagePath = documentSnapshot.get("profileImage").toString();
                                                 String name = documentSnapshot.get("nickname").toString();
                                                 String email = documentSnapshot.get("eMail").toString();

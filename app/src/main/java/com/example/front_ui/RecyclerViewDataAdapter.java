@@ -2,11 +2,8 @@ package com.example.front_ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.location.Location;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.front_ui.Edit.BroadcastUtils;
 import com.example.front_ui.Utils.LocationUtil;
 import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,11 +22,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.example.front_ui.DataModel.StoreInfo;
-import com.example.front_ui.DataModel.PostingInfo;
 
 import org.imperiumlabs.geofirestore.GeoFirestore;
 import org.imperiumlabs.geofirestore.GeoQuery;
@@ -38,7 +30,6 @@ import org.imperiumlabs.geofirestore.GeoQueryEventListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 
 public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDataAdapter.ItemRowHolder> { // 세로 리사이클러 뷰를 위한 어뎁터
 
@@ -112,7 +103,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         itemRowHolder.touchStore.setOnClickListener(new View.OnClickListener() { // 각 가게별 상단 바를 터치 했을 때 이벤트 설정
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, StorePage.class);
+                Intent intent = new Intent(mContext, StorePageActivity.class);
 
                 Log.d(TAG, "name : " + singleItem.getName() + " averStar : " + singleItem.getAver_star() + " docId : " + singleItem.getStoreId());
                 intent.putExtra("storeName", singleItem.getName());
@@ -120,7 +111,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                 intent.putExtra("documentId", singleItem.getStoreId());
 
                 mContext.startActivity(intent);
-                Toast.makeText(v.getContext(), "click event on more, "+sectionName , Toast.LENGTH_SHORT).show();
+//                Toast.makeText(v.getContext(), "click event on more, "+sectionName , Toast.LENGTH_SHORT).show();
             }
         });
 

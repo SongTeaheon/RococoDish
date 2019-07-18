@@ -64,9 +64,6 @@ public class FollowRecyAdapter extends RecyclerView.Adapter<FollowRecyAdapter.Fo
         followViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "추후에 기능추가예정", Toast.LENGTH_SHORT).show();
-                //TODO : 클릭시 해당 유저 마이페이지로 이동
-
                 Intent intent = new Intent(context, MyPage.class);
                 intent.putExtra("userUUID", followerList.get(i).getUserUID());
                 context.startActivity(intent);

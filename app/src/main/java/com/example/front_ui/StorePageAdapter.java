@@ -1,6 +1,8 @@
 package com.example.front_ui;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StorePostInfo;
 import com.example.front_ui.Utils.GlideApp;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class StorePageAdapter extends BaseAdapter {
@@ -43,7 +47,7 @@ public class StorePageAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if(convertView == null)
             convertView = LayoutInflater.from(context).inflate(R.layout.store_page_item, parent, false);
 
@@ -65,7 +69,12 @@ public class StorePageAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "추후 추가 예정", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, DishView.class);
+                intent.putExtra("postingInfo", list.get(position).getPostingInfo());
+                SerializableStoreInfo serializableStoreInfo = new SerializableStoreInfo(list.get(position).getStoreInfo());
+                intent.putExtra("storeInfo", serializableStoreInfo );
+                context.startActivity(intent);
+
             }
         });
 
