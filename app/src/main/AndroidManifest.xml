@@ -28,7 +28,7 @@
         <activity android:name=".MyPage" />
         <activity android:name=".PostToMyPage" />
         <activity android:name=".PostingProcess.MainShareActivity" />
-        <activity android:name=".StorePage" />
+        <activity android:name=".StorePageActivity" />
         <activity android:name=".FollowActivity" />
         <activity android:name=".SubActivity">
             <intent-filter>

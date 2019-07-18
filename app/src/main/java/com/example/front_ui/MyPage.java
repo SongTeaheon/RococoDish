@@ -150,7 +150,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                         }
                     });
             //팔로우 버튼 누르기 이벤트 처리
-            //TODO : 다방면의 테스트 필요(일단 개인 테스팅은 통과)
+            //TODO : 팔로우페이지 -> 마이페이지 팔로우 기능 마비됨.(해결필요)
             follow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -278,11 +278,6 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                 }
             }
         });
-
-//        imageButton.setBackground(new ShapeDrawable(new OvalShape()));
-//        if(Build.VERSION.SDK_INT >= 22) {
-//            imageButton.setClipToOutline(true);//프로필 이미지 동그랗게
-//        }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
