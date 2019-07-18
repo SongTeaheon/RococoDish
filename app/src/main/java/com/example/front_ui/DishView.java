@@ -93,12 +93,19 @@ public class DishView extends AppCompatActivity {
     ImageView commentSend;//댓글 업로드 버튼
     EditText cocomentEditText;//대댓글 작성창
     ImageView cocomentSend;//대댓글 업로드 버튼
+    int gloabal_like;
 
     DishViewProfileImgPass dishViewProfileImgPass;
+    DishViewLikeNumPass dishViewLikeNumPass;
 
     //프로필 경로 받는 리스너
     public void OnProfileImgGetListener(DishViewProfileImgPass _dishViewProfileImgPass){
         dishViewProfileImgPass = _dishViewProfileImgPass;
+    }
+
+    //좋아요 개수 받는 리스너
+    public void OnLikeNumListener(DishViewLikeNumPass _dishViewLikeNumPass){
+        dishViewLikeNumPass = _dishViewLikeNumPass;
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -455,6 +462,13 @@ public class DishView extends AppCompatActivity {
                 //데이터 패치는 뷰홀더에서 처리함. 댓글에 대해 각각 해야해서 뷰홀더안에서 해야함.
             }
         });
+        //likeFunc() 함수에서 받은 좋아요 개수를 전역변수에 저장한 후 onDestroy에서 사용함.
+        OnLikeNumListener(new DishViewLikeNumPass() {
+            @Override
+            public void likeNumPass(int likeNum) {
+                gloabal_like = likeNum;
+            }
+        });
 
     }
 
@@ -575,23 +589,36 @@ public class DishView extends AppCompatActivity {
                     @Override
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
                         assert queryDocumentSnapshots != null;
-                        int likes = queryDocumentSnapshots.getDocuments().size();
-                        likesText.setText("좋아하는 사람 "+likes+ "명");
 
-                        //TODO : 들어올 때 좋아요 개수 업데이트보다 나갈 때 좋아요 개수 업데이트가 좋지 않을까....근데 어렵다...
+                        likesText.setText("좋아하는 사람 "+queryDocumentSnapshots.getDocuments().size()+ "명");
+
+                        //TODO : 슬라이싱으로 좋아요 개수 가져오자. + 창 나갈 때 좋아요 디비에 저장
                         //좋아요 개수 디비에 업데이트트
-                       FirebaseFirestore.getInstance()
-                                .collection("포스팅")
-                                .document(postingInfo.postingId)
-                                .update("numLike", likes)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "좋아요 개수를 디비에 업데이트했습니다.");
-                                    }
-                                });
+                        String like_text = likesText.getText().toString();
+                        int likes = Integer.valueOf(like_text.substring(8, like_text.length()-1));//슬라이싱으로 좋아요 개수만 정수로 가져옴.
+
+                        dishViewLikeNumPass.likeNumPass(likes);
+
                     }
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        //todo: 창이 꺼질때 좋아요 개수를 디비에 저장함.
+        FirebaseFirestore.getInstance()
+                .collection("포스팅")
+                .document(postingInfo.postingId)
+                .update("numLike", gloabal_like)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "좋아요 개수를 디비에 업데이트했습니다.");
+                    }
+                });
+
     }
 
     //좋아요 클릭부분만
