@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.location.Location;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,7 @@ import android.widget.ToggleButton;
 
 import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.Edit.BroadcastUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.LocationUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -316,13 +319,19 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             }
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BroadcastUtils.UnregBrdcastReceiver_posting(this);
+    }
 }
 
 class MyAdapter extends BaseAdapter {
     private final String TAG = "TAGMyAdapter";
     FirebaseFirestore db;
 
-    Context context;
+    Context mContext;
     int layout;
     ArrayList<PostingInfo> list;
     LayoutInflater inf;
@@ -345,7 +354,7 @@ class MyAdapter extends BaseAdapter {
         currentLatitude = lat;
         currentLongtitude = lon;
         this.userUUID = userUUID;
-        this.context = context;
+        this.mContext = context;
         this.layout = layout;
         mCallback = listener;
         inf = (LayoutInflater) context.getSystemService
@@ -379,14 +388,20 @@ class MyAdapter extends BaseAdapter {
         final PostingInfo singleItem = list.get(position);
         Log.d(TAG, "downloadImageFromFirebaseStorage : " + singleItem.imagePathInStorage);
         StorageReference fileReference = storage.getReferenceFromUrl(singleItem.imagePathInStorage);
-        GlideApp.with(context).load(fileReference).into(iv);
+        GlideApp.with(mContext).load(fileReference).into(iv);
 
 //태완태완 이미지 선택시 반응입니다. 여기가 그 각 포스팅1 글 누르면 발생하는 이벤트 부분입니다.
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                final Intent intent = new Intent(context, DishView.class);
+                //데이터 수정이 일어난 데이터가 클릭되면 수정된 데이터를 여기에서 반영해야함1!! receive 필터 아이디는 postingId
+                LocalBroadcastManager
+                        .getInstance(mContext)
+                        .registerReceiver(BroadcastUtils.getBrdCastReceiver_posting(singleItem),
+                                new IntentFilter(singleItem.getPostingId()));
+
+                final Intent intent = new Intent(mContext, DishView.class);
 
                 db.collection("가게")
                         .document(singleItem.getStoreId())
@@ -406,9 +421,9 @@ class MyAdapter extends BaseAdapter {
                                         intent.putExtra("storeInfo", serializableStoreInfo);
                                         intent.putExtra("distance", distance);
 
-                                        context.startActivity(intent);
+                                        mContext.startActivity(intent);
 
-                                        Toast.makeText(context, storeInfo.name, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(mContext, storeInfo.name, Toast.LENGTH_SHORT).show();
 
                                     } else {
                                         Log.d(TAG, "No such document");

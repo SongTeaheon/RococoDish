@@ -2,6 +2,7 @@ package com.example.front_ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,7 +33,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.front_ui.AlgoliaTest.StoreNameSearchAcitivity;
+import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.SearchedData;
+import com.example.front_ui.Edit.BroadcastUtils;
 import com.example.front_ui.Interface.MyPageDataPass;
 import com.example.front_ui.PostingProcess.MainShareActivity;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
@@ -401,5 +405,13 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                         }
                     }).show();
         }
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BroadcastUtils.UnregBrdcastReceiver_posting(this);
     }
 }
