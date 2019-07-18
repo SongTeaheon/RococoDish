@@ -26,6 +26,7 @@ import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.R;
 import com.example.front_ui.Utils.AlgoliaUtils;
 import com.example.front_ui.Utils.GlideApp;
+import com.example.front_ui.Utils.RatingBarUtils;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -78,6 +79,7 @@ public class LastShareFragment extends Fragment {
     TextView text_title;
     List<Double> detail_aver_star;
     GeoPoint geoPoint;
+    TextView storeName;
 
 
     KakaoStoreInfo kakaoStoreInfo;
@@ -113,6 +115,8 @@ public class LastShareFragment extends Fragment {
 //        text_description = view.findViewById(R.id.search_btn);
         mRatingBar = view.findViewById(R.id.ratingBar);
         mStarText = view.findViewById(R.id.starText);
+        storeName = view.findViewById(R.id.tvStore);
+        storeName.setText(kakaoStoreInfo.place_name);
         detail_aver_star = new ArrayList<Double>() {};
 //        String text = text_description.getText().toString();
         postingImage = view.findViewById(R.id.imageView1);
@@ -202,41 +206,10 @@ public class LastShareFragment extends Fragment {
         });
 
         //Star Rating Bar setup
-        setupStarRatingBar();
+        RatingBarUtils.setupStarRatingBar(mRatingBar, mStarText);
         return view;
     }
 
-
-
-    //ratingBar Listener
-    private void setupStarRatingBar(){
-        //맛
-        mRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                setStarText(mRatingBar, mStarText);
-            }
-        });
-    }
-
-
-    private void setStarText(RatingBar b, TextView v){ //변경
-        v.setText(String.valueOf(v));
-        float i = (float) b.getRating();
-        if (i == 1) {
-            v.setText("1.0");
-        } else if (i == 2) {
-            v.setText("2.0");
-        } else if (i == 3) {
-            v.setText("3.0");
-        } else if (i == 4) {
-            v.setText("4.0");
-        } else if (i == 5) {
-            v.setText("5.0");
-        } else {
-            v.setText("");
-        }
-    }
 
 
     //사진 upload 후, 사진 업로드가 완료되면 업로드된 url을 가져온 후, db에 다른 정보들과 함께 세팅한다.
@@ -302,7 +275,7 @@ public class LastShareFragment extends Fragment {
         detail_aver_star.add((double)mRatingBar.getRating());//맛
         postingInfo.detail_aver_star = detail_aver_star;
         postingInfo.storeName = kakaoStoreInfo.place_name;
-        postingInfo.address = kakaoStoreInfo.road_address_name;
+        postingInfo.address = kakaoStoreInfo.address_name;
 
         //TODO : 파이어스토어 넣을시에 태그는 맵으로 변환시킴
         String postingDesc = tags.getText().toString();

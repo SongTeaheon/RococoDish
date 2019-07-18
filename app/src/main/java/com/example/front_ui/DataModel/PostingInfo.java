@@ -13,6 +13,7 @@ public class PostingInfo implements Serializable {
     public String imagePathInStorage;
     public int numLike;
     public Object postingTime;
+    public Object editTime;
     public String title;
     public Map<String, Boolean> tag;
     public String description;
@@ -173,5 +174,9 @@ public class PostingInfo implements Serializable {
     }
     public void setHashTags(String hashTags){
         this.hashTags = hashTags;
+    }
+
+    public String getHashTags() {
+        return hashTags;
     }
 }

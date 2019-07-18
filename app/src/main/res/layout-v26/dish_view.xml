@@ -250,7 +250,7 @@
                     app:srcCompat="@mipmap/ic_bookmark" />
 
                 <ImageView
-                    android:id="@+id/imageView5"
+                    android:id="@+id/share_imageview"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginStart="16dp"

@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.SerializableStoreInfo;
+import com.example.front_ui.Edit.EditActivity;
 import com.example.front_ui.Utils.DeleteUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.MathUtil;
@@ -65,6 +66,7 @@ public class DishView extends AppCompatActivity {
     TextView tvAddress;
     ImageView backButton;
     TextView tvStoreName;
+    ImageView shareButton;
 
 
 
@@ -73,6 +75,8 @@ public class DishView extends AppCompatActivity {
     FirebaseStorage storage;
     PostingInfo postingInfo;
     SerializableStoreInfo storeInfo;
+    double distance;
+
     ImageView profileImage;
     TextView profileName;
     @Nullable
@@ -137,7 +141,7 @@ public class DishView extends AppCompatActivity {
         storeInfo = (SerializableStoreInfo)intent.getSerializableExtra("storeInfo");
         Log.d(TAG, "store Info id : " + storeInfo.getStoreId() + " store name : " + storeInfo.getName() + " store map :" + storeInfo.getLat()+", "+storeInfo.getLon() +
                 " star :  " + storeInfo.getAver_star());
-        double distance = (double)intent.getDoubleExtra("distance", 0.0);
+        distance = (double)intent.getDoubleExtra("distance", 0.0);
         Log.d(TAG, "거리(미터단위) : " + distance);
 
         /**
@@ -247,13 +251,34 @@ public class DishView extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "edit button clicked");
+                    //TODO: 수정기능
                     Toast.makeText(getApplicationContext(), "edit button clicked", Toast.LENGTH_LONG).show();
-                    
-
+                    Intent intent = new Intent(DishView.this, EditActivity.class);
+                    intent.putExtra("postingInfo", postingInfo);
+                    intent.putExtra("storeInfo", storeInfo);
+                    intent.putExtra("distance", distance);
+                    startActivity(intent);
                 }
             });
         }
 
+        /*
+        * 공유기능
+        * */
+        shareButton = findViewById(R.id.share_imageview);
+        shareButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                //share기능.
+                //일단 텍스트 전달 기능!
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                String text = "원하는 텍스트를 입력하세요";
+                intent.putExtra(Intent.EXTRA_TEXT, text);
+                Intent chooser = Intent.createChooser(intent, "친구에게 공유하기");
+                startActivity(chooser);
+            }
+        });
         /**
          * 포스팅 작성자의 프로필 정보(이미지, 이름) 불러오기 + 우측 상단에 띄우기
          * **/
