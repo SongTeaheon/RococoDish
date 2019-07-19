@@ -193,17 +193,6 @@ public class DishView extends AppCompatActivity {
 
 
 
-        /**
-         * 게시물 내용 설정
-         * **/
-//        descText = findViewById(R.id.desc_textview_dishView);
-//        if(postingInfo.description != null){
-//            descText.setText(postingInfo.description);
-//        }
-//        else{
-//            descText.setText("게시물 내용이 없습니다.");
-//        }
-
         tvStoreName = findViewById(R.id.tvStore);
         tvStoreName.setText(storeInfo.getName());
         tvAddress.setText(storeInfo.getAddress());
@@ -567,6 +556,7 @@ public class DishView extends AppCompatActivity {
                 .collection("좋아요")
                 .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
         //좋아요 여부와 색변경
+        //todo : 게시물 삭제할 때 파이어스토어 재접근 보다 현재 스냅샷 리스너를 해제하자.
         likeRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {

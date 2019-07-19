@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ public class StorePageActivity extends AppCompatActivity {
 
     TextView tv_storeName;
     TextView tv_storeStar;
+    ImageView backBtn;
     GridView gridView;
     ProgressBar progressBar;
     List<StorePostInfo> list = new ArrayList<>();
@@ -43,6 +45,14 @@ public class StorePageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.store_page);
+
+        backBtn = findViewById(R.id.backButton);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         Intent intent = getIntent();
         storeName = intent.getStringExtra("storeName");
@@ -68,10 +78,9 @@ public class StorePageActivity extends AppCompatActivity {
                 .collection("포스팅")
                 .whereEqualTo("storeId", docId)
 //                .orderBy("postingTime", Query.Direction.DESCENDING)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         if(!queryDocumentSnapshots.getDocuments().isEmpty()){
                             for(DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
 

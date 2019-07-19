@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import java.util.List;
 
 public class FollowerFragment extends Fragment {
 
+    String TAG = "TAGFollowerFrag";
     RecyclerView followerRecycler;
     FollowRecyAdapter followRecyAdapter;
     List<FollowInfo> followerList = new ArrayList<>();
@@ -51,37 +53,42 @@ public class FollowerFragment extends Fragment {
 
         String userUUID = getArguments().getString("userUUID");
 
-
+        //todo : 팔로워 취소했을 때에도 실시간 반영 필요
         //마이페이지에서 왔을 때
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(userUUID)
                 .collection("팔로워")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if(e != null)
+                            Log.d(TAG, e.getMessage());
                         if(!queryDocumentSnapshots.getDocuments().isEmpty()){
-                            for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
+                            for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()){
 
-                                String followerUid = dc.getId();
+                                switch (dc.getType()){
+                                    case ADDED:
+                                        String followerUid = dc.getDocument().getId();
 
-                                //유저의 프로필 정보 가져오기
-                                FirebaseFirestore.getInstance()
-                                        .collection("사용자")
-                                        .document(followerUid)
-                                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                                                String imagePath = documentSnapshot.get("profileImage").toString();
-                                                String name = documentSnapshot.get("nickname").toString();
-                                                String email = documentSnapshot.get("eMail").toString();
-                                                String uid = documentSnapshot.getId();
+                                        //유저의 프로필 정보 가져오기
+                                        FirebaseFirestore.getInstance()
+                                                .collection("사용자")
+                                                .document(followerUid)
+                                                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                                                        String imagePath = documentSnapshot.get("profileImage").toString();
+                                                        String name = documentSnapshot.get("nickname").toString();
+                                                        String email = documentSnapshot.get("eMail").toString();
+                                                        String uid = documentSnapshot.getId();
 
-                                                followerList.add(new FollowInfo(imagePath, name, email, uid));
-                                                followRecyAdapter.notifyItemChanged(followerList.size());
-                                            }
-                                        });
+                                                        followerList.add(new FollowInfo(imagePath, name, email, uid));
+                                                        followRecyAdapter.notifyItemChanged(followerList.size());
+                                                    }
+                                                });
+                                }
+
                             }
                         }
                     }
