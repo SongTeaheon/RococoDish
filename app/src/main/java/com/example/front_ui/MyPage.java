@@ -65,6 +65,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.rishabhkhanna.customtogglebutton.CustomToggleButton;
 
 //interface for datapass to MyPage
 public class MyPage extends AppCompatActivity implements MyPageDataPass {
@@ -103,7 +104,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         currentLatitude = intent.getDoubleExtra("latitude", 0.0);
         currentLongtitude = intent.getDoubleExtra("longitude", 0.0);
 
-        //이전 페이지에서 uuid를 가져옴.
+        //이전 페이지에서 사용자의 uuid를 가져옴.
         final String userUUID = intent.getStringExtra("userUUID");
 
         //팔로우 글자 누르면 팔로우 리스트 창 이동
@@ -120,7 +121,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         /**
          * 팔로우 버튼 처리
          * **/
-        final ToggleButton follow = findViewById(R.id.followToggle);
+        final CustomToggleButton follow = findViewById(R.id.followToggle);
         if(userUUID.equals(FirebaseAuth.getInstance().getUid())){
             follow.setVisibility(View.GONE);
         }
@@ -129,7 +130,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             //팔로우 화면표시용
             follow.setVisibility(View.INVISIBLE);
             FirebaseFirestore.getInstance().collection("사용자")
-                    .document(FirebaseAuth.getInstance().getUid())
+                    .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
                     .collection("팔로잉")
                     .document(userUUID)
                     .get()
@@ -147,10 +148,12 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                                 }
                                 follow.setVisibility(View.VISIBLE);
                             }
+                            else{
+                                follow.setVisibility(View.VISIBLE);
+                            }
                         }
                     });
             //팔로우 버튼 누르기 이벤트 처리
-            //TODO : 팔로우페이지 -> 마이페이지 팔로우 기능 마비됨.(해결필요)
             follow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -187,7 +190,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                     else{
                         Log.d(TAG, "팔로우 버튼 클릭 해제됨");
                         //삭제 부분
-                        followerRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        followingRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Log.d(TAG, "팔로우 버튼 해제해서 '사용자->팔로잉' 디비 삭제 완료");
@@ -246,38 +249,43 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                 }
             }
         });
-        circleImageView.setOnClickListener(new View.OnClickListener() {
-            final String[] profiles = new String[] {"앨범에서 사진 선택", "기본 이미지로 변경"};
-            @Override
-            public void onClick(final View v) {
-                switch (v.getId()) {
-                    case R.id.circleImage :
-                        new AlertDialog.Builder(MyPage.this)
-                            .setTitle("프로필")
-                            .setItems(profiles, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    switch (profiles[which]) {
-                                        case "앨범에서 사진 선택":
-                                            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                            startActivityForResult(intent, RC_GALLERY);
-                                            break;
-                                        case "기본 이미지로 변경":
-                                            FirebaseFirestore.getInstance().collection("사용자")
-                                                    .document(userUUID)
-                                                    .update("profileImage", basicProfile);
-                                            Intent mintent = new Intent(getApplicationContext(), MyPage.class);
-                                            startActivity(mintent);
-                                            finish();
-                                            break;
-                                    }
-                                }
-                            })
-                            .show();
-                        break;
+        //todo : 타인의 프로필 변경은 막기
+        //자신일 경우에만 프로필 변경 가능
+        if(userUUID.equals(FirebaseAuth.getInstance().getUid())){
+            circleImageView.setOnClickListener(new View.OnClickListener() {
+                final String[] profiles = new String[] {"앨범에서 사진 선택", "기본 이미지로 변경"};
+                @Override
+                public void onClick(final View v) {
+                    switch (v.getId()) {
+                        case R.id.circleImage :
+                            new AlertDialog.Builder(MyPage.this)
+                                    .setTitle("프로필")
+                                    .setItems(profiles, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            switch (profiles[which]) {
+                                                case "앨범에서 사진 선택":
+                                                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                                    startActivityForResult(intent, RC_GALLERY);
+                                                    break;
+                                                case "기본 이미지로 변경":
+                                                    FirebaseFirestore.getInstance().collection("사용자")
+                                                            .document(userUUID)
+                                                            .update("profileImage", basicProfile);
+                                                    Intent mintent = new Intent(getApplicationContext(), MyPage.class);
+                                                    startActivity(mintent);
+                                                    finish();
+                                                    break;
+                                            }
+                                        }
+                                    })
+                                    .show();
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        }
+
     }
 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
