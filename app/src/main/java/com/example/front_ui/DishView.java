@@ -298,7 +298,6 @@ public class DishView extends AppCompatActivity {
             public void onClick(View view) {
                 String disStr = Double.toString(distance);
                 Log.d(TAG, "num like " + postingInfo.getNumLike());
-                //TODO:share기능 미완성.
                 LocationTemplate params = LocationTemplate.newBuilder(storeInfo.getAddress(),
                         ContentObject.newBuilder(storeInfo.getName(),
                                 postingInfo.imagePathInStorage,
@@ -315,19 +314,6 @@ public class DishView extends AppCompatActivity {
                                 .build()))
                         .setAddressTitle(storeInfo.getName())
                         .build();
-//                FeedTemplate params = FeedTemplate
-//                        .newBuilder(ContentObject.newBuilder(storeInfo.getName(),
-//                                postingInfo.imagePathInStorage,
-//                                LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
-//                                        .setMobileWebUrl("https://developers.kakao.com").build())
-//                                .setDescrption(postingInfo.getHashTags())
-//                                .build())
-//                        .setSocial(SocialObject.newBuilder().setLikeCount(postingInfo.getNumLike()).setCommentCount(0)
-//                                .setSharedCount(0).setViewCount(0).build())
-//                        .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
-//                                .setAndroidExecutionParams("distance="+disStr+"&postingId="+postingInfo.getPostingId()+"&storeId="+storeInfo.getStoreId())
-//                                .build()))
-//                        .build();
 
                 Map<String, String> serverCallbackArgs = new HashMap<String, String>();
                 serverCallbackArgs.put("user_id", "sth534@naver.com");
