@@ -95,6 +95,16 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_page);
 
+        TextView textView = findViewById(R.id.textView);
+        textView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+                startActivity(intent);
+                return false;
+            }
+        });
+
 
         /**
          * 이전 창에서 데이터 가져옴.
@@ -405,34 +415,28 @@ class MyAdapter extends BaseAdapter {
                                 new IntentFilter(singleItem.getPostingId()));
 
                 final Intent intent = new Intent(mContext, DishView.class);
-
+                //비동기로 객체 가져오기
                 db.collection("가게")
                         .document(singleItem.getStoreId())
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                             @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                                        StoreInfo storeInfo = document.toObject(StoreInfo.class);
-                                        Log.d(TAG, "storeInfo : " + storeInfo.getName());
-                                        SerializableStoreInfo serializableStoreInfo = new SerializableStoreInfo(storeInfo);
-                                        double distance = LocationUtil.getDistanceFromMe(currentLatitude, currentLongtitude, storeInfo.getGeoPoint());
-                                        intent.putExtra("postingInfo", singleItem);
-                                        intent.putExtra("storeInfo", serializableStoreInfo);
-                                        intent.putExtra("distance", distance);
+                            public void onEvent(@javax.annotation.Nullable DocumentSnapshot document, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                                if (document.exists()) {
+                                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                    StoreInfo storeInfo = document.toObject(StoreInfo.class);
+                                    Log.d(TAG, "storeInfo : " + storeInfo.getName());
+                                    SerializableStoreInfo serializableStoreInfo = new SerializableStoreInfo(storeInfo);
+                                    double distance = LocationUtil.getDistanceFromMe(currentLatitude, currentLongtitude, storeInfo.getGeoPoint());
+                                    intent.putExtra("postingInfo", singleItem);
+                                    intent.putExtra("storeInfo", serializableStoreInfo);
+                                    intent.putExtra("distance", distance);
 
-                                        mContext.startActivity(intent);
+                                    mContext.startActivity(intent);
 
-                                        Toast.makeText(mContext, storeInfo.name, Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(mContext, storeInfo.name, Toast.LENGTH_SHORT).show();
 
-                                    } else {
-                                        Log.d(TAG, "No such document");
-                                    }
                                 } else {
-                                    Log.d(TAG, "get failed with ", task.getException());
+                                    Log.d(TAG, "No such document");
                                 }
                             }
                         });

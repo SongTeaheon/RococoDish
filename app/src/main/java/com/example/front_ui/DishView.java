@@ -41,6 +41,7 @@ import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.collect.ImmutableMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
@@ -54,7 +55,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -204,7 +204,7 @@ public class DishView extends AppCompatActivity {
 
 
 
-
+        //todo : 이미지 불러올 때 다른 앱들처럼 용량 낮은 깨진파일먼저 갖고 와서 placeholder로 붙이고 나중에 퀄리티 높은 이미지 덮어씌우기(데이터가 느릴 경우 소비자 지루함 방지용)
         StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
         GlideApp.with(this).load(fileReference).into(imageView);
 
@@ -555,6 +555,7 @@ public class DishView extends AppCompatActivity {
                 .document(postingInfo.postingId)
                 .collection("좋아요")
                 .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+
         //좋아요 여부와 색변경
         //todo : 게시물 삭제할 때 파이어스토어 재접근 보다 현재 스냅샷 리스너를 해제하자.
         likeRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -574,7 +575,9 @@ public class DishView extends AppCompatActivity {
                 }
                 //완전 처음 게시물에 들어갔을 경우(좋아요 부분을 디비에 만들어야함.)
                 else{
-                    FirebaseFirestore.getInstance().collection("포스팅")
+                    //삭제되어서 필드가 없을 경우를 제외하곤 좋아요 추가
+                    FirebaseFirestore.getInstance()
+                            .collection("포스팅")
                             .document(postingInfo.postingId)
                             .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                 @Override
@@ -582,10 +585,7 @@ public class DishView extends AppCompatActivity {
                                     assert documentSnapshot != null;
 
                                     if(documentSnapshot.exists()){
-                                        HashMap map = new HashMap();
-                                        map.put("isLiked", false);
-                                        likeRef.set(map);
-
+                                        likeRef.set(ImmutableMap.of("isLiked", false));
 
                                         likeClick(likeImage, likeRef, false);
                                     }
@@ -731,6 +731,7 @@ public class DishView extends AppCompatActivity {
         super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
 
+        //창이 꺼질 때 포스팅 도큐먼트 필드에 좋아요 개수 저장
         FirebaseFirestore.getInstance()
                 .collection("포스팅")
                 .document(postingInfo.postingId)
