@@ -11,7 +11,7 @@ import java.util.Map;
 public class PostingInfo implements Serializable {
     public String storeName;
     public String imagePathInStorage;
-    public int numLike;
+    public int numLike = 0;
     public Object postingTime;
     public Object editTime;
     public String title;

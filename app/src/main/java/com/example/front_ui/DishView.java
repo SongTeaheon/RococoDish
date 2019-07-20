@@ -34,7 +34,9 @@ import android.widget.Toast;
 import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.SerializableStoreInfo;
+import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Edit.EditActivity;
+import com.example.front_ui.Interface.FirebasePredicate;
 import com.example.front_ui.Utils.DeleteUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.MathUtil;
@@ -50,12 +52,30 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.ButtonObject;
+import com.kakao.message.template.ContentObject;
+import com.kakao.message.template.FeedTemplate;
+import com.kakao.message.template.LinkObject;
+import com.kakao.message.template.LocationTemplate;
+import com.kakao.message.template.SocialObject;
+import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
+import com.kakao.util.KakaoParameterException;
+import com.kakao.util.helper.log.Logger;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -139,19 +159,26 @@ public class DishView extends AppCompatActivity {
 
 
         /**
-         LastShareFragment 에서 singleitem 을 받음
+         앱 내 직전 뷰 에서 singleitem 을 받음
+         또는
+         카카오 메시지를 통해서 들어올 수 있음.
          * **/
         //LastFragmentShare에서 받은 아이템 정보를 갖고옴.
-        Intent intent = this.getIntent();
+        Intent intent = getIntent();
+        if(intent == null){
+            Log.e(TAG, "intent is null");
+        }
 
-        postingInfo = (PostingInfo)intent.getSerializableExtra("postingInfo");
+
+        //dist
+        postingInfo = (PostingInfo) intent.getSerializableExtra("postingInfo");
         Log.d(TAG, "postingID : " + postingInfo.getPostingId());
-        Log.d(TAG, "posting Info description " + postingInfo.description +"storage path " + postingInfo.imagePathInStorage
-        + " storeId : " + postingInfo.getStoreId() +" postingid : " + postingInfo.postingId);
-        storeInfo = (SerializableStoreInfo)intent.getSerializableExtra("storeInfo");
-        Log.d(TAG, "store Info id : " + storeInfo.getStoreId() + " store name : " + storeInfo.getName() + " store map :" + storeInfo.getLat()+", "+storeInfo.getLon() +
+        Log.d(TAG, "posting Info description " + postingInfo.description + "storage path " + postingInfo.imagePathInStorage
+                + " storeId : " + postingInfo.getStoreId() + " postingid : " + postingInfo.postingId);
+        storeInfo = (SerializableStoreInfo) intent.getSerializableExtra("storeInfo");
+        Log.d(TAG, "store Info id : " + storeInfo.getStoreId() + " store name : " + storeInfo.getName() + " store map :" + storeInfo.getLat() + ", " + storeInfo.getLon() +
                 " star :  " + storeInfo.getAver_star());
-        distance = (double)intent.getDoubleExtra("distance", 0.0);
+        distance = (double) intent.getDoubleExtra("distance", 0.0);
         Log.d(TAG, "거리(미터단위) : " + distance);
 
 
@@ -270,16 +297,43 @@ public class DishView extends AppCompatActivity {
         shareButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                //share기능.
-                //일단 텍스트 전달 기능!
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                String text = "원하는 텍스트를 입력하세요";
-                intent.putExtra(Intent.EXTRA_TEXT, text);
-                Intent chooser = Intent.createChooser(intent, "친구에게 공유하기");
-                startActivity(chooser);
+                String disStr = Double.toString(distance);
+                Log.d(TAG, "num like " + postingInfo.getNumLike());
+                LocationTemplate params = LocationTemplate.newBuilder(storeInfo.getAddress(),
+                        ContentObject.newBuilder(storeInfo.getName(),
+                                postingInfo.imagePathInStorage,
+                                LinkObject.newBuilder()
+                                        .setWebUrl("https://developers.kakao.com")
+                                        .setMobileWebUrl("https://developers.kakao.com")
+                                        .build())
+                                .setDescrption(postingInfo.getHashTags())
+                                .build())
+                        .setSocial(SocialObject.newBuilder().setLikeCount(postingInfo.getNumLike()).setCommentCount(0)
+                                .setSharedCount(0).setViewCount(0).build())
+                        .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
+                                .setAndroidExecutionParams("distance="+disStr+"&postingId="+postingInfo.getPostingId()+"&storeId="+storeInfo.getStoreId())
+                                .build()))
+                        .setAddressTitle(storeInfo.getName())
+                        .build();
+
+                Map<String, String> serverCallbackArgs = new HashMap<String, String>();
+                serverCallbackArgs.put("user_id", "sth534@naver.com");
+                serverCallbackArgs.put("product_id", "292744");
+
+                KakaoLinkService.getInstance().sendDefault(DishView.this, params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+                    @Override
+                    public void onFailure(ErrorResult errorResult) {
+                        Logger.e(errorResult.toString());
+                    }
+
+                    @Override
+                    public void onSuccess(KakaoLinkResponse result) {
+                        // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
+                    }
+                });
             }
         });
+
         /**
          * 포스팅 작성자의 프로필 정보(이미지, 이름) 불러오기 + 우측 상단에 띄우기
          * **/
@@ -743,5 +797,7 @@ public class DishView extends AppCompatActivity {
                     }
                 });
     }
+
+
 }
 

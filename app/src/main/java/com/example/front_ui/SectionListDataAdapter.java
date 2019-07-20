@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Edit.BroadcastUtils;
+import com.example.front_ui.Utils.DataPassUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -119,13 +120,9 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
 
                 //데이터 전달
-                final Intent intent = new Intent(mContext, DishView.class);
+                Intent intent = new Intent(mContext, DishView.class);
+                DataPassUtils.makeIntentForData(intent, singleItem, storeInfo, distance);
 
-                SerializableStoreInfo serializableStoreInfo = new SerializableStoreInfo(storeInfo);
-                Log.d(TAG, "data check : " + singleItem.getHashTags());
-                intent.putExtra("postingInfo", singleItem);
-                intent.putExtra("storeInfo", serializableStoreInfo);
-                intent.putExtra("distance", distance);
                 mContext.startActivity(intent);
             }
         });
