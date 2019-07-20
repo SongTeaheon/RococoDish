@@ -6,14 +6,18 @@ apply plugin: 'com.google.gms.google-services'
 allprojects {
     repositories {
         jcenter()
+        mavenCentral()
         maven {
             url "https://maven.google.com"
             }
         maven {
             url "https://jitpack.io"
         }
+        maven { url 'http://devrepo.kakao.com:8088/nexus/content/groups/public/' }
+
     }
 }
+
 
 android {
     compileSdkVersion 28
@@ -70,6 +74,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 
+    //카카오링크 사용을 위해!
+    implementation group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
+
     //사진 동그랗게 라이브러리
     implementation 'de.hdodenhof:circleimageview:2.0.0'
 
@@ -107,6 +114,9 @@ dependencies {
 
     //Algolia api
     implementation 'com.algolia:algoliasearch-android:3.+'
+
+    //빵빠레 애니메이션
+    implementation 'nl.dionsegijn:konfetti:1.1.3'
 
 }
 

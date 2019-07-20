@@ -42,7 +42,6 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
         Log.d(TAG, "어댑터의 constructor가 불러졌습니다.");
 
         list = new ArrayList<>();
-        list.add(new PostingInfo());//빈 탱이를 넣는다.
         this.context = context;
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -53,7 +52,7 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
     @NonNull
     @Override
     public myPageItemHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.polar_style, null);
+        View v = LayoutInflater.from(context).inflate(R.layout.polar_style, viewGroup, false);
         myPageItemHolder holder = new myPageItemHolder(v);
         return holder;
     }
@@ -61,32 +60,20 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
     @Override
     public void onBindViewHolder(@NonNull final myPageItemHolder itemRowHolder, int i) {
         Log.d(TAG, "onBindviewHolder position : " + i);
-        if(i == 0){
-            GlideApp.with(context)
-                    .load(R.drawable.ic_star)
-                    .into(itemRowHolder.imageview);
-        }else if(i > 0){
-            PostingInfo postingInfo = list.get(i);//노확실
-            StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
-            GlideApp.with(context).load(fileReference).into(itemRowHolder.imageview);
-        }
+
+        GlideApp.with(context).load(list.get(i).imagePathInStorage).into(itemRowHolder.imageview);
+
+        //아이템 클릭시 이벤트
         itemRowHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int pos = itemRowHolder.getAdapterPosition();
-                if(pos == 0){
-                    //글 작성으로 이동
-                    Toast.makeText(context, "우측 하단 플러스 버튼 이용해주세요.", Toast.LENGTH_SHORT).show();
-                }else{
-                    //TODO : 해당 게시물 화면으로 이동하면 됩니다.
-                }
+                Toast.makeText(context, "추후 추가 예정", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     @Override
     public int getItemViewType(int position) {
-//        return super.getItemViewType(position);
         return position;
     }
 

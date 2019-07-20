@@ -13,7 +13,6 @@ public class SerializableStoreInfo implements Serializable {
     public double aver_star;
     public int postingNum;
     public String address;
-    public List<Double> detail_aver_star;
     private ArrayList<PostingInfo> allItemsInSection;
     double lat;//latitude
     double lon;//longtitude
@@ -25,7 +24,6 @@ public class SerializableStoreInfo implements Serializable {
         aver_star = storeInfo.getAver_star();
         postingNum = storeInfo.getPostingNum();
         address = storeInfo.getAddress();
-        detail_aver_star = storeInfo.getDetail_aver_star();
         allItemsInSection = storeInfo.getAllItemsInSection();
         lat = storeInfo.getGeoPoint().getLatitude();
         lon =storeInfo.getGeoPoint().getLongitude();
@@ -53,10 +51,6 @@ public class SerializableStoreInfo implements Serializable {
 
     public String getAddress() {
         return address;
-    }
-
-    public List<Double> getDetail_aver_star() {
-        return detail_aver_star;
     }
 
     public ArrayList<PostingInfo> getAllItemsInSection() {
@@ -93,10 +87,6 @@ public class SerializableStoreInfo implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public void setDetail_aver_star(List<Double> detail_aver_star) {
-        this.detail_aver_star = detail_aver_star;
     }
 
     public void setAllItemsInSection(ArrayList<PostingInfo> allItemsInSection) {

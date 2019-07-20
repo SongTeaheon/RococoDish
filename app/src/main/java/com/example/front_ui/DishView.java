@@ -2,14 +2,17 @@ package com.example.front_ui;
 
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,12 +34,16 @@ import android.widget.Toast;
 import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.SerializableStoreInfo;
+import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.Edit.EditActivity;
+import com.example.front_ui.Interface.FirebasePredicate;
 import com.example.front_ui.Utils.DeleteUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.collect.ImmutableMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
@@ -45,13 +52,30 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.ButtonObject;
+import com.kakao.message.template.ContentObject;
+import com.kakao.message.template.FeedTemplate;
+import com.kakao.message.template.LinkObject;
+import com.kakao.message.template.LocationTemplate;
+import com.kakao.message.template.SocialObject;
+import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
+import com.kakao.util.KakaoParameterException;
+import com.kakao.util.helper.log.Logger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -65,6 +89,7 @@ public class DishView extends AppCompatActivity {
     TextView tvAddress;
     ImageView backButton;
     TextView tvStoreName;
+    ImageView shareButton;
 
 
 
@@ -73,6 +98,8 @@ public class DishView extends AppCompatActivity {
     FirebaseStorage storage;
     PostingInfo postingInfo;
     SerializableStoreInfo storeInfo;
+    double distance;
+
     ImageView profileImage;
     TextView profileName;
     @Nullable
@@ -93,11 +120,19 @@ public class DishView extends AppCompatActivity {
     ImageView commentSend;//댓글 업로드 버튼
     EditText cocomentEditText;//대댓글 작성창
     ImageView cocomentSend;//대댓글 업로드 버튼
+    int gloabal_like;
 
     DishViewProfileImgPass dishViewProfileImgPass;
+    DishViewLikeNumPass dishViewLikeNumPass;
 
+    //프로필 경로 받는 리스너
     public void OnProfileImgGetListener(DishViewProfileImgPass _dishViewProfileImgPass){
         dishViewProfileImgPass = _dishViewProfileImgPass;
+    }
+
+    //좋아요 개수 받는 리스너
+    public void OnLikeNumListener(DishViewLikeNumPass _dishViewLikeNumPass){
+        dishViewLikeNumPass = _dishViewLikeNumPass;
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,20 +159,34 @@ public class DishView extends AppCompatActivity {
 
 
         /**
-         LastShareFragment 에서 singleitem 을 받음
+         앱 내 직전 뷰 에서 singleitem 을 받음
+         또는
+         카카오 메시지를 통해서 들어올 수 있음.
          * **/
         //LastFragmentShare에서 받은 아이템 정보를 갖고옴.
-        Intent intent = this.getIntent();
+        Intent intent = getIntent();
+        if(intent == null){
+            Log.e(TAG, "intent is null");
+        }
 
-        postingInfo = (PostingInfo)intent.getSerializableExtra("postingInfo");
+
+        //dist
+        postingInfo = (PostingInfo) intent.getSerializableExtra("postingInfo");
         Log.d(TAG, "postingID : " + postingInfo.getPostingId());
-        Log.d(TAG, "posting Info description " + postingInfo.description +"storage path " + postingInfo.imagePathInStorage
-        + " storeId : " + postingInfo.getStoreId() +" postingid : " + postingInfo.postingId);
-        storeInfo = (SerializableStoreInfo)intent.getSerializableExtra("storeInfo");
-        Log.d(TAG, "store Info id : " + storeInfo.getStoreId() + " store name : " + storeInfo.getName() + " store map :" + storeInfo.getLat()+", "+storeInfo.getLon() +
+        Log.d(TAG, "posting Info description " + postingInfo.description + "storage path " + postingInfo.imagePathInStorage
+                + " storeId : " + postingInfo.getStoreId() + " postingid : " + postingInfo.postingId);
+        storeInfo = (SerializableStoreInfo) intent.getSerializableExtra("storeInfo");
+        Log.d(TAG, "store Info id : " + storeInfo.getStoreId() + " store name : " + storeInfo.getName() + " store map :" + storeInfo.getLat() + ", " + storeInfo.getLon() +
                 " star :  " + storeInfo.getAver_star());
-        double distance = (double)intent.getDoubleExtra("distance", 0.0);
+        distance = (double) intent.getDoubleExtra("distance", 0.0);
         Log.d(TAG, "거리(미터단위) : " + distance);
+
+
+        /*
+         * 수정 사항 반영1(Local Broad Cast) : 수정 버튼을 통해 수정된 사항이 있으면 받는다.
+         * */
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver,
+                new IntentFilter(postingInfo.getPostingId()));
 
         /**
          지도로 넘어가기
@@ -147,12 +196,7 @@ public class DishView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "show the kakao map");
-                Toast.makeText(getApplicationContext(), "address is clicked", Toast.LENGTH_LONG).show();
-                //daummaps://place?id=7813422 이거 할라면 게시글 쓸 때,
-                //daummaps://look?p=37.537229,127.005515
-                //daummaps://search?q=맛집&p=37.537229,127.005515이걸로 안될라나
                 String storeName = storeInfo.getName();
-//                String url = "daummaps://search?q="+storeName+"&p=37.537229,127.005515";
                 String url;
                 if(storeInfo.getKakaoId() != null){
                     url = "daummaps://place?id=" + storeInfo.getKakaoId();
@@ -176,17 +220,6 @@ public class DishView extends AppCompatActivity {
 
 
 
-        /**
-         * 게시물 내용 설정
-         * **/
-//        descText = findViewById(R.id.desc_textview_dishView);
-//        if(postingInfo.description != null){
-//            descText.setText(postingInfo.description);
-//        }
-//        else{
-//            descText.setText("게시물 내용이 없습니다.");
-//        }
-
         tvStoreName = findViewById(R.id.tvStore);
         tvStoreName.setText(storeInfo.getName());
         tvAddress.setText(storeInfo.getAddress());
@@ -198,7 +231,7 @@ public class DishView extends AppCompatActivity {
 
 
 
-
+        //todo : 이미지 불러올 때 다른 앱들처럼 용량 낮은 깨진파일먼저 갖고 와서 placeholder로 붙이고 나중에 퀄리티 높은 이미지 덮어씌우기(데이터가 느릴 경우 소비자 지루함 방지용)
         StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
         GlideApp.with(this).load(fileReference).into(imageView);
 
@@ -246,10 +279,60 @@ public class DishView extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "edit button clicked");
+                    //TODO: 수정기능
                     Toast.makeText(getApplicationContext(), "edit button clicked", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(DishView.this, EditActivity.class);
+                    intent.putExtra("postingInfo", postingInfo);
+                    intent.putExtra("storeInfo", storeInfo);
+                    intent.putExtra("distance", distance);
+                    startActivity(intent);
                 }
             });
         }
+
+        /*
+        * 공유기능
+        * */
+        shareButton = findViewById(R.id.share_imageview);
+        shareButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                String disStr = Double.toString(distance);
+                Log.d(TAG, "num like " + postingInfo.getNumLike());
+                LocationTemplate params = LocationTemplate.newBuilder(storeInfo.getAddress(),
+                        ContentObject.newBuilder(storeInfo.getName(),
+                                postingInfo.imagePathInStorage,
+                                LinkObject.newBuilder()
+                                        .setWebUrl("https://developers.kakao.com")
+                                        .setMobileWebUrl("https://developers.kakao.com")
+                                        .build())
+                                .setDescrption(postingInfo.getHashTags())
+                                .build())
+                        .setSocial(SocialObject.newBuilder().setLikeCount(postingInfo.getNumLike()).setCommentCount(0)
+                                .setSharedCount(0).setViewCount(0).build())
+                        .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
+                                .setAndroidExecutionParams("distance="+disStr+"&postingId="+postingInfo.getPostingId()+"&storeId="+storeInfo.getStoreId())
+                                .build()))
+                        .setAddressTitle(storeInfo.getName())
+                        .build();
+
+                Map<String, String> serverCallbackArgs = new HashMap<String, String>();
+                serverCallbackArgs.put("user_id", "sth534@naver.com");
+                serverCallbackArgs.put("product_id", "292744");
+
+                KakaoLinkService.getInstance().sendDefault(DishView.this, params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+                    @Override
+                    public void onFailure(ErrorResult errorResult) {
+                        Logger.e(errorResult.toString());
+                    }
+
+                    @Override
+                    public void onSuccess(KakaoLinkResponse result) {
+                        // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
+                    }
+                });
+            }
+        });
 
         /**
          * 포스팅 작성자의 프로필 정보(이미지, 이름) 불러오기 + 우측 상단에 띄우기
@@ -295,11 +378,9 @@ public class DishView extends AppCompatActivity {
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent intent = new Intent(DishView.this, PostToMyPage.class);
-                final Bundle bundle = new Bundle();
-                bundle.putSerializable("allPostingInfo", postingInfo);
-                intent.putExtra("writerImage", userImage);
-                intent.putExtras(bundle);
+                Intent intent = new Intent(DishView.this, MyPage.class);
+                intent.putExtra("userUUID", postingInfo.writerId);
+                Log.d(TAG, "들어왔씁니다.");
                 startActivity(intent);
             }
         });
@@ -352,7 +433,7 @@ public class DishView extends AppCompatActivity {
 
                     }
                 });
-        //댓글 업로드 시 내 프로필 사진 적용
+//        //댓글 업로드 시 내 프로필 사진 적용
         OnProfileImgGetListener(new DishViewProfileImgPass() {
             @Override
             public void passProfileImgPath(String imgPath) {
@@ -430,7 +511,6 @@ public class DishView extends AppCompatActivity {
                                 commentSend.setVisibility(View.VISIBLE);
                                 cocomentSend.setVisibility(View.GONE);
 
-                                //TODO : 대댓글에서 프로필 이미지 처리
                                 commentRef
                                         .document(docId)
                                         .collection("대댓글")
@@ -450,6 +530,15 @@ public class DishView extends AppCompatActivity {
                 //데이터 패치는 뷰홀더에서 처리함. 댓글에 대해 각각 해야해서 뷰홀더안에서 해야함.
             }
         });
+      
+        //likeFunc() 함수에서 받은 좋아요 개수를 전역변수에 저장한 후 onDestroy에서 사용함.
+        OnLikeNumListener(new DishViewLikeNumPass() {
+            @Override
+            public void likeNumPass(int likeNum) {
+                gloabal_like = likeNum;
+            }
+        });
+
 
     }
 
@@ -460,7 +549,9 @@ public class DishView extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        assert e != null;
+                        if(e != null){
+                            Log.d(TAG, e.getMessage());
+                        }
                         assert queryDocumentSnapshots != null;
 
                         for(DocumentChange snapshot : queryDocumentSnapshots.getDocumentChanges()){
@@ -518,7 +609,9 @@ public class DishView extends AppCompatActivity {
                 .document(postingInfo.postingId)
                 .collection("좋아요")
                 .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+
         //좋아요 여부와 색변경
+        //todo : 게시물 삭제할 때 파이어스토어 재접근 보다 현재 스냅샷 리스너를 해제하자.
         likeRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
@@ -536,7 +629,9 @@ public class DishView extends AppCompatActivity {
                 }
                 //완전 처음 게시물에 들어갔을 경우(좋아요 부분을 디비에 만들어야함.)
                 else{
-                    FirebaseFirestore.getInstance().collection("포스팅")
+                    //삭제되어서 필드가 없을 경우를 제외하곤 좋아요 추가
+                    FirebaseFirestore.getInstance()
+                            .collection("포스팅")
                             .document(postingInfo.postingId)
                             .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                 @Override
@@ -544,10 +639,7 @@ public class DishView extends AppCompatActivity {
                                     assert documentSnapshot != null;
 
                                     if(documentSnapshot.exists()){
-                                        HashMap map = new HashMap();
-                                        map.put("isLiked", false);
-                                        likeRef.set(map);
-
+                                        likeRef.set(ImmutableMap.of("isLiked", false));
 
                                         likeClick(likeImage, likeRef, false);
                                     }
@@ -568,10 +660,19 @@ public class DishView extends AppCompatActivity {
                     @Override
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
                         assert queryDocumentSnapshots != null;
+
                         likesText.setText("좋아하는 사람 "+queryDocumentSnapshots.getDocuments().size()+ "명");
+
+                        //좋아요 개수 디비에 업데이트트
+                        String like_text = likesText.getText().toString();
+                        int likes = Integer.valueOf(like_text.substring(8, like_text.length()-1));//슬라이싱으로 좋아요 개수만 정수로 가져옴.
+
+                        dishViewLikeNumPass.likeNumPass(likes);
+
                     }
                 });
     }
+
 
     //좋아요 클릭부분만
     public void likeClick(final ImageView likeImage,
@@ -655,5 +756,48 @@ public class DishView extends AppCompatActivity {
         pTextView.setMovementMethod(LinkMovementMethod.getInstance());
         pTextView.setText(string);
     }
+
+    /*
+     * 수정 사항 반영2(Local Broad Cast)
+     * */
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // intent ..
+            Log.d(TAG, "brdCastRecevie : " + intent.getStringExtra("hashTags"));
+            postingInfo.setHashTags(intent.getStringExtra("hashTags"));
+            postingInfo.setAver_star(intent.getFloatExtra("aver_star", 0.0f));
+
+            if(postingInfo.hashTags != null){
+                setTags(hashTagText, postingInfo.hashTags);
+            }
+            else{
+                setTags(hashTagText, "게시물 내용이 없습니다.");
+            }
+            tvScore.setText(Double.toString(postingInfo.getAver_star()));
+
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
+
+        //창이 꺼질 때 포스팅 도큐먼트 필드에 좋아요 개수 저장
+        FirebaseFirestore.getInstance()
+                .collection("포스팅")
+                .document(postingInfo.postingId)
+                .update("numLike", gloabal_like)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "좋아요 개수를 디비에 업데이트했습니다.");
+                    }
+                });
+    }
+
+
 }
 

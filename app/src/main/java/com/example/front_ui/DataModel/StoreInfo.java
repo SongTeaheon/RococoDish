@@ -11,14 +11,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StoreInfo{
+public class StoreInfo {
     public String name;
     public String kakaoId;
     public String storeId;
     public double aver_star;
     public int postingNum;
     public String address;
-    public List<Double> detail_aver_star;
     private ArrayList<PostingInfo> allItemsInSection;
     public GeoPoint geoPoint;
 
@@ -30,13 +29,11 @@ public class StoreInfo{
     public StoreInfo(String name,
                      float aver_star,
                      String address,
-                     List<Double> detail_aver_star,
                      GeoPoint geoPoint
                      ) {
         this.name = name;
         this.aver_star = aver_star;
         this.address = address;
-        this.detail_aver_star = detail_aver_star;
         this.geoPoint = geoPoint;
 
     }
@@ -52,10 +49,6 @@ public class StoreInfo{
 
     public String getAddress() {
         return address;
-    }
-
-    public List<Double> getDetail_aver_star() {
-        return detail_aver_star;
     }
 
     public GeoPoint getGeoPoint() {
@@ -111,9 +104,5 @@ public class StoreInfo{
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public void setDetail_aver_star(List<Double> detail_aver_star) {
-        this.detail_aver_star = detail_aver_star;
     }
 }

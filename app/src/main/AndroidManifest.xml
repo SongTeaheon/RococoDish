@@ -15,7 +15,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SignUpActivity"></activity>
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
+        <activity android:name=".SettingActivity" />
+        <activity android:name=".Edit.EditActivity" />
+        <activity android:name=".SignUpActivity" />
         <activity android:name=".AlgoliaTest.StoreNameSearchAcitivity" />
         <activity android:name=".MainSearchActivity" />
         <activity
@@ -25,19 +30,27 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".SignInActivity" />
         <activity android:name=".MyPage" />
-        <activity android:name=".PostToMyPage" />
+        <!--<activity android:name=".PostToMyPage" />-->
         <activity android:name=".PostingProcess.MainShareActivity" />
-        <activity android:name=".StorePage" />
+        <activity android:name=".StorePageActivity" />
+        <activity android:name=".FollowActivity" />
         <activity android:name=".SubActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="@string/kakao_scheme"
+                    android:host="@string/kakaolink_host" />
             </intent-filter>
         </activity>
         <activity
             android:name=".DishView"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>

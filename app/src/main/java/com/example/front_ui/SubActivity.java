@@ -2,18 +2,21 @@ package com.example.front_ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,16 +34,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.front_ui.AlgoliaTest.StoreNameSearchAcitivity;
+import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.SearchedData;
+import com.example.front_ui.DataModel.SerializableStoreInfo;
+import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.Edit.BroadcastUtils;
+import com.example.front_ui.Interface.FirebasePredicate;
 import com.example.front_ui.Interface.MyPageDataPass;
 import com.example.front_ui.PostingProcess.MainShareActivity;
+import com.example.front_ui.Utils.DataPassUtils;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 import com.yarolegovich.slidingrootnav.SlidingRootNavLayout;
@@ -133,16 +146,13 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
             }
         });
 
-        //사용자 이름 띄우기
-//        userNameText = findViewById(R.id.userName_textview_drawer);
-//        userNameText.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-
         //마이페이지 글자 누를시 이벤트
         myPageTextview = findViewById(R.id.myPage_textview_activitySub);
         myPageTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SubActivity.this, MyPage.class);
+                intent.putExtra("userUUID", FirebaseAuth.getInstance().getUid());
                 intent.putExtra("latitude", mCurrentLocation.getLatitude());
                 intent.putExtra("longitude", mCurrentLocation.getLongitude());
                 startActivity(intent);
@@ -213,6 +223,46 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                 startActivityForResult(intent, SEARCH_REQUEST_CODE);
             }
         });
+
+        /*
+        * kakao로 데이터가 날아온 경우. dishview로 날아가야함.
+        * */
+        Intent intent = getIntent();
+        if(intent != null){
+            //카카오톡 메시지를 통해 온 경우.
+            Uri uri = intent.getData();
+            if(uri != null) {
+                Log.d(TAG, "uriuri : " + uri.toString());
+
+                final String postingId = uri.getQueryParameter("postingId");
+                final String storeId = uri.getQueryParameter("storeId");
+                final String disStr = uri.getQueryParameter("distance");
+
+                getDataWithId("포스팅", postingId, new FirebasePredicate() {
+                    @Override
+                    public void afterGetData(DocumentSnapshot document) {
+                        if (document.exists()) {
+                            final PostingInfo postingInfo = document.toObject(PostingInfo.class);
+                            getDataWithId("가게", storeId, new FirebasePredicate() {
+                                @Override
+                                public void afterGetData(DocumentSnapshot document) {
+                                    StoreInfo storeInfo = document.toObject(StoreInfo.class);
+                                    Double distance = Double.parseDouble(disStr);
+                                    Intent intent = new Intent(SubActivity.this, DishView.class);
+                                    DataPassUtils.makeIntentForData(intent, postingInfo, storeInfo, distance);
+                                    SubActivity.this.startActivity(intent);
+                                }
+                            });
+                        }else{
+                            Toast.makeText(SubActivity.this, "해당 게시글이 삭제되었습니다", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }else {
+                Log.e(TAG, "no uri");
+            }
+
+        }
     }
 
 
@@ -257,8 +307,8 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                             if (task.isSuccessful() && task.getResult() != null) {
                                 mCurrentLocation = task.getResult();
                                 Log.d(TAG, "getCurrentLocation - success mCurrentLocation lat : " + mCurrentLocation.getLatitude() + " long : " + mCurrentLocation.getLongitude());
-                                Toast.makeText(getApplicationContext(), "lat : " + mCurrentLocation.getLatitude() +
-                                        "\n lng: " + mCurrentLocation.getLongitude(), Toast.LENGTH_LONG).show();
+                               Log.d(TAG, "lat : " + mCurrentLocation.getLatitude() +
+                                        "\n lng: " + mCurrentLocation.getLongitude());
                                 initRecyclerView(mCurrentLocation);//내 위치를 가져오면 그 때 recyclerview 실행
                             } else {
                                 Log.e(TAG, "getCurrentLocation Exception" + task.getException());
@@ -404,5 +454,33 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                         }
                     }).show();
         }
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BroadcastUtils.UnregBrdcastReceiver_posting(this);
+    }
+
+
+    private void getDataWithId(String collectionName, String id, final FirebasePredicate predicate){
+        Log.d(TAG, "getDataFromFirestore");
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(collectionName).document(id)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        predicate.afterGetData(documentSnapshot);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                     @Override
+                     public void onFailure(@NonNull Exception e) {
+                         Log.e(TAG, "해당 데이터가 삭제되었습니다.");
+                }
+        });
     }
 }

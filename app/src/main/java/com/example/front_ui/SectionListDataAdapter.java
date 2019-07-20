@@ -1,12 +1,15 @@
 package com.example.front_ui;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.graphics.Paint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +23,8 @@ import android.widget.Toast;
 
 import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.Edit.BroadcastUtils;
+import com.example.front_ui.Utils.DataPassUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -100,19 +105,24 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 .placeholder(circularProgressDrawable)
                 .into(holder.imageView);
 
+
+
         //태완태완 이미지 선택시 반응입니다. 여기가 그 각 포스팅1 글 누르면 발생하는 이벤트 부분입니다.
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent intent = new Intent(mContext, DishView.class);
-//                final Bundle bundlePosting = new Bundle();
-//                final Bundle bundleStore = new Bundle();
 
-                SerializableStoreInfo serializableStoreInfo = new SerializableStoreInfo(storeInfo);
+                //데이터 수정이 일어난 데이터가 클릭되면 수정된 데이터를 여기에서 반영해야함1!! receive 필터 아이디는 postingId
+                LocalBroadcastManager
+                        .getInstance(mContext)
+                        .registerReceiver(BroadcastUtils.getBrdCastReceiver_posting(singleItem),
+                                new IntentFilter(singleItem.getPostingId()));
 
-                intent.putExtra("postingInfo", singleItem);
-                intent.putExtra("storeInfo", serializableStoreInfo);
-                intent.putExtra("distance", distance);
+
+                //데이터 전달
+                Intent intent = new Intent(mContext, DishView.class);
+                DataPassUtils.makeIntentForData(intent, singleItem, storeInfo, distance);
+
                 mContext.startActivity(intent);
             }
         });
