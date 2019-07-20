@@ -111,6 +111,9 @@ dependencies {
     //Algolia api
     implementation 'com.algolia:algoliasearch-android:3.+'
 
+    //빵빠레 애니메이션
+    implementation 'nl.dionsegijn:konfetti:1.1.3'
+
 }
 
 
