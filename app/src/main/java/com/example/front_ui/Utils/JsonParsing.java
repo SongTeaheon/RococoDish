@@ -104,4 +104,10 @@ public class JsonParsing {
         }
         return list;
     }
+
+    public static String toJSForSpecialWord(String str){
+        return str;
+    }
+
+
 }
