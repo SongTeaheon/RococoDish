@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/MainColor</item>
+        <item name="colorPrimaryDark">#B39797</item>
+        <item name="colorAccent">@color/MainColor</item>
     </style>
 
     <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">

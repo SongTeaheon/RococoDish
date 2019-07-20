@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#80FFE1D9</color>
-    <color name="colorPrimaryDark">#DD1B1A1A</color>
-    <color name="colorAccent">#80FF909A</color>
-    <color name="colorWhite">#FFFFFF</color>
-    <color name="colorMainBackGround">#FDFEF8</color>
-    <color name="colorMainText">#E38F73</color>
-    <color name="colorMainSearch">#D2DAC7</color>
-    <color name="colorMainSearchIcon">#CDB745</color>
-    <color name="colorGray">#80E2E2E2</color>
-    <color name="colorNone">#00000000</color>
-    <color name="MainColor">#FF6E6E</color>
-    <color name="LightGrey">#ECEFF0</color>
-    <color name="Black">#000000</color>
-    <color name="Grey">#7F7F7F</color>
-    <color name="GGrey">#464747</color>
+<color name="colorPrimary">#80FFE1D9</color>
+<color name="colorPrimaryDark">#DD1B1A1A</color>
+<color name="colorAccent">#80FF909A</color>
+<color name="colorWhite">#FFFFFF</color>
+<color name="colorMainBackGround">#FDFEF8</color>
+<color name="colorMainText">#E38F73</color>
+<color name="colorMainSearch">#D2DAC7</color>
+<color name="colorMainSearchIcon">#CDB745</color>
+<color name="colorGray">#80E2E2E2</color>
+<color name="colorNone">#00000000</color>
+<color name="MainColor">#FF6E6E</color>
+<color name="LightGrey">#ECEFF0</color>
+<color name="Black">#000000</color>
+<color name="Grey">#7F7F7F</color>
+<color name="GGrey">#464747</color>
+<color name="tab_selected">@color/colorWhite</color>
+<color name="tab_nonselected">#B39797</color>
 
-    <color name="color1">#FFF4CA</color>
-    <color name="color2">#FFE1D9</color>
+<color name="color1">#FFF4CA</color>
+<color name="color2">#FFE1D9</color>
 
-    <!--파이어베이스 UI-->
-    <color name="colorPrimary2">#F7DC6F</color>
-    <color name="colorPrimaryDark2">#FFCA28</color>
-    <color name="colorAccent2">#E74C3C</color>
+<!--파이어베이스 UI-->
+<color name="colorPrimary2">#F7DC6F</color>
+<color name="colorPrimaryDark2">#FFCA28</color>
+<color name="colorAccent2">#E74C3C</color>
 </resources>

@@ -38,16 +38,15 @@
 
         <ImageView
             android:id="@+id/imageViewCancel"
-            android:layout_width="22dp"
-            android:layout_height="23dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_cancel_black_24dp"
-            android:tint="@color/MainColor"/>
+            app:srcCompat="@mipmap/ic_cancel"/>
 
     </android.support.constraint.ConstraintLayout>
 
