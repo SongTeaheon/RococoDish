@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Edit.EditActivity"></activity>
+        <activity android:name=".SettingActivity" />
+        <activity android:name=".Edit.EditActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".AlgoliaTest.StoreNameSearchAcitivity" />
         <activity android:name=".MainSearchActivity" />
@@ -26,7 +27,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".SignInActivity" />
         <activity android:name=".MyPage" />
-        <activity android:name=".PostToMyPage" />
+        <!--<activity android:name=".PostToMyPage" />-->
         <activity android:name=".PostingProcess.MainShareActivity" />
         <activity android:name=".StorePageActivity" />
         <activity android:name=".FollowActivity" />
