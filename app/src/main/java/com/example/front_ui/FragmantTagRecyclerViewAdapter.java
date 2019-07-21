@@ -23,7 +23,7 @@ public class FragmantTagRecyclerViewAdapter extends RecyclerView.Adapter<Fragman
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragmenttag_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_tag_item, parent, false);
         return new ItemViewHolder(view);
     }
 

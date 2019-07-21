@@ -4,4 +4,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="todo">TODO</string>
+
+    <!--페이스북 문자열들-->
+    <string name="facebook_app_id">485865235320156</string>
+    <string name="fb_login_protocol_scheme">fb485865235320156</string>
 </resources>

@@ -17,4 +17,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/facebookLogin_textview_signUpActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/bmjua"
+        android:text="페이스북으로 시작하기"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/emailLogin_textview_signUpActivity"
+        app:layout_constraintStart_toStartOf="@+id/emailLogin_textview_signUpActivity"
+        app:layout_constraintTop_toBottomOf="@+id/emailLogin_textview_signUpActivity" />
+
+    <TextView
+        android:id="@+id/googleLogin_textview_signUpActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/bmjua"
+        android:text="구글로 시작하기"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/facebookLogin_textview_signUpActivity"
+        app:layout_constraintStart_toStartOf="@+id/facebookLogin_textview_signUpActivity"
+        app:layout_constraintTop_toBottomOf="@+id/facebookLogin_textview_signUpActivity" />
 </android.support.constraint.ConstraintLayout>

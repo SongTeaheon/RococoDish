@@ -23,7 +23,7 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragmentpeople_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_people_item, parent, false);
         return new ItemViewHolder(view);
     }
 
