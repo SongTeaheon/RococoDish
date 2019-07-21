@@ -22,7 +22,7 @@ public class FragmantSotreRecyclerViewAdapter extends RecyclerView.Adapter<Fragm
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragmentstore_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_store_item, parent, false);
         return new ItemViewHolder(view);
     }
 

@@ -24,7 +24,7 @@ public class FragmantRegionRecyclerViewAdapter extends RecyclerView.Adapter<Frag
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragmentregion_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_region_item, parent, false);
         return new ItemViewHolder(view);
     }
 

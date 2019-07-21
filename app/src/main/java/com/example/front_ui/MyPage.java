@@ -89,7 +89,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
 
     private int RC_GALLERY = 1;
 //    public ImageButton imageButton;
-    private CircleImageView circleImageView;
+    private ImageView circleImageView;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

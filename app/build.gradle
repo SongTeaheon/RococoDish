@@ -118,6 +118,8 @@ dependencies {
     //빵빠레 애니메이션
     implementation 'nl.dionsegijn:konfetti:1.1.3'
 
+    //페이스북
+    implementation 'com.facebook.android:facebook-login:[5,6)'
 }
 
 
