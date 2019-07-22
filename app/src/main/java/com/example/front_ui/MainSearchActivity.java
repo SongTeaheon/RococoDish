@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -38,7 +39,7 @@ public class MainSearchActivity extends AppCompatActivity {
     private final String TAG = "TAGMainSearchActivity";
     RecyclerView mRecyclerView;
     TextView search_tv;
-    Button search_btn;
+    ImageView search_btn;
 
     Retrofit retrofit;
     KakaoApiStoreSearchService service;
@@ -72,11 +73,11 @@ public class MainSearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_search);
+        setContentView(R.layout.main_search_page);
 
         mRecyclerView = findViewById(R.id.mrecyclerView);
-        search_tv = findViewById(R.id.search_tv);
-        search_btn = findViewById(R.id.search_btn);
+        search_tv = findViewById(R.id.mainsearchStore);
+        search_btn = findViewById(R.id.main_search_btn);
 
 
         search_btn.setOnClickListener(new View.OnClickListener(){
