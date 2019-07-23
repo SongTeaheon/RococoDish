@@ -133,7 +133,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             }
         });
         //isExpanded가 참일 때 리사이클러뷰가 나오게함. 거짓이면 사라짐.
-        commentViewHolder.childRecyclerView.setVisibility(isExpanded? View.VISIBLE : View.GONE);
+//        commentViewHolder.childRecyclerView.setVisibility(isExpanded? View.VISIBLE : View.GONE);
 
 
         //긴 클릭 => 대댓 적을 수 있게함.(여기선 파이어스토어에 업로드만 함. 패치는 DishView에서 실시간으로 하면 자동으로 추가됨.)
