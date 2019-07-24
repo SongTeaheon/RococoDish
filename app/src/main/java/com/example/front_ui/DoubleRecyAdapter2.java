@@ -1,6 +1,7 @@
 package com.example.front_ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.front_ui.DataModel.PostingInfo;
+import com.example.front_ui.DataModel.SerializableStoreInfo;
+import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Utils.GlideApp;
 
 import java.util.List;
@@ -17,11 +20,18 @@ public class DoubleRecyAdapter2 extends RecyclerView.Adapter<DoubleRecyAdapter2.
 
     Context context;
     List<PostingInfo> list;
+    StoreInfo storeInfo;
+    double distance;//부모 어댑터에서 계산한 지금 내 위치와 가게와의 거리
+    //todo : 거리추가
 
     public DoubleRecyAdapter2(Context context,
-                              List<PostingInfo> list){
+                              List<PostingInfo> list,
+                              StoreInfo storeInfo,
+                              double distance){
         this.context = context;
         this.list = list;
+        this.storeInfo = storeInfo;
+        this.distance = distance;
     }
 
 
@@ -50,6 +60,25 @@ public class DoubleRecyAdapter2 extends RecyclerView.Adapter<DoubleRecyAdapter2.
         GlideApp.with(context)
                 .load(list.get(i).getImagePathInStorage())
                 .into(doubleRecyViewHolder2.imageFood);
+
+
+        /**
+         * 포스팅 클릭시 DishView이동
+         * **/
+        final PostingInfo postingInfo = list.get(i);
+        final SerializableStoreInfo serializableStoreInfo = new SerializableStoreInfo(storeInfo);
+
+        doubleRecyViewHolder2.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, DishView.class);
+                intent.putExtra("postingInfo", postingInfo);
+                intent.putExtra("storeInfo", serializableStoreInfo);
+                intent.putExtra("distance", distance);
+                context.startActivity(intent);
+
+            }
+        });
     }
 
     @Override

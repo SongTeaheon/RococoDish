@@ -65,31 +65,31 @@ public class FollowerFragment extends Fragment {
                         if(e != null)
                             Log.d(TAG, e.getMessage());
                         if(!queryDocumentSnapshots.getDocuments().isEmpty()){
-                            for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()){
 
-                                switch (dc.getType()){
-                                    case ADDED:
-                                        String followerUid = dc.getDocument().getId();
+                            followerList.clear();
 
-                                        //유저의 프로필 정보 가져오기
-                                        FirebaseFirestore.getInstance()
-                                                .collection("사용자")
-                                                .document(followerUid)
-                                                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                                    @Override
-                                                    public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                                                        String imagePath = documentSnapshot.get("profileImage").toString();
-                                                        String name = documentSnapshot.get("nickname").toString();
-                                                        String email = documentSnapshot.get("eMail").toString();
-                                                        String uid = documentSnapshot.getId();
+                            for(DocumentSnapshot dc: queryDocumentSnapshots.getDocuments()){
 
-                                                        followerList.add(new FollowInfo(imagePath, name, email, uid));
-                                                        followRecyAdapter.notifyItemChanged(followerList.size());
-                                                    }
-                                                });
-                                }
+                                String followerUid = dc.getId();
 
+                                //유저의 프로필 정보 가져오기
+                                FirebaseFirestore.getInstance()
+                                        .collection("사용자")
+                                        .document(followerUid)
+                                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                                                String imagePath = documentSnapshot.get("profileImage").toString();
+                                                String name = documentSnapshot.get("nickname").toString();
+                                                String email = documentSnapshot.get("eMail").toString();
+                                                String uid = documentSnapshot.getId();
+
+                                                followerList.add(new FollowInfo(imagePath, name, email, uid));
+                                                followRecyAdapter.notifyItemChanged(followerList.size());
+                                            }
+                                        });
                             }
+                            followRecyAdapter.notifyDataSetChanged();
                         }
                     }
                 });

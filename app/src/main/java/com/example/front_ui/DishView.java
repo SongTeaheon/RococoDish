@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,9 +35,7 @@ import android.widget.Toast;
 import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.SerializableStoreInfo;
-import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Edit.EditActivity;
-import com.example.front_ui.Interface.FirebasePredicate;
 import com.example.front_ui.Utils.DeleteUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.MathUtil;
@@ -52,24 +51,19 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.gson.Gson;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
 import com.kakao.kakaolink.v2.KakaoLinkService;
 import com.kakao.message.template.ButtonObject;
 import com.kakao.message.template.ContentObject;
-import com.kakao.message.template.FeedTemplate;
 import com.kakao.message.template.LinkObject;
 import com.kakao.message.template.LocationTemplate;
 import com.kakao.message.template.SocialObject;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
-import com.kakao.util.KakaoParameterException;
 import com.kakao.util.helper.log.Logger;
 
 import java.util.ArrayList;
@@ -460,6 +454,7 @@ public class DishView extends AppCompatActivity {
         /**
          * 대댓 처리부분
          * **/
+
         cocomentEditText = findViewById(R.id.cocoment_edittext_cocommentInput);//대댓 작성창
         cocomentSend = findViewById(R.id.send_imageview_cocomentInput);//대댓 작성 버튼
 
@@ -480,50 +475,66 @@ public class DishView extends AppCompatActivity {
                     commentEdit.setVisibility(View.GONE);
                     commentSend.setVisibility(View.GONE);
 
-                    //AlertDialog에서 작성버튼 누르면 키보드 올라가게 함.
+                    //대댓글 작성하기 누르면 키보드 자동으로 올라가게 함.
                     final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-
-                    //TODO: 대댓글 취소할시 키보드가 내려가면 댓글작성으로 바뀌어야함.
-                    //대댓글 쓰려다가 취소버튼 누를 경우
 
 
                     //변경한 UI에서 작성을 누르면 업로드를 시작
                     cocomentSend.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(cocomentEditText.getText().toString().isEmpty()){
-                                Toast.makeText(DishView.this, "빈칸을 채워주세요.", Toast.LENGTH_SHORT).show();
-                            }
-                            //글자를 넣었을 경우엔 이제 글을 파이어스토어에 업로드한다.
-                            else{
-                                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);//키보드 내려줌.
+                            new AlertDialog.Builder(DishView.this)
+                                    .setMessage("대댓글을 작성하시겠습니까?")
+                                    .setPositiveButton("작성", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if(cocomentEditText.getText().toString().isEmpty()){
+                                                Toast.makeText(DishView.this, "빈칸을 채워주세요.", Toast.LENGTH_SHORT).show();
+                                            }
+                                            //글자를 넣었을 경우엔 이제 글을 파이어스토어에 업로드한다.
+                                            else{
+                                                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);//키보드 내려줌.
 
-                                String cocoment = cocomentEditText.getText().toString();//대댓 내용
-                                cocomentEditText.getText().clear();//대댓쓴걸 지워준다.
+                                                String cocoment = cocomentEditText.getText().toString();//대댓 내용
+                                                cocomentEditText.getText().clear();//대댓쓴걸 지워준다.
 
-                                //댓글 컬렉션 안에 서브컬렉션 대댓글 안에 필드로 넣음.
-                                String uuid = UUID.randomUUID().toString();
+                                                //댓글 컬렉션 안에 서브컬렉션 대댓글 안에 필드로 넣음.
+                                                String uuid = UUID.randomUUID().toString();
 
-                                //UI 원래상태로 돌림.
-                                commentEdit.setVisibility(View.VISIBLE);
-                                cocomentEditText.setVisibility(View.GONE);
-                                commentSend.setVisibility(View.VISIBLE);
-                                cocomentSend.setVisibility(View.GONE);
+                                                //UI 원래상태로 돌림.
+                                                commentEdit.setVisibility(View.VISIBLE);
+                                                cocomentEditText.setVisibility(View.GONE);
+                                                commentSend.setVisibility(View.VISIBLE);
+                                                cocomentSend.setVisibility(View.GONE);
 
-                                commentRef
-                                        .document(docId)
-                                        .collection("대댓글")
-                                        .document(uuid)
-                                        .set(new CommentInfo(
-                                                uuid,
-                                                myUid,
-                                                myName,
-                                                myProfileImgPath,
-                                                cocoment,
-                                                System.currentTimeMillis(),
-                                                false));
-                            }
+                                                commentRef
+                                                        .document(docId)
+                                                        .collection("대댓글")
+                                                        .document(uuid)
+                                                        .set(new CommentInfo(
+                                                                uuid,
+                                                                myUid,
+                                                                myName,
+                                                                myProfileImgPath,
+                                                                cocoment,
+                                                                System.currentTimeMillis(),
+                                                                false));
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                                            commentEdit.setVisibility(View.VISIBLE);
+                                            cocomentEditText.setVisibility(View.GONE);
+                                            commentSend.setVisibility(View.VISIBLE);
+                                            cocomentSend.setVisibility(View.GONE);
+                                            cocomentEditText.getText().clear();//대댓쓴걸 지워준다.
+                                        }
+                                    }).show();
+
                         }
                     });
                 }
@@ -538,8 +549,6 @@ public class DishView extends AppCompatActivity {
                 gloabal_like = likeNum;
             }
         });
-
-
     }
 
     public void realTimeFetchComment(CollectionReference commentRef){
@@ -554,14 +563,15 @@ public class DishView extends AppCompatActivity {
                         }
                         assert queryDocumentSnapshots != null;
 
-                        for(DocumentChange snapshot : queryDocumentSnapshots.getDocumentChanges()){
-                            switch (snapshot.getType()){
-                                case ADDED:
-                                    CommentInfo commentInfo = snapshot.getDocument().toObject(CommentInfo.class);
-                                    commentList.add(commentInfo);
-                                    commentAdapter.notifyItemChanged(commentList.size()+1);
-                            }
+                        commentList.clear();
+
+                        for(DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
+
+                            CommentInfo commentInfo = dc.toObject(CommentInfo.class);
+                            commentList.add(commentInfo);
+                            commentAdapter.notifyItemChanged(commentList.size());
                         }
+                        commentAdapter.notifyDataSetChanged();
                     }
                 });
 
@@ -592,6 +602,8 @@ public class DishView extends AppCompatActivity {
                                     .set(new CommentInfo(documentId, myUid, myName, profilePath, commentDesc, commentTime, false));
                         }
                     });
+                    final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
                 }
             }
@@ -611,7 +623,6 @@ public class DishView extends AppCompatActivity {
                 .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
 
         //좋아요 여부와 색변경
-        //todo : 게시물 삭제할 때 파이어스토어 재접근 보다 현재 스냅샷 리스너를 해제하자.
         likeRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
@@ -797,7 +808,5 @@ public class DishView extends AppCompatActivity {
                     }
                 });
     }
-
-
 }
 
