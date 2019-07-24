@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,14 +22,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
-
 import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Edit.BroadcastUtils;
@@ -54,17 +49,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.yalantis.ucrop.UCrop;
-
-import org.w3c.dom.Document;
-
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Objects;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 import me.rishabhkhanna.customtogglebutton.CustomToggleButton;
 
 //interface for datapass to MyPage
@@ -102,6 +90,13 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                 Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
                 startActivity(intent);
                 return false;
+            }
+        });
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DoubleRecyActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -237,28 +232,31 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(userUUID)
-                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.get("profileImage") != null){//프로필 사진이 있을 경우
-                    CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(getApplicationContext());
-                    circularProgressDrawable.setStrokeCap(Paint.Cap.ROUND);
-                    circularProgressDrawable.setCenterRadius(10f);
-                    circularProgressDrawable.setBackgroundColor(R.color.colorMainSearch);
-                    circularProgressDrawable.start();
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if(e != null){
+                            Log.d(TAG, e.getMessage());
+                        }
+                        if(documentSnapshot.get("profileImage") != null){//프로필 사진이 있을 경우
+                            CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(getApplicationContext());
+                            circularProgressDrawable.setStrokeCap(Paint.Cap.ROUND);
+                            circularProgressDrawable.setCenterRadius(10f);
+                            circularProgressDrawable.setBackgroundColor(R.color.colorMainSearch);
+                            circularProgressDrawable.start();
 
-                    String path = documentSnapshot.get("profileImage").toString();
-                    GlideApp.with(getApplicationContext())
-                            .load(path)
-                            .placeholder(circularProgressDrawable)
-                            .into(circleImageView);
-                    progressDialog.dismiss();
-                }
-                else{//프로필 사진이 없을 경우 걍 로딩 없앰.
-                    progressDialog.dismiss();
-                }
-            }
-        });
+                            String path = documentSnapshot.get("profileImage").toString();
+                            GlideApp.with(getApplicationContext())
+                                    .load(path)
+                                    .placeholder(circularProgressDrawable)
+                                    .into(circleImageView);
+                            progressDialog.dismiss();
+                        }
+                        else{//프로필 사진이 없을 경우 걍 로딩 없앰.
+                            progressDialog.dismiss();
+                        }
+                    }
+                });
         //todo : 타인의 프로필 변경은 막기
         //자신일 경우에만 프로필 변경 가능
         if(userUUID.equals(FirebaseAuth.getInstance().getUid())){
@@ -282,9 +280,10 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                                                     FirebaseFirestore.getInstance().collection("사용자")
                                                             .document(userUUID)
                                                             .update("profileImage", basicProfile);
-                                                    Intent mintent = new Intent(getApplicationContext(), MyPage.class);
-                                                    startActivity(mintent);
-                                                    finish();
+                                                    //todo : 나갔다 들어오면서 이전 액티비티에서 전해오는 userUUID가 NULL이ㄷ 되버리는 에러
+                                                    GlideApp.with(getApplicationContext())
+                                                            .load(basicProfile)
+                                                            .into(circleImageView);
                                                     break;
                                             }
                                         }
