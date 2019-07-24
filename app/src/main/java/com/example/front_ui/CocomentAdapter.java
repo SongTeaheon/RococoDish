@@ -1,7 +1,9 @@
 package com.example.front_ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,8 @@ import android.widget.TextView;
 import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.Utils.GlideApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -61,7 +65,7 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CocomentViewHolder cocomentViewHolder, int i) {
+    public void onBindViewHolder(@NonNull CocomentViewHolder cocomentViewHolder, final int i) {
         //프로필 이미지 부분
         GlideApp.with(context)
                 .load(cocomentList.get(i).getImgPath())
@@ -82,6 +86,30 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
 
 
         //TODO : 꾸욱 누르면 대댓글 삭제
+        final String[] options = new String[] {"삭제", "닫기"};
+        cocomentViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (cocomentList.get(i).getCommentWriterId().equals(FirebaseAuth.getInstance().getUid())){
+
+                    new AlertDialog.Builder(context)
+                            .setTitle("내가 쓴 대댓글")
+                            .setItems(options, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (options[which]){
+
+                                        case "삭제":
+                                            //todo : 대댓삭제
+                                        case "닫기":
+                                            dialog.dismiss();
+                                    }
+                                }
+                            });
+                }
+                return false;
+            }
+        });
     }
 
     @Override

@@ -24,7 +24,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -124,14 +123,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         commentViewHolder.childRecyclerView.setAdapter(cocomentAdapter);
 
         //짧은 클릭 => 대댓글 볼 수 있게 함.
-        final boolean isExpanded = parentList.get(i).isExpanded();
-        commentViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                parentList.get(i).setExpanded(!isExpanded);
-                notifyItemChanged(i);
-            }
-        });
+//        final boolean isExpanded = parentList.get(i).isExpanded();
+//        commentViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                parentList.get(i).setExpanded(!isExpanded);
+//                notifyItemChanged(i);
+//            }
+//        });
         //isExpanded가 참일 때 리사이클러뷰가 나오게함. 거짓이면 사라짐.
 //        commentViewHolder.childRecyclerView.setVisibility(isExpanded? View.VISIBLE : View.GONE);
 
@@ -140,8 +139,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         final String docId = parentList.get(i).getDocUuid();//해당 댓글에 대해서만 UUID를 가져옴.
 
         //다이얼로그 옵션 리스트
-        final String[] meCommentOptions = new String[] {"대댓글 달기", "수정", "삭제", "취소"};
-        final String[] otherCommentOptions = new String[] {"대댓글 달기", "취소"};
+        final String[] meCommentOptions = new String[] {"대댓글 달기", "삭제", "닫기"};
+        final String[] otherCommentOptions = new String[] {"대댓글 달기", "닫기"};
 
         //댓글 경로
         final DocumentReference commentRef = FirebaseFirestore.getInstance()
@@ -157,7 +156,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             @Override
             public boolean onLongClick(View v) {
 
-                //내가 작성한 댓글의 경우우
+                //내가 작성한 댓글의 경우
                if(parentList.get(i).getCommentWriterId().equals(myUid)){
                     new AlertDialog.Builder(context)
                             .setTitle("내가 쓴 글")
@@ -168,10 +167,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                         case "대댓글 달기":
                                             //댓글 도큐먼트 아이디를 DishView에 넘김(거기서 리스너로 받으면 됨.)
                                             commentAdapterToDishView.sendGetCommentDocId(docId);
-                                            break;
-                                        case "수정":
-                                            Toast.makeText(context, "추후에 넣을 예정", Toast.LENGTH_SHORT).show();
-                                            //TODO : 댓글 내용만 update하면됨.
                                             break;
                                         case "삭제":
                                             //우선 대댓글 삭제해주고
@@ -191,8 +186,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                                                             .delete();
                                                                     //대댓글 삭제 후 댓글 삭제
                                                                     commentRef.delete();
-                                                                    //TODO: 삭제 후 리사이클러뷰 UI반영
-                                                                    
+
                                                                 }
                                                             }
                                                             else{
@@ -246,22 +240,21 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if(queryDocumentSnapshots != null){
+                        if (e != null){
+                            Log.d(TAG, e.getMessage());
+                        }
+                        if(queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()){
 
-                            for(DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()){
+                            childList.clear();
 
-                                //대댓이 있는 경우만 불러옴.
-                                if(dc.getDocument().exists()){
+                           for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
 
-                                    //데이터가 추가되는 경우만 고려함.
-                                    switch (dc.getType()){
-                                        case ADDED:
-                                            CommentInfo commentInfo = dc.getDocument().toObject(CommentInfo.class);
-                                            childList.add(commentInfo);
-                                            cocomentAdapter.notifyItemChanged(childList.size());
-                                    }
-                                }
-                            }
+                               CommentInfo commentInfo = dc.toObject(CommentInfo.class);
+                               childList.add(commentInfo);
+                               cocomentAdapter.notifyItemChanged(childList.size());
+                           }
+
+                           cocomentAdapter.notifyDataSetChanged();
 
                         }
                     }

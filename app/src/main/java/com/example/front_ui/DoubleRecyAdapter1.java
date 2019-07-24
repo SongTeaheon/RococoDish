@@ -1,6 +1,7 @@
 package com.example.front_ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,10 +13,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.Utils.LocationUtil;
+import com.example.front_ui.Utils.MathUtil;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -28,13 +33,15 @@ public class DoubleRecyAdapter1 extends RecyclerView.Adapter<DoubleRecyAdapter1.
     String TAG = "TAG_DoubleRecyAdapter1";
     Context context;
     List<StoreInfo> parentList;
+    GeoPoint myGeoPoint;
 //    Location location;
 
     public DoubleRecyAdapter1(Context context,
-                              List<StoreInfo> parentList){
+                              List<StoreInfo> parentList,
+                              GeoPoint myGeoPoint){
         this.context = context;
         this.parentList = parentList;
-//        this.location = location;
+        this.myGeoPoint = myGeoPoint;
     }
 
     public class DoubleRecyViewHolder1 extends RecyclerView.ViewHolder {
@@ -70,32 +77,52 @@ public class DoubleRecyAdapter1 extends RecyclerView.Adapter<DoubleRecyAdapter1.
         //가게이름
         doubleRecyViewHolder1.storeName.setText(parentList.get(i).getName());
 
-//        //가게 거리
-//        double distance = LocationUtil.getDistanceFromMe(location, list.get(i).getGeoPoint());
-//        String distanceStr = MathUtil.adjustedDistance(distance);
-//        doubleRecyViewHolder1.storeDistance.setText(distanceStr);
+
+        //가게 거리
+        double storeLatitude = parentList.get(i).getGeoPoint().getLatitude();
+        double storeLongitude = parentList.get(i).getGeoPoint().getLongitude();
+
+        double myLatitude = myGeoPoint.getLatitude();
+        double myLongitude = myGeoPoint.getLongitude();
+
+        double distance = distanceBtwMeAndStore(storeLatitude, storeLongitude, myLatitude, myLongitude);
+        String distanceStr = String.valueOf(distance);
+        String result;
+        if(distanceStr.startsWith("0")){
+            result = distanceStr.substring(2, 5) + " m";
+        }
+        else{
+            result = distanceStr.substring(0, 4) + " km";
+        }
+        doubleRecyViewHolder1.storeDistance.setText(result);
+
 
         //가게 주소
         doubleRecyViewHolder1.storeAddress.setText(parentList.get(i).getAddress());
 
+
         //별점 평균
-        doubleRecyViewHolder1.storeStar.setText(Double.toString(parentList.get(i).getAver_star()));
+        doubleRecyViewHolder1.storeStar.setText(String.valueOf(parentList.get(i).getAver_star()).substring(0, 3));
 
 
 
         /**
-         * 수평 리사이클러뷰
+         * 수평 리사이클러뷰 설정
          * */
         final List<PostingInfo> childList = new ArrayList<>();
-        final DoubleRecyAdapter2 doubleRecyAdapter2 = new DoubleRecyAdapter2(context, childList);
+        final DoubleRecyAdapter2 doubleRecyAdapter2 = new DoubleRecyAdapter2(context, childList, parentList.get(i), distance);
         doubleRecyViewHolder1.childRecy.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
         doubleRecyViewHolder1.childRecy.setAdapter(doubleRecyAdapter2);
 
+
+        //가게 내 포스팅들 가져오기
         String docId = parentList.get(i).getStoreId();
 
         FirebaseFirestore.getInstance()
-                .collection("포스팅")
-                .whereEqualTo("storeId", docId)
+                .collection("가게")
+                .document(docId)
+                .collection("포스팅채널")
+                .orderBy("postingTime", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -116,6 +143,23 @@ public class DoubleRecyAdapter1 extends RecyclerView.Adapter<DoubleRecyAdapter1.
                         }
                     }
                 });
+
+
+        //클릭 이벤트들
+
+        //StorePage로 이동
+        final StoreInfo storeInfo = parentList.get(i);
+        doubleRecyViewHolder1.storeName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //todo : 가게페이지로 이동
+                Intent intent = new Intent(context, StorePageActivity.class);
+                intent.putExtra("storeName", storeInfo.getName());
+                intent.putExtra("averStar", storeInfo.getAver_star());
+                intent.putExtra("documentId", storeInfo.getStoreId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -124,5 +168,29 @@ public class DoubleRecyAdapter1 extends RecyclerView.Adapter<DoubleRecyAdapter1.
     }
 
 
+
+    /**
+     * 거리 계산 함수들
+     * **/
+
+    private double distanceBtwMeAndStore(double lat1, double lon1, double lat2, double lon2){
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1))
+                * Math.sin(deg2rad(lat2))
+                + Math.cos(deg2rad(lat1))
+                * Math.cos(deg2rad(lat2))
+                * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+        return (dist);
+    }
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
+    }
 
 }
