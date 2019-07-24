@@ -1,4 +1,4 @@
-package com.example.front_ui;
+package com.example.front_ui.Search;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,24 +10,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.front_ui.DataModel.FragmentSotreData;
+import com.example.front_ui.DataModel.FragmentPeopleData;
+import com.example.front_ui.R;
+import com.example.front_ui.Search.FragmantPeopleRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
-public class FragmentStore extends Fragment {
+public class FragmentPeople extends Fragment {
 
     private RecyclerView recyclerView;
-    private FragmantSotreRecyclerViewAdapter adapter;
-    private ArrayList<FragmentSotreData> list = new ArrayList<>();
+    private FragmantPeopleRecyclerViewAdapter adapter;
+    private ArrayList<FragmentPeopleData> list = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.search_fragment_store, container, false);
+        ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.search_fragment_people, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.storeRecyclerView);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.peopleRecyclerView);
 
-        adapter = new FragmantSotreRecyclerViewAdapter(list);
+        adapter = new FragmantPeopleRecyclerViewAdapter(list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 

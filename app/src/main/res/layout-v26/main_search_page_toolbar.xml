@@ -27,7 +27,7 @@
                     android:src="@mipmap/ic_back" />
 
                 <EditText
-                    android:id="@+id/mainsearchStore"
+                    android:id="@+id/mainsearch_text"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_marginStart="-4dp"

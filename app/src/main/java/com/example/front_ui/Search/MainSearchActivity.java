@@ -1,4 +1,4 @@
-package com.example.front_ui;
+package com.example.front_ui.Search;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,32 +7,25 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.DataModel.SearchedData;
-import com.example.front_ui.PostingProcess.MainShareActivity;
-import com.example.front_ui.PostingProcess.StoreSearchRecyclerViewAdapter;
+import com.example.front_ui.MainSearchRecyclerViewAdapter;
+import com.example.front_ui.R;
 import com.example.front_ui.Utils.JsonParsing;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
 import com.example.front_ui.Utils.RecyclerItemClickListener;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
 
 public class MainSearchActivity extends AppCompatActivity {
 
@@ -76,7 +69,7 @@ public class MainSearchActivity extends AppCompatActivity {
         setContentView(R.layout.main_search_page);
 
         mRecyclerView = findViewById(R.id.mrecyclerView);
-        search_tv = findViewById(R.id.mainsearchStore);
+        search_tv = findViewById(R.id.mainsearch_text);
         search_btn = findViewById(R.id.main_search_btn);
 
 
@@ -140,6 +133,7 @@ public class MainSearchActivity extends AppCompatActivity {
         Call<JsonObject> request_subway = service.getKakaoStoreInfo(kakaoApiId, searchWord, subway_code, "1");//, code
         Call<JsonObject> request_attraction = service.getKakaoStoreInfo(kakaoApiId, searchWord, attraction_code, "4");//, code
 
+        //로컬 listener
         request_local.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -159,7 +153,7 @@ public class MainSearchActivity extends AppCompatActivity {
             }
         });
 
-        //store listener
+        //대학교 listener
         request_school.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -179,7 +173,7 @@ public class MainSearchActivity extends AppCompatActivity {
             }
         });
 
-        //store listener
+        //지하철 listener
         request_subway.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -199,7 +193,7 @@ public class MainSearchActivity extends AppCompatActivity {
             }
         });
 
-        //store listener
+        //관광명소 listener
         request_attraction.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -218,9 +212,6 @@ public class MainSearchActivity extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
-
-
-
     }
 
 

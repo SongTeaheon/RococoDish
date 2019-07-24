@@ -1,4 +1,4 @@
-package com.example.front_ui;
+package com.example.front_ui.Search;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,27 +10,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.front_ui.DataModel.FragmentPeopleData;
+import com.example.front_ui.DataModel.FragmentTagData;
+import com.example.front_ui.R;
+import com.example.front_ui.Search.FragmantTagRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
-public class FragmentPeople extends Fragment {
+public class FragmentTag extends Fragment {
 
     private RecyclerView recyclerView;
-    private FragmantPeopleRecyclerViewAdapter adapter;
-    private ArrayList<FragmentPeopleData> list = new ArrayList<>();
+    private FragmantTagRecyclerViewAdapter adapter;
+    private ArrayList<FragmentTagData> list = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.search_fragment_people, container, false);
+        ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.search_fragment_tag, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.peopleRecyclerView);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.tagRecyclerView);
 
-        adapter = new FragmantPeopleRecyclerViewAdapter(list);
+        adapter = new FragmantTagRecyclerViewAdapter(list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
         return rootView;
     }
+
+    //각 태그 누르면 그 태그가 있는 가게들 게시글 쭉 뜨는 FragmentTag2로 넘어가야 합니다다
 }

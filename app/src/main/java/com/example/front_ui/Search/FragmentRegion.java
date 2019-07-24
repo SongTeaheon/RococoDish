@@ -1,4 +1,4 @@
-package com.example.front_ui;
+package com.example.front_ui.Search;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.front_ui.DataModel.FragmentRegionData;
+import com.example.front_ui.R;
+import com.example.front_ui.Search.FragmantRegionRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
