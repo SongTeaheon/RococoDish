@@ -1,4 +1,4 @@
-package com.example.front_ui;
+package com.example.front_ui.Search;
 
 import android.support.v4.app.Fragment;
 
