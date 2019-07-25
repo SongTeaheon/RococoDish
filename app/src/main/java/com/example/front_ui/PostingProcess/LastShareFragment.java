@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.DataModel.PostingInfo;
@@ -47,6 +48,7 @@ import com.google.firebase.firestore.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
 import org.imperiumlabs.geofirestore.GeoFirestore;
 
@@ -79,6 +81,7 @@ public class LastShareFragment extends Fragment {
     TextView text_title;
     GeoPoint geoPoint;
     TextView storeName;
+    private HashTagHelper editHashTagHelper;
 
 
     KakaoStoreInfo kakaoStoreInfo;
@@ -144,50 +147,64 @@ public class LastShareFragment extends Fragment {
 
         //해쉬태그 처리
         tags = (EditText)view.findViewById(R.id.hashTag);
-        mspanable = tags.getText();
 
-        tags.addTextChangedListener(new TextWatcher() {
+        //todo : 태그 기능보완 라이브러리
+        editHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.MainColor), new HashTagHelper.OnHashTagClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String startChar = null;
-
-                try{
-                    startChar = Character.toString(s.charAt(start));
-                    Log.i(TAG, "새로운 태그의 첫글자 : "+startChar);
-                }catch (Exception e){
-                    startChar = "";
-                }
-                if (startChar.equals("#")){
-                    changeTheColor(s.toString().substring(start), start, start + count);
-                    hashTagIsComing++;
-                }
-                if(startChar.equals(" ")){
-                    hashTagIsComing = 0;
-                }
-                if(hashTagIsComing != 0){
-                    changeTheColor(s.toString().substring(start), start, start + count);
-                    hashTagIsComing++;
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-
-            private void changeTheColor(String s, int start, int end) {
-                mspanable.setSpan(
-                        new ForegroundColorSpan(
-                                getResources().getColor(R.color.colorAccent)),
-                        start,
-                        end,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            public void onHashTagClicked(String hashTag) {
+                return;
             }
         });
+        editHashTagHelper.handle(tags);
+//        mspanable = tags.getText();
+//
+//
+//
+//        tags.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                String startChar = null;
+//
+//                try{
+//                    startChar = Character.toString(s.charAt(start));
+//                    Log.i(TAG, "새로운 태그의 첫글자 : "+startChar);
+//                }catch (Exception e){
+//                    startChar = "";
+//                }
+//                if (startChar.equals("#")){
+//                    changeTheColor(s.toString().substring(start), start, start + count);
+//                    hashTagIsComing++;
+//                }
+//                if(startChar.equals(" ")){
+//                    hashTagIsComing = 0;
+//                }
+//                if(startChar.equals("\n")){//줄바꿈 엔터할 경우에도 띄어쓰기와 마찬가지로 태그 색 없앰.
+//                    hashTagIsComing = 0;
+//                }
+//                if(hashTagIsComing != 0){//#과 이어져있으면 색을 변경해줌.
+//                    changeTheColor(s.toString().substring(start), start, start + count);
+//                    hashTagIsComing++;
+//                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//            }
+//
+//            private void changeTheColor(String s, int start, int end) {
+//                mspanable.setSpan(
+//                        new ForegroundColorSpan(
+//                                getResources().getColor(R.color.colorAccent)),
+//                        start,
+//                        end,
+//                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            }
+//        });
 
         //share 버튼
         ImageView completeButton = view.findViewById(R.id.imageViewComplete);
@@ -275,21 +292,32 @@ public class LastShareFragment extends Fragment {
         postingInfo.address = kakaoStoreInfo.address_name;
 
         //TODO : 파이어스토어 넣을시에 태그는 맵으로 변환시킴
-        String postingDesc = tags.getText().toString();
-        if(!postingDesc.isEmpty()) {
-            String[] postingDescList = postingDesc.split(" ");//띄어쓰기 단위로 게시물 내용을 나눠줌.
-            Map<String, Boolean> tagMap = new HashMap<>();
-            for (String i : postingDescList) {
-                if (!i.isEmpty() && i.trim().startsWith("#")) {//빈건 버리고, 띄어쓰기단위별로 이중띄어쓰기 된 거 없애고 #로 시작하는 것만 가져옴.
-                    if (i.length() > 1) { //샵# 하나만 있는 것도 배제(if문 중첩을 한 이유는 처리속도 높일려고.)
-                        tagMap.put(i.substring(1, i.length()), true);//#부분 제외하고 바로 맵에 집어넣음.
-                    }
-                }
-            }
-            if (!tagMap.isEmpty()) {
-                postingInfo.tag = tagMap;//만든 맵을 바로 객체에 집어넣음.
-            }
+        List<String> allHashTag = editHashTagHelper.getAllHashTags();
+        Map<String, Boolean> tagMap = new HashMap<>();
+        for(String i : allHashTag){
+            tagMap.put(i, true);
         }
+        postingInfo.tag = tagMap;
+//        String postingDesc = tags.getText().toString();
+//        if(!postingDesc.isEmpty()) {
+//            String[] postingDescList = postingDesc.split(" ");//띄어쓰기 단위로 게시물 내용을 나눠줌.
+//            Map<String, Boolean> tagMap = new HashMap<>();
+//            for (String i : postingDescList) {
+//                if (!i.isEmpty() && i.trim().startsWith("#")) {//빈건 버리고, 띄어쓰기단위별로 이중띄어쓰기 된 거 없애고 #로 시작하는 것만 가져옴.
+//                    if (i.length() > 1) { //샵# 하나만 있는 것도 배제(if문 중첩을 한 이유는 처리속도 높일려고.)
+//                        if(i.contains("\n")){
+//                            return;
+//                        }
+//                        else{
+//                            tagMap.put(i.substring(1, i.length()), true);//#부분 제외하고 바로 맵에 집어넣음.
+//                        }
+//                    }
+//                }
+//            }
+//            if (!tagMap.isEmpty()) {
+//                postingInfo.tag = tagMap;//만든 맵을 바로 객체에 집어넣음.
+//            }
+//        }
 
         postingInfo.imagePathInStorage = imagePathInStorage;
 
