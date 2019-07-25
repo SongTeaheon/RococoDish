@@ -85,8 +85,6 @@ public class DishView extends AppCompatActivity {
     TextView tvStoreName;
     ImageView shareButton;
 
-
-
     ImageView imageView;
     FirebaseFirestore db;
     FirebaseStorage storage;
@@ -110,6 +108,7 @@ public class DishView extends AppCompatActivity {
     TextView hashTagText;
     TextView tvScore;
     TextView tvDistance;
+    TextView hasNoComments;
     EditText commentEdit;//댓글 작성창
     ImageView commentSend;//댓글 업로드 버튼
     EditText cocomentEditText;//대댓글 작성창
@@ -204,6 +203,7 @@ public class DishView extends AppCompatActivity {
         /**
          해쉬태그
          **/
+
         hashTagText = findViewById(R.id.hashTag_textview_dishView);
         if(postingInfo.hashTags != null){
             setTags(hashTagText, postingInfo.hashTags);
@@ -211,7 +211,6 @@ public class DishView extends AppCompatActivity {
         else{
             setTags(hashTagText, "게시물 내용이 없습니다.");
         }
-
 
 
         tvStoreName = findViewById(R.id.tvStore);
@@ -563,6 +562,18 @@ public class DishView extends AppCompatActivity {
                         }
                         assert queryDocumentSnapshots != null;
 
+                        hasNoComments = findViewById(R.id.hasNoComments_textview_DishView);
+                        if (queryDocumentSnapshots.getDocuments().isEmpty()){
+                            hasNoComments.setVisibility(View.VISIBLE);//"댓글이 없습니다" 텍스트 보여주기
+                        }
+                        else{
+                            hasNoComments.setVisibility(View.GONE);
+                        }
+
+                        //todo : 삭제 자동반영하는 법
+                        //1. 데이터를 불러올 때 비동기인 addSnapshotListener로 불러와야함.
+                        //2. for문을 돌려서 데이터를 불러오기 직전에 리스트를 싹다 지워줌.(다시 불러올 때 중복 방지)
+                        //3. for문이 끝나면 데이터 변경이 있는지 감지하고 비동기로 데이터 변경을 받으니까 자동반영됨.
                         commentList.clear();
 
                         for(DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
@@ -730,7 +741,7 @@ public class DishView extends AppCompatActivity {
     //디비에 있는 "해쉬태그" 정보를 받아서 #부분만 색깔을 칠해주는 메서드(무조건 #이 있는 스트링만 받아야함.)
     //추가로 해쉬태그 누를시 이벤트도 생성 가능
     private void setTags(TextView pTextView, String pTagString) {
-        SpannableString string = new SpannableString(pTagString);
+        SpannableString string = new SpannableString(pTagString);//raw 텍스트들
 
         int start = -1;
         for (int i = 0; i < pTagString.length(); i++) {

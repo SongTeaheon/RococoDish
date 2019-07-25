@@ -99,7 +99,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         //시간 부분
         Long time = parentList.get(i).getTime();
         Date date = new Date(time);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM월 dd일 - hh시 mm분 ss초");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd hh:mm:ss");
         String result = dateFormat.format(date);
         commentViewHolder.time.setText(result);
 
@@ -118,7 +118,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         final List<CommentInfo> childList = new ArrayList<>();
         //대댓 리사이클러뷰
         final CocomentAdapter cocomentAdapter;
-        cocomentAdapter = new CocomentAdapter(context, postingInfo, childList);
+        cocomentAdapter = new CocomentAdapter(context, postingInfo, childList, parentList.get(i).getDocUuid());
         commentViewHolder.childRecyclerView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
         commentViewHolder.childRecyclerView.setAdapter(cocomentAdapter);
 
@@ -159,7 +159,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 //내가 작성한 댓글의 경우
                if(parentList.get(i).getCommentWriterId().equals(myUid)){
                     new AlertDialog.Builder(context)
-                            .setTitle("내가 쓴 글")
+                            .setTitle("내가 쓴 댓글")
                             .setItems(meCommentOptions, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -206,7 +206,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 }
                 else{
                     new AlertDialog.Builder(context)
-                            .setTitle("남이 쓴 글")
+                            .setTitle("남이 쓴 댓글")
                             .setItems(otherCommentOptions, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -228,7 +228,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
 
         /**
-         * 댓글을 화면에 띄우기 Comments Fetch
+         * 대댓글을 화면에 띄우기 Cocomments Fetch
          * **/
         FirebaseFirestore.getInstance()
                 .collection("포스팅")
@@ -257,12 +257,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                            cocomentAdapter.notifyDataSetChanged();
 
                         }
+                        else{
+                            childList.clear();
+                            cocomentAdapter.notifyDataSetChanged();
+                        }
                     }
                 });
 
-//        //댓글 올라오는 애니메이션
-//        Animation animation = AnimationUtils.loadAnimation(context, R.anim.up_from_bottom);
-//        commentViewHolder.itemView.startAnimation(animation);
+        //댓글 올라오는 애니메이션
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.up_from_bottom);
+        commentViewHolder.itemView.startAnimation(animation);
 
 
     }

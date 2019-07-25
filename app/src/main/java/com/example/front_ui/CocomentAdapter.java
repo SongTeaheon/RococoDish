@@ -5,15 +5,19 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.Utils.GlideApp;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -26,16 +30,19 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
     Context context;
     PostingInfo postingInfo;//도큐먼트 아이디 때문에 필요
     List<CommentInfo> cocomentList;
+    String commentDocId;
     private String TAG = "TAGCocommentAdapter";
 
 
     //생성자
     public CocomentAdapter(Context context,
                            PostingInfo postingInfo,
-                           List<CommentInfo> cocomentList) {
+                           List<CommentInfo> cocomentList,
+                           String commentDocId) {
         this.context = context;
         this.postingInfo = postingInfo;
         this.cocomentList = cocomentList;
+        this.commentDocId = commentDocId;
     }
 
     //뷰홀더
@@ -80,7 +87,7 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
         //시간 부분
         Long time = cocomentList.get(i).getTime();
         Date date = new Date(time);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM월 dd일 - hh시 mm분 ss초");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd hh:mm:ss");
         String result = dateFormat.format(date);
         cocomentViewHolder.time.setText(result);
 
@@ -100,16 +107,28 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
                                     switch (options[which]){
 
                                         case "삭제":
-                                            //todo : 대댓삭제
+                                            FirebaseFirestore.getInstance()
+                                                    .collection("포스팅")
+                                                    .document(postingInfo.postingId)
+                                                    .collection("댓글")
+                                                    .document(commentDocId)
+                                                    .collection("대댓글")
+                                                    .document(cocomentList.get(i).getDocUuid())
+                                                    .delete();
+                                            notifyItemChanged(i);
                                         case "닫기":
                                             dialog.dismiss();
                                     }
                                 }
-                            });
+                            }).show();
                 }
                 return false;
             }
         });
+
+        //댓글 올라오는 애니메이션
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.up_from_bottom);
+        cocomentViewHolder.itemView.startAnimation(animation);
     }
 
     @Override

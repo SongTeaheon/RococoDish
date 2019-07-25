@@ -169,7 +169,10 @@ public class LastShareFragment extends Fragment {
                 if(startChar.equals(" ")){
                     hashTagIsComing = 0;
                 }
-                if(hashTagIsComing != 0){
+                if(startChar.equals("\n")){//줄바꿈 엔터할 경우에도 띄어쓰기와 마찬가지로 태그 색 없앰.
+                    hashTagIsComing = 0;
+                }
+                if(hashTagIsComing != 0){//#과 이어져있으면 색을 변경해줌.
                     changeTheColor(s.toString().substring(start), start, start + count);
                     hashTagIsComing++;
                 }
@@ -282,7 +285,12 @@ public class LastShareFragment extends Fragment {
             for (String i : postingDescList) {
                 if (!i.isEmpty() && i.trim().startsWith("#")) {//빈건 버리고, 띄어쓰기단위별로 이중띄어쓰기 된 거 없애고 #로 시작하는 것만 가져옴.
                     if (i.length() > 1) { //샵# 하나만 있는 것도 배제(if문 중첩을 한 이유는 처리속도 높일려고.)
-                        tagMap.put(i.substring(1, i.length()), true);//#부분 제외하고 바로 맵에 집어넣음.
+                        if(i.contains("\n")){
+                            return;
+                        }
+                        else{
+                            tagMap.put(i.substring(1, i.length()), true);//#부분 제외하고 바로 맵에 집어넣음.
+                        }
                     }
                 }
             }
