@@ -2,7 +2,6 @@ package com.example.front_ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
@@ -16,9 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +25,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,15 +32,13 @@ import android.widget.Toast;
 import com.example.front_ui.AlgoliaTest.StoreNameSearchAcitivity;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.SearchedData;
-import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Edit.BroadcastUtils;
 import com.example.front_ui.Interface.FirebasePredicate;
-import com.example.front_ui.Interface.MyPageDataPass;
 import com.example.front_ui.PostingProcess.MainShareActivity;
+import com.example.front_ui.Search.MainSearchActivity;
+import com.example.front_ui.Search.SubSearchPage;
 import com.example.front_ui.Utils.DataPassUtils;
-import com.example.front_ui.Utils.KakaoApiStoreSearchService;
-import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -56,9 +50,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
-import com.yarolegovich.slidingrootnav.SlidingRootNavLayout;
-
-import java.util.Objects;
 
 
 public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
@@ -218,7 +209,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
             @Override
             public void onClick(View view) {
 //                Intent intent = new Intent(SubActivity.this, MainSearchActivity.class);
-                Intent intent = new Intent(SubActivity.this, MainSearchActivity.class);
+                Intent intent = new Intent(SubActivity.this, SubSearchPage.class);
 
                 startActivityForResult(intent, SEARCH_REQUEST_CODE);
             }

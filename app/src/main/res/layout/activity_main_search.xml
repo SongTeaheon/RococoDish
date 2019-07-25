@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainSearchActivity">
+    tools:context=".Search.MainSearchActivity">
 
     <EditText
         android:id="@+id/search_tv"
@@ -43,4 +43,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_btn"
         app:layout_constraintVertical_bias="0.168" />
+
 </android.support.constraint.ConstraintLayout>

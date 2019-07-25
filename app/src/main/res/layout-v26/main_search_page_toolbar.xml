@@ -27,12 +27,12 @@
                     android:src="@mipmap/ic_back" />
 
                 <EditText
-                    android:id="@+id/searchStore"
+                    android:id="@+id/mainsearch_text"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_marginStart="-4dp"
                     android:layout_marginEnd="12dp"
-                    android:layout_toStartOf="@+id/search_btn0"
+                    android:layout_toStartOf="@+id/main_search_btn"
                     android:layout_toEndOf="@+id/backButton"
                     android:fontFamily="@font/bmjua"
                     android:hint="  가게, 지역, 태그, 이름으로 검색"
@@ -42,7 +42,7 @@
                     tools:ignore="SpUsage" />
 
                 <ImageView
-                    android:id="@+id/search_btn0"
+                    android:id="@+id/main_search_btn"
                     android:layout_width="26dp"
                     android:layout_height="26dp"
                     android:layout_alignParentEnd="true"

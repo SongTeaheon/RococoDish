@@ -23,6 +23,10 @@ public class UserInfo {
         this.postingNum = postingNum;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
     public UserInfo() {
     }
 }

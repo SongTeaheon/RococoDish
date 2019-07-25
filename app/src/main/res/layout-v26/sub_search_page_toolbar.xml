@@ -28,12 +28,12 @@
 
                 <!--여기 TextView를 터치하면 다시 main_search_page로 가게 하는 것이 가장 편할 듯 합니당-->
                 <TextView
-                    android:id="@+id/searchStore"
+                    android:id="@+id/subsearchStore"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_marginStart="-4dp"
                     android:layout_marginEnd="12dp"
-                    android:layout_toStartOf="@+id/search_btn0"
+                    android:layout_toStartOf="@+id/sub_search_btn"
                     android:layout_toEndOf="@+id/backButton"
                     android:fontFamily="@font/bmjua"
                     android:paddingStart="12dp"
@@ -45,7 +45,7 @@
                     tools:ignore="SpUsage" />
 
                 <ImageView
-                    android:id="@+id/search_btn0"
+                    android:id="@+id/sub_search_btn"
                     android:layout_width="26dp"
                     android:layout_height="26dp"
                     android:layout_alignParentEnd="true"

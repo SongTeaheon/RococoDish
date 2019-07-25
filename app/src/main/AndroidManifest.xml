@@ -44,10 +44,11 @@
             android:value="@string/kakao_app_key" />
 
         <activity android:name=".SettingActivity" />
+        <activity android:name=".Search.SubSearchPage" />
         <activity android:name=".Edit.EditActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".AlgoliaTest.StoreNameSearchAcitivity" />
-        <activity android:name=".MainSearchActivity" />
+        <activity android:name=".Search.MainSearchActivity" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"

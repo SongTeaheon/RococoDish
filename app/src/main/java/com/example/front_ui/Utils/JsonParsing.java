@@ -7,6 +7,7 @@ import com.example.front_ui.DataModel.KakaoMetaData;
 import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.DataModel.SearchedData;
 import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.DataModel.UserInfo;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -86,8 +87,8 @@ public class JsonParsing {
     }
 
 
-    public static List<StoreInfo> getStoreListFromJsonList(JSONArray jsonArray){
-        List<StoreInfo> list = new ArrayList<>();
+    public static ArrayList<StoreInfo> getStoreListFromJsonList(JSONArray jsonArray){
+        ArrayList<StoreInfo> list = new ArrayList<>();
         for(int k = 0; k < jsonArray.length(); k++){
             String jsonStr = null;
             try {
@@ -105,9 +106,23 @@ public class JsonParsing {
         return list;
     }
 
-    public static String toJSForSpecialWord(String str){
-        return str;
-    }
+    public static ArrayList<UserInfo> getUserListFromJsonList(JSONArray jsonArray){
+        ArrayList<UserInfo> list = new ArrayList<>();
+        for(int k = 0; k < jsonArray.length(); k++){
+            String jsonStr = null;
+            try {
+                JSONObject jsonObject = jsonArray.getJSONObject(k);
+                jsonStr = jsonObject.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
+            Gson gson = new Gson();
+            UserInfo userInfo = gson.fromJson(jsonStr, UserInfo.class);
+
+            list.add(userInfo);
+        }
+        return list;
+    }
 
 }
