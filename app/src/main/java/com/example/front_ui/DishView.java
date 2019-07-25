@@ -65,8 +65,12 @@ import com.kakao.message.template.SocialObject;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 import com.kakao.util.helper.log.Logger;
+import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +88,8 @@ public class DishView extends AppCompatActivity {
     ImageView backButton;
     TextView tvStoreName;
     ImageView shareButton;
+    TextView postTime;
+    HashTagHelper textHashTagHelper;
 
     ImageView imageView;
     FirebaseFirestore db;
@@ -139,6 +145,8 @@ public class DishView extends AppCompatActivity {
         imageView = (ImageView) findViewById(R.id.imageView1);
 
 
+
+
         /*
          * backbutton 뒤로가기 버튼
          * */
@@ -161,6 +169,13 @@ public class DishView extends AppCompatActivity {
         if(intent == null){
             Log.e(TAG, "intent is null");
         }
+
+        //게시물 시간 설정
+        postTime = findViewById(R.id.textViewDay);
+//        Long time = (Long) postingInfo.postingTime;
+//        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+//        String dateString = formatter.format(new Date(time));
+//        postTime.setText(dateString);
 
 
         //dist
@@ -205,12 +220,26 @@ public class DishView extends AppCompatActivity {
          **/
 
         hashTagText = findViewById(R.id.hashTag_textview_dishView);
+//        if(postingInfo.hashTags != null){
+//            setTags(hashTagText, postingInfo.hashTags);
+//        }
+//        else{
+//            setTags(hashTagText, "게시물 내용이 없습니다.");
+//        }
         if(postingInfo.hashTags != null){
-            setTags(hashTagText, postingInfo.hashTags);
+            hashTagText.setText(postingInfo.hashTags);
+            textHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.MainColor), new HashTagHelper.OnHashTagClickListener() {
+                @Override
+                public void onHashTagClicked(String hashTag) {
+                    Toast.makeText(getApplicationContext(), hashTag, Toast.LENGTH_SHORT).show();
+                }
+            });
+            textHashTagHelper.handle(hashTagText);
         }
         else{
-            setTags(hashTagText, "게시물 내용이 없습니다.");
+            hashTagText.setText("게시물 내용이 없습니다.");
         }
+
 
 
         tvStoreName = findViewById(R.id.tvStore);
