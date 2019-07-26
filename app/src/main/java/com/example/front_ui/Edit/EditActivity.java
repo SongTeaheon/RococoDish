@@ -27,6 +27,7 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,6 +52,7 @@ public class EditActivity extends AppCompatActivity {
     FirebaseFirestore db;
     FirebaseStorage storage;
     Context mContext;
+    HashTagHelper editHashTagHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,13 @@ public class EditActivity extends AppCompatActivity {
 
         description = findViewById(R.id.hashTag);
         description.setText(postingInfo.getHashTags());
+        editHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.MainColor), new HashTagHelper.OnHashTagClickListener() {
+            @Override
+            public void onHashTagClicked(String hashTag) {
+                return;
+            }
+        });
+        editHashTagHelper.handle(description);
 
 
         addressText = findViewById(R.id.textViewAddress);
