@@ -172,11 +172,7 @@ public class DishView extends AppCompatActivity {
 
         //게시물 시간 설정
         postTime = findViewById(R.id.textViewDay);
-//        Long time = (Long) postingInfo.postingTime;
-//        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-//        String dateString = formatter.format(new Date(time));
-//        postTime.setText(dateString);
-
+        //todo : 시간을 객체로 저장해서 문자로 변환이 안됨......
 
         //dist
         postingInfo = (PostingInfo) intent.getSerializableExtra("postingInfo");
