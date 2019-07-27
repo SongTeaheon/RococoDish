@@ -361,33 +361,28 @@ public class DishView extends AppCompatActivity {
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(postingInfo.writerId)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-
-                        //프로필 이미지 업로드
-                        userImage = (String) document.get("profileImage");
-                        if(userImage != null){
-                            GlideApp.with(getApplicationContext())
-                                    .load(userImage)
-                                    .into(profileImage);
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if (e != null){
+                            Log.d(TAG, e.getMessage());
                         }
+                        if (documentSnapshot.exists()){
 
-                        //프로필 이름 업로드
-                        String userName = (String) document.get("nickname");
-                        profileName.setText(userName);
+                            //프로필 이미지 업로드
+                            userImage = (String) documentSnapshot.get("profileImage");
+                            if(userImage != null){
+                                GlideApp.with(getApplicationContext())
+                                        .load(userImage)
+                                        .into(profileImage);
+                            }
 
-                    } else {
-                        Log.d(TAG, "No such document");
+                            //프로필 이름 업로드
+                            String userName = (String) documentSnapshot.get("nickname");
+                            profileName.setText(userName);
+                        }
                     }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
+                });
 
         /**
          * 작성자의 프로필을 클릭시 작성자 마이페이지 이동 + postingInfo 다음 액티비티로 넘겨주기
@@ -472,7 +467,8 @@ public class DishView extends AppCompatActivity {
         });
 
         //실시간 댓글 가져오기
-        realTimeFetchComment(commentRef);
+        hasNoComments = findViewById(R.id.hasNoComments_textview_DishView);
+        realTimeFetchComment(commentRef, hasNoComments);
 
 
         /**
@@ -575,7 +571,8 @@ public class DishView extends AppCompatActivity {
         });
     }
 
-    public void realTimeFetchComment(CollectionReference commentRef){
+    public void realTimeFetchComment(CollectionReference commentRef,
+                                     final TextView hasNoComments){
         //실시간 댓글 가져오기
         commentRef
                 .orderBy("time", Query.Direction.ASCENDING)
@@ -587,7 +584,7 @@ public class DishView extends AppCompatActivity {
                         }
                         assert queryDocumentSnapshots != null;
 
-                        hasNoComments = findViewById(R.id.hasNoComments_textview_DishView);
+
                         if (queryDocumentSnapshots.getDocuments().isEmpty()){
                             hasNoComments.setVisibility(View.VISIBLE);//"댓글이 없습니다" 텍스트 보여주기
                         }
@@ -763,46 +760,6 @@ public class DishView extends AppCompatActivity {
         commentRecy.setAdapter(commentAdapter);
     }
 
-    //디비에 있는 "해쉬태그" 정보를 받아서 #부분만 색깔을 칠해주는 메서드(무조건 #이 있는 스트링만 받아야함.)
-    //추가로 해쉬태그 누를시 이벤트도 생성 가능
-    private void setTags(TextView pTextView, String pTagString) {
-        SpannableString string = new SpannableString(pTagString);//raw 텍스트들
-
-        int start = -1;
-        for (int i = 0; i < pTagString.length(); i++) {
-            if (pTagString.charAt(i) == '#') {
-                start = i;
-            } else if (pTagString.charAt(i) == ' ' || (i == pTagString.length() - 1 && start != -1)) {
-                if (start != -1) {
-                    if (i == pTagString.length() - 1) {
-                        i++; // case for if hash is last word and there is no
-                        // space after word
-                    }
-
-                    final String tag = pTagString.substring(start, i);
-                    string.setSpan(new ClickableSpan() {
-
-                        @Override
-                        public void onClick(View widget) {
-                            Log.d(TAG, "현재 누른 태그 = " + tag);
-                            Toast.makeText(DishView.this, "누르면 이 태그로 검색 ->"+tag, Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void updateDrawState(TextPaint ds) {
-                            // link color = #80FF909A 옅은 색
-                            ds.setColor(Color.parseColor("#FF6E6E"));
-                            ds.setUnderlineText(false);
-                        }
-                    }, start, i, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    start = -1;
-                }
-            }
-        }
-
-        pTextView.setMovementMethod(LinkMovementMethod.getInstance());
-        pTextView.setText(string);
-    }
 
     /*
      * 수정 사항 반영2(Local Broad Cast)
@@ -816,12 +773,6 @@ public class DishView extends AppCompatActivity {
             postingInfo.setHashTags(intent.getStringExtra("hashTags"));
             postingInfo.setAver_star(intent.getFloatExtra("aver_star", 0.0f));
 
-            if(postingInfo.hashTags != null){
-                setTags(hashTagText, postingInfo.hashTags);
-            }
-            else{
-                setTags(hashTagText, "게시물 내용이 없습니다.");
-            }
             tvScore.setText(Double.toString(postingInfo.getAver_star()));
 
         }
@@ -832,9 +783,17 @@ public class DishView extends AppCompatActivity {
         super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
 
-        //창이 꺼질 때 포스팅 도큐먼트 필드에 좋아요 개수 저장
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        //창이 꺼지기 전 다음 액티비티를 불러올 때 포스팅 도큐먼트 필드에 좋아요 개수 저장
         FirebaseFirestore.getInstance()
-                .collection("포스팅")
+                .collection("가게")
+                .document(postingInfo.storeId)
+                .collection("포스팅채널")
                 .document(postingInfo.postingId)
                 .update("numLike", gloabal_like)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -843,6 +802,17 @@ public class DishView extends AppCompatActivity {
                         Log.d(TAG, "좋아요 개수를 디비에 업데이트했습니다.");
                     }
                 });
+        //        FirebaseFirestore.getInstance()
+//                .collection("포스팅")
+//                .document(postingInfo.postingId)
+//                .update("numLike", gloabal_like)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d(TAG, "좋아요 개수를 디비에 업데이트했습니다.");
+//                    }
+//                });
+
     }
 }
 
