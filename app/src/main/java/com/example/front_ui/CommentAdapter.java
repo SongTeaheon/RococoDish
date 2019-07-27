@@ -2,6 +2,8 @@ package com.example.front_ui;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -136,6 +138,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
 
         //긴 클릭 => 대댓 적을 수 있게함.(여기선 파이어스토어에 업로드만 함. 패치는 DishView에서 실시간으로 하면 자동으로 추가됨.)
+
         final String docId = parentList.get(i).getDocUuid();//해당 댓글에 대해서만 UUID를 가져옴.
 
         //다이얼로그 옵션 리스트
@@ -166,7 +169,15 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                     switch (meCommentOptions[which]){
                                         case "대댓글 달기":
                                             //댓글 도큐먼트 아이디를 DishView에 넘김(거기서 리스너로 받으면 됨.)
-                                            commentAdapterToDishView.sendGetCommentDocId(docId);
+//                                            commentAdapterToDishView.sendGetCommentDocId(docId);
+                                            //todo : 대댓글 작성하는 창으로 이동
+                                            //todo : 이동하면서 기존에 댓글 부분 정보랑 내 프로필 이미지 같이 전달
+                                            Intent intent = new Intent(context, CocomentActivity.class);
+                                            Bundle bundle = new Bundle();
+                                            bundle.putSerializable("commentInfo", parentList.get(i));
+                                            intent.putExtra("postingInfo", postingInfo);
+                                            intent.putExtras(bundle);
+                                            context.startActivity(intent);
                                             break;
                                         case "삭제":
                                             //우선 대댓글 삭제해주고

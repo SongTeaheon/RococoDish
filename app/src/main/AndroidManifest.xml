@@ -16,6 +16,8 @@
         android:roundIcon="@drawable/rococo_app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".CocomentActivity"
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,18 +57,15 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".AlgoliaTest.StoreNameSearchAcitivity" />
         <activity android:name=".Search.MainSearchActivity" />
-
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
-
+            android:theme="@style/AppTheme" />
         <activity android:name=".MyPage" />
         <activity android:name=".PostingProcess.MainShareActivity" />
         <activity android:name=".StorePageActivity" />
         <activity android:name=".FollowActivity" />
         <activity android:name=".SubActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
