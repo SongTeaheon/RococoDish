@@ -88,9 +88,11 @@ public class DoubleRecyActivity extends AppCompatActivity{
         /**
          * 거리 가져오기
          * **/
-        //todo : GPS 허용 권한 가져오기(onStart)
+        //todo : GPS 설정 여부 확인
+        //todo : GPS 허용 권한 여부 확인
         //todo : 거리 불러오기
-        //todo : 그 다음 리사이클러뷰 불러오기
+        //todo : 리사이클러뷰 세팅
+        //todo : 가게 목록 불러오기
 
         //GPS 사용여부 & 허용권한 여부
         if (!checkLocationServicesStatus()) {
@@ -102,17 +104,8 @@ public class DoubleRecyActivity extends AppCompatActivity{
             checkRunTimePermission();
         }
 
-        //가장 상단에 내 위치 주소 표시
-        gpsTracker = new GpsTracker(DoubleRecyActivity.this);
-        title = findViewById(R.id.title_DoubleRecyActivity);
-        final double latitude = gpsTracker.getLatitude();
-        final double longitude = gpsTracker.getLongitude();
-        title.setText(getCurrentAddress(latitude, longitude));
-        Toast.makeText(DoubleRecyActivity.this, "현재위치 \n위도 " + latitude + "\n경도 " + longitude, Toast.LENGTH_LONG).show();
-
-
         /**
-         * 툴바 설정
+         * 툴바 설정(드로워 연결용)
          * */
         toolbar = findViewById(R.id.pageViewToolbar);
         setSupportActionBar(toolbar);
@@ -125,21 +118,17 @@ public class DoubleRecyActivity extends AppCompatActivity{
                 .withMenuLayout(R.layout.activity_sub_drawer)
                 .withToolbarMenuToggle(toolbar)
                 .inject();
+        //마이페이지로 이동
         myPage = findViewById(R.id.myPage_textview_activitySub);
         myPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DoubleRecyActivity.this, MyPage.class);
                 intent.putExtra("userUUID", FirebaseAuth.getInstance().getUid());
-                intent.putExtra("latitude", latitude);
-                intent.putExtra("longitude", longitude);
+                //todo : 마이페이지로 가는데 왜 위도, 경도를 보내는지?
+                intent.putExtra("latitude", getMyLocation().getLatitude());
+                intent.putExtra("longitude", getMyLocation().getLongitude());
                 startActivity(intent);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        drawerView.closeMenu();
-                    }
-                }, 1000);//1초 텀두고 메뉴를 닫아줌.(텀을 안두면 intent이동이랑 멤뉴 닫는거랑 겹쳐서 앱 속도 느려짐.)
             }
         });
 
@@ -155,7 +144,7 @@ public class DoubleRecyActivity extends AppCompatActivity{
 
         //전체 포스팅 리사이클러뷰
         parentRecy = findViewById(R.id.parentRecy);
-        initStoreRecyclerView(parentRecy, latitude, longitude);
+        initStoreRecyclerView(parentRecy, getMyLocation());
 
 
         /**
@@ -163,7 +152,7 @@ public class DoubleRecyActivity extends AppCompatActivity{
          * **/
         // 내 포스팅들 불러오기
         getMyPostData();
-        // 가게, 부모리사이클러뷰 정보를 거리순으로 불러옴
+        // 가게 목록을 가까운 거리순으로 불러옴
         getCloseStore();
 
 
@@ -195,13 +184,16 @@ public class DoubleRecyActivity extends AppCompatActivity{
         title = findViewById(R.id.title_DoubleRecyActivity);
         final double latitude = gpsTracker.getLatitude();
         final double longitude = gpsTracker.getLongitude();
+        title.setText(getCurrentAddress(latitude, longitude));
+        Toast.makeText(DoubleRecyActivity.this, "현재위치 \n위도 " + latitude + "\n경도 " + longitude, Toast.LENGTH_LONG).show();
         return new GeoPoint(latitude, longitude);
     }
 
+    //가게 거리순 정렬해서 불러오기(거리 제한도 가능)
     public void getCloseStore(){
         final Map<Double,String> docMap = new HashMap<>();
 
-        //내가 있는 위치의 위도, 경도값 가져오기
+        //내가 있는 위치의 위도, 경도값 가져오기(여기부턴 변하지 않게 final로 처리)
         final double myLat = getMyLocation().getLatitude();
         final double myLong = getMyLocation().getLongitude();
 
@@ -217,8 +209,8 @@ public class DoubleRecyActivity extends AppCompatActivity{
 
                             for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
 
-                                String storeDocId = dc.getId();
-                                GeoPoint geoPoint = (GeoPoint) dc.getData().get("geoPoint");
+                                String storeDocId = dc.getId();//가게 도큐먼트 아이디
+                                GeoPoint geoPoint = (GeoPoint) dc.getData().get("geoPoint");//가게의 위도, 경도
 
                                 double storeLat = geoPoint.getLatitude();
                                 double storeLong = geoPoint.getLongitude();
@@ -228,7 +220,7 @@ public class DoubleRecyActivity extends AppCompatActivity{
 
                                 docMap.put(distance, storeDocId);
                             }
-                            //todo : 이제 가까운 순으로 정렬해서 리사이클러뷰에 넣어줌.
+                            //todo : 이제 가까운 순으로 정렬해서 리사이클러뷰에 순서대로 넣어줌.
                             TreeMap treeMap = new TreeMap<Double, String>(docMap);
                             Iterator<Double> iterator = treeMap.keySet().iterator(); // hashMap을 오름차순 정렬
 
@@ -247,82 +239,8 @@ public class DoubleRecyActivity extends AppCompatActivity{
                 });
     }
 
-    //내 위치를 중심으로 가까운 가게순으로 불러옴.
-//    private int radius = 5;
-//    HashSet<String> dcSet = new HashSet<>(); //중복x
-//    private void getCloseStoreIdAndGetData(final double latitude, final double longitude) {
-//
-//        CollectionReference geoFirestoreRef = FirebaseFirestore.getInstance().collection("가게");
-//        GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
-//        final GeoPoint myPoint = new GeoPoint(latitude, longitude);
-//        //내 위치에서 radius(km)이내에 있는 값을 찾아라
-//        final GeoQuery geoQuery = geoFirestore.queryAtLocation(myPoint, radius);
-//        geoQuery.removeAllListeners();
-//
-//        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-//            //내 위치에서 radius만큼 떨어진 곳에 가게들이 있을 떄! -> 데이터를 가져온다.
-//            @Override
-//            public void onKeyEntered(String documentID, GeoPoint location) {
-//                if(!dcSet.contains(documentID) && (radius < 50 && dcSet.size() < 50)) {
-//                    Log.d(TAG, String.format("Document %s entered the searc area at [%f,%f] (radius : %d)", documentID, location.getLatitude(), location.getLongitude(), radius));
-//                    dcSet.add(documentID);
-//
-//
-//                    FirebaseFirestore.getInstance()
-//                            .collection("가게")
-//                            .document(documentID)
-//                            .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//                                @Override
-//                                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-//                                    if(documentSnapshot != null && documentSnapshot.exists()){
-//                                        StoreInfo storeInfo = documentSnapshot.toObject(StoreInfo.class);
-//
-//                                        parentList.add(storeInfo);
-//
-//                                        doubleRecyAdapter1.notifyItemChanged(parentList.size());
-//
-//                                        parentRecy.setVisibility(View.VISIBLE);
-//                                        swipeRefreshLayout.setRefreshing(false);
-//                                    }
-//                                }
-//                            });
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onKeyExited(String documentID) {
-//                System.out.println(String.format("Document %s is no longer in the search area", documentID));
-//            }
-//
-//            @Override
-//            public void onKeyMoved(String documentID, GeoPoint location) {
-//                System.out.println(String.format("Document %s moved within the search area to [%f,%f]", documentID, location.getLatitude(), location.getLongitude()));
-//            }
-//
-//            //내 위치에서 radius만큼 떨어진 곳을 다 찾았을 때 더 찾으려면 여기에!
-//            @Override
-//            public void onGeoQueryReady() {
-//                Log.d(TAG, "All initial data has been loaded and events have been fired!" + radius +" size : "+ dcSet.size()+"mypoint "+myPoint.getLatitude()+" "+ myPoint.getLongitude());
-//                //가게 수가 50개가 넘거나 반경이 100km가 넘으면 STOP
-//                if(dcSet.size() < 50 && radius < 50) {
-//                    radius += 5;
-//                    getCloseStoreIdAndGetData(latitude, longitude);
-//                }
-//            }
-//
-//            @Override
-//            public void onGeoQueryError(Exception exception) {
-//                System.err.println("There was an error with this query: " + exception.getLocalizedMessage());
-//            }
-//        });
-//    }
-
     //가게 목록 불러오는 리사이클러뷰 설정
-    public void initStoreRecyclerView(RecyclerView parentRecy,
-                                      double latitude,
-                                      double longitude){
-        GeoPoint myGeoPoint = new GeoPoint(latitude, longitude);
+    public void initStoreRecyclerView(RecyclerView parentRecy, GeoPoint myGeoPoint){
         parentRecy.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         doubleRecyAdapter1 = new DoubleRecyAdapter1(DoubleRecyActivity.this, parentList, myGeoPoint);
         parentRecy.setAdapter(doubleRecyAdapter1);
