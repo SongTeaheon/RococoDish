@@ -84,7 +84,7 @@ public class DoubleRecyAdapter1 extends RecyclerView.Adapter<DoubleRecyAdapter1.
 
         double myLatitude = myGeoPoint.getLatitude();
         double myLongitude = myGeoPoint.getLongitude();
-
+            //거리 계산하기
         double distance = MathUtil.distanceBtwMeAndStore(storeLatitude, storeLongitude, myLatitude, myLongitude);
         String distanceStr = String.valueOf(distance);
         String result;

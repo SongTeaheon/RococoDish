@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StorePostInfo;
 import com.example.front_ui.Utils.GlideApp;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
 import java.util.List;
@@ -56,8 +58,10 @@ public class StorePageAdapter extends BaseAdapter {
         likeNum = convertView.findViewById(R.id.storePageLike);
 
         //게시물 사진
+        StorageReference fileReference = FirebaseStorage.getInstance()
+                .getReferenceFromUrl(list.get(position).getPostImagePath());
         GlideApp.with(context)
-                .load(list.get(position).getPostImagePath())
+                .load(fileReference)
                 .into(postImage);
 
         //게시물당 별점
