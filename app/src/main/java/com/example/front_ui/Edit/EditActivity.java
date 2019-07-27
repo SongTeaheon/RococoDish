@@ -12,10 +12,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.R;
+import com.example.front_ui.Utils.AlgoliaUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.RatingBarUtils;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,6 +32,7 @@ import com.google.firebase.storage.StorageReference;
 import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EditActivity extends AppCompatActivity {
@@ -53,6 +56,7 @@ public class EditActivity extends AppCompatActivity {
     FirebaseStorage storage;
     Context mContext;
     HashTagHelper editHashTagHelper;
+    Map<String, Boolean> oldTagMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,7 @@ public class EditActivity extends AppCompatActivity {
         distance = (double) intent.getDoubleExtra("distance", 0.0);
         Log.d(TAG, "거리(미터단위) : " + distance);
         oldAverStar = postingInfo.getAver_star();
+        oldTagMap = postingInfo.getTag();
 
         //데이터 세팅.
         imageView = findViewById(R.id.imageView1);
@@ -87,10 +92,14 @@ public class EditActivity extends AppCompatActivity {
         editHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.MainColor), new HashTagHelper.OnHashTagClickListener() {
             @Override
             public void onHashTagClicked(String hashTag) {
-                return;
+                Toast.makeText(getApplicationContext(), hashTag, Toast.LENGTH_SHORT).show();
             }
         });
         editHashTagHelper.handle(description);
+
+        //tag데이터 업데이트
+        //1. firebase 업데이트.
+        //2. 알골리아 업데이트.
 
 
         addressText = findViewById(R.id.textViewAddress);
@@ -120,10 +129,20 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onclick : share!!!!!");
+                //태그
+
+                //tag 바꾸기
+                List<String> allHashTag = editHashTagHelper.getAllHashTags();
+                Map<String, Boolean> tagMap = new HashMap<>();
+                for(String i : allHashTag){
+                    tagMap.put(i, true);
+                }
+                postingInfo.tag = tagMap;
+
                 //다끝나면 액티비티 종료
-                //TODO::가게평점 변경 필요. 데이터가 다시 되돌아가야함..........
                 sendPostingDataToLocalBrdcast();  //local broad cast을 통해 수정사항을 전달한다.
                 changeDataOnFirebase();    //firebase에 변경 사항 변경
+                changeTagOnAlgolia();
                 //평점 변경 및 데이터 뿌리기.
                 changeStarAndUpdateStoreData(Float.parseFloat(starText.getText().toString()), storeInfo.getStoreId());
                 EditActivity.this.finish();
@@ -133,34 +152,67 @@ public class EditActivity extends AppCompatActivity {
 
     //firebase에 변경 사항 변경
     void changeDataOnFirebase(){
-        Map<String, Object> data = new HashMap<>();
-        data.put("hashTags", description.getText().toString());
-        data.put("aver_star", Float.parseFloat(starText.getText().toString()));
+        postingInfo.setHashTags(description.getText().toString());
+        postingInfo.setAver_star(Float.parseFloat(starText.getText().toString()));
 
         db.collection("포스팅").document(postingInfo.getPostingId())
-                .set(data, SetOptions.merge());
+                .set(postingInfo);
         db.collection("가게").document(storeInfo.getStoreId())
                 .collection("포스팅채널").document(postingInfo.getPostingId())
-                .set(data, SetOptions.merge());
+                .set(postingInfo);
     }
 
+    void changeTagOnAlgolia(){
+        //1. old태그 삭제
+        //TODO: 너무 무식한 알고리즘. 생각좀 더 해볼 필요가 있음
+        //oldTag를 돌면서 oldTag중에 newTAG에 없는 걸 찾아서 지운다.
+        for(final String oldTag : oldTagMap.keySet()){
+            boolean isExist = false;
+            for(final String newTag : postingInfo.getTag().keySet()){
+                if(oldTag.equals(newTag)) {
+                    isExist = true;break;
+                }
+            }
+            if(!isExist) {
+                Log.d(TAG, "delete tag : " + oldTag);
+                AlgoliaUtils.deleteTagInAlgolia(oldTag, postingInfo.getPostingId());
+            }
+        }
+
+        //newTag를 돌면서 newTag중에 oldTag에 없는 건 추가한다.
+        for(final String newTag : postingInfo.getTag().keySet()){
+            boolean isExist = false;
+            for(final String oldTag : oldTagMap.keySet()){
+                if(newTag.equals(oldTag)) {
+                    isExist = true;break;
+                }
+            }
+            if(!isExist) {
+                Log.d(TAG, "add tag : " + newTag);
+                AlgoliaUtils.addTagData(newTag, postingInfo.getPostingId());
+            }
+        }
+    }
     //local broad cast을 통해 수정사항을 전달한다.
     void sendPostingDataToLocalBrdcast(){
         Log.d(TAG, "sendPostingDataToLocalBrdcast : " + postingInfo.getPostingId());
         Intent intent = new Intent(postingInfo.getPostingId());//intent filter는 postingId!!!
         intent.putExtra("hashTags", description.getText().toString());
         intent.putExtra("aver_star", Float.parseFloat(starText.getText().toString()));
+        intent.putExtra("tag", (HashMap)postingInfo.getTag());
+
 
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
         //받는 곳.
         //1. subactivity에서 dishview가 켜졌으면, SectionListDataAdapter와 dishView
         //2. MyPage에서 dishView가 켜졌으면, SectionListDataAdapter와 myPage와 dishView
         //3. 가게페이지에서 켜졌으면, SectionListDataAdapter와 storePage와 dishView
+
     }
 
     //postingInfo의 별점을 storeInfo에 넣어준다.
     //평점 바꾸어주는 코드 필요. 데이터 write까지
-    //lastShareFragment와 중복된 코드!!!
+    //TODO: 리팩토링 lastShareFragment와 중복된 코드!!!
     private void changeStarAndUpdateStoreData(final float newStar, final String storeId) {
         Log.d(TAG, "changeStarAndUpdateStoreData.");
         //트랜잭션으로 원자적으로 사용. 데이터 가져와서 세팅!
@@ -202,15 +254,4 @@ public class EditActivity extends AppCompatActivity {
 
     }
 
-    //local broad cast을 통해 수정사항을 전달한다.
-//    void sendStoreDataToLocalBrdcast(double newAverStar){
-//        Log.d(TAG, "sendStoreDataToLocalBrdcast : " + storeInfo.getStoreId());
-//        Intent intent = new Intent(storeInfo.getStoreId());//intent filter는 postingId!!!
-//        intent.putExtra("aver_star", newAverStar);
-//
-//        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
-//        //받는 곳.
-//        //1. subactivity에서 dishview가 켜졌으면, RecyclerViewDataAdapter
-//        //3. 가게페이지에서 켜졌으면, RecyclerViewDataAdapter와 storePage ??
-//    }
 }

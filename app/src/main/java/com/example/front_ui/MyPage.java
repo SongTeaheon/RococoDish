@@ -351,6 +351,8 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
     }
 }
 
+
+//TODO: 데이터 불러오는 걸 adapter에서
 class MyAdapter extends BaseAdapter {
     private final String TAG = "TAGMyAdapter";
     FirebaseFirestore db;

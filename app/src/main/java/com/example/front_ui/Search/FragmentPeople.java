@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.front_ui.DataModel.FragmentPeopleData;
+import com.example.front_ui.DataModel.UserInfo;
 import com.example.front_ui.R;
 import com.example.front_ui.Search.FragmantPeopleRecyclerViewAdapter;
 
@@ -20,13 +21,13 @@ public class FragmentPeople extends Fragment {
 
     private RecyclerView recyclerView;
     private FragmantPeopleRecyclerViewAdapter adapter;
-    private ArrayList<FragmentPeopleData> list = new ArrayList<>();
+    private ArrayList<UserInfo> list = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.search_fragment_people, container, false);
-
+        list = ((SubSearchPage)getActivity()).getUserList();
         recyclerView = (RecyclerView) rootView.findViewById(R.id.peopleRecyclerView);
 
         adapter = new FragmantPeopleRecyclerViewAdapter(list);

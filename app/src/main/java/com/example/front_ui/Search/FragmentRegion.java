@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.front_ui.DataModel.FragmentRegionData;
+import com.example.front_ui.DataModel.SearchedData;
 import com.example.front_ui.R;
 import com.example.front_ui.Search.FragmantRegionRecyclerViewAdapter;
 
@@ -20,13 +21,14 @@ public class FragmentRegion extends Fragment {
 
     private RecyclerView recyclerView;
     private FragmantRegionRecyclerViewAdapter adapter;
-    private ArrayList<FragmentRegionData> list = new ArrayList<>();
+    private ArrayList<SearchedData> list;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.search_fragment_region, container, false);
 
+        list = ((SubSearchPage)getActivity()).getRegionList();
         recyclerView = (RecyclerView) rootView.findViewById(R.id.regionRecyclerView);
 
         adapter = new FragmantRegionRecyclerViewAdapter(list);
