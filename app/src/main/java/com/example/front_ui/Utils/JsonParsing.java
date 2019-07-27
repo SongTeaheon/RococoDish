@@ -2,6 +2,7 @@ package com.example.front_ui.Utils;
 
 import android.util.Log;
 
+import com.example.front_ui.DataModel.AlgoliaTagData;
 import com.example.front_ui.DataModel.KakaoLocalInfo;
 import com.example.front_ui.DataModel.KakaoMetaData;
 import com.example.front_ui.DataModel.KakaoStoreInfo;
@@ -108,10 +109,15 @@ public class JsonParsing {
 
     public static ArrayList<UserInfo> getUserListFromJsonList(JSONArray jsonArray){
         ArrayList<UserInfo> list = new ArrayList<>();
+
         for(int k = 0; k < jsonArray.length(); k++){
             String jsonStr = null;
+//            UserInfo userInfo = new UserInfo();
             try {
                 JSONObject jsonObject = jsonArray.getJSONObject(k);
+//                JSONObject jsonObject = jsonArray.getJSONObject(k).getJSONObject("_highlightResult");
+//                userInfo.nickname = (String)jsonObject.get("nickname");
+//                userInfo.eMail = (String)jsonObject.get("eMail");
                 jsonStr = jsonObject.toString();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -123,6 +129,70 @@ public class JsonParsing {
             list.add(userInfo);
         }
         return list;
+    }
+
+    public static ArrayList<AlgoliaTagData> getTagListFromJsonList(JSONArray jsonArray){
+        ArrayList<AlgoliaTagData> list = new ArrayList<>();
+        for(int k = 0; k < jsonArray.length(); k++){
+            AlgoliaTagData data = new AlgoliaTagData();
+            try {
+                JSONObject jsonObject = jsonArray.getJSONObject(k).getJSONObject("_highlightResult");
+                data.setPostingIds(jsonObject.getJSONObject("postingIds").getString("value"));
+                data.setPostingNum(Integer.parseInt(jsonObject.getJSONObject("postingNum").getString("value")));
+                data.setText(jsonArray.getJSONObject(k).getString("text"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            list.add(data);
+        }
+        return list;
+    }
+
+    public static String getFirstAlgoliaId(JSONArray jsonArray){
+        String algId = null;
+        try {
+            JSONObject jsonObject = jsonArray.getJSONObject(0);
+            algId = jsonObject.getString("objectID");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return algId;
+    }
+
+    public static String getFirstAlgoliaNum(JSONArray jsonArray){
+        String algId = null;
+        String numStr = "0";
+        try {
+            numStr = jsonArray.getJSONObject(0).getJSONObject("_highlightResult").getJSONObject("num").getString("value");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "getNum : " + numStr);
+        return numStr;
+    }
+
+    public static String getFirstAlgoliaText(JSONArray jsonArray){
+        String algId = null;
+        String text = null;
+        try {
+            text = jsonArray.getJSONObject(0).getString("text");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "getNum : " + text);
+        return text;
+    }
+
+    public static String getFirstAlgoliaPostingIds(JSONArray jsonArray){
+        String algId = null;
+        String postingIds = null;
+        try {
+            postingIds = jsonArray.getJSONObject(0).getJSONObject("_highlightResult").getJSONObject("postingIds").getString("value");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "postingIds : " + postingIds);
+        return postingIds;
     }
 
 }

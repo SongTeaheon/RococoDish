@@ -21,12 +21,15 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.front_ui.DataModel.AlgoliaTagData;
 import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.Interface.AlgoliaSearchPredicate;
 import com.example.front_ui.R;
 import com.example.front_ui.Utils.AlgoliaUtils;
 import com.example.front_ui.Utils.GlideApp;
+import com.example.front_ui.Utils.JsonParsing;
 import com.example.front_ui.Utils.RatingBarUtils;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,6 +54,7 @@ import com.google.firebase.storage.UploadTask;
 import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
 import org.imperiumlabs.geofirestore.GeoFirestore;
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -294,6 +298,7 @@ public class LastShareFragment extends Fragment {
         //TODO : 파이어스토어 넣을시에 태그는 맵으로 변환시킴
         List<String> allHashTag = editHashTagHelper.getAllHashTags();
         Map<String, Boolean> tagMap = new HashMap<>();
+
         for(String i : allHashTag){
             tagMap.put(i, true);
         }
@@ -475,6 +480,16 @@ public class LastShareFragment extends Fragment {
         //db에 데이터를 넣는 코드 필요
         final String docUUID = UUID.randomUUID().toString();
         postingInfo.setPostingId(docUUID);
+
+
+        //알골리아에 tag를 올린다.
+        for(final String tag : postingInfo.getTag().keySet()){
+            AlgoliaUtils.addTagData(tag, postingInfo.getPostingId());
+        }
+
+
+
+
         //posting document uuid
         postingInfo.setStoreId(storeId);
         db.collection("가게").document(storeId).collection("포스팅채널").document(docUUID)

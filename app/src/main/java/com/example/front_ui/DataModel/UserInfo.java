@@ -9,6 +9,7 @@ public class UserInfo {
     public int postingNum;
     //망할 깃헙 테스트
 
+
     public UserInfo(String eMail,
                     String nickName,
                     String profileImage,
@@ -25,6 +26,10 @@ public class UserInfo {
 
     public String getNickname() {
         return nickname;
+    }
+
+    public int getPostingNum() {
+        return postingNum;
     }
 
     public UserInfo() {

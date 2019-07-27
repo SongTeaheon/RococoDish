@@ -2,7 +2,6 @@ package com.example.front_ui.Utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -18,7 +17,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -33,12 +31,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 public class DeleteUtils {
 
@@ -50,7 +44,7 @@ public class DeleteUtils {
                                      final FirebaseFirestore db,
                                      FirebaseStorage storage,
                                      final String storeDocId,
-                                     String postingDocId,
+                                     PostingInfo postingInfo,
                                      final String imagePath,
                                      final double postingAverStar){
 
@@ -64,7 +58,12 @@ public class DeleteUtils {
 
 
         Log.d(TAG, "firebase delete posting");
+        String postingDocId = postingInfo.getPostingId();
 
+        //알골리아 태그 삭제.
+        for(final String tag : postingInfo.getTag().keySet()){
+            AlgoliaUtils.deleteTagInAlgolia(tag, postingDocId);
+        }
 
         //posting colletion에서 삭제(필드만 삭제)
         db.collection("포스팅").document(postingDocId)
@@ -173,7 +172,7 @@ public class DeleteUtils {
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Store Data DocumentSnapshot in store collection successfully deleted!");
                         //삭제하면서 algolia에서 id로 검색해서 지워준다.
-                        deleteStoreInAlgolia(storeDocId);
+                        AlgoliaUtils.deleteInAlgolia("store", "storeId", storeDocId);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -184,33 +183,7 @@ public class DeleteUtils {
                 });
     }
 
-    //algolia에서 가게 데이터를 지운다.
-    private static void deleteStoreInAlgolia(String storeFirebaseId){
 
-        final Index index = AlgoliaUtils.client.getIndex("store");
-
-        //1. 먼저 가게 데이터를 찾는다.
-        AlgoliaUtils.searchStore("store", "storeId", storeFirebaseId, new AlgoliaSearchPredicate() {
-            @Override
-            public void gettingJSONArrayCompleted(JSONArray jsonArray) {
-                for(int k = 0; k < jsonArray.length(); k++){
-                    String jsonStr = null;
-                    try {
-                        JSONObject jsonObject = jsonArray.getJSONObject(k);
-                        String idStr = jsonObject.getString("objectID");
-                        Log.d(TAG, "algolia 삭제! objectId" + idStr );
-                        index.deleteObjectAsync(idStr, null);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    Gson gson = new Gson();
-                    StoreInfo storeInfo = gson.fromJson(jsonStr, StoreInfo.class);
-
-                }
-            }
-        });
-    }
 
 
     //postingInfo의 별점을 storeInfo에 넣어준다.

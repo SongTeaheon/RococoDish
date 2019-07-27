@@ -1,10 +1,12 @@
 package com.example.front_ui.Search;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.front_ui.DataModel.AlgoliaTagData;
 import com.example.front_ui.DataModel.SearchedData;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.DataModel.UserInfo;
@@ -48,22 +51,28 @@ public class SubSearchPage extends AppCompatActivity {
     //TODO: 리팩토링 : kakao api utils따로 만들어서 StoreSearchFragment코드랑 합치기
     private final String kakaoApiId = "KakaoAK 952900bd9ca440b836d9c490525aef64";
 
-
-
+    SimpleCursorAdapter mAdapter = null;
+    MyDBHandler dbHandler;
     EditText editText;
     ImageView searchBtn;
     ImageView backBtn;
 
     //검색결과 리스트
-    public ArrayList<StoreInfo> storeList;
-    public ArrayList<SearchedData> regionList;
-    public ArrayList<UserInfo> userList;
+    ArrayList<StoreInfo> storeList;
+    ArrayList<SearchedData> regionList;
+    ArrayList<UserInfo> userList;
+    ArrayList<AlgoliaTagData> tagList;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sub_search_page);
+
+        storeList = new ArrayList<>();;
+        regionList = new ArrayList<>();
+        userList = new ArrayList<>();
 
         editText = findViewById(R.id.mainsearch_text);
         //검색 버튼
@@ -73,11 +82,11 @@ public class SubSearchPage extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d(TAG, "search button is clicked");
                 String keyword = editText.getText().toString();
-                //1. 가게이름 검색
+                dbHandler.insert(keyword);
+
                 getRegionSearchResult(keyword);
                 getPeopleSearchResult(keyword);
-                //TODO: 태그 검색 만들기
-//                getTagSearchResult(keyword);
+                getTagSearchResult(keyword);
                 getStoreSearchResult(keyword);
 
             }
@@ -93,6 +102,19 @@ public class SubSearchPage extends AppCompatActivity {
             }
         });
 
+        //검색 기록을 위한 DB
+        if( dbHandler == null ) {
+            dbHandler = MyDBHandler.open(this);
+        }
+        Cursor c = dbHandler.select();
+        Log.d(TAG, "record index : " + c.getColumnIndex("RECORD"));
+        Log.d(TAG, "record size : " + c.getCount());
+
+        if(c.getCount() != 0)
+            dbHandler.getAllRecordData();
+//        mAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_list_item_activated_2,
+//                c, new String[]{"id", "record"}, new int[]{android.R.id.text1, android.R.id.text2}, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        //id와 record를 찍어보자
 
         BottomNavigationViewEx bottomNavigationViewEx = findViewById(R.id.bottom_bar);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -128,7 +150,7 @@ public class SubSearchPage extends AppCompatActivity {
 
 
     void getStoreSearchResult(String keyword){
-        AlgoliaUtils.searchStore("store", "name", keyword, new AlgoliaSearchPredicate() {
+        AlgoliaUtils.searchData("store", "name", keyword, new AlgoliaSearchPredicate() {
             @Override
             public void gettingJSONArrayCompleted(JSONArray jsonArray) {
                 storeList =  JsonParsing.getStoreListFromJsonList(jsonArray);
@@ -140,12 +162,25 @@ public class SubSearchPage extends AppCompatActivity {
     }
 
     void getPeopleSearchResult(String keyword){
-        AlgoliaUtils.searchStore("user", "nickname", keyword, new AlgoliaSearchPredicate() {
+        AlgoliaUtils.searchData("user", "nickname", keyword, new AlgoliaSearchPredicate() {
             @Override
             public void gettingJSONArrayCompleted(JSONArray jsonArray) {
                 userList =  JsonParsing.getUserListFromJsonList(jsonArray);
                 for(int i = 0; i < userList.size(); i++){
                     Log.d(TAG, "user data " + i + " : "+ userList.get(i).getNickname());
+                }
+            }
+        });
+    }
+
+    void getTagSearchResult(String keyword){
+        //TODO: exact 아님 그냥 data로 바꿔야함. 그냥 테스트용
+        AlgoliaUtils.searchData("tag", "text", keyword, new AlgoliaSearchPredicate() {
+            @Override
+            public void gettingJSONArrayCompleted(JSONArray jsonArray) {
+                tagList =  JsonParsing.getTagListFromJsonList(jsonArray);
+                for(int i = 0; i < tagList.size(); i++){
+                    Log.d(TAG, "tag data " + i + " : "+ tagList.get(i).getText());
                 }
             }
         });
@@ -274,5 +309,18 @@ public class SubSearchPage extends AppCompatActivity {
         }
     }
 
+    /********************************* 데이터 전달을 위한 함수 - 리팩토링 필요한가?? *********************************/
+    public ArrayList<StoreInfo> getStoreList(){
+        return storeList;
+    }
+    public ArrayList<SearchedData> getRegionList(){
+        return regionList;
+    }
+    public ArrayList<UserInfo> getUserList(){
+        return userList;
+    }
+//    public ArrayList<StoreInfo> getTagList(){
+//        return tagList;
+//    }
 
 }

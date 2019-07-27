@@ -216,12 +216,7 @@ public class DishView extends AppCompatActivity {
          **/
 
         hashTagText = findViewById(R.id.hashTag_textview_dishView);
-//        if(postingInfo.hashTags != null){
-//            setTags(hashTagText, postingInfo.hashTags);
-//        }
-//        else{
-//            setTags(hashTagText, "게시물 내용이 없습니다.");
-//        }
+
         if(postingInfo.hashTags != null){
             hashTagText.setText(postingInfo.hashTags);
             textHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.MainColor), new HashTagHelper.OnHashTagClickListener() {
@@ -281,7 +276,7 @@ public class DishView extends AppCompatActivity {
                                     commentList.clear();
                                     Log.d(TAG, "size : " + commentList.size());
                                     commentAdapter.notifyDataSetChanged();
-                                    DeleteUtils.deletePosting(mContext,  db, storage, storeId, postingId, imagePath, postingAverStar);
+                                    DeleteUtils.deletePosting(mContext,  db, storage, storeId, postingInfo, imagePath, postingAverStar);
                                 }
                             })
                             .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -815,12 +810,13 @@ public class DishView extends AppCompatActivity {
             Log.d(TAG, "brdCastRecevie : " + intent.getStringExtra("hashTags"));
             postingInfo.setHashTags(intent.getStringExtra("hashTags"));
             postingInfo.setAver_star(intent.getFloatExtra("aver_star", 0.0f));
+            postingInfo.setTag((HashMap)intent.getSerializableExtra("tag"));
 
             if(postingInfo.hashTags != null){
-                setTags(hashTagText, postingInfo.hashTags);
+                hashTagText.setText(postingInfo.hashTags);
             }
             else{
-                setTags(hashTagText, "게시물 내용이 없습니다.");
+                hashTagText.setText("게시물 내용이 없습니다.");
             }
             tvScore.setText(Double.toString(postingInfo.getAver_star()));
 
