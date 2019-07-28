@@ -30,6 +30,7 @@ import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Edit.BroadcastUtils;
 import com.example.front_ui.Utils.GlideApp;
+import com.example.front_ui.Utils.GlidePlaceHolder;
 import com.example.front_ui.Utils.LocationUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.ImmutableMap;
@@ -414,7 +415,10 @@ class MyAdapter extends BaseAdapter {
         final PostingInfo singleItem = list.get(position);
         Log.d(TAG, "downloadImageFromFirebaseStorage : " + singleItem.imagePathInStorage);
         StorageReference fileReference = storage.getReferenceFromUrl(singleItem.imagePathInStorage);
-        GlideApp.with(mContext).load(fileReference).into(iv);
+        GlideApp.with(mContext)
+                .load(fileReference)
+                .placeholder(GlidePlaceHolder.circularPlaceHolder(mContext))
+                .into(iv);
 
 //태완태완 이미지 선택시 반응입니다. 여기가 그 각 포스팅1 글 누르면 발생하는 이벤트 부분입니다.
         convertView.setOnClickListener(new View.OnClickListener() {

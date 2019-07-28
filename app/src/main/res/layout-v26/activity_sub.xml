@@ -100,8 +100,6 @@
                 android:layout_height="match_parent"
                 android:background="@color/colorWhite">
 
-
-
                 <!--오늘 뭐먹지 부분-->
                 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/myPage_cardview_activitySub"

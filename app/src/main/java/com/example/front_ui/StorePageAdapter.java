@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StorePostInfo;
 import com.example.front_ui.Utils.GlideApp;
+import com.example.front_ui.Utils.GlidePlaceHolder;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -62,6 +63,7 @@ public class StorePageAdapter extends BaseAdapter {
                 .getReferenceFromUrl(list.get(position).getPostImagePath());
         GlideApp.with(context)
                 .load(fileReference)
+                .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
                 .into(postImage);
 
         //게시물당 별점

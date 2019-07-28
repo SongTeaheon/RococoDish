@@ -17,13 +17,19 @@ import android.widget.TextView;
 import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.Utils.GlideApp;
+import com.example.front_ui.Utils.GlidePlaceHolder;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.CocomentViewHolder> {
 
@@ -72,11 +78,30 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CocomentViewHolder cocomentViewHolder, final int i) {
+    public void onBindViewHolder(@NonNull final CocomentViewHolder cocomentViewHolder, final int i) {
         //프로필 이미지 부분
-        GlideApp.with(context)
-                .load(cocomentList.get(i).getImgPath())
-                .into(cocomentViewHolder.userImage);
+//        GlideApp.with(context)
+//                .load(cocomentList.get(i).getImgPath())
+//                .into(cocomentViewHolder.userImage);
+        //todo : 이전과 다르게 실시간 이미지 반영
+        FirebaseFirestore.getInstance()
+                .collection("사용자")
+                .document(cocomentList.get(i).getCommentWriterId())
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if(e != null){
+                            Log.d(TAG, e.getMessage());
+                        }
+                        if(documentSnapshot.exists()){
+
+                            GlideApp.with(context.getApplicationContext())
+                                    .load(documentSnapshot.get("profileImage"))
+                                    .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
+                                    .into(cocomentViewHolder.userImage);
+                        }
+                    }
+                });
 
         //유저이름 부분
         cocomentViewHolder.userName.setText(cocomentList.get(i).getWriterName());
