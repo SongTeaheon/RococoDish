@@ -33,6 +33,7 @@ import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.ImmutableMap;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -55,6 +56,8 @@ import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 import com.kakao.util.helper.log.Logger;
 import com.volokh.danylo.hashtaghelper.HashTagHelper;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -142,8 +145,7 @@ public class DishView extends AppCompatActivity {
             Log.e(TAG, "intent is null");
         }
 
-        //게시물 시간 설정
-        postTime = findViewById(R.id.textViewDay);
+
         //todo : 시간을 객체로 저장해서 문자로 변환이 안됨......(태헌님 부탁해요~ㅠ)
 
         //dist
@@ -156,6 +158,11 @@ public class DishView extends AppCompatActivity {
                 " star :  " + storeInfo.getAver_star());
         distance = (double) intent.getDoubleExtra("distance", 0.0);
         Log.d(TAG, "거리(미터단위) : " + distance);
+
+        //게시물 시간 설정
+        postTime = findViewById(R.id.textViewDay);
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        postTime.setText(transFormat.format(postingInfo.getPostingTime()));
 
 
         /*
@@ -260,7 +267,6 @@ public class DishView extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "edit button clicked");
-                    //TODO: 수정기능
                     Toast.makeText(getApplicationContext(), "edit button clicked", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(DishView.this, EditActivity.class);
                     intent.putExtra("postingInfo", postingInfo);

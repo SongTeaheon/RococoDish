@@ -164,7 +164,6 @@ public class EditActivity extends AppCompatActivity {
 
     void changeTagOnAlgolia(){
         //1. old태그 삭제
-        //TODO: 너무 무식한 알고리즘. 생각좀 더 해볼 필요가 있음
         //oldTag를 돌면서 oldTag중에 newTAG에 없는 걸 찾아서 지운다.
         for(final String oldTag : oldTagMap.keySet()){
             boolean isExist = false;
@@ -212,7 +211,7 @@ public class EditActivity extends AppCompatActivity {
 
     //postingInfo의 별점을 storeInfo에 넣어준다.
     //평점 바꾸어주는 코드 필요. 데이터 write까지
-    //TODO: 리팩토링 lastShareFragment와 중복된 코드!!!
+    //FIXME: 리팩토링 lastShareFragment와 중복된 코드!!!
     private void changeStarAndUpdateStoreData(final float newStar, final String storeId) {
         Log.d(TAG, "changeStarAndUpdateStoreData.");
         //트랜잭션으로 원자적으로 사용. 데이터 가져와서 세팅!

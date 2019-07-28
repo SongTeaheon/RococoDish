@@ -283,7 +283,6 @@ public class StoreSearchFragment extends Fragment {
             try {
                 temp.add((KakaoStoreInfo)list_item.clone());
             } catch (CloneNotSupportedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

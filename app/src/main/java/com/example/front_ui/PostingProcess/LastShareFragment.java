@@ -152,7 +152,6 @@ public class LastShareFragment extends Fragment {
         //해쉬태그 처리
         tags = (EditText)view.findViewById(R.id.hashTag);
 
-        //todo : 태그 기능보완 라이브러리
         editHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.MainColor), new HashTagHelper.OnHashTagClickListener() {
             @Override
             public void onHashTagClicked(String hashTag) {
@@ -295,7 +294,6 @@ public class LastShareFragment extends Fragment {
         postingInfo.storeName = kakaoStoreInfo.place_name;
         postingInfo.address = kakaoStoreInfo.address_name;
 
-        //TODO : 파이어스토어 넣을시에 태그는 맵으로 변환시킴
         List<String> allHashTag = editHashTagHelper.getAllHashTags();
         Map<String, Boolean> tagMap = new HashMap<>();
 
