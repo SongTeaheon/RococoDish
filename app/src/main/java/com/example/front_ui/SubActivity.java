@@ -355,6 +355,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         my_recycler_view.setHasFixedSize(true);
         //가게 안에 목록 가져오는 리사이클러뷰
         recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter);
+        recyclerViewDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
         my_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         my_recycler_view.setAdapter(recyclerViewDataAdapter);
     }

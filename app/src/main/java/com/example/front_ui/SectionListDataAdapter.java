@@ -133,6 +133,12 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         return (null != list ? list.size() : 0);
     }
 
+    @Override
+    public long getItemId(int position) {
+        PostingInfo postingInfo = list.get(position);
+        return postingInfo.getViewId();
+    }
+
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageView;
@@ -143,7 +149,6 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             this.view = view;
             Log.d(TAG, "singleItemRowHolder");
             this.imageView = (ImageView) view.findViewById(R.id.imagefood);
-
         }
 
     }
@@ -166,13 +171,15 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 PostingInfo post = document.toObject(PostingInfo.class);
+                                post.setViewId(list.size()+1);
                                 list.add(post);
                             }
                             //post데이터가 들어오면 리사이클러뷰를 refresh한다.
+                            Log.d(TAG, "notifyDataSetChanged!!!!!!!!!");
+                            notifyDataSetChanged();
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
-                        notifyDataSetChanged();
                     }
                 });
 

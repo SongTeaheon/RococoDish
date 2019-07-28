@@ -17,6 +17,8 @@ import android.widget.Toast;
 import com.example.front_ui.Utils.LocationUtil;
 import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -25,6 +27,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.example.front_ui.DataModel.StoreInfo;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.imperiumlabs.geofirestore.GeoFirestore;
 import org.imperiumlabs.geofirestore.GeoQuery;
@@ -37,13 +41,15 @@ import javax.annotation.Nullable;
 
 public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDataAdapter.ItemRowHolder> { // 세로 리사이클러 뷰를 위한 어뎁터
 
+
+
     private ArrayList<StoreInfo> list;
     private Context mContext;
     private static final String TAG = "TAGRecyclerViewAdapter";
     FirebaseFirestore db;
     SectionListDataAdapter itemListDataAdapter;
     private Location mCurrentLocation;
-
+    int isCalled;//onBindView가 다음으로 몇 번째가 불릴 건지 센다. - 중복해서 불리는 건 세지 않는다.
 
 
 
@@ -55,11 +61,12 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         db = FirebaseFirestore.getInstance();
         mCurrentLocation = cLocation;
         getCloseStoreIdAndGetData();
+        isCalled = 0;
     }
 
     @Override
     public ItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        Log.d(TAG, "onCreateViewHolder");
+        Log.d(TAG, "onCreateViewHolder ");
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.vertical_items, null);
         ItemRowHolder mh = new ItemRowHolder(v);
         return mh;
@@ -67,16 +74,9 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
     @Override
     public void onBindViewHolder(ItemRowHolder itemRowHolder, final int i) {
-        Log.d(TAG, "onBindViewHolder");
+        Log.d(TAG, "onBindViewHolder : " + i);
         Log.d(TAG, "storeId : " + list.get(i).getStoreId());
         final StoreInfo singleItem = list.get(i);
-
-        //데이터 수정이 일어난 데이터가 클릭되면 수정된 데이터를 여기에서 반영해야함1!! receive 필터 아이디는 postingId
-//        LocalBroadcastManager
-//                .getInstance(mContext)
-//                .registerReceiver(BroadcastUtils.getBrdCastReceiver_store(singleItem),
-//                        new IntentFilter(singleItem.getStoreId()));
-//        Log.d(TAG, "data check : aver_store_star : " + singleItem.getAver_star());
 
         final String sectionName = singleItem.getName();
         final double sectionStar = singleItem.aver_star;
@@ -94,12 +94,20 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         itemRowHolder.storeAddress.setText(address);
         //to do : distance 표시
 
-        itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance);
+        if(isCalled <= i) {
+            itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance);
+            itemListDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
+            itemRowHolder.recycler_view_list.setHasFixedSize(true);
+            itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+            itemRowHolder.recycler_view_list.setAdapter(itemListDataAdapter);
+            if(isCalled == 3) { //3번 째가 불리면 눈에 보이는 데이터는 일단 내려왔다고 생각!
+                //TODO: 태완님 여기가 보이는 창 로딩 완료 위치입니다.
+                Toast.makeText(mContext, "done timing2", Toast.LENGTH_SHORT).show();
+            }
 
-        itemRowHolder.recycler_view_list.setHasFixedSize(true);
-        itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-        itemRowHolder.recycler_view_list.setAdapter(itemListDataAdapter);
 
+            isCalled = i+1;
+        }
 
 
 
@@ -126,7 +134,13 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         return (null != list ? list.size() : 0);
     }
 
-    public class ItemRowHolder extends RecyclerView.ViewHolder {
+    @Override
+    public long getItemId(int position) {
+        StoreInfo storeInfo = list.get(position);
+        return storeInfo.getViewId();
+    }
+
+    static class ItemRowHolder extends RecyclerView.ViewHolder {
 
         public CardView touchStore;
         public TextView storeName;
@@ -157,7 +171,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
 
     //내 위치 주변 10km 가게 찾기.
-    private int radius = 5;
+    private int radius = 2;
     HashSet<String> dcSet = new HashSet<>(); //중복x
     private void getCloseStoreIdAndGetData() {
 
@@ -172,11 +186,10 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
             //내 위치에서 radius만큼 떨어진 곳에 가게들이 있을 떄! -> 데이터를 가져온다.
             @Override
             public void onKeyEntered(String documentID, GeoPoint location) {
-                if(!dcSet.contains(documentID) && (radius < 50 && dcSet.size() < 50)) {
+                if(!dcSet.contains(documentID) && (radius <= 1000 /*&& dcSet.size() < 50*/)) {
                     Log.d(TAG, String.format("Document %s entered the searc area at [%f,%f] (radius : %d)", documentID, location.getLatitude(), location.getLongitude(), radius));
                     dcSet.add(documentID);
                     getStoreDataFromCloud(documentID, radius);
-
                 }
             }
 
@@ -195,8 +208,14 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
             public void onGeoQueryReady() {
                 Log.d(TAG, "All initial data has been loaded and events have been fired!" + radius +" size : "+ dcSet.size()+"mypoint "+myPoint.getLatitude()+" "+ myPoint.getLongitude());
                 //가게 수가 50개가 넘거나 반경이 100km가 넘으면 STOP
-                if(dcSet.size() < 50 && radius < 50) {
-                    radius += 5;
+                if(radius < 10){
+                    radius += 2;
+                    getCloseStoreIdAndGetData();
+                }else if( radius < 50){
+                    radius += 10;
+                    getCloseStoreIdAndGetData();
+                }else if( radius < 1000){
+                    radius = 1000;
                     getCloseStoreIdAndGetData();
                 }
             }
@@ -228,10 +247,11 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                                 //해당 가게 정보의 post데이터를 가져온다.
                                 //소수점 한자리로 반올림.
                                 storeInfo.aver_star = MathUtil.roundOnePlace(storeInfo.aver_star);
-                                Log.d(TAG, "가게이름 : " + storeInfo.name + " radius : " + radius);
+                                storeInfo.setViewId(list.size()+1);//size가 storeInfo의 viewId가 된다.
+
+                                Log.d(TAG, "가게이름 : " + storeInfo.name + " radius : " + radius + " listSize : "+ list.size());
                                 list.add(storeInfo);
                                 notifyDataSetChanged();
-//                                notifyItemChanged(list.size()+1);//이 부분 수정하니까 깜빡이는 부분 사라짐.
                             }
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());

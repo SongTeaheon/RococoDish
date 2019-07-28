@@ -25,6 +25,9 @@ public class PostingInfo implements Serializable {
     public float aver_star;
     public String hashTags;
 
+    private int viewId; //recyclervieadapter에서만 쓰이는 데이터입니다. 신경안쓰셔도 됩니당
+
+
     public PostingInfo() {
     }
 
@@ -167,5 +170,13 @@ public class PostingInfo implements Serializable {
 
     public String getHashTags() {
         return hashTags;
+    }
+
+    public int getViewId() {
+        return viewId;
+    }
+
+    public void setViewId(int viewId) {
+        this.viewId = viewId;
     }
 }
