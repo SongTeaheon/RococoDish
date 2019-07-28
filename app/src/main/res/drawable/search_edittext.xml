@@ -6,4 +6,7 @@
     <solid
         android:color="#DEE2E3"
         />
+    <padding
+        android:left="12dp"
+        />
 </shape>
