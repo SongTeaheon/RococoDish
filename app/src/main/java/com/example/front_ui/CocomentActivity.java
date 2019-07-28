@@ -78,7 +78,7 @@ public class CocomentActivity extends AppCompatActivity {
 
                             myImagePath.put(0, documentSnapshot.getData().get("profileImage").toString());
 
-                            GlideApp.with(CocomentActivity.this)
+                            GlideApp.with(getApplicationContext())
                                     .load(myImagePath.get(0))
                                     .into(cocomentImage);
 
@@ -86,14 +86,13 @@ public class CocomentActivity extends AppCompatActivity {
                     }
                 });
 
-        //todo : 받은 댓글정보가 있을 경우에만 실행
+        //받은 댓글정보가 있을 경우에만 실행
         if(commentInfo != null && postingInfo != null){
 
-            //todo : 댓글 정보를 가져와서 붙임 & 대댓글에 내 프로필 이미지 적용
+            //댓글 정보를 가져와서 붙임 & 대댓글에 내 프로필 이미지 적용
             setCommentAndMyImage(commentInfo);
 
-            //todo : 대댓글 작성을 눌렀을 경우 실행
-
+            //대댓글 작성을 눌렀을 경우 실행
             final String cocomentUuid = UUID.randomUUID().toString();
             writeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -124,6 +123,7 @@ public class CocomentActivity extends AppCompatActivity {
                                 Log.d(TAG, "대댓글이 업로드되었습니다.");
                             }
                         });
+                        //키보드 자동으로 닫아줌.
                         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                         finish();

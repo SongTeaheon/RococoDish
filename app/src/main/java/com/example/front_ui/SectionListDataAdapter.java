@@ -1,6 +1,7 @@
 package com.example.front_ui;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,8 @@ import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Edit.BroadcastUtils;
 import com.example.front_ui.Utils.DataPassUtils;
 import com.example.front_ui.Utils.GlideApp;
+import com.example.front_ui.Utils.GlidePlaceHolder;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -62,6 +66,13 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     StoreInfo storeInfo;
     double distance;
     private String uuid;
+    LoadingProgressDialog dialog;
+
+    public SectionListDataAdapter(Context context,
+                                  StoreInfo storeInfo,
+                                  double distance,
+                                  LoadingProgressDialog dialog) {
+
     int index;
 
     public SectionListDataAdapter(Context context, StoreInfo storeInfo, double distance, int index) {
@@ -75,6 +86,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         storageReference = storage.getReference();
         list = new ArrayList<>();
         getPostDataFromCloud(storeInfo.getStoreId());
+        this.dialog = dialog;
     }
 
 
@@ -179,6 +191,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                             //post데이터가 들어오면 리사이클러뷰를 refresh한다.
                             Log.d(TAG, "notifyDataSetChanged!!!!!!!!!");
                             notifyDataSetChanged();
+
                             if(index == 3) //TODO: 태완님 여기가 done타이밍입니당
                                 Toast.makeText(mContext, "done timing2", Toast.LENGTH_SHORT).show();
 
@@ -186,7 +199,12 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
                     }
-                });
+                }).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                dialog.dismiss();
+            }
+        });
 
 
     }

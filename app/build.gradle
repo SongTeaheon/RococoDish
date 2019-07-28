@@ -123,6 +123,9 @@ dependencies {
 
     //해쉬태그
     implementation 'com.github.danylovolokh:hashtag-helper:1.1.0'
+
+    //에어비앤비 로티 애니메이션
+    implementation 'com.airbnb.android:lottie:2.3.0'
 }
 
 

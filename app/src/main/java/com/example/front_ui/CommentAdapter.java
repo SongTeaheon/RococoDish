@@ -22,6 +22,7 @@ import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.Utils.DeleteUtils;
 import com.example.front_ui.Utils.GlideApp;
+import com.example.front_ui.Utils.GlidePlaceHolder;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -94,9 +95,28 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     public void onBindViewHolder(@NonNull final CommentViewHolder commentViewHolder, final int i) {
 
         //프로필 사진 부분
-        GlideApp.with(context)
-                .load(parentList.get(i).getImgPath())
-                .into(commentViewHolder.image);
+//        GlideApp.with(context)
+//                .load(parentList.get(i).getImgPath())
+//                .into(commentViewHolder.image);
+        //todo : 이전과 다르게 실시간 댓글 작성자 프로필 이미지 반영
+        FirebaseFirestore.getInstance()
+                .collection("사용자")
+                .document(parentList.get(i).getCommentWriterId())
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if(e != null){
+                            Log.d(TAG, e.getMessage());
+                        }
+                        if(documentSnapshot.exists()){
+
+                            GlideApp.with(context.getApplicationContext())
+                                    .load(documentSnapshot.get("profileImage"))
+                                    .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
+                                    .into(commentViewHolder.image);
+                        }
+                    }
+                });
 
         //시간 부분
         Long time = parentList.get(i).getTime();

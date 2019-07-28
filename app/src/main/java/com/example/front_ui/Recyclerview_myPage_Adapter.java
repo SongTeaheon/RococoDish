@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.PostingProcess.MainShareActivity;
 import com.example.front_ui.Utils.GlideApp;
+import com.example.front_ui.Utils.GlidePlaceHolder;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,7 +62,10 @@ public class Recyclerview_myPage_Adapter extends RecyclerView.Adapter<Recyclervi
     public void onBindViewHolder(@NonNull final myPageItemHolder itemRowHolder, int i) {
         Log.d(TAG, "onBindviewHolder position : " + i);
 
-        GlideApp.with(context).load(list.get(i).imagePathInStorage).into(itemRowHolder.imageview);
+        GlideApp.with(context)
+                .load(list.get(i).imagePathInStorage)
+                .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
+                .into(itemRowHolder.imageview);
 
         //아이템 클릭시 이벤트
         itemRowHolder.itemView.setOnClickListener(new View.OnClickListener() {
