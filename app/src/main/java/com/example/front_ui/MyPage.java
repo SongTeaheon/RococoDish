@@ -304,9 +304,21 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         if(requestCode == RC_GALLERY && resultCode == Activity.RESULT_OK && data != null){
             Uri selectedImageFromGallery = data.getData();
 
+            UCrop.Options options = new UCrop.Options();
+//            options.setStatusBarColor(getResources().getColor(R.color.MainColor));
+//            options.setActiveControlsWidgetColor(getResources().getColor(R.color.MainColor));
+//            options.setCropGridColor(getResources().getColor(R.color.MainColor));
+//            options.setDimmedLayerColor(getResources().getColor(R.color.MainColor));
+//            options.setToolbarColor(getResources().getColor(R.color.MainColor));
+//            options.setLogoColor(getResources().getColor(R.color.MainColor));
+            options.setCropFrameColor(getResources().getColor(R.color.MainColor));
+//            options.setToolbarWidgetColor(getResources().getColor(R.color.MainColor));// 색변환
+//            options.setActiveWidgetColor(getResources().getColor(R.color.MainColor)); //아무변화 없음
+
             Uri destinationUri = Uri.fromFile(new File(getApplicationContext().getCacheDir(), "IMG_" + System.currentTimeMillis()));
             UCrop.of(selectedImageFromGallery, destinationUri)
                     .withAspectRatio(1, 1)
+                    .withOptions(options)
                     .withMaxResultSize(450, 450)
                     .start(this);
         }
@@ -339,6 +351,8 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
     }
 }
 
+
+//TODO: 데이터 불러오는 걸 adapter에서
 class MyAdapter extends BaseAdapter {
     private final String TAG = "TAGMyAdapter";
     FirebaseFirestore db;

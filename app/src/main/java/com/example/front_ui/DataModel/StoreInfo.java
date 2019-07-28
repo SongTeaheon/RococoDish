@@ -21,6 +21,8 @@ public class StoreInfo {
     private ArrayList<PostingInfo> allItemsInSection;
     public GeoPoint geoPoint;
 
+    private int viewId; //recyclervieadapter에서만 쓰이는 데이터입니다. 신경안쓰셔도 됩니당
+
 
     public StoreInfo() {
 
@@ -104,5 +106,13 @@ public class StoreInfo {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public int getViewId() {
+        return viewId;
+    }
+
+    public void setViewId(int viewId) {
+        this.viewId = viewId;
     }
 }

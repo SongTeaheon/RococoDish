@@ -13,6 +13,8 @@ import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Utils.GlideApp;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -57,8 +59,10 @@ public class DoubleRecyAdapter2 extends RecyclerView.Adapter<DoubleRecyAdapter2.
     public void onBindViewHolder(@NonNull DoubleRecyViewHolder2 doubleRecyViewHolder2, int i) {
 
         //이미지 설정
+        StorageReference fileReference = FirebaseStorage.getInstance()
+                .getReferenceFromUrl(list.get(i).imagePathInStorage);
         GlideApp.with(context)
-                .load(list.get(i).getImagePathInStorage())
+                .load(fileReference)
                 .into(doubleRecyViewHolder2.imageFood);
 
 

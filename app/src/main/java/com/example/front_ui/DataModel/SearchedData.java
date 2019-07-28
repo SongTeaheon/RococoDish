@@ -10,8 +10,11 @@ public class SearchedData implements Serializable {
     public String place_name;
     public String x;
     public String y;
+    public String address;
 
-
+    public String getAddress() {
+        return address;
+    }
 
     public String getPlace_name() {
         return place_name;

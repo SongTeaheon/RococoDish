@@ -12,9 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.algolia.search.saas.AlgoliaException;
-import com.algolia.search.saas.CompletionHandler;
-import com.algolia.search.saas.Query;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.DataModel.UserInfo;
 import com.example.front_ui.Interface.AlgoliaSearchPredicate;
@@ -28,8 +25,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +57,7 @@ public class StoreNameSearchAcitivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                AlgoliaUtils.searchStore("store", "name", editable.toString(), new AlgoliaSearchPredicate() {
+                AlgoliaUtils.searchData("store", "name", editable.toString(), new AlgoliaSearchPredicate() {
                             @Override
                             public void gettingJSONArrayCompleted(JSONArray jsonArray) {
                                 List<StoreInfo> storeList =  JsonParsing.getStoreListFromJsonList(jsonArray);

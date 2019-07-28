@@ -9,15 +9,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.front_ui.DataModel.FragmentRegionData;
+import com.example.front_ui.DataModel.SearchedData;
 import com.example.front_ui.R;
 
 import java.util.ArrayList;
 
 public class FragmantRegionRecyclerViewAdapter extends RecyclerView.Adapter<FragmantRegionRecyclerViewAdapter.ItemViewHolder> {
 
-    private ArrayList<FragmentRegionData> listData = new ArrayList<>();
+    private ArrayList<SearchedData> listData = new ArrayList<>();
 
-    public FragmantRegionRecyclerViewAdapter(ArrayList<FragmentRegionData> list) {
+    public FragmantRegionRecyclerViewAdapter(ArrayList<SearchedData> list) {
         this.listData = list;
     }
 
@@ -38,7 +39,7 @@ public class FragmantRegionRecyclerViewAdapter extends RecyclerView.Adapter<Frag
         return listData.size();
     }
 
-    void addItem(FragmentRegionData data) {
+    void addItem(SearchedData data) {
         listData.add(data);
     }
 
@@ -60,12 +61,12 @@ public class FragmantRegionRecyclerViewAdapter extends RecyclerView.Adapter<Frag
             itemRegionPosts = itemView.findViewById(R.id.itemRegionPosts);
         }
 
-        void onBind(FragmentRegionData fragmentSotreData) {
-            imageViewRegion.setImageResource(fragmentSotreData.getImageViewRegion()); // to do 임시로 이미지 int로 해놓았습니다 ㅜㅜ
-            itemRegionName.setText(fragmentSotreData.getItemRegionName());
-            itemRegionDistance.setText(String.valueOf(fragmentSotreData.getItemRegionDistance()));
-            itemRegionAddress.setText(fragmentSotreData.getItemRegionAddress());
-            itemRegionPosts.setText(fragmentSotreData.getItemRegionPosts());
+        void onBind(SearchedData searchedData) {
+//            imageViewRegion.setImageResource(searchedData.getImageViewRegion()); // to do 임시로 이미지 int로 해놓았습니다 ㅜㅜ
+            itemRegionName.setText(searchedData.getPlace_name());
+//            itemRegionDistance.setText(String.valueOf(searchedData.getItemRegionDistance()));
+            itemRegionAddress.setText(searchedData.getAddress());
+//            itemRegionPosts.setText(searchedData.getItemRegionPosts());
         }
 
         // 각 지역 누르면 각 지역 가게 뜨는 화면으로

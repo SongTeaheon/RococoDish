@@ -9,15 +9,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.front_ui.DataModel.FragmentPeopleData;
+import com.example.front_ui.DataModel.UserInfo;
 import com.example.front_ui.R;
 
 import java.util.ArrayList;
 
 public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<FragmantPeopleRecyclerViewAdapter.ItemViewHolder> {
 
-    private ArrayList<FragmentPeopleData> listData = new ArrayList<>();
+    private ArrayList<UserInfo> listData;
 
-    public FragmantPeopleRecyclerViewAdapter(ArrayList<FragmentPeopleData> list) {
+    public FragmantPeopleRecyclerViewAdapter(ArrayList<UserInfo> list) {
         this.listData = list;
     }
 
@@ -38,7 +39,7 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
         return listData.size();
     }
 
-    void addItem(FragmentPeopleData data) {
+    void addItem(UserInfo data) {
         listData.add(data);
     }
 
@@ -56,10 +57,11 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
             itemPeoplePosts = itemView.findViewById(R.id.itemPeoplePosts);
         }
 
-        void onBind(FragmentPeopleData fragmentSotreData) {
-            imageViewPeople.setImageResource(fragmentSotreData.getImageViewPeople()); // to do 임시로 이미지 int로 해놓았습니다 ㅜㅜ
-            itemPeopleName.setText(fragmentSotreData.getItemPeopleName());
-            itemPeoplePosts.setText(fragmentSotreData.getItemPeoplePosts());
+        void onBind(UserInfo userInfo) {
+            //TODO:이거 데이터 어떻게 가져오는지 태완님한테 물어봐야할 듯
+//            imageViewPeople.setImageResource(userInfo.getImageViewPeople()); // to do 임시로 이미지 int로 해놓았습니다 ㅜㅜ
+            itemPeopleName.setText(userInfo.getNickname());
+//            itemPeoplePosts.setText(userInfo.getPostingNum());
         }
     }
 }

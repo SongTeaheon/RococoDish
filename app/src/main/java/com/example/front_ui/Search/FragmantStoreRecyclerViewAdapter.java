@@ -8,15 +8,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.front_ui.DataModel.FragmentSotreData;
+import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.R;
 
 import java.util.ArrayList;
 
-public class FragmantSotreRecyclerViewAdapter extends RecyclerView.Adapter<FragmantSotreRecyclerViewAdapter.ItemViewHolder> {
+public class FragmantStoreRecyclerViewAdapter extends RecyclerView.Adapter<FragmantStoreRecyclerViewAdapter.ItemViewHolder> {
 
-    private ArrayList<FragmentSotreData> listData = new ArrayList<>();
+    private ArrayList<StoreInfo> listData;
 
-    public FragmantSotreRecyclerViewAdapter(ArrayList<FragmentSotreData> list) {
+    public FragmantStoreRecyclerViewAdapter(ArrayList<StoreInfo> list) {
         this.listData = list;
     }
 
@@ -37,7 +38,7 @@ public class FragmantSotreRecyclerViewAdapter extends RecyclerView.Adapter<Fragm
         return listData.size();
     }
 
-    void addItem(FragmentSotreData data) {
+    void addItem(StoreInfo data) {
         listData.add(data);
     }
 
@@ -59,12 +60,12 @@ public class FragmantSotreRecyclerViewAdapter extends RecyclerView.Adapter<Fragm
             itemStoreScore = itemView.findViewById(R.id.itemStoreScore);
         }
 
-        void onBind(FragmentSotreData fragmentSotreData) {
-            itemStoreName.setText(fragmentSotreData.getStoreName());
-            itemStoreDistance.setText(String.valueOf(fragmentSotreData.getStoreDistance()));
-            itemStoreAddress.setText(fragmentSotreData.getStoreAddress());
-            itemStorePosts.setText(fragmentSotreData.getStorePosts());
-            itemStoreScore.setText(String.valueOf(fragmentSotreData.getStoreScore()));
+        void onBind(StoreInfo storeInfo) {
+            itemStoreName.setText(storeInfo.getName());
+//            itemStoreDistance.setText(String.valueOf(storeInfo.getStoreDistance()));
+            itemStoreAddress.setText(storeInfo.getAddress());
+//            itemStorePosts.setText(storeInfo.getStorePosts());
+            itemStoreScore.setText(String.valueOf(storeInfo.getAver_star()));
         }
 
         //여기에 각 가게 터치 시 각 가게 페이지로 넘어가도록

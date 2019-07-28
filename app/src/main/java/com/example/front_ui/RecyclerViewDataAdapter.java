@@ -3,7 +3,6 @@ package com.example.front_ui;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,26 +15,23 @@ import android.widget.Toast;
 
 import com.example.front_ui.Utils.LocationUtil;
 import com.example.front_ui.Utils.MathUtil;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.example.front_ui.DataModel.StoreInfo;
 
+
 import org.imperiumlabs.geofirestore.GeoFirestore;
 import org.imperiumlabs.geofirestore.GeoQuery;
-import org.imperiumlabs.geofirestore.GeoQueryEventListener;
+import org.imperiumlabs.geofirestore.GeoQueryDataEventListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import javax.annotation.Nullable;
-
 public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDataAdapter.ItemRowHolder> { // 세로 리사이클러 뷰를 위한 어뎁터
+
+
 
     private ArrayList<StoreInfo> list;
     private Context mContext;
@@ -43,7 +39,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     FirebaseFirestore db;
     SectionListDataAdapter itemListDataAdapter;
     private Location mCurrentLocation;
-
+    int isCalled;//onBindView가 다음으로 몇 번째가 불릴 건지 센다. - 중복해서 불리는 건 세지 않는다.
 
 
 
@@ -55,11 +51,12 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         db = FirebaseFirestore.getInstance();
         mCurrentLocation = cLocation;
         getCloseStoreIdAndGetData();
+        isCalled = 0;
     }
 
     @Override
     public ItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        Log.d(TAG, "onCreateViewHolder");
+        Log.d(TAG, "onCreateViewHolder ");
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.vertical_items, null);
         ItemRowHolder mh = new ItemRowHolder(v);
         return mh;
@@ -67,16 +64,9 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
     @Override
     public void onBindViewHolder(ItemRowHolder itemRowHolder, final int i) {
-        Log.d(TAG, "onBindViewHolder");
+        Log.d(TAG, "onBindViewHolder : " + i);
         Log.d(TAG, "storeId : " + list.get(i).getStoreId());
         final StoreInfo singleItem = list.get(i);
-
-        //데이터 수정이 일어난 데이터가 클릭되면 수정된 데이터를 여기에서 반영해야함1!! receive 필터 아이디는 postingId
-//        LocalBroadcastManager
-//                .getInstance(mContext)
-//                .registerReceiver(BroadcastUtils.getBrdCastReceiver_store(singleItem),
-//                        new IntentFilter(singleItem.getStoreId()));
-//        Log.d(TAG, "data check : aver_store_star : " + singleItem.getAver_star());
 
         final String sectionName = singleItem.getName();
         final double sectionStar = singleItem.aver_star;
@@ -94,12 +84,14 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         itemRowHolder.storeAddress.setText(address);
         //to do : distance 표시
 
-        itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance);
-
-        itemRowHolder.recycler_view_list.setHasFixedSize(true);
-        itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-        itemRowHolder.recycler_view_list.setAdapter(itemListDataAdapter);
-
+        if(isCalled <= i) {
+            itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance, i);
+            itemListDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
+            itemRowHolder.recycler_view_list.setHasFixedSize(true);
+            itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+            itemRowHolder.recycler_view_list.setAdapter(itemListDataAdapter);
+            isCalled = i+1;
+        }
 
 
 
@@ -126,7 +118,13 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         return (null != list ? list.size() : 0);
     }
 
-    public class ItemRowHolder extends RecyclerView.ViewHolder {
+    @Override
+    public long getItemId(int position) {
+        StoreInfo storeInfo = list.get(position);
+        return storeInfo.getViewId();
+    }
+
+    static class ItemRowHolder extends RecyclerView.ViewHolder {
 
         public CardView touchStore;
         public TextView storeName;
@@ -157,7 +155,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
 
     //내 위치 주변 10km 가게 찾기.
-    private int radius = 5;
+    private int radius = 2;
     HashSet<String> dcSet = new HashSet<>(); //중복x
     private void getCloseStoreIdAndGetData() {
 
@@ -167,77 +165,58 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         //내 위치에서 radius(km)이내에 있는 값을 찾아라
         final GeoQuery geoQuery = geoFirestore.queryAtLocation(myPoint, radius);
         geoQuery.removeAllListeners();
-
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-            //내 위치에서 radius만큼 떨어진 곳에 가게들이 있을 떄! -> 데이터를 가져온다.
+        geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
             @Override
-            public void onKeyEntered(String documentID, GeoPoint location) {
-                if(!dcSet.contains(documentID) && (radius < 50 && dcSet.size() < 50)) {
-                    Log.d(TAG, String.format("Document %s entered the searc area at [%f,%f] (radius : %d)", documentID, location.getLatitude(), location.getLongitude(), radius));
-                    dcSet.add(documentID);
-                    getStoreDataFromCloud(documentID, radius);
+            public void onDocumentEntered(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+                String documentId = documentSnapshot.getId();
+                if(!dcSet.contains(documentId) && (radius <= 1000 /*&& dcSet.size() < 50*/)) {
+                    StoreInfo storeInfo = documentSnapshot.toObject(StoreInfo.class);
+                    storeInfo.aver_star = MathUtil.roundOnePlace(storeInfo.aver_star);
+                    storeInfo.setViewId(list.size()+1);//size가 storeInfo의 viewId가 된다.
+                    Log.d(TAG, "geoquery 결과 가게이름 : " + storeInfo.name + " radius : " + radius + " listSize : "+ list.size());
 
+                    list.add(storeInfo);
+                    dcSet.add(documentId);
+                    notifyDataSetChanged();
                 }
             }
 
             @Override
-            public void onKeyExited(String documentID) {
-                System.out.println(String.format("Document %s is no longer in the search area", documentID));
+            public void onDocumentExited(DocumentSnapshot documentSnapshot) {
+
             }
 
             @Override
-            public void onKeyMoved(String documentID, GeoPoint location) {
-                System.out.println(String.format("Document %s moved within the search area to [%f,%f]", documentID, location.getLatitude(), location.getLongitude()));
+            public void onDocumentMoved(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+
             }
 
-            //내 위치에서 radius만큼 떨어진 곳을 다 찾았을 때 더 찾으려면 여기에!
+            @Override
+            public void onDocumentChanged(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+
+            }
+
             @Override
             public void onGeoQueryReady() {
                 Log.d(TAG, "All initial data has been loaded and events have been fired!" + radius +" size : "+ dcSet.size()+"mypoint "+myPoint.getLatitude()+" "+ myPoint.getLongitude());
                 //가게 수가 50개가 넘거나 반경이 100km가 넘으면 STOP
-                if(dcSet.size() < 50 && radius < 50) {
-                    radius += 5;
+                if(radius < 10){
+                    radius += 2;
+                    getCloseStoreIdAndGetData();
+                }else if( radius < 50){
+                    radius += 10;
+                    getCloseStoreIdAndGetData();
+                }else if( radius < 1000){
+                    radius = 1000;
                     getCloseStoreIdAndGetData();
                 }
             }
 
             @Override
-            public void onGeoQueryError(Exception exception) {
-                System.err.println("There was an error with this query: " + exception.getLocalizedMessage());
+            public void onGeoQueryError(Exception e) {
+                Log.e(TAG,"onGeoQueryError : " + e.toString());
             }
         });
-    }
-
-
-
-    private void getStoreDataFromCloud(final String documentID, final int radius) {
-        Log.d(TAG, "getDataFromFirestore, documentID : " + documentID);
-
-        db.collection("가게").document(documentID)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            Log.d(TAG, document.getId() + " => " + document.getData());
-                            //store 정보를 가져오고, id를 따로 저장한다.
-                            if(document.getData() != null) {
-                                StoreInfo storeInfo = document.toObject(StoreInfo.class);
-                                storeInfo.setStoreId(documentID);
-                                //해당 가게 정보의 post데이터를 가져온다.
-                                //소수점 한자리로 반올림.
-                                storeInfo.aver_star = MathUtil.roundOnePlace(storeInfo.aver_star);
-                                Log.d(TAG, "가게이름 : " + storeInfo.name + " radius : " + radius);
-                                list.add(storeInfo);
-                                notifyDataSetChanged();
-//                                notifyItemChanged(list.size()+1);//이 부분 수정하니까 깜빡이는 부분 사라짐.
-                            }
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
     }
 
 
