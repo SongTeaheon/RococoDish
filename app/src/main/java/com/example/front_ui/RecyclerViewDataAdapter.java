@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,33 +13,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.front_ui.Utils.LocationUtil;
 import com.example.front_ui.Utils.MathUtil;
-import com.facebook.shimmer.Shimmer;
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.example.front_ui.DataModel.StoreInfo;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+
 
 import org.imperiumlabs.geofirestore.GeoFirestore;
 import org.imperiumlabs.geofirestore.GeoQuery;
-import org.imperiumlabs.geofirestore.GeoQueryEventListener;
+import org.imperiumlabs.geofirestore.GeoQueryDataEventListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-
-import javax.annotation.Nullable;
 
 public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDataAdapter.ItemRowHolder> { // 세로 리사이클러 뷰를 위한 어뎁터
 
@@ -105,7 +96,9 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         //to do : distance 표시
 
         if(isCalled <= i) {
+
             itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance, dialog);
+            itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance, i);
             itemListDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
             itemRowHolder.recycler_view_list.setHasFixedSize(true);
             itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
@@ -192,29 +185,37 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         //내 위치에서 radius(km)이내에 있는 값을 찾아라
         final GeoQuery geoQuery = geoFirestore.queryAtLocation(myPoint, radius);
         geoQuery.removeAllListeners();
-
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-            //내 위치에서 radius만큼 떨어진 곳에 가게들이 있을 떄! -> 데이터를 가져온다.
+        geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
             @Override
-            public void onKeyEntered(String documentID, GeoPoint location) {
-                if(!dcSet.contains(documentID) && (radius <= 1000 /*&& dcSet.size() < 50*/)) {
-                    Log.d(TAG, String.format("Document %s entered the searc area at [%f,%f] (radius : %d)", documentID, location.getLatitude(), location.getLongitude(), radius));
-                    dcSet.add(documentID);
-                    getStoreDataFromCloud(documentID, radius);
+            public void onDocumentEntered(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+                String documentId = documentSnapshot.getId();
+                if(!dcSet.contains(documentId) && (radius <= 1000 /*&& dcSet.size() < 50*/)) {
+                    StoreInfo storeInfo = documentSnapshot.toObject(StoreInfo.class);
+                    storeInfo.aver_star = MathUtil.roundOnePlace(storeInfo.aver_star);
+                    storeInfo.setViewId(list.size()+1);//size가 storeInfo의 viewId가 된다.
+                    Log.d(TAG, "geoquery 결과 가게이름 : " + storeInfo.name + " radius : " + radius + " listSize : "+ list.size());
+
+                    list.add(storeInfo);
+                    dcSet.add(documentId);
+                    notifyDataSetChanged();
                 }
             }
 
             @Override
-            public void onKeyExited(String documentID) {
-                System.out.println(String.format("Document %s is no longer in the search area", documentID));
+            public void onDocumentExited(DocumentSnapshot documentSnapshot) {
+
             }
 
             @Override
-            public void onKeyMoved(String documentID, GeoPoint location) {
-                System.out.println(String.format("Document %s moved within the search area to [%f,%f]", documentID, location.getLatitude(), location.getLongitude()));
+            public void onDocumentMoved(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+
             }
 
-            //내 위치에서 radius만큼 떨어진 곳을 다 찾았을 때 더 찾으려면 여기에!
+            @Override
+            public void onDocumentChanged(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+
+            }
+
             @Override
             public void onGeoQueryReady() {
                 Log.d(TAG, "All initial data has been loaded and events have been fired!" + radius +" size : "+ dcSet.size()+"mypoint "+myPoint.getLatitude()+" "+ myPoint.getLongitude());
@@ -232,43 +233,10 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
             }
 
             @Override
-            public void onGeoQueryError(Exception exception) {
-                System.err.println("There was an error with this query: " + exception.getLocalizedMessage());
+            public void onGeoQueryError(Exception e) {
+                Log.e(TAG,"onGeoQueryError : " + e.toString());
             }
         });
-    }
-
-
-
-    private void getStoreDataFromCloud(final String documentID, final int radius) {
-        Log.d(TAG, "getDataFromFirestore, documentID : " + documentID);
-
-        db.collection("가게").document(documentID)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            Log.d(TAG, document.getId() + " => " + document.getData());
-                            //store 정보를 가져오고, id를 따로 저장한다.
-                            if(document.getData() != null) {
-                                StoreInfo storeInfo = document.toObject(StoreInfo.class);
-                                storeInfo.setStoreId(documentID);
-                                //해당 가게 정보의 post데이터를 가져온다.
-                                //소수점 한자리로 반올림.
-                                storeInfo.aver_star = MathUtil.roundOnePlace(storeInfo.aver_star);
-                                storeInfo.setViewId(list.size()+1);//size가 storeInfo의 viewId가 된다.
-
-                                Log.d(TAG, "가게이름 : " + storeInfo.name + " radius : " + radius + " listSize : "+ list.size());
-                                list.add(storeInfo);
-                                notifyDataSetChanged();
-                            }
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
     }
 
 

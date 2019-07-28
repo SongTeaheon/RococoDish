@@ -27,20 +27,10 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:src="@color/MainColor"
+            android:src="@drawable/ic_circle_region"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/imagePin"
-            android:layout_width="18dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="35dp"
-            android:src="@drawable/ic_taped_pin"
-            app:layout_constraintStart_toStartOf="@+id/imageViewRegion"
-            app:layout_constraintTop_toTopOf="@+id/imageViewRegion" />
 
         <TextView
             android:id="@+id/itemRegionName"
@@ -48,28 +38,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/bmhanna_11yrs"
             android:text="지역 이름"
             android:textColor="@color/Black"
-            android:textSize="20dp"
+            android:textSize="16dp"
             app:layout_constraintStart_toEndOf="@+id/imageViewRegion"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="SpUsage" />
-
-        <TextView
-            android:id="@+id/itemRegionDistance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:fontFamily="@font/bmhanna_11yrs"
-            android:text="0km"
-            android:textColor="@color/MainColor"
-            android:textSize="10dp"
-            app:layout_constraintStart_toEndOf="@+id/imageViewRegion"
-            app:layout_constraintTop_toBottomOf="@+id/itemRegionName"
             tools:ignore="SpUsage" />
 
         <TextView
@@ -78,31 +53,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/bmhanna_11yrs"
             android:text="서울 동대문구 서울시립대로 29길 3"
             android:textColor="@color/Grey"
             android:textSize="10dp"
-            app:layout_constraintStart_toEndOf="@id/itemRegionDistance"
-            app:layout_constraintTop_toBottomOf="@+id/itemRegionName"
-            tools:ignore="SpUsage" />
-
-        <TextView
-            android:id="@+id/itemRegionPosts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/bmhanna_11yrs"
-            android:text="게시물 0개"
-            android:textColor="@color/Grey"
-            android:textSize="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageViewRegion"
-            app:layout_constraintTop_toBottomOf="@+id/itemRegionDistance"
-            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintTop_toBottomOf="@+id/itemRegionName"
             tools:ignore="SpUsage" />
 
     </android.support.constraint.ConstraintLayout>

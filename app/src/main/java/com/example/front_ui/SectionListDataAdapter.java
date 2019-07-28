@@ -72,10 +72,15 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                                   StoreInfo storeInfo,
                                   double distance,
                                   LoadingProgressDialog dialog) {
+
+    int index;
+
+    public SectionListDataAdapter(Context context, StoreInfo storeInfo, double distance, int index) {
         Log.d(TAG, "SectionListDataAdapter");
         this.mContext = context;
         this.storeInfo = storeInfo;
         this.distance = distance;
+        this.index = index;
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -186,6 +191,9 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                             //post데이터가 들어오면 리사이클러뷰를 refresh한다.
                             Log.d(TAG, "notifyDataSetChanged!!!!!!!!!");
                             notifyDataSetChanged();
+
+                            if(index == 3) //TODO: 태완님 여기가 done타이밍입니당
+                                Toast.makeText(mContext, "done timing2", Toast.LENGTH_SHORT).show();
 
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());

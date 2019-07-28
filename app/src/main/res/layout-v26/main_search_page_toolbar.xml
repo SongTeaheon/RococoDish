@@ -35,11 +35,11 @@
                     android:layout_toStartOf="@+id/main_search_btn"
                     android:layout_toEndOf="@+id/backButton"
                     android:fontFamily="@font/bmjua"
-                    android:hint="  가게, 지역, 태그, 이름으로 검색"
+                    android:hint="가게, 지역, 태그, 이름으로 검색"
                     android:textColor="@android:color/black"
                     android:textSize="20dp"
                     android:background="@drawable/search_edittext"
-                    tools:ignore="SpUsage" />
+                    tools:ignore="RtlSymmetry,SpUsage" />
 
                 <ImageView
                     android:id="@+id/main_search_btn"

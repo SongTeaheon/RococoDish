@@ -132,17 +132,34 @@ public class JsonParsing {
     }
 
     public static ArrayList<AlgoliaTagData> getTagListFromJsonList(JSONArray jsonArray){
+        Log.d(TAG, "getTagListFromJsonList");
+
         ArrayList<AlgoliaTagData> list = new ArrayList<>();
         for(int k = 0; k < jsonArray.length(); k++){
             AlgoliaTagData data = new AlgoliaTagData();
             try {
                 JSONObject jsonObject = jsonArray.getJSONObject(k).getJSONObject("_highlightResult");
-                data.setPostingIds(jsonObject.getJSONObject("postingIds").getString("value"));
-                data.setPostingNum(Integer.parseInt(jsonObject.getJSONObject("postingNum").getString("value")));
-                data.setText(jsonArray.getJSONObject(k).getString("text"));
+                String postingIdsStr = jsonObject.getJSONObject("postingIds").getString("value");
+                String numStr = jsonObject.getJSONObject("num").getString("value");
+                String textStr = jsonArray.getJSONObject(k).getString("text");
+                numStr = numStr.replace("<em>", "");
+                numStr = numStr.replace("</em>", "");
+                postingIdsStr = postingIdsStr.replace("<em>", "");
+                postingIdsStr = postingIdsStr.replace("</em>", "");
+                textStr = textStr.replace("<em>", "");
+                textStr = textStr.replace("</em>", "");
+
+                Log.d(TAG, "getTagList numSTr : " +numStr);
+                Log.d(TAG, "getTagList postingIdsStr : " +postingIdsStr);
+                Log.d(TAG, "getTagList textStr : " +textStr);
+
+                data.setPostingIds(postingIdsStr);
+                data.setPostingNum(Integer.parseInt(numStr));
+                data.setText(textStr);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
             list.add(data);
         }
         return list;

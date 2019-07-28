@@ -178,6 +178,7 @@ public class SubSearchPage extends AppCompatActivity {
         AlgoliaUtils.searchData("tag", "text", keyword, new AlgoliaSearchPredicate() {
             @Override
             public void gettingJSONArrayCompleted(JSONArray jsonArray) {
+                Log.d(TAG, "tag data json array " + jsonArray.toString());
                 tagList =  JsonParsing.getTagListFromJsonList(jsonArray);
                 for(int i = 0; i < tagList.size(); i++){
                     Log.d(TAG, "tag data " + i + " : "+ tagList.get(i).getText());
@@ -189,7 +190,7 @@ public class SubSearchPage extends AppCompatActivity {
     /********************************* 지역검색 만들기 필요 변수 및 함수 *********************************/
     private ArrayList<SearchedData> local_list;
     private ArrayList<SearchedData> subway_list;
-    private ArrayList<SearchedData> attraction_list;
+//    private ArrayList<SearchedData> attraction_list;
     private ArrayList<SearchedData> school_list;
 
     private int localCnt;
@@ -198,7 +199,7 @@ public class SubSearchPage extends AppCompatActivity {
     private int attractionCnt;
     private final String school_code = "SC4";
     private final String subway_code = "SW8";
-    private final String attraction_code = "AT4";
+//    private final String attraction_code = "AT4";
     void getRegionSearchResult(final String searchWord){
 
         localCnt = -1;
@@ -215,7 +216,7 @@ public class SubSearchPage extends AppCompatActivity {
         Call<JsonObject> request_local = service.getKakaoLocalInfo(kakaoApiId, searchWord);//, code
         Call<JsonObject> request_school = service.getKakaoStoreInfo(kakaoApiId, searchWord, school_code, "2");//, code
         Call<JsonObject> request_subway = service.getKakaoStoreInfo(kakaoApiId, searchWord, subway_code, "1");//, code
-        Call<JsonObject> request_attraction = service.getKakaoStoreInfo(kakaoApiId, searchWord, attraction_code, "4");//, code
+//        Call<JsonObject> request_attraction = service.getKakaoStoreInfo(kakaoApiId, searchWord, attraction_code, "4");//, code
 
         //로컬 listener
         request_local.enqueue(new Callback<JsonObject>() {
@@ -278,31 +279,31 @@ public class SubSearchPage extends AppCompatActivity {
         });
 
         //관광명소 listener
-        request_attraction.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if(response.body() != null) {
-                    Log.d(TAG, "request_attraction enqueue is Successed. data : " + response.body().toString());
-                    attraction_list = JsonParsing.parseJsonToSearchedInfo(response.body(), searchWord, 2);
-                    attractionCnt = attraction_list.size();
-                    if(localCnt > -1 && schoolCnt >-1 && subwayCnt > -1 && attractionCnt > -1){
-                        makeResultForStoreSearch();
-                    }
-                }
-            }
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d(TAG, "request_attraction enqueue is failed : w : " + t.toString());
-                t.printStackTrace();
-            }
-        });
+//        request_attraction.enqueue(new Callback<JsonObject>() {
+//            @Override
+//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                if(response.body() != null) {
+//                    Log.d(TAG, "request_attraction enqueue is Successed. data : " + response.body().toString());
+//                    attraction_list = JsonParsing.parseJsonToSearchedInfo(response.body(), searchWord, 2);
+//                    attractionCnt = attraction_list.size();
+//                    if(localCnt > -1 && schoolCnt >-1 && subwayCnt > -1 && attractionCnt > -1){
+//                        makeResultForStoreSearch();
+//                    }
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<JsonObject> call, Throwable t) {
+//                Log.d(TAG, "request_attraction enqueue is failed : w : " + t.toString());
+//                t.printStackTrace();
+//            }
+//        });
     }
 
     void makeResultForStoreSearch(){
         regionList = local_list;
         regionList.addAll(subway_list);
         regionList.addAll(school_list);
-        regionList.addAll(attraction_list);
+//        regionList.addAll(attraction_list);
 
         for(int i = 0; i < regionList.size(); i++){
             Log.d(TAG, "region data " + i + " : "+ regionList.get(i).getPlace_name());
@@ -319,8 +320,8 @@ public class SubSearchPage extends AppCompatActivity {
     public ArrayList<UserInfo> getUserList(){
         return userList;
     }
-//    public ArrayList<StoreInfo> getTagList(){
-//        return tagList;
-//    }
+    public ArrayList<AlgoliaTagData> getTagList(){
+        return tagList;
+    }
 
 }

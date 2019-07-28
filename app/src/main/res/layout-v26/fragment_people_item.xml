@@ -21,9 +21,9 @@
         android:background="@color/colorWhite">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageViewPeople"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:id="@+id/imageViewBack"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
@@ -32,30 +32,40 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageViewPeople"
+            android:layout_width="51dp"
+            android:layout_height="51dp"
+            android:layout_marginStart="10dp"
+            android:src="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewBack"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/imageViewBack" />
+
         <TextView
             android:id="@+id/itemPeopleName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/bmhanna_11yrs"
             android:text="유저이름"
             android:textColor="@color/Black"
-            android:textSize="15dp"
+            android:textSize="16dp"
             app:layout_constraintStart_toEndOf="@+id/imageViewPeople"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpUsage" />
 
         <TextView
-            android:id="@+id/itemPeoplePosts"
+            android:id="@+id/itemPeopleEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/bmhanna_11yrs"
-            android:text="게시물 0개"
+            android:text="test@naver.com"
             android:textColor="@color/Grey"
             android:textSize="10dp"
             app:layout_constraintStart_toEndOf="@+id/imageViewPeople"

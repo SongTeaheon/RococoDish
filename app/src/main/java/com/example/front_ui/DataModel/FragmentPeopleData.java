@@ -6,7 +6,7 @@ public class FragmentPeopleData implements Serializable {
 
     private int imageViewPeople; //일단 빠르게 작성하려고 int로 해놓았으니 String으로 바꿔주세요 ㅜㅜ
     private String itemPeopleName;
-    private int itemPeoplePosts;
+    private String itemPeopleEmail;
 
     public int getImageViewPeople() {
         return imageViewPeople;
@@ -24,11 +24,11 @@ public class FragmentPeopleData implements Serializable {
         this.itemPeopleName = itemPeopleName;
     }
 
-    public int getItemPeoplePosts() {
-        return itemPeoplePosts;
+    public String getItemPeopleEmail() {
+        return itemPeopleEmail;
     }
 
-    public void setItemPeoplePosts(int itemPeoplePosts) {
-        this.itemPeoplePosts = itemPeoplePosts;
+    public void setItemPeopleEmail(String itemPeopleEmail) {
+        this.itemPeopleEmail = itemPeopleEmail;
     }
 }
