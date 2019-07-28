@@ -102,16 +102,11 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         final PostingInfo singleItem = list.get(i);
         Log.d(TAG, "downloadImageFromFirebaseStorage : " + singleItem.imagePathInStorage);
 
-        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(mContext);
-//        circularProgressDrawable.setStrokeCap(Paint.Cap.SQUARE);
-        circularProgressDrawable.setCenterRadius(50f);
-        circularProgressDrawable.setStrokeWidth(10f);
-        circularProgressDrawable.start();
 
         StorageReference fileReference = storage.getReferenceFromUrl(singleItem.imagePathInStorage);
         GlideApp.with(mContext)
                 .load(fileReference)
-                .placeholder(circularProgressDrawable)
+                .placeholder(GlidePlaceHolder.circularPlaceHolder(mContext))
                 .into(holder.imageView);
 
 
