@@ -28,7 +28,7 @@ public class FragmentStore extends Fragment {
         list = ((SubSearchPage)getActivity()).getStoreList();
         recyclerView = (RecyclerView) rootView.findViewById(R.id.storeRecyclerView);
         if(!list.isEmpty()) { //TODO: 지역 검색에서 아무 데이터가 없는 경우 임시 처리. 전체검색 UI나오면 변경!
-            adapter = new FragmantStoreRecyclerViewAdapter(list);
+            adapter = new FragmantStoreRecyclerViewAdapter(getContext(), list);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(adapter);
         }

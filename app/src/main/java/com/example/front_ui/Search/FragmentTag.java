@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.front_ui.DataModel.AlgoliaTagData;
 import com.example.front_ui.DataModel.FragmentTagData;
 import com.example.front_ui.R;
 import com.example.front_ui.Search.FragmantTagRecyclerViewAdapter;
@@ -20,7 +21,7 @@ public class FragmentTag extends Fragment {
 
     private RecyclerView recyclerView;
     private FragmantTagRecyclerViewAdapter adapter;
-    private ArrayList<FragmentTagData> list = new ArrayList<>();
+    private ArrayList<AlgoliaTagData> list = new ArrayList<>();
 
     @Nullable
     @Override
@@ -29,7 +30,7 @@ public class FragmentTag extends Fragment {
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.tagRecyclerView);
 
-        adapter = new FragmantTagRecyclerViewAdapter(list);
+        adapter = new FragmantTagRecyclerViewAdapter(getContext(), list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 

@@ -1,5 +1,6 @@
 package com.example.front_ui.Search;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +19,7 @@ public class FragmantRegionRecyclerViewAdapter extends RecyclerView.Adapter<Frag
 
     private ArrayList<SearchedData> listData = new ArrayList<>();
 
-    public FragmantRegionRecyclerViewAdapter(ArrayList<SearchedData> list) {
+    public FragmantRegionRecyclerViewAdapter(Context mContext, ArrayList<SearchedData> list) {
         this.listData = list;
     }
 
@@ -56,9 +57,9 @@ public class FragmantRegionRecyclerViewAdapter extends RecyclerView.Adapter<Frag
 
             imageViewRegion = itemView.findViewById(R.id.imageViewRegion);
             itemRegionName = itemView.findViewById(R.id.itemRegionName);
-            itemRegionDistance = itemView.findViewById(R.id.itemRegionDistance);
+//            itemRegionDistance = itemView.findViewById(R.id.itemRegionDistance);
             itemRegionAddress = itemView.findViewById(R.id.itemRegionAddress);
-            itemRegionPosts = itemView.findViewById(R.id.itemRegionPosts);
+//            itemRegionPosts = itemView.findViewById(R.id.itemRegionPosts);
         }
 
         void onBind(SearchedData searchedData) {

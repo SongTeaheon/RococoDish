@@ -44,28 +44,28 @@
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:cardElevation="0dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorWhite">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorWhite">
 
-                <TextView
-                    android:id="@+id/store"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="@dimen/spacing_small"
-                    android:fontFamily="@font/bmhanna_11yrs"
-                    android:paddingStart="16dp"
-                    android:text="가게"
-                    android:textColor="@color/Black"
-                    android:textSize="20dp"
-                    tools:ignore="RtlSymmetry,SpUsage" />
+                    <TextView
+                        android:id="@+id/store"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="@dimen/spacing_small"
+                        android:fontFamily="@font/bmhanna_11yrs"
+                        android:paddingStart="16dp"
+                        android:text="가게"
+                        android:textColor="@color/Black"
+                        android:textSize="20dp"
+                        tools:ignore="RtlSymmetry,SpUsage" />
 
-            </RelativeLayout>
+                </RelativeLayout>
         </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.RecyclerView

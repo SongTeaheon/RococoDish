@@ -36,7 +36,6 @@ import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Edit.BroadcastUtils;
 import com.example.front_ui.Interface.FirebasePredicate;
 import com.example.front_ui.PostingProcess.MainShareActivity;
-import com.example.front_ui.Search.MainSearchActivity;
 import com.example.front_ui.Search.SubSearchPage;
 import com.example.front_ui.Utils.DataPassUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -61,7 +60,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 
 
     private FusedLocationProviderClient mFusedLocationClient;
-    RecyclerView my_recycler_view;
+    RecyclerView main_recyclerview;
     RecyclerView myPage_recyclerview;
     NestedScrollView nestedScrollView;
     private Location mCurrentLocation;
@@ -162,7 +161,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
          * **/
 
 
-        my_recycler_view = (RecyclerView) findViewById(R.id.mrecyclerView);
+        main_recyclerview = (RecyclerView) findViewById(R.id.mrecyclerView);
         nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
 
@@ -181,7 +180,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         myPage_recyclerview.setAdapter(myPageAdapter);
 
         //마이페이지 글자 누를시 이벤트
-        my_recycler_view.setOnTouchListener(new View.OnTouchListener() {
+        main_recyclerview.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 nestedScrollView.setOnTouchListener(new View.OnTouchListener() {
@@ -352,12 +351,12 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     //주변 가게 recyclerviewt세팅!
     private void initRecyclerView(Location locationCenter) {
         Log.d(TAG, "initRecyclerView");
-        my_recycler_view.setHasFixedSize(true);
+        main_recyclerview.setHasFixedSize(true);
         //가게 안에 목록 가져오는 리사이클러뷰
         recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter);
         recyclerViewDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
-        my_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        my_recycler_view.setAdapter(recyclerViewDataAdapter);
+        main_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        main_recyclerview.setAdapter(recyclerViewDataAdapter);
     }
 
 
@@ -366,10 +365,10 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         // 새로고침 코드
         getCurrentLocation();
 
-        my_recycler_view.setHasFixedSize(true);
+        main_recyclerview.setHasFixedSize(true);
         recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, mCurrentLocation);
-        my_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        my_recycler_view.setAdapter(recyclerViewDataAdapter);
+        main_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        main_recyclerview.setAdapter(recyclerViewDataAdapter);
 
         Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
         myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));

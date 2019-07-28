@@ -1,5 +1,6 @@
 package com.example.front_ui.Search;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +19,7 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
 
     private ArrayList<UserInfo> listData;
 
-    public FragmantPeopleRecyclerViewAdapter(ArrayList<UserInfo> list) {
+    public FragmantPeopleRecyclerViewAdapter(Context mContext, ArrayList<UserInfo> list) {
         this.listData = list;
     }
 
@@ -54,7 +55,7 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
 
             imageViewPeople = itemView.findViewById(R.id.imageViewPeople);
             itemPeopleName = itemView.findViewById(R.id.itemPeopleName);
-            itemPeoplePosts = itemView.findViewById(R.id.itemPeoplePosts);
+//            itemPeoplePosts = itemView.findViewById(R.id.itemPeoplePosts);
         }
 
         void onBind(UserInfo userInfo) {

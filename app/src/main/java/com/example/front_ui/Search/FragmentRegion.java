@@ -31,7 +31,7 @@ public class FragmentRegion extends Fragment {
         list = ((SubSearchPage)getActivity()).getRegionList();
         recyclerView = (RecyclerView) rootView.findViewById(R.id.regionRecyclerView);
 
-        adapter = new FragmantRegionRecyclerViewAdapter(list);
+        adapter = new FragmantRegionRecyclerViewAdapter(getContext(), list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 

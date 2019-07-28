@@ -2,14 +2,13 @@ package com.example.front_ui.Search;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,7 +23,6 @@ import com.example.front_ui.Utils.AlgoliaUtils;
 import com.example.front_ui.Utils.JsonParsing;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
 import com.google.gson.JsonObject;
-import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import org.json.JSONArray;
 
@@ -60,9 +58,19 @@ public class SubSearchPage extends AppCompatActivity {
     //검색결과 리스트
     ArrayList<StoreInfo> storeList;
     ArrayList<SearchedData> regionList;
-    ArrayList<UserInfo> userList;
+    ArrayList<UserInfo> peopleList;
     ArrayList<AlgoliaTagData> tagList;
 
+    //리사이클러 뷰
+    RecyclerView recyclerViewStore;
+    RecyclerView recyclerViewPeople;
+    RecyclerView recyclerViewRegion;
+    RecyclerView recyclerViewTag;
+
+    CardView cardViewStore;
+    CardView cardViewPeople;
+    CardView cardViewRegion;
+    CardView cardViewTag;
 
 
     @Override
@@ -72,9 +80,20 @@ public class SubSearchPage extends AppCompatActivity {
 
         storeList = new ArrayList<>();;
         regionList = new ArrayList<>();
-        userList = new ArrayList<>();
+        peopleList = new ArrayList<>();
+
+        recyclerViewStore = findViewById(R.id.recyclerviewStore);
+        recyclerViewPeople = findViewById(R.id.recyclerviewPeople);
+        recyclerViewRegion = findViewById(R.id.recyclerviewRegion);
+        recyclerViewTag = findViewById(R.id.recyclerviewTag);
+
+        cardViewStore = findViewById(R.id.cardviewStore);
+        cardViewPeople = findViewById(R.id.cardviewPeople);
+        cardViewRegion = findViewById(R.id.cardviewRegion);
+        cardViewTag = findViewById(R.id.cardviewTag);
 
         editText = findViewById(R.id.mainsearch_text);
+
         //검색 버튼
         searchBtn = findViewById(R.id.main_search_btn);
         searchBtn.setOnClickListener(new View.OnClickListener(){
@@ -116,39 +135,42 @@ public class SubSearchPage extends AppCompatActivity {
 //                c, new String[]{"id", "record"}, new int[]{android.R.id.text1, android.R.id.text2}, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         //id와 record를 찍어보자
 
-        BottomNavigationViewEx bottomNavigationViewEx = findViewById(R.id.bottom_bar);
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.frame_layout, fragmentStore).commitAllowingStateLoss();
-
-        bottomNavigationViewEx.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                switch (menuItem.getItemId()) {
-                    case R.id.nav_store: {
-                        transaction.replace(R.id.frame_layout, fragmentStore).commitAllowingStateLoss();
-                        break;
-                    }
-                    case R.id.nav_region: {
-                        transaction.replace(R.id.frame_layout, fragmentRegion).commitAllowingStateLoss();
-                        break;
-                    }
-                    case R.id.nav_tag: {
-                        transaction.replace(R.id.frame_layout, fragmentTag).commitAllowingStateLoss();
-                        break;
-                    }
-                    case R.id.nav_people: {
-                        transaction.replace(R.id.frame_layout, fragmentPeople).commitAllowingStateLoss();
-                        break;
-                    }
-                }
-
-                return true;
-            }
-        });
+    }
+    /********************************* 리사이클러 뷰 4개 세팅  ********************************/
+    void initRecyclerViewStore(){
+        Log.d(TAG, "initRecyclerViewStore");
+        recyclerViewStore.setHasFixedSize(true);
+        //가게 안에 목록 가져오는 리사이클러뷰
+        FragmantStoreRecyclerViewAdapter storeRecyclerViewAdapter = new FragmantStoreRecyclerViewAdapter(this, storeList);
+        recyclerViewStore.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerViewStore.setAdapter(storeRecyclerViewAdapter);
+    }
+    void initRecyclerViewPeople(){
+        Log.d(TAG, "initRecyclerViewPeople");
+        recyclerViewPeople.setHasFixedSize(true);
+        //가게 안에 목록 가져오는 리사이클러뷰
+        FragmantPeopleRecyclerViewAdapter peopleRecyclerViewAdapter = new FragmantPeopleRecyclerViewAdapter(this, peopleList);
+        recyclerViewPeople.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerViewPeople.setAdapter(peopleRecyclerViewAdapter);
+    }
+    void initRecyclerViewRegion(){
+        Log.d(TAG, "initRecyclerViewStore");
+        recyclerViewRegion.setHasFixedSize(true);
+        //가게 안에 목록 가져오는 리사이클러뷰
+        FragmantRegionRecyclerViewAdapter regionRecyclerViewAdapter = new FragmantRegionRecyclerViewAdapter(this, regionList);
+        recyclerViewRegion.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerViewRegion.setAdapter(regionRecyclerViewAdapter);
+    }
+    void initRecyclerViewTag(){
+        Log.d(TAG, "initRecyclerViewStore");
+        recyclerViewTag.setHasFixedSize(true);
+        //가게 안에 목록 가져오는 리사이클러뷰
+        FragmantTagRecyclerViewAdapter tagRecyclerViewAdapter = new FragmantTagRecyclerViewAdapter(this, tagList);
+        recyclerViewTag.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerViewTag.setAdapter(tagRecyclerViewAdapter);
     }
 
-
+    /********************************* 가게, 지역, 사람 검색 만들기 필요 변수 및 함수  *********************************/
     void getStoreSearchResult(String keyword){
         AlgoliaUtils.searchData("store", "name", keyword, new AlgoliaSearchPredicate() {
             @Override
@@ -156,6 +178,12 @@ public class SubSearchPage extends AppCompatActivity {
                 storeList =  JsonParsing.getStoreListFromJsonList(jsonArray);
                 for(int i = 0; i < storeList.size(); i++){
                     Log.d(TAG, "store data " + i + " : "+ storeList.get(i).getName());
+                }
+                if(storeList.size() != 0)
+                    initRecyclerViewStore();
+                else {
+                    recyclerViewStore.setVisibility(View.GONE);
+                    cardViewStore.setVisibility(View.GONE);
                 }
             }
         });
@@ -165,9 +193,15 @@ public class SubSearchPage extends AppCompatActivity {
         AlgoliaUtils.searchData("user", "nickname", keyword, new AlgoliaSearchPredicate() {
             @Override
             public void gettingJSONArrayCompleted(JSONArray jsonArray) {
-                userList =  JsonParsing.getUserListFromJsonList(jsonArray);
-                for(int i = 0; i < userList.size(); i++){
-                    Log.d(TAG, "user data " + i + " : "+ userList.get(i).getNickname());
+                peopleList =  JsonParsing.getUserListFromJsonList(jsonArray);
+                for(int i = 0; i < peopleList.size(); i++){
+                    Log.d(TAG, "user data " + i + " : "+ peopleList.get(i).getNickname());
+                }
+                if(peopleList.size() != 0)
+                    initRecyclerViewPeople();
+                else {
+                    recyclerViewPeople.setVisibility(View.GONE);
+                    cardViewPeople.setVisibility(View.GONE);
                 }
             }
         });
@@ -182,6 +216,12 @@ public class SubSearchPage extends AppCompatActivity {
                 tagList =  JsonParsing.getTagListFromJsonList(jsonArray);
                 for(int i = 0; i < tagList.size(); i++){
                     Log.d(TAG, "tag data " + i + " : "+ tagList.get(i).getText());
+                }
+                if(tagList.size() != 0)
+                    initRecyclerViewTag();
+                else {
+                    recyclerViewTag.setVisibility(View.GONE);
+                    cardViewTag.setVisibility(View.GONE);
                 }
             }
         });
@@ -308,6 +348,12 @@ public class SubSearchPage extends AppCompatActivity {
         for(int i = 0; i < regionList.size(); i++){
             Log.d(TAG, "region data " + i + " : "+ regionList.get(i).getPlace_name());
         }
+        if(regionList.size() != 0)
+            initRecyclerViewRegion();
+        else {
+            recyclerViewRegion.setVisibility(View.GONE);
+            cardViewRegion.setVisibility(View.GONE);
+        }
     }
 
     /********************************* 데이터 전달을 위한 함수 - 리팩토링 필요한가?? *********************************/
@@ -317,8 +363,8 @@ public class SubSearchPage extends AppCompatActivity {
     public ArrayList<SearchedData> getRegionList(){
         return regionList;
     }
-    public ArrayList<UserInfo> getUserList(){
-        return userList;
+    public ArrayList<UserInfo> getPeopleList(){
+        return peopleList;
     }
     public ArrayList<AlgoliaTagData> getTagList(){
         return tagList;

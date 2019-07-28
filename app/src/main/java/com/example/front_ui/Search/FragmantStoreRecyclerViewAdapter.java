@@ -1,5 +1,6 @@
 package com.example.front_ui.Search;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,7 +18,7 @@ public class FragmantStoreRecyclerViewAdapter extends RecyclerView.Adapter<Fragm
 
     private ArrayList<StoreInfo> listData;
 
-    public FragmantStoreRecyclerViewAdapter(ArrayList<StoreInfo> list) {
+    public FragmantStoreRecyclerViewAdapter(Context mConxtext, ArrayList<StoreInfo> list) {
         this.listData = list;
     }
 
@@ -54,10 +55,10 @@ public class FragmantStoreRecyclerViewAdapter extends RecyclerView.Adapter<Fragm
             super(itemView);
 
             itemStoreName = itemView.findViewById(R.id.itemStoreName);
-            itemStoreDistance = itemView.findViewById(R.id.itemStoreDistance);
+//            itemStoreDistance = itemView.findViewById(R.id.itemStoreDistance);
             itemStoreAddress = itemView.findViewById(R.id.itemStoreAddress);
-            itemStorePosts = itemView.findViewById(R.id.itemStorePosts);
-            itemStoreScore = itemView.findViewById(R.id.itemStoreScore);
+//            itemStorePosts = itemView.findViewById(R.id.itemStorePosts);
+//            itemStoreScore = itemView.findViewById(R.id.itemStoreScore);
         }
 
         void onBind(StoreInfo storeInfo) {
@@ -65,7 +66,7 @@ public class FragmantStoreRecyclerViewAdapter extends RecyclerView.Adapter<Fragm
 //            itemStoreDistance.setText(String.valueOf(storeInfo.getStoreDistance()));
             itemStoreAddress.setText(storeInfo.getAddress());
 //            itemStorePosts.setText(storeInfo.getStorePosts());
-            itemStoreScore.setText(String.valueOf(storeInfo.getAver_star()));
+//            itemStoreScore.setText(String.valueOf(storeInfo.getAver_star()));
         }
 
         //여기에 각 가게 터치 시 각 가게 페이지로 넘어가도록
