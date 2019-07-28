@@ -139,7 +139,7 @@ public class AlgoliaUtils {
                         numStr = numStr.replace("</em>", "");
                         idStr = idStr.replace("<em>", "");
                         idStr = idStr.replace("</em>", "");
-                        postingIdsStr = postingIdsStr.replace("</em>", "");
+                        postingIdsStr = postingIdsStr.replace("<em>", "");
                         postingIdsStr = postingIdsStr.replace("</em>", "");
                         postingIdsStr = postingIdsStr + "," + postingId;
 
@@ -190,7 +190,7 @@ public class AlgoliaUtils {
                     numStr = numStr.replace("</em>", "");
                     idStr = idStr.replace("<em>", "");
                     idStr = idStr.replace("</em>", "");
-                    postingIdsStr = postingIdsStr.replace("</em>", "");
+                    postingIdsStr = postingIdsStr.replace("<em>", "");
                     postingIdsStr = postingIdsStr.replace("</em>", "");
                     postingIdsStr = postingIdsStr.replace(","+postingId, "");//postingId제거
 

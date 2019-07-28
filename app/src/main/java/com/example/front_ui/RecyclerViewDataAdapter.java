@@ -85,17 +85,11 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         //to do : distance 표시
 
         if(isCalled <= i) {
-            itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance);
+            itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance, i);
             itemListDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
             itemRowHolder.recycler_view_list.setHasFixedSize(true);
             itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
             itemRowHolder.recycler_view_list.setAdapter(itemListDataAdapter);
-            if(isCalled == 3) { //3번 째가 불리면 눈에 보이는 데이터는 일단 내려왔다고 생각!
-                //TODO: 태완님 여기가 보이는 창 로딩 완료 위치입니다.
-                Toast.makeText(mContext, "done timing2", Toast.LENGTH_SHORT).show();
-            }
-
-
             isCalled = i+1;
         }
 
