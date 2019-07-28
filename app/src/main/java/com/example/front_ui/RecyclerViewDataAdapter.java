@@ -1,5 +1,6 @@
 package com.example.front_ui;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -16,6 +17,8 @@ import android.widget.Toast;
 
 import com.example.front_ui.Utils.LocationUtil;
 import com.example.front_ui.Utils.MathUtil;
+import com.facebook.shimmer.Shimmer;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -50,10 +53,13 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     SectionListDataAdapter itemListDataAdapter;
     private Location mCurrentLocation;
     int isCalled;//onBindView가 다음으로 몇 번째가 불릴 건지 센다. - 중복해서 불리는 건 세지 않는다.
+    LoadingProgressDialog dialog;
 
 
 
-    public RecyclerViewDataAdapter(Context context, Location cLocation) {
+    public RecyclerViewDataAdapter(Context context,
+                                   Location cLocation,
+                                   LoadingProgressDialog dialog) {
         Log.d(TAG, "adpater constructor called");
         Log.d(TAG, "x, y : " + cLocation.getLongitude() + " " + cLocation.getLatitude());
         list= new ArrayList<>();
@@ -62,6 +68,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         mCurrentLocation = cLocation;
         getCloseStoreIdAndGetData();
         isCalled = 0;
+        this.dialog = dialog;
     }
 
     @Override
@@ -74,6 +81,9 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
     @Override
     public void onBindViewHolder(ItemRowHolder itemRowHolder, final int i) {
+
+
+
         Log.d(TAG, "onBindViewHolder : " + i);
         Log.d(TAG, "storeId : " + list.get(i).getStoreId());
         final StoreInfo singleItem = list.get(i);
@@ -95,13 +105,14 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         //to do : distance 표시
 
         if(isCalled <= i) {
-            itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance);
+            itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance, dialog);
             itemListDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
             itemRowHolder.recycler_view_list.setHasFixedSize(true);
             itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
             itemRowHolder.recycler_view_list.setAdapter(itemListDataAdapter);
             if(isCalled == 3) { //3번 째가 불리면 눈에 보이는 데이터는 일단 내려왔다고 생각!
                 //TODO: 태완님 여기가 보이는 창 로딩 완료 위치입니다.
+                //todo : 가게목록만 불러오는게 끝나는 부분입니다. 여기서 로딩을 멈추면 포스팅에 이미지 불러오는데 기다려야합니다.
                 Toast.makeText(mContext, "done timing2", Toast.LENGTH_SHORT).show();
             }
 

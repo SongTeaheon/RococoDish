@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.front_ui.DataModel.FollowInfo;
 import com.example.front_ui.Utils.GlideApp;
+import com.example.front_ui.Utils.GlidePlaceHolder;
 
 import java.util.List;
 
@@ -54,6 +55,7 @@ public class FollowRecyAdapter extends RecyclerView.Adapter<FollowRecyAdapter.Fo
         if(followerList.get(i).getProfileImagePath() != null){
             GlideApp.with(context)
                     .load(followerList.get(i).getProfileImagePath())
+                    .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
                     .into(followViewHolder.profileImage);
         }
 
