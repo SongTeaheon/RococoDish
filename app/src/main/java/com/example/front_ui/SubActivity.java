@@ -80,8 +80,6 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     TextView userNameText;
     RecyclerViewDataAdapter recyclerViewDataAdapter;
     FloatingActionButton addPosting;
-    LoadingProgressDialog loadingProgressDialog;
-
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -355,15 +353,10 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     private void initRecyclerView(Location locationCenter) {
         //로딩창
 
-        loadingProgressDialog = new LoadingProgressDialog(this);
-        loadingProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        loadingProgressDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-        loadingProgressDialog.show();
-
         Log.d(TAG, "initRecyclerView");
         main_recyclerview.setHasFixedSize(true);
         //가게 안에 목록 가져오는 리사이클러뷰
-        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter, loadingProgressDialog);
+        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter);
         recyclerViewDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
         main_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         main_recyclerview.setAdapter(recyclerViewDataAdapter);
@@ -376,7 +369,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         getCurrentLocation();
 
         main_recyclerview.setHasFixedSize(true);
-        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, mCurrentLocation, loadingProgressDialog);
+        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, mCurrentLocation);
         main_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         main_recyclerview.setAdapter(recyclerViewDataAdapter);
 

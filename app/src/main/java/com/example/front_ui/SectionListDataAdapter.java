@@ -66,11 +66,13 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     StoreInfo storeInfo;
     double distance;
     private String uuid;
-    LoadingProgressDialog dialog;
     int index;
 
 
-    public SectionListDataAdapter(Context context, StoreInfo storeInfo, double distance, int index,  LoadingProgressDialog dialog) {
+    public SectionListDataAdapter(Context context,
+                                  StoreInfo storeInfo,
+                                  double distance,
+                                  int index) {
         Log.d(TAG, "SectionListDataAdapter");
         this.mContext = context;
         this.storeInfo = storeInfo;
@@ -81,7 +83,6 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         storageReference = storage.getReference();
         list = new ArrayList<>();
         getPostDataFromCloud(storeInfo.getStoreId());
-        this.dialog = dialog;
     }
 
 
@@ -183,7 +184,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                             notifyDataSetChanged();
 
                             if(index == 3)//다이얼로그 끝!
-                                dialog.dismiss();
+                                return; //todo : 로딩 끝냄
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
