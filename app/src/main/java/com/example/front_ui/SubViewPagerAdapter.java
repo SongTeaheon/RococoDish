@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.Utils.GlideApp;
+import com.example.front_ui.Utils.GlidePlaceHolder;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -56,6 +57,7 @@ public class SubViewPagerAdapter extends PagerAdapter {
                 .getReferenceFromUrl(list.get(position).imagePathInStorage);
         GlideApp.with(context)
                 .load(filePath)
+                .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
                 .into(image);
 
         container.addView(view);

@@ -20,11 +20,9 @@
         <activity android:name=".CocomentActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"></activity>
+        <activity android:name=".Search.RegionSearchActivity"></activity>
         <activity android:name=".StartActivity"
             android:screenOrientation="portrait">
-
-        <activity android:name=".Search.RegionSearchActivity"></activity>
-        
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
