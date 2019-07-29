@@ -35,6 +35,15 @@ public class FragmantStoreRecyclerViewAdapter extends RecyclerView.Adapter<Fragm
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         holder.onBind(listData.get(position));
+        StoreInfo storeInfo = listData.get(position);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: 가게 페이지로 넘어가는 부분. storeInfo는 정확하지 않아서 아이디만 사용해야할 거 같아요
+            }
+        });
+
     }
 
     @Override

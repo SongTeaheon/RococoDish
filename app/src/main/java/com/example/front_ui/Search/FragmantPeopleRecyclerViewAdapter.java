@@ -33,6 +33,13 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         holder.onBind(listData.get(position));
+        UserInfo userInfo = listData.get(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     @Override
@@ -60,9 +67,8 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
 
         void onBind(UserInfo userInfo) {
             //TODO:이거 데이터 어떻게 가져오는지 태완님한테 물어봐야할 듯
-//            imageViewPeople.setImageResource(userInfo.getImageViewPeople()); // to do 임시로 이미지 int로 해놓았습니다 ㅜㅜ
             itemPeopleName.setText(userInfo.getNickname());
-//            itemPeoplePosts.setText(userInfo.getPostingNum());
+
         }
     }
 }

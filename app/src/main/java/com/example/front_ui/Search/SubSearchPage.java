@@ -2,6 +2,7 @@ package com.example.front_ui.Search;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
@@ -130,28 +131,29 @@ public class SubSearchPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "tvStore is clicked");
-//                fragmentManager.beginTransaction().replace(R.id.framelayout, new FragmentStore()).commit();
+                initFragment(fragmentStore);
             }
         });
         tvRegion.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "tvRegion is clicked");
-//                fragmentManager.beginTransaction().replace(R.id.framelayout, fragmentRegion).commit();
+                initFragment(fragmentRegion);
             }
         });
         tvPeople.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "tvPeople is clicked");
-//                fragmentManager.beginTransaction().replace(R.id.framelayout, fragmentPeople).commit();
+                initFragment(fragmentPeople);
             }
         });
         tvTag.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "tvTag is clicked");
-//                fragmentManager.beginTransaction().replace(R.id.framelayout, fragmentTag).commit();
+                initFragment(fragmentTag);
+
             }
         });
 
@@ -212,6 +214,10 @@ public class SubSearchPage extends AppCompatActivity {
         FragmantTagRecyclerViewAdapter tagRecyclerViewAdapter = new FragmantTagRecyclerViewAdapter(this, tagList);
         recyclerViewTag.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewTag.setAdapter(tagRecyclerViewAdapter);
+    }
+
+    void initFragment(Fragment fragment){
+        fragmentManager.beginTransaction().replace(R.id.resultFrameLayout, fragment).commit();
     }
 
     /********************************* 가게, 지역, 사람 검색 만들기 필요 변수 및 함수  *********************************/

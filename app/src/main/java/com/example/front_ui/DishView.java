@@ -147,9 +147,6 @@ public class DishView extends AppCompatActivity {
             Log.e(TAG, "intent is null");
         }
 
-
-        //todo : 시간을 객체로 저장해서 문자로 변환이 안됨......(태헌님 부탁해요~ㅠ)
-
         //dist
         postingInfo = (PostingInfo) intent.getSerializableExtra("postingInfo");
         Log.d(TAG, "postingID : " + postingInfo.getPostingId());

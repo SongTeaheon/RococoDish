@@ -29,6 +29,7 @@ public class FragmentTag extends Fragment {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.search_fragment_tag, container, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.tagRecyclerView);
+        list = ((SubSearchPage)getActivity()).getTagList();
 
         adapter = new FragmantTagRecyclerViewAdapter(getContext(), list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

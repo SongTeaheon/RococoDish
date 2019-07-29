@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.front_ui.DataModel.FragmentRegionData;
 import com.example.front_ui.DataModel.SearchedData;
+import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.R;
 
 import java.util.ArrayList;
@@ -33,6 +34,14 @@ public class FragmantRegionRecyclerViewAdapter extends RecyclerView.Adapter<Frag
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         holder.onBind(listData.get(position));
+        SearchedData searchedData = listData.get(position);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: 가게 페이지로 넘어가는 부분. storeInfo는 정확하지 않아서 아이디만 사용해야할 거 같아요
+            }
+        });
     }
 
     @Override
