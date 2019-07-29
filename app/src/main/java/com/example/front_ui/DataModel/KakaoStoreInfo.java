@@ -98,6 +98,38 @@ public class KakaoStoreInfo implements Parcelable, Cloneable {
         return y;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public String getCategory_name() {
+        return category_name;
+    }
+
+    public String getCategory_group_name() {
+        return category_group_name;
+    }
+
+    public String getCategory_group_code() {
+        return category_group_code;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getRoad_address_name() {
+        return road_address_name;
+    }
+
+    public String getAddress_name() {
+        return address_name;
+    }
+
+    public String getPlace_url() {
+        return place_url;
+    }
+
     /*
     public String title;
     public String description;

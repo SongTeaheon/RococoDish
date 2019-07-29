@@ -1,6 +1,7 @@
 package com.example.front_ui.Search;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.MyPage;
 import com.example.front_ui.R;
+import com.example.front_ui.StorePageActivity;
 
 import java.util.ArrayList;
 
@@ -18,10 +21,12 @@ public class FragmantStoreRecyclerViewAdapter extends RecyclerView.Adapter<Fragm
 
     final private String TAG = "TAGFragmentStoreAdapter";
     private ArrayList<StoreInfo> listData;
+    private Context mContext;
 
-    public FragmantStoreRecyclerViewAdapter(Context mConxtext, ArrayList<StoreInfo> list) {
+    public FragmantStoreRecyclerViewAdapter(Context context, ArrayList<StoreInfo> list) {
         Log.d(TAG, "FragmantStoreRecyclerViewAdapter constructor");
         this.listData = list;
+        mContext = context;
     }
 
     @NonNull
@@ -34,12 +39,17 @@ public class FragmantStoreRecyclerViewAdapter extends RecyclerView.Adapter<Fragm
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         holder.onBind(listData.get(position));
-        StoreInfo storeInfo = listData.get(position);
+        final StoreInfo storeInfo = listData.get(position);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: 가게 페이지로 넘어가는 부분. storeInfo는 정확하지 않아서 아이디만 사용해야할 거 같아요
+                Log.d(TAG, "item is cliceked. go to storePage userid : " + storeInfo.getStoreId());
+                Intent intent = new Intent(mContext, StorePageActivity.class);
+                intent.putExtra("storeName", storeInfo.getName());
+                intent.putExtra("documentId", storeInfo.getStoreId());
+                mContext.startActivity(intent);
+                ((SubSearchPage)mContext).finish();
             }
         });
 
@@ -57,10 +67,7 @@ public class FragmantStoreRecyclerViewAdapter extends RecyclerView.Adapter<Fragm
     class ItemViewHolder extends RecyclerView.ViewHolder {
 
         private TextView itemStoreName;
-        private TextView itemStoreDistance;
         private TextView itemStoreAddress;
-        private TextView itemStorePosts;
-        private TextView itemStoreScore;
 
         ItemViewHolder(View itemView) {
             super(itemView);

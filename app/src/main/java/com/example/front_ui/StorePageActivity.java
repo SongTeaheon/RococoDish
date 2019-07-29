@@ -54,7 +54,6 @@ public class StorePageActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         storeName = intent.getStringExtra("storeName");
-        storeStar = intent.getStringExtra("averStar");
         docId = intent.getStringExtra("documentId");
 
         Log.d(TAG, "name, star, id :" + storeName + storeStar + docId);

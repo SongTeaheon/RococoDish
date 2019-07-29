@@ -39,4 +39,8 @@ public class SearchedData implements Serializable {
     public void setY(String y) {
         this.y = y;
     }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }
