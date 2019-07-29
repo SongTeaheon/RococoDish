@@ -16,7 +16,10 @@ import com.example.front_ui.DataModel.UserInfo;
 import com.example.front_ui.MyPage;
 import com.example.front_ui.R;
 import com.example.front_ui.SubActivity;
+import com.example.front_ui.Utils.GlideApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -27,8 +30,13 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
     private Context mContext;
     private double currentLat;
     private double currentLon;
+    private int mode;
+    FirebaseStorage storage;
 
-    public FragmantPeopleRecyclerViewAdapter(Context mContext, ArrayList<UserInfo> list, double lat, double lon) {
+
+    //mode가 1이면 데이터 수 제한 x, 2이면 데이터 수 4개 제한.
+    public FragmantPeopleRecyclerViewAdapter(Context mContext, ArrayList<UserInfo> list, double lat, double lon/*, int mode*/) {
+        storage = FirebaseStorage.getInstance();
         this.listData = list;
         this.mContext = mContext;
         this.currentLat = lat;
@@ -55,6 +63,7 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
                 intent.putExtra("latitude", currentLat);
                 intent.putExtra("longitude", currentLon);
                 mContext.startActivity(intent);
+                ((SubSearchPage)mContext).finish();
             }
         });
     }
@@ -72,20 +81,23 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
 
         private ImageView imageViewPeople;
         private TextView itemPeopleName;
-        private TextView itemPeoplePosts;
+        private TextView itemPeopleEmail;
 
         ItemViewHolder(View itemView) {
             super(itemView);
 
-            imageViewPeople = itemView.findViewById(R.id.imageViewPeople);
             itemPeopleName = itemView.findViewById(R.id.itemPeopleName);
-//            itemPeoplePosts = itemView.findViewById(R.id.itemPeoplePosts);
+            itemPeopleEmail = itemView.findViewById(R.id.itemPeopleEmail);
         }
 
         void onBind(UserInfo userInfo) {
             //TODO:이거 데이터 어떻게 가져오는지 태완님한테 물어봐야할 듯
             itemPeopleName.setText(userInfo.getNickname());
-
+//            imageViewPeople;
+            itemPeopleEmail.setText(userInfo.eMail);
+            //profileImage는 Null!!!
+//            StorageReference fileReference = storage.getReferenceFromUrl(userInfo.profileImage);
+//            GlideApp.with(mContext).load(fileReference).into(imageViewPeople);
         }
     }
 }

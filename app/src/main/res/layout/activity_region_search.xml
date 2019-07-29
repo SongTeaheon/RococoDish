@@ -23,47 +23,20 @@
         <!--toolbar-->
     </RelativeLayout>
 
-    <!--<Button-->
-    <!--android:id="@+id/search_btn"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentStart="true"-->
-    <!--android:layout_alignParentEnd="true"-->
-    <!--android:layout_marginStart="16dp"-->
-    <!--android:layout_marginEnd="16dp"-->
-    <!--android:layout_marginTop="16dp"-->
-    <!--android:hint="지역 검색"-->
-    <!--android:textColorHint="@color/colorAccent"-->
-    <!--android:paddingLeft="10dp"-->
-    <!--android:paddingTop="5dp"-->
-    <!--android:paddingRight="10dp"-->
-    <!--android:paddingBottom="5dp"-->
-    <!--android:textSize="18dp"-->
-    <!--android:textStyle="bold"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toTopOf="parent"-->
-    <!--tools:ignore="SpUsage"-->
-    <!--android:inputType="text" />-->
+    <FrameLayout
+        android:id="@+id/loadingFrame"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:elevation="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relLayout1">
 
-    <!--<ListView-->
-    <!--android:id="@+id/listView"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_centerHorizontal="true"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:layout_marginStart="16dp"-->
-    <!--android:layout_marginEnd="16dp"-->
-    <!--android:divider="#999999"-->
-    <!--android:dividerHeight="0.5dp"-->
-    <!--android:visibility="invisible"-->
-    <!--app:layout_constraintBottom_toBottomOf="@+id/swipe_layout"-->
-    <!--app:layout_constraintEnd_toEndOf="@+id/search_btn"-->
-    <!--app:layout_constraintStart_toStartOf="@+id/search_btn"-->
-    <!--app:layout_constraintTop_toBottomOf="@+id/search_btn"-->
-    <!--app:layout_constraintVertical_bias="0.0" />-->
-    <!--로딩창-->
-
+        <include layout="@layout/dialog_loading" />
+    </FrameLayout>
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"

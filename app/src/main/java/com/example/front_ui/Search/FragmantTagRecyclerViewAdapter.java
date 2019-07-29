@@ -62,15 +62,14 @@ public class FragmantTagRecyclerViewAdapter extends RecyclerView.Adapter<Fragman
         ItemViewHolder(View itemView) {
             super(itemView);
 
-            imageViewTag = itemView.findViewById(R.id.imageViewTag);
             itemTagName = itemView.findViewById(R.id.itemTagName);
-//            itemTagPosts = itemView.findViewById(R.id.itemTagPosts);
+            itemTagPosts = itemView.findViewById(R.id.itemTagPostNum);
         }
 
-        void onBind(AlgoliaTagData fragmentSotreData) {
-//            imageViewTag.setImageResource(fragmentSotreData.getImageViewTag()); // to do 임시로 이미지 int로 해놓았습니다 ㅜㅜ
-            itemTagName.setText(fragmentSotreData.getText());
-//            itemTagPosts.setText(fragmentSotreData.getItemTagPosts());
+        void onBind(AlgoliaTagData tagData) {
+            itemTagName.setText(tagData.getText());
+            String postNumStr = "게시글 "+ tagData.getPostingNum()+"개";
+            itemTagPosts.setText(postNumStr);
         }
 
         // 각 지역 누르면 그 태그가 있는 게시물 들을 마이페이지 처럼 2 X 무한대로 띄움

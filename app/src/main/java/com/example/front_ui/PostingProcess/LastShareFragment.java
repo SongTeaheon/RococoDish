@@ -6,11 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.text.Editable;
 import android.text.Spannable;
-import android.text.Spanned;
-import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,17 +15,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.front_ui.DataModel.AlgoliaTagData;
 import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.StoreInfo;
-import com.example.front_ui.Interface.AlgoliaSearchPredicate;
 import com.example.front_ui.R;
 import com.example.front_ui.Utils.AlgoliaUtils;
 import com.example.front_ui.Utils.GlideApp;
-import com.example.front_ui.Utils.JsonParsing;
 import com.example.front_ui.Utils.RatingBarUtils;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -54,9 +46,7 @@ import com.google.firebase.storage.UploadTask;
 import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
 import org.imperiumlabs.geofirestore.GeoFirestore;
-import org.json.JSONArray;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,7 +111,7 @@ public class LastShareFragment extends Fragment {
 //        text_description = view.findViewById(R.id.search_btn);
         mRatingBar = view.findViewById(R.id.ratingBar);
         mStarText = view.findViewById(R.id.starText);
-        storeName = view.findViewById(R.id.tvStore);
+        storeName = view.findViewById(R.id.mainText);
         storeName.setText(kakaoStoreInfo.place_name);
 //        String text = text_description.getText().toString();
         postingImage = view.findViewById(R.id.imageView1);

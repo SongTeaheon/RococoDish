@@ -48,7 +48,7 @@
             tools:ignore="SpUsage" />
 
         <TextView
-            android:id="@+id/itemTagAddress"
+            android:id="@+id/itemTagPostNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

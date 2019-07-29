@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.DataModel.StorePostInfo;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -59,7 +58,7 @@ public class StorePageActivity extends AppCompatActivity {
         docId = intent.getStringExtra("documentId");
 
         Log.d(TAG, "name, star, id :" + storeName + storeStar + docId);
-        tv_storeName = findViewById(R.id.tvStore);
+        tv_storeName = findViewById(R.id.mainText);
 
         tv_storeName.setText(storeName);
 

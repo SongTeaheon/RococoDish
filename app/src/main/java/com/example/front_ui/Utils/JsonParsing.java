@@ -77,6 +77,7 @@ public class JsonParsing {
                 data.setPlace_name(object.getPlace_name());
                 data.setX(object.getX());
                 data.setY(object.getY());
+                Log.d(TAG, "x : " + object.getX() + " y : " + object.getY());
             }
 
             //해당 데이터에 keyword가 포함되어 있으면 넣는다.

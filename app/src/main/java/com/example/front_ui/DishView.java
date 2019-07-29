@@ -1,7 +1,6 @@
 package com.example.front_ui;
 
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -18,9 +17,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,7 +31,6 @@ import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.ImmutableMap;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -208,7 +203,7 @@ public class DishView extends AppCompatActivity {
             hashTagText.setText("게시물 내용이 없습니다.");
         }
 
-        tvStoreName = findViewById(R.id.tvStore);
+        tvStoreName = findViewById(R.id.mainText);
         tvStoreName.setText(storeInfo.getName());
         tvAddress.setText(storeInfo.getAddress());
         tvScore = findViewById(R.id.textViewScore);

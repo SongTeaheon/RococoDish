@@ -411,7 +411,8 @@ public class SubSearchPage extends AppCompatActivity {
         Log.d(TAG, "size of region list : " + regionList.size());
 
         for(int i = 0; i < regionList.size(); i++){
-            Log.d(TAG, "region data " + i + " : "+ regionList.get(i).getPlace_name());
+            Log.d(TAG, "region data " + i + " : "+ regionList.get(i).getPlace_name()
+                    + " x : " + regionList.get(i).getX() + " y : " + regionList.get(i).getY());
         }
         if(regionList.size() != 0) {
             initRecyclerViewRegion();

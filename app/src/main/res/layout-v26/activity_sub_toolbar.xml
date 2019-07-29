@@ -29,7 +29,7 @@
 
                 <!--가게이름 10글자 넘어가면 안되게 해야함...ㅜㅜ-->
                 <TextView
-                    android:id="@+id/tvStore"
+                    android:id="@+id/mainText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"

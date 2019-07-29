@@ -67,18 +67,12 @@ public class FragmantStoreRecyclerViewAdapter extends RecyclerView.Adapter<Fragm
             super(itemView);
 
             itemStoreName = itemView.findViewById(R.id.itemStoreName);
-//            itemStoreDistance = itemView.findViewById(R.id.itemStoreDistance);
             itemStoreAddress = itemView.findViewById(R.id.itemStoreAddress);
-//            itemStorePosts = itemView.findViewById(R.id.itemStorePosts);
-//            itemStoreScore = itemView.findViewById(R.id.itemStoreScore);
         }
 
         void onBind(StoreInfo storeInfo) {
             itemStoreName.setText(storeInfo.getName());
-//            itemStoreDistance.setText(String.valueOf(storeInfo.getStoreDistance()));
             itemStoreAddress.setText(storeInfo.getAddress());
-//            itemStorePosts.setText(storeInfo.getStorePosts());
-//            itemStoreScore.setText(String.valueOf(storeInfo.getAver_star()));
         }
 
         //여기에 각 가게 터치 시 각 가게 페이지로 넘어가도록

@@ -8,8 +8,8 @@ import java.io.Serializable;
 * */
 public class SearchedData implements Serializable {
     public String place_name;
-    public String x;
-    public String y;
+    public String x;//longitude
+    public String y;//lat
     public String address;
 
     public String getAddress() {

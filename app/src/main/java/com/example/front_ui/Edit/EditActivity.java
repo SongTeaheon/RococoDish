@@ -25,7 +25,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -105,7 +104,7 @@ public class EditActivity extends AppCompatActivity {
         addressText = findViewById(R.id.textViewAddress);
         addressText.setText(postingInfo.getAddress());
 
-        storeName = findViewById(R.id.tvStore);
+        storeName = findViewById(R.id.mainText);
         storeName.setText(storeInfo.getName());
 
         starText = findViewById(R.id.starText);
