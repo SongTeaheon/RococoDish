@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -67,12 +68,14 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     double distance;
     private String uuid;
     int index;
+    FrameLayout loadingFrame;
 
 
     public SectionListDataAdapter(Context context,
                                   StoreInfo storeInfo,
                                   double distance,
-                                  int index) {
+                                  int index,
+                                  FrameLayout loadingFrame) {
         Log.d(TAG, "SectionListDataAdapter");
         this.mContext = context;
         this.storeInfo = storeInfo;
@@ -83,6 +86,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         storageReference = storage.getReference();
         list = new ArrayList<>();
         getPostDataFromCloud(storeInfo.getStoreId());
+        this.loadingFrame = loadingFrame;
     }
 
 
@@ -184,6 +188,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                             notifyDataSetChanged();
 
                             if(index == 3)//다이얼로그 끝!
+                                loadingFrame.setVisibility(View.GONE);
                                 return; //todo : 로딩 끝냄
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());

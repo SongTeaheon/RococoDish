@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.front_ui.Utils.LocationUtil;
@@ -44,11 +45,13 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     SectionListDataAdapter itemListDataAdapter;
     private Location mCurrentLocation;
     int isCalled;//onBindView가 다음으로 몇 번째가 불릴 건지 센다. - 중복해서 불리는 건 세지 않는다.
+    FrameLayout loadingFrame;
 
 
 
     public RecyclerViewDataAdapter(Context context,
-                                   Location cLocation) {
+                                   Location cLocation,
+                                   FrameLayout loadingFrame) {
         Log.d(TAG, "adpater constructor called");
         Log.d(TAG, "x, y : " + cLocation.getLongitude() + " " + cLocation.getLatitude());
         list= new ArrayList<>();
@@ -57,6 +60,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         mCurrentLocation = cLocation;
         getCloseStoreIdAndGetData();
         isCalled = 0;
+        this.loadingFrame = loadingFrame;
     }
 
     @Override
@@ -94,7 +98,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
         if(isCalled <= i) {
 
-            itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance, i);
+            itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance, i, loadingFrame);
             itemListDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
             itemRowHolder.recycler_view_list.setHasFixedSize(true);
             itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));

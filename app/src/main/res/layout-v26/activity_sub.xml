@@ -75,6 +75,21 @@
         <!--app:layout_constraintStart_toStartOf="@+id/search_btn"-->
         <!--app:layout_constraintTop_toBottomOf="@+id/search_btn"-->
         <!--app:layout_constraintVertical_bias="0.0" />-->
+    <!--로딩창-->
+    <FrameLayout
+        android:id="@+id/loadingFrame"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:elevation="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relLayout1">
+
+        <include layout="@layout/dialog_loading" />
+    </FrameLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_layout"
