@@ -16,8 +16,10 @@
         android:roundIcon="@drawable/rococo_app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CocomentActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
+        <activity android:name=".Search.RegionSearchActivity"></activity>
+        <activity
+            android:name=".CocomentActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -65,8 +67,9 @@
         <activity android:name=".PostingProcess.MainShareActivity" />
         <activity android:name=".StorePageActivity" />
         <activity android:name=".FollowActivity" />
-        <activity android:name=".LoginDialog"
-            android:theme="@style/Theme.MaterialComponents.Light.Dialog"/>
+        <activity
+            android:name=".LoginDialog"
+            android:theme="@style/Theme.MaterialComponents.Light.Dialog" />
         <activity android:name=".SubActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

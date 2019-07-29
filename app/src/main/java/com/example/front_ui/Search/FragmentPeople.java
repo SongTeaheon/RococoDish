@@ -26,9 +26,11 @@ public class FragmentPeople extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.search_fragment_people, container, false);
         list = ((SubSearchPage)getActivity()).getPeopleList();
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.peopleRecyclerView);
+        double lat = ((SubSearchPage)getActivity()).getLat();
+        double lon = ((SubSearchPage)getActivity()).getLon();
 
-        adapter = new FragmantPeopleRecyclerViewAdapter(getContext(), list);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.peopleRecyclerView);
+        adapter = new FragmantPeopleRecyclerViewAdapter(getActivity(), list, lat, lon);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 

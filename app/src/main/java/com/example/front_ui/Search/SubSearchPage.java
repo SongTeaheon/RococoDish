@@ -1,5 +1,6 @@
 package com.example.front_ui.Search;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -83,11 +84,17 @@ public class SubSearchPage extends AppCompatActivity {
     TextView tvPeople;
     TextView tvTag;
 
+    double currentLatitude;
+    double currentLongtitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sub_search_page);
+
+        Intent intent = this.getIntent();
+        currentLatitude = intent.getDoubleExtra("latitude", 0.0);
+        currentLongtitude = intent.getDoubleExtra("longitude", 0.0);
 
         storeList = new ArrayList<>();;
         regionList = new ArrayList<>();
@@ -195,7 +202,7 @@ public class SubSearchPage extends AppCompatActivity {
         Log.d(TAG, "initRecyclerViewPeople");
         recyclerViewPeople.setHasFixedSize(true);
         //가게 안에 목록 가져오는 리사이클러뷰
-        FragmantPeopleRecyclerViewAdapter peopleRecyclerViewAdapter = new FragmantPeopleRecyclerViewAdapter(this, peopleList);
+        FragmantPeopleRecyclerViewAdapter peopleRecyclerViewAdapter = new FragmantPeopleRecyclerViewAdapter(this, peopleList, currentLatitude, currentLongtitude);
         recyclerViewPeople.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewPeople.setAdapter(peopleRecyclerViewAdapter);
     }
@@ -429,5 +436,13 @@ public class SubSearchPage extends AppCompatActivity {
     public ArrayList<AlgoliaTagData> getTagList(){
         return tagList;
     }
+    public double getLat(){
+        return currentLatitude;
+    }
+    public double getLon(){
+        return currentLongtitude;
+    }
+
+
 
 }

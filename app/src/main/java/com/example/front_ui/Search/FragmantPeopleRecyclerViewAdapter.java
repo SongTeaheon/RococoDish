@@ -1,8 +1,10 @@
 package com.example.front_ui.Search;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +13,26 @@ import android.widget.TextView;
 
 import com.example.front_ui.DataModel.FragmentPeopleData;
 import com.example.front_ui.DataModel.UserInfo;
+import com.example.front_ui.MyPage;
 import com.example.front_ui.R;
+import com.example.front_ui.SubActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
 public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<FragmantPeopleRecyclerViewAdapter.ItemViewHolder> {
 
+    private final String TAG = "FragmentPeopleRecycler";
     private ArrayList<UserInfo> listData;
+    private Context mContext;
+    private double currentLat;
+    private double currentLon;
 
-    public FragmantPeopleRecyclerViewAdapter(Context mContext, ArrayList<UserInfo> list) {
+    public FragmantPeopleRecyclerViewAdapter(Context mContext, ArrayList<UserInfo> list, double lat, double lon) {
         this.listData = list;
+        this.mContext = mContext;
+        this.currentLat = lat;
+        this.currentLon = lon;
     }
 
     @NonNull
@@ -33,11 +45,16 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         holder.onBind(listData.get(position));
-        UserInfo userInfo = listData.get(position);
+        final UserInfo userInfo = listData.get(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Log.d(TAG, "item is cliceked. go to MyPage userid : " + userInfo.getUserId());
+                Intent intent = new Intent(mContext, MyPage.class);
+                intent.putExtra("userUUID", userInfo.getUserId());
+                intent.putExtra("latitude", currentLat);
+                intent.putExtra("longitude", currentLon);
+                mContext.startActivity(intent);
             }
         });
     }

@@ -7,6 +7,7 @@ public class UserInfo {
     public String follower;
     public String following;
     public int postingNum;
+    public String userId;
     //망할 깃헙 테스트
 
 
@@ -33,5 +34,13 @@ public class UserInfo {
     }
 
     public UserInfo() {
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
