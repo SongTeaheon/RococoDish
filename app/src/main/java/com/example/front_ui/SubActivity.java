@@ -28,6 +28,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,6 +81,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     TextView userNameText;
     RecyclerViewDataAdapter recyclerViewDataAdapter;
     FloatingActionButton addPosting;
+    FrameLayout loadingFrame;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -351,12 +353,14 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 
     //주변 가게 recyclerviewt세팅!
     private void initRecyclerView(Location locationCenter) {
-        //로딩창
+        //todo :로딩창
+        loadingFrame = findViewById(R.id.loadingFrame);
+        loadingFrame.setVisibility(View.VISIBLE);
 
         Log.d(TAG, "initRecyclerView");
         main_recyclerview.setHasFixedSize(true);
         //가게 안에 목록 가져오는 리사이클러뷰
-        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter);
+        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter, loadingFrame);
         recyclerViewDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
         main_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         main_recyclerview.setAdapter(recyclerViewDataAdapter);
@@ -368,8 +372,10 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         // 새로고침 코드
         getCurrentLocation();
 
+        loadingFrame = findViewById(R.id.loadingFrame);
+
         main_recyclerview.setHasFixedSize(true);
-        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, mCurrentLocation);
+        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, mCurrentLocation, loadingFrame);
         main_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         main_recyclerview.setAdapter(recyclerViewDataAdapter);
 

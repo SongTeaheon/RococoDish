@@ -38,12 +38,19 @@
             app:layout_constraintStart_toStartOf="@+id/textView3"
             app:layout_constraintTop_toBottomOf="@+id/textView3">
 
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/lottie_anim"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <!--<com.airbnb.lottie.LottieAnimationView-->
+                <!--android:id="@+id/lottie_anim"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--app:lottie_loop="true"-->
+                <!--app:lottie_fileName="lottie_foods.json"-->
+                <!--app:lottie_autoPlay="true" />-->
+
+            <ProgressBar
                 android:layout_gravity="center"
-                app:lottie_autoPlay="true" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
         </android.support.v7.widget.CardView>
     </LinearLayout>
