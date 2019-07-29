@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
-        android:id="@+id/listview_storeSearch"
+        android:id="@+id/listview_record"
         android:layout_width="363dp"
         android:layout_height="630dp"
         android:layout_marginStart="8dp"
@@ -43,7 +43,7 @@
         android:layout_marginBottom="8dp"
         android:text="클릭금지"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/listview_storeSearch"
+        app:layout_constraintBottom_toTopOf="@+id/listview_record"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/editText_storeNameSearch"
         app:layout_constraintTop_toTopOf="parent" />

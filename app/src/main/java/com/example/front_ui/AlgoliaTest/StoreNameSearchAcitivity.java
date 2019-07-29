@@ -42,7 +42,7 @@ public class StoreNameSearchAcitivity extends AppCompatActivity {
         setContentView(R.layout.activity_store_name_search_acitivity);
 
         db = FirebaseFirestore.getInstance();
-        listView = findViewById(R.id.listview_storeSearch);
+        listView = findViewById(R.id.listview_record);
         editText = findViewById(R.id.editText_storeNameSearch);
         editText.addTextChangedListener(new TextWatcher() {
             @Override

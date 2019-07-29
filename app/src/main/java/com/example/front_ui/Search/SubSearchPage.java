@@ -48,6 +48,8 @@ public class SubSearchPage extends AppCompatActivity {
     private FragmentRegion fragmentRegion = new FragmentRegion();
     private FragmentTag fragmentTag = new FragmentTag();
     private FragmentPeople fragmentPeople = new FragmentPeople();
+    private SearchRecordFragment fragmentRecord = new SearchRecordFragment();
+
 
     Retrofit retrofit;
     KakaoApiStoreSearchService service;
@@ -65,6 +67,8 @@ public class SubSearchPage extends AppCompatActivity {
     ArrayList<SearchedData> regionList;
     ArrayList<UserInfo> peopleList;
     ArrayList<AlgoliaTagData> tagList;
+    ArrayList<String> recordList;
+
 
     //리사이클러 뷰
     RecyclerView recyclerViewStore;
@@ -99,6 +103,8 @@ public class SubSearchPage extends AppCompatActivity {
         storeList = new ArrayList<>();;
         regionList = new ArrayList<>();
         peopleList = new ArrayList<>();
+        recordList = new ArrayList<>();
+
 
         recyclerViewStore = findViewById(R.id.recyclerviewStore);
         recyclerViewPeople = findViewById(R.id.recyclerviewPeople);
@@ -124,15 +130,10 @@ public class SubSearchPage extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d(TAG, "search button is clicked");
                 String keyword = editText.getText().toString();
-                dbHandler.insert(keyword);
-
-                getRegionSearchResult(keyword);
-                getPeopleSearchResult(keyword);
-                getTagSearchResult(keyword);
-                getStoreSearchResult(keyword);
-
+                searchButtonClicked(keyword);
             }
         });
+
 
         tvStore.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -174,6 +175,10 @@ public class SubSearchPage extends AppCompatActivity {
             }
         });
 
+
+        /*
+        * DB설정
+        * */
         //검색 기록을 위한 DB
         if( dbHandler == null ) {
             dbHandler = MyDBHandler.open(this);
@@ -183,12 +188,24 @@ public class SubSearchPage extends AppCompatActivity {
         Log.d(TAG, "record size : " + c.getCount());
 
         if(c.getCount() != 0)
-            dbHandler.getAllRecordData();
+            dbHandler.getAllRecordData(recordList);
+        //검색 기록 프래그먼트부터 보여준다.
+        initFragment(fragmentRecord);
 //        mAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_list_item_activated_2,
 //                c, new String[]{"id", "record"}, new int[]{android.R.id.text1, android.R.id.text2}, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         //id와 record를 찍어보자
 
     }
+
+    public void searchButtonClicked(String keyword){
+        dbHandler.insert(keyword);
+        deleteFragment(fragmentRecord);
+        getRegionSearchResult(keyword);
+        getPeopleSearchResult(keyword);
+        getTagSearchResult(keyword);
+        getStoreSearchResult(keyword);
+    }
+
     /********************************* 리사이클러 뷰 4개 세팅  ********************************/
     void initRecyclerViewStore(){
         Log.d(TAG, "initRecyclerViewStore");
@@ -225,6 +242,9 @@ public class SubSearchPage extends AppCompatActivity {
 
     void initFragment(Fragment fragment){
         fragmentManager.beginTransaction().replace(R.id.resultFrameLayout, fragment).commit();
+    }
+    void deleteFragment(Fragment fragment){
+        fragmentManager.beginTransaction().remove(fragment).commit();
     }
 
     /********************************* 가게, 지역, 사람 검색 만들기 필요 변수 및 함수  *********************************/
@@ -436,6 +456,10 @@ public class SubSearchPage extends AppCompatActivity {
     }
     public ArrayList<AlgoliaTagData> getTagList(){
         return tagList;
+    }
+
+    public ArrayList<String> getRecordList(){
+        return recordList;
     }
     public double getLat(){
         return currentLatitude;

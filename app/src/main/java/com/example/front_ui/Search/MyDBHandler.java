@@ -56,7 +56,8 @@ public class MyDBHandler {
     }
 
     //TODO: 예쁘게 바꿔보
-    public void getAllRecordData() {
+    public void getAllRecordData(ArrayList<String> list) {
+        Log.d(TAG, "getAllRecordData");
         StringBuffer sb = new StringBuffer();
         sb.append(" SELECT _ID, RECORD FROM SEARCH_TABLE ");
      // 읽기 전용 DB 객체를 만든다
@@ -68,6 +69,7 @@ public class MyDBHandler {
         while( cursor.moveToNext() ) {
             Log.d(TAG, "id : " + cursor.getInt(0));
             Log.d(TAG, "record : " + cursor.getString(1));
+            list.add(cursor.getString(1));
 //            person = new Person();
 //            person.set_id(cursor.getInt(0));
 //            person.setName(cursor.getString(1));
