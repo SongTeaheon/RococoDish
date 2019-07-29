@@ -41,7 +41,6 @@ import com.example.front_ui.Interface.FirebasePredicate;
 import com.example.front_ui.PostingProcess.MainShareActivity;
 import com.example.front_ui.Search.SubSearchPage;
 import com.example.front_ui.Utils.DataPassUtils;
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -81,7 +80,6 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     TextView userNameText;
     RecyclerViewDataAdapter recyclerViewDataAdapter;
     FloatingActionButton addPosting;
-    ProgressDialog dialog;
     LoadingProgressDialog loadingProgressDialog;
 
 
@@ -356,9 +354,6 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     //주변 가게 recyclerviewt세팅!
     private void initRecyclerView(Location locationCenter) {
         //로딩창
-//        dialog = new ProgressDialog(this);
-//        dialog.setMessage("가게를 불러오고 있습니다.");
-//        dialog.show();
 
         loadingProgressDialog = new LoadingProgressDialog(this);
         loadingProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

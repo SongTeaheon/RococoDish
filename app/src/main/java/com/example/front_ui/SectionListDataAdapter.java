@@ -188,11 +188,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
                     }
-                }).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-            }
-        });
+                });
 
 
     }

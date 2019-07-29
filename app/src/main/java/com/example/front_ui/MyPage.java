@@ -466,14 +466,21 @@ class MyAdapter extends BaseAdapter {
     private void getPostingDataFromCloud(String userUUID) {
         Log.d(TAG, "getDataFromFirestore");
 
+        final ProgressDialog progressDialog = new ProgressDialog(mContext);
+        progressDialog.setMessage("게시물을 불러오는 중입니다.");
+        progressDialog.show();
+
         db.collection("포스팅")
                 .whereEqualTo("writerId", userUUID)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.d(TAG, e.getMessage());
+                        }
+                        if (!queryDocumentSnapshots.isEmpty()) {
+
+                            for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 //store 정보를 가져오고, id를 따로 저장한다.
                                 PostingInfo postingInfo = document.toObject(PostingInfo.class);
@@ -481,14 +488,37 @@ class MyAdapter extends BaseAdapter {
                                 list.add(postingInfo);
                                 notifyDataSetChanged();
                             }
-                            Log.d(TAG, "getPostingData size : " + task.getResult().size());
-                            mCallback.setNumberOfData(task.getResult().size());
+                            Log.d(TAG, "getPostingData size : " + queryDocumentSnapshots.getDocuments().size());
+                            mCallback.setNumberOfData(queryDocumentSnapshots.getDocuments().size());
                         } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
+                            Log.d(TAG, "getPostingData size : " + queryDocumentSnapshots.getDocuments().size());
+                            mCallback.setNumberOfData(queryDocumentSnapshots.getDocuments().size());
                         }
+                        progressDialog.dismiss();
                     }
                 });
     }
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Log.d(TAG, document.getId() + " => " + document.getData());
+//                                //store 정보를 가져오고, id를 따로 저장한다.
+//                                PostingInfo postingInfo = document.toObject(PostingInfo.class);
+//                                //해당 가게 정보의 post데이터를 가져온다.
+//                                list.add(postingInfo);
+//                                notifyDataSetChanged();
+//                            }
+//                            Log.d(TAG, "getPostingData size : " + task.getResult().size());
+//                            mCallback.setNumberOfData(task.getResult().size());
+//                        } else {
+//                            Log.w(TAG, "Error getting documents.", task.getException());
+//                        }
+//                    }
+//                });
+//    }
 
 }
 

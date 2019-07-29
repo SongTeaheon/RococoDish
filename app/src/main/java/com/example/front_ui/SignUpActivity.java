@@ -152,16 +152,16 @@ public class SignUpActivity extends AppCompatActivity {
             private void handleFacebookAccessToken(AccessToken token){
                 Log.d(TAG, "handleFacebookAccessToken : "+token);
 
+                final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this);
+                progressDialog.setMessage("회원정보 확인중입니다");
+                progressDialog.show();
+
                 AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
                 auth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Log.d(TAG, "signInWithCredential이 성공적");
-
-                            final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this);
-                            progressDialog.setMessage("회원정보 확인중입니다");
-                            progressDialog.show();
 
                             final FirebaseUser user = auth.getCurrentUser();
                             final DocumentReference userRef = firestore.collection("사용자").document(auth.getUid());
@@ -304,6 +304,10 @@ public class SignUpActivity extends AppCompatActivity {
          * **/
         if(requestCode == RC_GOOGLE_LOGIN){
             Task task = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+            final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this);
+            progressDialog.setMessage("회원정보 확인중입니다.");
+            progressDialog.show();
             try{
                 GoogleSignInAccount account = (GoogleSignInAccount) task.getResult(ApiException.class);
                 Log.d(TAG, "구글에서 받은 계정정보 = "+ account.toString());
@@ -314,11 +318,7 @@ public class SignUpActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()){
                                     Log.d(TAG, "계정정보 받은 후 signInWithCredential:성공");
-                                    final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this);
-                                    progressDialog.setMessage("회원정보 확인중입니다.");
-                                    progressDialog.show();
 
-                                    //todo
                                     final DocumentReference userRef = firestore.collection("사용자").document(auth.getUid());
 
                                     userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

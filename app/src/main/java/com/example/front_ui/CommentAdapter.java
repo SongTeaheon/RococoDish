@@ -188,10 +188,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                 public void onClick(DialogInterface dialog, int which) {
                                     switch (meCommentOptions[which]){
                                         case "대댓글 달기":
-                                            //댓글 도큐먼트 아이디를 DishView에 넘김(거기서 리스너로 받으면 됨.)
-//                                            commentAdapterToDishView.sendGetCommentDocId(docId);
-                                            //todo : 대댓글 작성하는 창으로 이동
-                                            //todo : 이동하면서 기존에 댓글 부분 정보랑 내 프로필 이미지 같이 전달
                                             Intent intent = new Intent(context, CocomentActivity.class);
                                             Bundle bundle = new Bundle();
                                             bundle.putSerializable("commentInfo", parentList.get(i));
@@ -243,8 +239,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                 public void onClick(DialogInterface dialog, int which) {
                                     switch (otherCommentOptions[which]){
                                         case "대댓글 달기":
-                                            //댓글 도큐먼트 아이디를 DishView에 넘김(거기서 리스너로 받으면 됨.)
-                                            commentAdapterToDishView.sendGetCommentDocId(docId);
+                                            Intent intent = new Intent(context, CocomentActivity.class);
+                                            Bundle bundle = new Bundle();
+                                            bundle.putSerializable("commentInfo", parentList.get(i));
+                                            intent.putExtra("postingInfo", postingInfo);
+                                            intent.putExtras(bundle);
+                                            context.startActivity(intent);
                                             break;
                                         case "취소":
                                             dialog.dismiss();
