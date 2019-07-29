@@ -176,6 +176,7 @@ public class LoginDialog extends Activity {
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     if(!documentSnapshot.exists()){
                                         UserInfo newUser = new UserInfo(
+                                                FirebaseAuth.getInstance().getUid(),
                                                 user.getEmail(),
                                                 user.getDisplayName(),
                                                 MyPage.basicProfile,
@@ -258,6 +259,7 @@ public class LoginDialog extends Activity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if(!documentSnapshot.exists()){
                             final UserInfo newUser = new UserInfo(
+                                    FirebaseAuth.getInstance().getUid(),
                                     auth.getCurrentUser().getEmail(),
                                     auth.getCurrentUser().getDisplayName(),
                                     MyPage.basicProfile,
@@ -292,10 +294,10 @@ public class LoginDialog extends Activity {
                     }
                 });
             }
-            else{
-                Toast.makeText(this, "다른 계정으로 가입한 이메일입니다.", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
+//            else{
+//                Toast.makeText(this, "다른 계정으로 가입한 이메일입니다.", Toast.LENGTH_SHORT).show();
+//                progressDialog.dismiss();
+//            }
         }
         /**
          * 페이스북 로그인 응답
@@ -331,6 +333,7 @@ public class LoginDialog extends Activity {
                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                                             if(!documentSnapshot.exists()){
                                                 UserInfo newUser = new UserInfo(
+                                                        FirebaseAuth.getInstance().getUid(),
                                                         auth.getCurrentUser().getEmail(),
                                                         auth.getCurrentUser().getDisplayName(),
                                                         MyPage.basicProfile,

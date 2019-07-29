@@ -1,6 +1,7 @@
 package com.example.front_ui.DataModel;
 
 public class UserInfo {
+    public String uid;
     public String eMail;
     public String nickname;
     public String profileImage;
@@ -11,12 +12,14 @@ public class UserInfo {
     //망할 깃헙 테스트
 
 
-    public UserInfo(String eMail,
+    public UserInfo(String uid,
+                    String eMail,
                     String nickName,
                     String profileImage,
                     String follower,
                     String following,
                     int postingNum) {
+        this.uid = uid;
         this.eMail = eMail;
         this.nickname = nickName;
         this.profileImage = profileImage;
