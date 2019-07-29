@@ -3,6 +3,7 @@ package com.example.front_ui.Search;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,11 @@ import java.util.ArrayList;
 
 public class FragmantStoreRecyclerViewAdapter extends RecyclerView.Adapter<FragmantStoreRecyclerViewAdapter.ItemViewHolder> {
 
+    final private String TAG = "TAGFragmentStoreAdapter";
     private ArrayList<StoreInfo> listData;
 
     public FragmantStoreRecyclerViewAdapter(Context mConxtext, ArrayList<StoreInfo> list) {
+        Log.d(TAG, "FragmantStoreRecyclerViewAdapter constructor");
         this.listData = list;
     }
 

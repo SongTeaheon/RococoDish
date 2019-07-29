@@ -3,6 +3,8 @@ package com.example.front_ui.Search;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.front_ui.DataModel.AlgoliaTagData;
 import com.example.front_ui.DataModel.SearchedData;
@@ -67,10 +70,17 @@ public class SubSearchPage extends AppCompatActivity {
     RecyclerView recyclerViewRegion;
     RecyclerView recyclerViewTag;
 
+    NestedScrollView scrollView;
+
     CardView cardViewStore;
     CardView cardViewPeople;
     CardView cardViewRegion;
     CardView cardViewTag;
+
+    TextView tvStore;
+    TextView tvRegion;
+    TextView tvPeople;
+    TextView tvTag;
 
 
     @Override
@@ -92,6 +102,11 @@ public class SubSearchPage extends AppCompatActivity {
         cardViewRegion = findViewById(R.id.cardviewRegion);
         cardViewTag = findViewById(R.id.cardviewTag);
 
+        tvStore = findViewById(R.id.tv_store);
+        tvPeople = findViewById(R.id.tv_people);
+        tvRegion = findViewById(R.id.tv_region);
+        tvTag = findViewById(R.id.tv_tag);
+
         editText = findViewById(R.id.mainsearch_text);
 
         //검색 버튼
@@ -108,6 +123,35 @@ public class SubSearchPage extends AppCompatActivity {
                 getTagSearchResult(keyword);
                 getStoreSearchResult(keyword);
 
+            }
+        });
+
+        tvStore.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "tvStore is clicked");
+//                fragmentManager.beginTransaction().replace(R.id.framelayout, new FragmentStore()).commit();
+            }
+        });
+        tvRegion.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "tvRegion is clicked");
+//                fragmentManager.beginTransaction().replace(R.id.framelayout, fragmentRegion).commit();
+            }
+        });
+        tvPeople.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "tvPeople is clicked");
+//                fragmentManager.beginTransaction().replace(R.id.framelayout, fragmentPeople).commit();
+            }
+        });
+        tvTag.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "tvTag is clicked");
+//                fragmentManager.beginTransaction().replace(R.id.framelayout, fragmentTag).commit();
             }
         });
 
@@ -179,9 +223,11 @@ public class SubSearchPage extends AppCompatActivity {
                 for(int i = 0; i < storeList.size(); i++){
                     Log.d(TAG, "store data " + i + " : "+ storeList.get(i).getName());
                 }
-                if(storeList.size() != 0)
+                if(storeList.size() != 0) {
                     initRecyclerViewStore();
-                else {
+                    cardViewStore.setVisibility(View.VISIBLE);
+                }else {
+                    Log.d(TAG, "no data for Store");
                     recyclerViewStore.setVisibility(View.GONE);
                     cardViewStore.setVisibility(View.GONE);
                 }
@@ -197,9 +243,11 @@ public class SubSearchPage extends AppCompatActivity {
                 for(int i = 0; i < peopleList.size(); i++){
                     Log.d(TAG, "user data " + i + " : "+ peopleList.get(i).getNickname());
                 }
-                if(peopleList.size() != 0)
+                if(peopleList.size() != 0) {
                     initRecyclerViewPeople();
-                else {
+                    cardViewPeople.setVisibility(View.VISIBLE);
+                }else {
+                    Log.d(TAG, "no data for People");
                     recyclerViewPeople.setVisibility(View.GONE);
                     cardViewPeople.setVisibility(View.GONE);
                 }
@@ -217,9 +265,11 @@ public class SubSearchPage extends AppCompatActivity {
                 for(int i = 0; i < tagList.size(); i++){
                     Log.d(TAG, "tag data " + i + " : "+ tagList.get(i).getText());
                 }
-                if(tagList.size() != 0)
+                if(tagList.size() != 0) {
                     initRecyclerViewTag();
-                else {
+                    cardViewTag.setVisibility(View.VISIBLE);
+                }else {
+                    Log.d(TAG, "no data for Tag");
                     recyclerViewTag.setVisibility(View.GONE);
                     cardViewTag.setVisibility(View.GONE);
                 }
@@ -266,7 +316,7 @@ public class SubSearchPage extends AppCompatActivity {
                     Log.d(TAG, "request_local enqueue is Successed. data : " + response.body().toString());
                     local_list = JsonParsing.parseJsonToSearchedInfo(response.body(), searchWord, 1);
                     localCnt = local_list.size();
-                    if(localCnt > -1 && schoolCnt >-1 && subwayCnt > -1 && attractionCnt > -1){
+                    if(localCnt > -1 && schoolCnt >-1 && subwayCnt > -1){
                         makeResultForStoreSearch();
                     }
                 }
@@ -286,7 +336,7 @@ public class SubSearchPage extends AppCompatActivity {
                     Log.d(TAG, "request_school enqueue is Successed. data : " + response.body().toString());
                     school_list = JsonParsing.parseJsonToSearchedInfo(response.body(),  searchWord,2);
                     schoolCnt = school_list.size();
-                    if(localCnt > -1 && schoolCnt >-1 && subwayCnt > -1 && attractionCnt > -1){
+                    if(localCnt > -1 && schoolCnt >-1 && subwayCnt > -1){
                         makeResultForStoreSearch();
                     }
                 }
@@ -306,7 +356,7 @@ public class SubSearchPage extends AppCompatActivity {
                     Log.d(TAG, "request_subway enqueue is Successed. data : " + response.body().toString());
                     subway_list = JsonParsing.parseJsonToSearchedInfo(response.body(), searchWord, 2);
                     subwayCnt = subway_list.size();
-                    if(localCnt > -1 && schoolCnt >-1 && subwayCnt > -1 && attractionCnt > -1){
+                    if(localCnt > -1 && schoolCnt >-1 && subwayCnt > -1){
                         makeResultForStoreSearch();
                     }
                 }
@@ -344,13 +394,17 @@ public class SubSearchPage extends AppCompatActivity {
         regionList.addAll(subway_list);
         regionList.addAll(school_list);
 //        regionList.addAll(attraction_list);
+        Log.d(TAG, "size of local list : " + local_list.size());
+        Log.d(TAG, "size of region list : " + regionList.size());
 
         for(int i = 0; i < regionList.size(); i++){
             Log.d(TAG, "region data " + i + " : "+ regionList.get(i).getPlace_name());
         }
-        if(regionList.size() != 0)
+        if(regionList.size() != 0) {
             initRecyclerViewRegion();
-        else {
+            cardViewRegion.setVisibility(View.VISIBLE);
+        }else {
+            Log.d(TAG, "no data for region");
             recyclerViewRegion.setVisibility(View.GONE);
             cardViewRegion.setVisibility(View.GONE);
         }

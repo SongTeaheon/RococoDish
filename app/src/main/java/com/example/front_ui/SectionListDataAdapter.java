@@ -187,17 +187,20 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                             Log.d(TAG, "notifyDataSetChanged!!!!!!!!!");
                             notifyDataSetChanged();
 
-                            if(index == 3)//다이얼로그 끝!
-                                dialog.dismiss();
+                            if(index == 3) //TODO: 태완님 여기가 done타이밍입니당
+                                Toast.makeText(mContext, "done timing2", Toast.LENGTH_SHORT).show();
+
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
                     }
-                }).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-            }
-        });
+                });
+//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//            @Override
+//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                dialog.dismiss();
+//            }
+//        });
 
 
     }

@@ -360,10 +360,10 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 //        dialog.setMessage("가게를 불러오고 있습니다.");
 //        dialog.show();
 
-        loadingProgressDialog = new LoadingProgressDialog(this);
-        loadingProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        loadingProgressDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-        loadingProgressDialog.show();
+//        loadingProgressDialog = new LoadingProgressDialog(this);
+//        loadingProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        loadingProgressDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+//        loadingProgressDialog.show();
 
         Log.d(TAG, "initRecyclerView");
         main_recyclerview.setHasFixedSize(true);
