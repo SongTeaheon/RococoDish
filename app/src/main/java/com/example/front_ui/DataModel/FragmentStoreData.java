@@ -2,7 +2,7 @@ package com.example.front_ui.DataModel;
 
 import java.io.Serializable;
 
-public class FragmentSotreData implements Serializable {
+public class FragmentStoreData implements Serializable {
 
     private String storeName;
     private String storeAddress;

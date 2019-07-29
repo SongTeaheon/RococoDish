@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.front_ui.DataModel.FragmentSotreData;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.R;
 
