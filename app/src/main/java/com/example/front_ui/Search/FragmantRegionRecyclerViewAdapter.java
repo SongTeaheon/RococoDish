@@ -1,6 +1,7 @@
 package com.example.front_ui.Search;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 
 import com.example.front_ui.DataModel.FragmentRegionData;
 import com.example.front_ui.DataModel.SearchedData;
+import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.MyPage;
 import com.example.front_ui.R;
 
 import java.util.ArrayList;
@@ -33,6 +36,20 @@ public class FragmantRegionRecyclerViewAdapter extends RecyclerView.Adapter<Frag
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         holder.onBind(listData.get(position));
+        SearchedData searchedData = listData.get(position);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: 가게 페이지로 넘어가는 부분. storeInfo는 정확하지 않아서 아이디만 사용해야할 거 같아요
+                //여기에서 lat과 lon을 보내줘야함.
+//                Intent intent = new Intent(mContext, MyPage.class);
+//                intent.putExtra("userUUID", userInfo.getUserId());
+//                intent.putExtra("latitude", currentLat);
+//                intent.putExtra("longitude", currentLon);
+//                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override

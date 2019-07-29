@@ -16,11 +16,15 @@
         android:roundIcon="@drawable/rococo_app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".CocomentActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"></activity>
         <activity android:name=".StartActivity"
             android:screenOrientation="portrait">
+
+        <activity android:name=".Search.RegionSearchActivity"></activity>
+        
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -73,6 +77,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity android:name=".MyPage" />
+
         <activity android:name=".PostingProcess.MainShareActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".StorePageActivity"
@@ -83,6 +88,7 @@
             android:theme="@style/Theme.MaterialComponents.Light.Dialog"/>
         <activity android:name=".SubActivity"
             android:screenOrientation="portrait">
+          
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

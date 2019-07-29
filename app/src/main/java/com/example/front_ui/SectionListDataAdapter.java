@@ -189,7 +189,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
                             if(index == 3)//다이얼로그 끝!
                                 loadingFrame.setVisibility(View.GONE);
-                                return; //todo : 로딩 끝냄
+
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }

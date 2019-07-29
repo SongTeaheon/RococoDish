@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.front_ui.DataModel.AlgoliaTagData;
+import com.example.front_ui.DataModel.SearchedData;
 import com.example.front_ui.R;
+import com.example.front_ui.Utils.AlgoliaUtils;
 
 import java.util.ArrayList;
 
@@ -32,6 +34,14 @@ public class FragmantTagRecyclerViewAdapter extends RecyclerView.Adapter<Fragman
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         holder.onBind(listData.get(position));
+
+        AlgoliaTagData tagData =  listData.get(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: TAG페이지로 넘어가는 부분.
+            }
+        });
     }
 
     @Override

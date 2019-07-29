@@ -3,6 +3,7 @@ package com.example.front_ui.Search;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,11 @@ import java.util.ArrayList;
 
 public class FragmantStoreRecyclerViewAdapter extends RecyclerView.Adapter<FragmantStoreRecyclerViewAdapter.ItemViewHolder> {
 
+    final private String TAG = "TAGFragmentStoreAdapter";
     private ArrayList<StoreInfo> listData;
 
     public FragmantStoreRecyclerViewAdapter(Context mConxtext, ArrayList<StoreInfo> list) {
+        Log.d(TAG, "FragmantStoreRecyclerViewAdapter constructor");
         this.listData = list;
     }
 
@@ -32,6 +35,15 @@ public class FragmantStoreRecyclerViewAdapter extends RecyclerView.Adapter<Fragm
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         holder.onBind(listData.get(position));
+        StoreInfo storeInfo = listData.get(position);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: 가게 페이지로 넘어가는 부분. storeInfo는 정확하지 않아서 아이디만 사용해야할 거 같아요
+            }
+        });
+
     }
 
     @Override

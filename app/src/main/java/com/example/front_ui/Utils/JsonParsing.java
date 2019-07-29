@@ -109,23 +109,19 @@ public class JsonParsing {
 
     public static ArrayList<UserInfo> getUserListFromJsonList(JSONArray jsonArray){
         ArrayList<UserInfo> list = new ArrayList<>();
-
+        Log.d(TAG, "user json array : " + jsonArray.toString());
         for(int k = 0; k < jsonArray.length(); k++){
             String jsonStr = null;
-//            UserInfo userInfo = new UserInfo();
+            UserInfo userInfo = new UserInfo();
             try {
-                JSONObject jsonObject = jsonArray.getJSONObject(k);
-//                JSONObject jsonObject = jsonArray.getJSONObject(k).getJSONObject("_highlightResult");
-//                userInfo.nickname = (String)jsonObject.get("nickname");
-//                userInfo.eMail = (String)jsonObject.get("eMail");
-                jsonStr = jsonObject.toString();
+                JSONObject jsonObject1 = jsonArray.getJSONObject(k);
+                JSONObject jsonObject2 = jsonArray.getJSONObject(k).getJSONObject("_highlightResult");
+                userInfo.nickname = (String)jsonObject1.get("nickname");
+                userInfo.eMail = (String)jsonObject2.getJSONObject("eMail").getString("value");
+                userInfo.userId = (String)jsonObject2.getJSONObject("userId").getString("value");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-            Gson gson = new Gson();
-            UserInfo userInfo = gson.fromJson(jsonStr, UserInfo.class);
-
             list.add(userInfo);
         }
         return list;

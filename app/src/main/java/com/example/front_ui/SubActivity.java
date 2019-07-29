@@ -227,8 +227,9 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
             public void onClick(View view) {
 //                Intent intent = new Intent(SubActivity.this, MainSearchActivity.class);
                 Intent intent = new Intent(SubActivity.this, SubSearchPage.class);
-
-                startActivityForResult(intent, SEARCH_REQUEST_CODE);
+                intent.putExtra("latitude", mCurrentLocation.getLatitude());
+                intent.putExtra("longitude", mCurrentLocation.getLongitude());
+                startActivity(intent);
             }
         });
 
@@ -367,7 +368,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     }
 
     //주변 가게 recyclerviewt세팅!
-    private void initRecyclerView(Location locationCenter) {
+    public void initRecyclerView(Location locationCenter) {
         //todo :로딩창
         loadingFrame = findViewById(R.id.loadingFrame);
         loadingFrame.setVisibility(View.VISIBLE);
@@ -403,31 +404,6 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         // 새로고침 완료
         recyclerViewDataAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
-    }
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
-
-        switch ( resultCode ){
-            case RESULT_OK:
-                Log.d(TAG, "back from search page ");
-                SearchedData item = (SearchedData) data.getSerializableExtra("SearchedData");
-                double x = Double.parseDouble(item.x);
-                double y = Double.parseDouble(item.y);
-                searchLocation = new Location("dummyprovider");
-                searchLocation.setLongitude(x);
-                searchLocation.setLatitude(y);
-
-                Log.d(TAG, "x, y, name : " + x +" " + y + " " + item.getPlace_name());
-
-                initRecyclerView(searchLocation);
-                break;
-            case RESULT_CANCELED:
-                initRecyclerView(mCurrentLocation);
-        }
     }
 
     @Override
