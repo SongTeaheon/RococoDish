@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -82,6 +83,8 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     RecyclerViewDataAdapter recyclerViewDataAdapter;
     FloatingActionButton addPosting;
     FrameLayout loadingFrame;
+    ViewPager myPostViewPager;
+    SubViewPagerAdapter viewPagerAdapter;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -176,25 +179,37 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         getLocationPermission(); //Permission완료해야 recyclerview를 불러온다.(그 전에 불러오면 안되기 때문)
 
 
-        //마이페이지용 리사이클러 뷰 변수
-        myPage_recyclerview = findViewById(R.id.myPage_recyclerview_activitySub);
-        Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
-        myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        myPage_recyclerview.setAdapter(myPageAdapter);
+//        마이페이지용 리사이클러 뷰 변수
+        myPostViewPager = findViewById(R.id.myPage_viewpager_activitySub);
+        viewPagerAdapter = new SubViewPagerAdapter(this);
+        myPostViewPager.setAdapter(viewPagerAdapter);
+        myPostViewPager.setOffscreenPageLimit(3);
+        myPostViewPager.setClipChildren(false);
+        myPostViewPager.setClipToPadding(false);
+        myPostViewPager.setPadding(40, 0, 40, 0);
+        myPostViewPager.setPageMargin(-300);
+        myPostViewPager.setOverScrollMode(2);
+        myPostViewPager.setPageTransformer(true, new Carousel(this));
+        myPostViewPager.setCurrentItem(1);
+//        myPage_recyclerview = findViewById(R.id.myPage_recyclerview_activitySub);
+//        Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
+//        myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+//        myPage_recyclerview.setAdapter(myPageAdapter);
+//
+//        //마이페이지 글자 누를시 이벤트
+//        main_recyclerview.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                nestedScrollView.setOnTouchListener(new View.OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View v, MotionEvent event) {
+//                        return true;
+//                    }
+//                });
+//                return false;
+//            }
+//        });
 
-        //마이페이지 글자 누를시 이벤트
-        main_recyclerview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                nestedScrollView.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        return true;
-                    }
-                });
-                return false;
-            }
-        });
 
         //별점평균 누를시 생기는 이벤트
         starText = findViewById(R.id.storeStar);
@@ -379,9 +394,11 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         main_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         main_recyclerview.setAdapter(recyclerViewDataAdapter);
 
-        Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
-        myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        myPage_recyclerview.setAdapter(myPageAdapter);
+//        Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
+//        myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+//        myPage_recyclerview.setAdapter(myPageAdapter);
+        //TODO : 뷰페이저로 수정
+
 
         // 새로고침 완료
         recyclerViewDataAdapter.notifyDataSetChanged();
