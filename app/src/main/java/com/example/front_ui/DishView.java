@@ -3,6 +3,7 @@ package com.example.front_ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -371,6 +372,9 @@ public class DishView extends AppCompatActivity {
         /**
          * 좋아요 기능 구현
          * */
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("게시물을 불러오고 있습니다.");
+        progressDialog.show();
         likeFunc();
 
         /**
@@ -416,7 +420,7 @@ public class DishView extends AppCompatActivity {
 
         //실시간 댓글 가져오기
         hasNoComments = findViewById(R.id.hasNoComments_textview_DishView);
-        realTimeFetchComment(commentRef, hasNoComments);
+        realTimeFetchComment(commentRef, hasNoComments, progressDialog);
 
 
         //아래 링크는 어댑터 클래스와 액티비티간 상호작용을 위한 인터페이스 사용법을 다룸.
@@ -432,7 +436,8 @@ public class DishView extends AppCompatActivity {
     }
 
     public void realTimeFetchComment(CollectionReference commentRef,
-                                     final TextView hasNoComments){
+                                     final TextView hasNoComments,
+                                     final ProgressDialog progressDialog){
         //실시간 댓글 가져오기
         commentRef
                 .orderBy("time", Query.Direction.ASCENDING)
@@ -465,6 +470,7 @@ public class DishView extends AppCompatActivity {
                             commentAdapter.notifyItemChanged(commentList.size());
                         }
                         commentAdapter.notifyDataSetChanged();
+                        progressDialog.dismiss();
                     }
                 });
 
@@ -583,19 +589,20 @@ public class DishView extends AppCompatActivity {
                           final DocumentReference likeRef,
                           final boolean isLiked){
 
+        //todo : 속도 때문에 좋아요 애니메이션은 일단 보류
         //좋아요 애니메이션 적용부분
-        ScaleAnimation scaleAnimation = new ScaleAnimation(
-                0.7f, 1.0f, 0.7f, 1.0f, Animation.RELATIVE_TO_SELF, 0.7f);
-        scaleAnimation.setDuration(500);
-        BounceInterpolator bounceInterpolator = new BounceInterpolator();
-        scaleAnimation.setInterpolator(bounceInterpolator);
-        //likeImage가 어떤 drawable을 가질 때마다 애니메이션을 적용해줌.(결국 이미지가 변경될 때마다 bounce애니메이션 적용함.)
-        if(likeImage.getDrawable().equals(R.drawable.ic_like)){
-            likeImage.startAnimation(scaleAnimation);
-        }
-        else {
-            likeImage.startAnimation(scaleAnimation);
-        }
+//        ScaleAnimation scaleAnimation = new ScaleAnimation(
+//                0.7f, 1.0f, 0.7f, 1.0f, Animation.RELATIVE_TO_SELF, 0.7f);
+//        scaleAnimation.setDuration(500);
+//        BounceInterpolator bounceInterpolator = new BounceInterpolator();
+//        scaleAnimation.setInterpolator(bounceInterpolator);
+//        //likeImage가 어떤 drawable을 가질 때마다 애니메이션을 적용해줌.(결국 이미지가 변경될 때마다 bounce애니메이션 적용함.)
+//        if(likeImage.getDrawable().equals(R.drawable.ic_like)){
+//            likeImage.startAnimation(scaleAnimation);
+//        }
+//        else {
+//            likeImage.startAnimation(scaleAnimation);
+//        }
 
 
         //클릭에 따른 좋아요 색 변경
@@ -670,16 +677,6 @@ public class DishView extends AppCompatActivity {
                         Log.d(TAG, "좋아요 개수를 디비에 업데이트했습니다.");
                     }
                 });
-        //        FirebaseFirestore.getInstance()
-//                .collection("포스팅")
-//                .document(postingInfo.postingId)
-//                .update("numLike", gloabal_like)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.d(TAG, "좋아요 개수를 디비에 업데이트했습니다.");
-//                    }
-//                });
 
     }
 }

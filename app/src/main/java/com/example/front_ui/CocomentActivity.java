@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -67,7 +68,7 @@ public class CocomentActivity extends AppCompatActivity {
         final Map<Integer, String> myImagePath = new HashMap<>();//초기화
         FirebaseFirestore.getInstance()
                 .collection("사용자")
-                .document(FirebaseAuth.getInstance().getUid())
+                .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -134,16 +135,29 @@ public class CocomentActivity extends AppCompatActivity {
         }
         else{
             Toast.makeText(this, "이미 삭제된 댓글입니다.", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, commentInfo.getCommentWriterId() + postingInfo.getAddress());
             finish();
         }
     }
 
     public void setCommentAndMyImage(CommentInfo commentInfo){
         //댓글 이미지
-        GlideApp.with(this)
-                .load(commentInfo.getImgPath())
-                .into(commentImage);
+        FirebaseFirestore.getInstance()
+                .collection("사용자")
+                .document(commentInfo.getCommentWriterId())
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if(e != null){
+                            Log.d(TAG, e.getMessage());
+                        }
+                        if(documentSnapshot.exists()){
+
+                            GlideApp.with(getApplicationContext())
+                                    .load(documentSnapshot.get("profileImage"))
+                                    .into(commentImage);
+                        }
+                    }
+                });
         //댓글 이름
         commentName.setText(commentInfo.getWriterName());
         //댓글 내용

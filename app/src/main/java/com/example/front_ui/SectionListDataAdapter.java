@@ -66,11 +66,13 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     StoreInfo storeInfo;
     double distance;
     private String uuid;
-    LoadingProgressDialog dialog;
     int index;
 
 
-    public SectionListDataAdapter(Context context, StoreInfo storeInfo, double distance, int index,  LoadingProgressDialog dialog) {
+    public SectionListDataAdapter(Context context,
+                                  StoreInfo storeInfo,
+                                  double distance,
+                                  int index) {
         Log.d(TAG, "SectionListDataAdapter");
         this.mContext = context;
         this.storeInfo = storeInfo;
@@ -81,7 +83,6 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         storageReference = storage.getReference();
         list = new ArrayList<>();
         getPostDataFromCloud(storeInfo.getStoreId());
-        this.dialog = dialog;
     }
 
 
@@ -102,16 +103,11 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         final PostingInfo singleItem = list.get(i);
         Log.d(TAG, "downloadImageFromFirebaseStorage : " + singleItem.imagePathInStorage);
 
-        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(mContext);
-//        circularProgressDrawable.setStrokeCap(Paint.Cap.SQUARE);
-        circularProgressDrawable.setCenterRadius(50f);
-        circularProgressDrawable.setStrokeWidth(10f);
-        circularProgressDrawable.start();
 
         StorageReference fileReference = storage.getReferenceFromUrl(singleItem.imagePathInStorage);
         GlideApp.with(mContext)
                 .load(fileReference)
-                .placeholder(circularProgressDrawable)
+                .placeholder(GlidePlaceHolder.circularPlaceHolder(mContext))
                 .into(holder.imageView);
 
 
@@ -195,12 +191,6 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                         }
                     }
                 });
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//            @Override
-//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                dialog.dismiss();
-//            }
-//        });
 
 
     }
