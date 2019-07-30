@@ -94,7 +94,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         itemRowHolder.storeName.setText(sectionName);
         itemRowHolder.storeStar.setText(Double.toString(sectionStar));
         itemRowHolder.storeDistance.setText(distanceStr);
-        itemRowHolder.storeAddress.setText(address);
+//        itemRowHolder.storeAddress.setText(address);
         //to do : distance 표시
 
         if(isCalled <= i) {
@@ -165,7 +165,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
             storeName = (TextView) view.findViewById(R.id.storeName);
             storeStar = (TextView) view.findViewById(R.id.storeStar);
             storeDistance = view.findViewById(R.id.storeDistance);
-            storeAddress = view.findViewById(R.id.storeAddress);
+//            storeAddress = view.findViewById(R.id.storeAddress);
 
 
         }
