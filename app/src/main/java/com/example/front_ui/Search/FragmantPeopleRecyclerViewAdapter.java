@@ -60,8 +60,6 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
                 Log.d(TAG, "item is cliceked. go to MyPage userid : " + userInfo.getUserId());
                 Intent intent = new Intent(mContext, MyPage.class);
                 intent.putExtra("userUUID", userInfo.getUserId());
-                intent.putExtra("latitude", currentLat);
-                intent.putExtra("longitude", currentLon);
                 mContext.startActivity(intent);
             }
         });

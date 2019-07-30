@@ -210,6 +210,8 @@ public class SubSearchPage extends AppCompatActivity {
         getRegionSearchResult(keyword);
         getPeopleSearchResult(keyword);
         //TODO: TAG data 일단 검색 막았음!!!
+        recyclerViewTag.setVisibility(View.GONE);
+        cardViewTag.setVisibility(View.GONE);
 //        getTagSearchResult(keyword);
         getStoreSearchResult(keyword);
     }
@@ -319,7 +321,6 @@ public class SubSearchPage extends AppCompatActivity {
     }
 
     void getTagSearchResult(String keyword){
-        //TODO: exact 아님 그냥 data로 바꿔야함. 그냥 테스트용
         AlgoliaUtils.searchData("tag", "text", keyword, new AlgoliaSearchPredicate() {
             @Override
             public void gettingJSONArrayCompleted(JSONArray jsonArray) {

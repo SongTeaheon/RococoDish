@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -81,7 +82,6 @@ public class DishView extends AppCompatActivity {
     FirebaseStorage storage;
     PostingInfo postingInfo;
     SerializableStoreInfo storeInfo;
-    double distance;
 
     ImageView profileImage;
     TextView profileName;
@@ -150,8 +150,6 @@ public class DishView extends AppCompatActivity {
         storeInfo = (SerializableStoreInfo) intent.getSerializableExtra("storeInfo");
         Log.d(TAG, "store Info id : " + storeInfo.getStoreId() + " store name : " + storeInfo.getName() + " store map :" + storeInfo.getLat() + ", " + storeInfo.getLon() +
                 " star :  " + storeInfo.getAver_star());
-        distance = (double) intent.getDoubleExtra("distance", 0.0);
-        Log.d(TAG, "거리(미터단위) : " + distance);
 
         //게시물 시간 설정
         postTime = findViewById(R.id.textViewDay);
@@ -210,7 +208,7 @@ public class DishView extends AppCompatActivity {
         tvScore.setText(Double.toString(postingInfo.getAver_star()));
         tvDistance = findViewById(R.id.textDistance);
 
-        tvDistance.setText(MathUtil.adjustedDistance(distance)+"!");
+        tvDistance.setText(SubActivity.getDistanceStr(storeInfo.getLat(), storeInfo.getLon())+"!");
 
 
         //todo : 이미지 불러올 때 다른 앱들처럼 용량 낮은 깨진파일먼저 갖고 와서 placeholder로 붙이고 나중에 퀄리티 높은 이미지 덮어씌우기(데이터가 느릴 경우 소비자 지루함 방지용)
@@ -265,7 +263,6 @@ public class DishView extends AppCompatActivity {
                     Intent intent = new Intent(DishView.this, EditActivity.class);
                     intent.putExtra("postingInfo", postingInfo);
                     intent.putExtra("storeInfo", storeInfo);
-                    intent.putExtra("distance", distance);
                     startActivity(intent);
                 }
             });
@@ -278,7 +275,7 @@ public class DishView extends AppCompatActivity {
         shareButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                String disStr = Double.toString(distance);
+                String disStr = SubActivity.getDistanceStr(storeInfo.getLat(), storeInfo.getLon());
                 Log.d(TAG, "num like " + postingInfo.getNumLike());
                 LocationTemplate params = LocationTemplate.newBuilder(storeInfo.getAddress(),
                         ContentObject.newBuilder(storeInfo.getName(),

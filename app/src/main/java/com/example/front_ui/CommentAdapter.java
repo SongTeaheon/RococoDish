@@ -128,7 +128,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         //유저 이름 부분
         commentViewHolder.userName.setText(parentList.get(i).getWriterName());
+        commentViewHolder.userName.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                //mypage로 넘어간다
+               moveToUserId(i);
+            }
+        });
 
+        commentViewHolder.image.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                moveToUserId(i);
+            }
+        });
         //댓글 부분
         commentViewHolder.userComment.setText(parentList.get(i).getComment());
 
@@ -305,5 +318,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     @Override
     public int getItemCount() {
         return parentList.size();
+    }
+
+    private void moveToUserId(int i){
+        Intent intent = new Intent(context, MyPage.class);
+        intent.putExtra("userUUID", parentList.get(i).getCommentWriterId());
+        context.startActivity(intent);
     }
 }

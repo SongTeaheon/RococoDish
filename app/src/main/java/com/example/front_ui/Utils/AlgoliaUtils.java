@@ -215,5 +215,37 @@ public class AlgoliaUtils {
         });
     }
 
+    //email에 해당하는 objectId를 가져오고 userInfo를 다시 보내준다.
+    public static void changeProfileImagePath(final UserInfo userInfo, final String path){
+        Log.d(TAG, "changeProfileImagePath : " + userInfo.eMail);
+        final Index index = client.getIndex("user");
+
+        AlgoliaUtils.searchData("user", "eMail", userInfo.eMail, new AlgoliaSearchPredicate() {
+            @Override
+            public void gettingJSONArrayCompleted(JSONArray jsonArray) {
+                String preMail = JsonParsing.getFirstAlgoliaEmail(jsonArray);
+                if(preMail != null && userInfo.eMail.equals(preMail)){
+                    //태그 데이터 존재.
+                    Log.d(TAG, "email 찾았음 : " + userInfo.eMail);
+                    String objectId = JsonParsing.getFirstAlgoliaId(jsonArray);
+
+                    //storeInfo를 바꾸어준다.
+                    Gson gson = new Gson();
+                    String jsonStr = gson.toJson(userInfo);
+                    Log.d(TAG, jsonStr);
+                    JSONObject json;
+                    try {
+                        json = new JSONObject(jsonStr);
+                        index.saveObjectAsync(json, objectId, null);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    Log.e(TAG, "no user data in algolia : " + userInfo.eMail);
+                }
+            }
+        });
+    }
+
 
 }

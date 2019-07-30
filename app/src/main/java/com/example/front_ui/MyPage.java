@@ -28,7 +28,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.DataModel.UserInfo;
 import com.example.front_ui.Edit.BroadcastUtils;
+import com.example.front_ui.Utils.AlgoliaUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.GlidePlaceHolder;
 import com.example.front_ui.Utils.LocationUtil;
@@ -65,6 +67,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
     double currentLatitude;
     double currentLongtitude;
     TextView followText;
+    UserInfo userInfo;
     static final String basicProfile = "https://firebasestorage.googleapis.com/v0/b/rococodish.appspot.com/o/user6.png?alt=media&token=f6f73ce5-bfe1-4dac-bbf2-29fb94706e09";
 
     @Override
@@ -107,8 +110,8 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
          * **/
         //현재 위치 정보를 가져온다.
         Intent intent = this.getIntent();
-        currentLatitude = intent.getDoubleExtra("latitude", 0.0);
-        currentLongtitude = intent.getDoubleExtra("longitude", 0.0);
+        currentLatitude = SubActivity.mCurrentLocation.getLatitude();
+        currentLongtitude = SubActivity.mCurrentLocation.getLongitude();
 
         //이전 페이지에서 사용자의 uuid를 가져옴.
         final String userUUID = intent.getStringExtra("userUUID");
@@ -239,6 +242,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                         if(e != null){
                             Log.d(TAG, e.getMessage());
                         }
+//                        userInfo = documentSnapshot.toObject(UserInfo.class);//TODO:바꾸는중 XXX
                         if(documentSnapshot.get("profileImage") != null){//프로필 사진이 있을 경우
                             CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(getApplicationContext());
                             circularProgressDrawable.setStrokeCap(Paint.Cap.ROUND);
@@ -341,7 +345,9 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                             .into(circleImageView);
 
                     //TODO:태완-path에 profile path를 넣어주세요
-                    //TODO:태헌-path를 알골리아에 업데이트
+                    //TODO:태헌-path를 알골리아에 업데이트 - 테스트 필요 XXX
+//                    AlgoliaUtils.changeProfileImagePath(userInfo, path);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
