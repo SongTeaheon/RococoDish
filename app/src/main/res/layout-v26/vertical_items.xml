@@ -35,9 +35,9 @@
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="12dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="12dp"
                         android:layout_marginBottom="@dimen/spacing_small"
-                        android:fontFamily="@font/bmhanna_11yrs"
+                        android:fontFamily="@font/bmjua"
                         android:text="가게이름"
                         android:textColor="@color/Black"
                         android:textSize="20dp"
@@ -48,33 +48,34 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/storeName"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginTop="-4dp"
-                        android:fontFamily="@font/bmhanna_11yrs"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_toEndOf="@+id/storeName"
+                        android:fontFamily="@font/bmjua"
                         android:text="0km"
                         android:textColor="@color/MainColor"
-                        android:textSize="10dp"
+                        android:textSize="15dp"
                         tools:ignore="SpUsage" />
 
-                    <TextView
-                        android:id="@+id/storeAddress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/storeName"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="-4dp"
-                        android:layout_toEndOf="@+id/storeDistance"
-                        android:text="서울 동대문구 서울시립대로29길 3"
-                        android:textSize="10dp"
-                        android:textColor="@color/Grey"
-                        android:fontFamily="@font/bmhanna_11yrs"
-                        tools:ignore="SpUsage" />
+                    <!--<TextView-->
+                        <!--android:id="@+id/storeAddress"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_below="@+id/storeName"-->
+                        <!--android:layout_marginStart="8dp"-->
+                        <!--android:layout_marginTop="-4dp"-->
+                        <!--android:layout_toEndOf="@+id/storeDistance"-->
+                        <!--android:text="서울 동대문구 서울시립대로29길 3"-->
+                        <!--android:textSize="10dp"-->
+                        <!--android:textColor="@color/Grey"-->
+                        <!--android:fontFamily="@font/bmhanna_11yrs"-->
+                        <!--tools:ignore="SpUsage" />-->
 
                     <ImageView
                         android:id="@+id/imageStar"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="12dp"
                         android:layout_marginEnd="8dp"
@@ -98,7 +99,7 @@
                     <ImageView
                         android:id="@+id/imageViewLine"
                         android:layout_width="match_parent"
-                        android:layout_height="3dp"
+                        android:layout_height="2dp"
                         android:layout_below="@+id/storeDistance"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentEnd="true"
@@ -120,9 +121,9 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="-12dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp" />
+                android:layout_marginBottom="16dp" />
 
         </RelativeLayout>
 

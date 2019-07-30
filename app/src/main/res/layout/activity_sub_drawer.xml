@@ -2,7 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/MainColor"
+    android:background="@color/colorWhite"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -30,7 +30,7 @@
             android:text="안녕하세요"
             android:fontFamily="@font/bmjua"
             android:textSize="20sp"
-            android:textColor="#fff"
+            android:textColor="@color/MainColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,7 +42,7 @@
             android:layout_marginEnd="8dp"
             android:fontFamily="@font/bmjua"
             android:text=""
-            android:textColor="#fff"
+            android:textColor="@color/MainColor"
             android:textSize="25sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textView5"
@@ -59,7 +59,7 @@
             android:layout_marginBottom="8dp"
             android:text="마이페이지"
             android:fontFamily="@font/bmjua"
-            android:textColor="#fff"
+            android:textColor="@color/MainColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +74,7 @@
             android:layout_marginBottom="32dp"
             android:fontFamily="@font/bmjua"
             android:text="로그아웃"
-            android:textColor="#fff"
+            android:textColor="@color/MainColor"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -89,7 +89,7 @@
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/bmjua"
             android:text="임시가게검색"
-            android:textColor="#fff"
+            android:textColor="@color/MainColor"
             android:textSize="30sp"
             app:layout_constraintBottom_toTopOf="@+id/logOut_textview_drawer"
             app:layout_constraintEnd_toEndOf="parent"
