@@ -209,33 +209,55 @@ public class SubSearchPage extends AppCompatActivity {
     /********************************* 리사이클러 뷰 4개 세팅  ********************************/
     void initRecyclerViewStore(){
         Log.d(TAG, "initRecyclerViewStore");
-        recyclerViewStore.setHasFixedSize(true);
+        //가게 데이터를 4개만 가져간다.
+        ArrayList<StoreInfo> shortList = new ArrayList<>();
+        int size = (4 < storeList.size()? 4 : storeList.size());
+        for(int i = 0 ; i < size; i++)
+            shortList.add(storeList.get(i));
         //가게 안에 목록 가져오는 리사이클러뷰
-        FragmantStoreRecyclerViewAdapter storeRecyclerViewAdapter = new FragmantStoreRecyclerViewAdapter(this, storeList);
+        recyclerViewStore.setHasFixedSize(true);
+        FragmantStoreRecyclerViewAdapter storeRecyclerViewAdapter = new FragmantStoreRecyclerViewAdapter(this, shortList);
         recyclerViewStore.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewStore.setAdapter(storeRecyclerViewAdapter);
     }
     void initRecyclerViewPeople(){
         Log.d(TAG, "initRecyclerViewPeople");
-        recyclerViewPeople.setHasFixedSize(true);
+
+        //가게 데이터를 4개만 가져간다.
+        ArrayList<UserInfo> shortList = new ArrayList<>();
+        int size = (4 < peopleList.size()? 4 : peopleList.size());
+        for(int i = 0 ; i < size; i++)
+            shortList.add(peopleList.get(i));
+
         //가게 안에 목록 가져오는 리사이클러뷰
-        FragmantPeopleRecyclerViewAdapter peopleRecyclerViewAdapter = new FragmantPeopleRecyclerViewAdapter(this, peopleList, currentLatitude, currentLongtitude);
+        recyclerViewPeople.setHasFixedSize(true);
+        FragmantPeopleRecyclerViewAdapter peopleRecyclerViewAdapter = new FragmantPeopleRecyclerViewAdapter(this, shortList, currentLatitude, currentLongtitude);
         recyclerViewPeople.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewPeople.setAdapter(peopleRecyclerViewAdapter);
     }
     void initRecyclerViewRegion(){
         Log.d(TAG, "initRecyclerViewStore");
-        recyclerViewRegion.setHasFixedSize(true);
+        //가게 데이터를 4개만 가져간다.
+        ArrayList<SearchedData> shortList = new ArrayList<>();
+        int size = (4 < regionList.size()? 4 : regionList.size());
+        for(int i = 0 ; i < size; i++)
+            shortList.add(regionList.get(i));
         //가게 안에 목록 가져오는 리사이클러뷰
-        FragmantRegionRecyclerViewAdapter regionRecyclerViewAdapter = new FragmantRegionRecyclerViewAdapter(this, regionList);
+        recyclerViewRegion.setHasFixedSize(true);
+        FragmantRegionRecyclerViewAdapter regionRecyclerViewAdapter = new FragmantRegionRecyclerViewAdapter(this, shortList);
         recyclerViewRegion.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewRegion.setAdapter(regionRecyclerViewAdapter);
     }
     void initRecyclerViewTag(){
         Log.d(TAG, "initRecyclerViewStore");
-        recyclerViewTag.setHasFixedSize(true);
+        //가게 데이터를 4개만 가져간다.
+        ArrayList<AlgoliaTagData> shortList = new ArrayList<>();
+        int size = (4 < tagList.size()? 4 : tagList.size());
+        for(int i = 0 ; i < size; i++)
+            shortList.add(tagList.get(i));
         //가게 안에 목록 가져오는 리사이클러뷰
-        FragmantTagRecyclerViewAdapter tagRecyclerViewAdapter = new FragmantTagRecyclerViewAdapter(this, tagList);
+        recyclerViewTag.setHasFixedSize(true);
+        FragmantTagRecyclerViewAdapter tagRecyclerViewAdapter = new FragmantTagRecyclerViewAdapter(this, shortList);
         recyclerViewTag.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewTag.setAdapter(tagRecyclerViewAdapter);
     }
