@@ -20,7 +20,8 @@
         <activity android:name=".CocomentActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"></activity>
-        <activity android:name=".Search.RegionSearchActivity"></activity>
+        <activity android:name=".Search.RegionSearchActivity"
+            android:screenOrientation="portrait"></activity>
         <activity android:name=".StartActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -74,7 +75,8 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".MyPage" />
+        <activity android:name=".MyPage"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".PostingProcess.MainShareActivity"
             android:screenOrientation="portrait"/>
