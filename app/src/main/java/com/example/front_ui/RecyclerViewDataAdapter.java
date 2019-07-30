@@ -77,6 +77,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
 
         Log.d(TAG, "onBindViewHolder : " + i);
+        Log.d(TAG, "storeName : " + list.get(i).getName());
         Log.d(TAG, "storeId : " + list.get(i).getStoreId());
         final StoreInfo singleItem = list.get(i);
 
@@ -192,6 +193,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
                 if(!dcSet.contains(documentId) && (radius <= 1000 /*&& dcSet.size() < 50*/)) {
                     StoreInfo storeInfo = documentSnapshot.toObject(StoreInfo.class);
                     storeInfo.aver_star = MathUtil.roundOnePlace(storeInfo.aver_star);
+                    storeInfo.setStoreId(documentId);
                     storeInfo.setViewId(list.size()+1);//size가 storeInfo의 viewId가 된다.
                     Log.d(TAG, "geoquery 결과 가게이름 : " + storeInfo.name + " radius : " + radius + " listSize : "+ list.size());
 
