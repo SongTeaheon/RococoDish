@@ -46,11 +46,12 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/bmjua"
-            android:textSize="12sp"
+            android:textSize="12dp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/relativeLayout"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="" />
+            tools:text=""
+            tools:ignore="SpUsage" />
 
         <TextView
             android:id="@+id/userCommnet_textview_comment"
@@ -61,23 +62,25 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/bmhanna_11yrs"
-            android:textSize="11sp"
+            android:textSize="10dp"
             app:layout_constraintBottom_toTopOf="@+id/commentTime_textview_comment"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/relativeLayout"
             app:layout_constraintTop_toBottomOf="@+id/userName_textview_comment"
-            tools:text="" />
+            tools:text=""
+            tools:ignore="SpUsage" />
 
         <TextView
             android:id="@+id/commentTime_textview_comment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="4dp"
-            android:textSize="8sp"
+            android:layout_marginBottom="8dp"
+            android:textSize="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="" />
+            tools:text=""
+            tools:ignore="SpUsage" />
 
     </android.support.constraint.ConstraintLayout>
 

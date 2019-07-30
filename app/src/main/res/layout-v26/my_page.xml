@@ -113,6 +113,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:radius="20dp"
         app:uncheckedColor="#444"
-        app:uncheckedTextColor="#000"></me.rishabhkhanna.customtogglebutton.CustomToggleButton>
+        app:uncheckedTextColor="#000" />
 
 </android.support.constraint.ConstraintLayout>

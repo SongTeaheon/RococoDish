@@ -11,50 +11,58 @@
     android:layout_marginRight="2dp"
     android:layout_marginStart="2dp"
     android:layout_marginEnd="2dp"
+    android:elevation="0dp"
+    app:cardUseCompatPadding="false"
     >
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="@color/colorWhite">
 
+        <ImageView
+            android:id="@+id/imageViewPin"
+            android:layout_width="9.5dp"
+            android:layout_height="14dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/ic_pin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:textStyle="bold"
-            android:textSize="16dp"
-            android:textColor="@color/colorAccent"
-            tools:text="5,000원"
+            android:fontFamily="@font/bmhanna_11yrs"
+            android:text="가게이름"
+            android:textColor="@color/Grey"
+            android:textSize="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpUsage" />
-
-        <!--<TextView-->
-            <!--android:id="@+id/tv_category"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_vertical"-->
-            <!--android:paddingRight="8dp"-->
-            <!--android:textSize="20sp"-->
-            <!--tools:text="5,000원" />-->
 
         <TextView
             android:id="@+id/tv_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:textSize="16dp"
-            android:textColor="@color/colorAccent"
-            tools:text="5,000원"
+            android:fontFamily="@font/bmhanna_11yrs"
+            android:text="가게주소"
+            android:textColor="@color/Grey"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageViewPin"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
             tools:ignore="SpUsage" />
 
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

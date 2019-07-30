@@ -19,6 +19,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.front_ui.DataModel.KakaoMetaData;
@@ -87,7 +88,7 @@ public class StoreSearchFragment extends Fragment {
 
         //search 버튼(EditText에 있는 단어를 받아서 검색)
         searchWordText = view.findViewById(R.id.searchWord);
-        Button searchButton = view.findViewById(R.id.searchButton);
+        ImageView searchButton = view.findViewById(R.id.searchButton);
         searchButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {

@@ -4,14 +4,14 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/MainColor</item>
-        <item name="colorPrimaryDark">#B39797</item>
+        <item name="colorPrimaryDark">@color/MainColor</item>
         <item name="colorAccent">@color/MainColor</item>
     </style>
 
     <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/custom_rating_bar_control</item>
         <item name="android:numStars">5</item>
-        <item name="android:rating">4.5</item>
+        <item name="android:rating">0</item>
         <item name="android:max">5</item>
         <item name="android:stepSize">0.5</item>
         <item name="android:isIndicator">false</item>

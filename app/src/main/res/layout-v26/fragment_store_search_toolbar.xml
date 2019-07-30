@@ -26,7 +26,6 @@
                     android:layout_marginEnd="20dp"
                     android:src="@mipmap/ic_back" />
 
-                <!--가게이름 10글자 넘어가면 안되게 해야함...ㅜㅜ-->
                 <TextView
                     android:id="@+id/mainText"
                     android:layout_width="match_parent"
@@ -37,45 +36,11 @@
                     android:layout_marginEnd="92dp"
                     android:fontFamily="@font/bmjua"
                     android:gravity="center"
-                    android:text="가게이름"
+                    android:text="다녀온 맛집"
                     android:textColor="@android:color/black"
                     android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="16dp"
                     android:autoSizeMaxTextSize="28dp"
-                    tools:ignore="SpUsage" />
-
-                <TextView
-                    android:id="@+id/edit_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/mainText"
-                    android:layout_alignBottom="@+id/mainText"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_toStartOf="@+id/delete_button"
-                    android:fontFamily="@font/bmjua"
-                    android:text="수정"
-                    android:textColor="@color/MainColor"
-                    android:textSize="20dp"
-                    android:visibility="invisible"
-                    tools:ignore="SpUsage" />
-
-                <TextView
-                    android:id="@+id/delete_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/mainText"
-                    android:layout_alignBottom="@+id/mainText"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="4dp"
-                    android:fontFamily="@font/bmjua"
-                    android:text="삭제"
-                    android:textColor="@color/MainColor"
-                    android:textSize="20dp"
-                    android:visibility="invisible"
                     tools:ignore="SpUsage" />
 
             </RelativeLayout>

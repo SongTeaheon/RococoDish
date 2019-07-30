@@ -98,12 +98,12 @@
                     <ImageView
                         android:id="@+id/imageViewLine"
                         android:layout_width="match_parent"
-                        android:layout_height="4dp"
+                        android:layout_height="3dp"
                         android:layout_below="@+id/storeDistance"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentEnd="true"
                         android:layout_marginStart="12dp"
-                        android:layout_marginTop="0dp"
+                        android:layout_marginTop="4dp"
                         android:layout_marginEnd="12dp"
                         android:background="#4D4D4D" />
 
@@ -122,7 +122,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"></android.support.v7.widget.RecyclerView>
+                android:layout_marginBottom="4dp" />
 
         </RelativeLayout>
 

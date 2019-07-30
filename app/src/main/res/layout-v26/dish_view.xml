@@ -231,34 +231,14 @@
                     app:srcCompat="@mipmap/ic_grey_heart" />
 
                 <ImageView
-                    android:id="@+id/imageView4"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintStart_toEndOf="@+id/like_imageview_dishView"
-                    app:layout_constraintTop_toBottomOf="@+id/description_box_dishView"
-                    app:srcCompat="@mipmap/ic_bookmark" />
-
-                <ImageView
                     android:id="@+id/share_imageview"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
-                    app:layout_constraintStart_toEndOf="@+id/imageView4"
+                    app:layout_constraintStart_toEndOf="@+id/like_imageview_dishView"
                     app:layout_constraintTop_toBottomOf="@+id/description_box_dishView"
                     app:srcCompat="@mipmap/ic_share" />
-
-                <ImageView
-                    android:id="@+id/imageViewQnA"
-                    android:layout_width="60dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/description_box_dishView"
-                    app:srcCompat="@mipmap/qna" />
 
                 <TextView
                     android:id="@+id/likeNum_textview_dishView"
