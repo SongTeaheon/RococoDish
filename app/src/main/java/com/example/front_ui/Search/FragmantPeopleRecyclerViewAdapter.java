@@ -63,7 +63,6 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
                 intent.putExtra("latitude", currentLat);
                 intent.putExtra("longitude", currentLon);
                 mContext.startActivity(intent);
-                ((SubSearchPage)mContext).finish();
             }
         });
     }

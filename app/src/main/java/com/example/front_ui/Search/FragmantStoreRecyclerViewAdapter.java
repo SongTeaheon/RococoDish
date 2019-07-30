@@ -49,7 +49,6 @@ public class FragmantStoreRecyclerViewAdapter extends RecyclerView.Adapter<Fragm
                 intent.putExtra("storeName", storeInfo.getName());
                 intent.putExtra("documentId", storeInfo.getStoreId());
                 mContext.startActivity(intent);
-                ((SubSearchPage)mContext).finish();
             }
         });
 

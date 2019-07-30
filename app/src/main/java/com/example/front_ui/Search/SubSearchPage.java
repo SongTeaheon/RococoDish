@@ -56,8 +56,8 @@ public class SubSearchPage extends AppCompatActivity {
     //TODO: 리팩토링 : kakao api utils따로 만들어서 StoreSearchFragment코드랑 합치기
     private final String kakaoApiId = "KakaoAK 952900bd9ca440b836d9c490525aef64";
 
+    public static MyDBHandler dbHandler;
     SimpleCursorAdapter mAdapter = null;
-    MyDBHandler dbHandler;
     EditText editText;
     ImageView searchBtn;
     ImageView backBtn;
@@ -67,7 +67,7 @@ public class SubSearchPage extends AppCompatActivity {
     ArrayList<SearchedData> regionList;
     ArrayList<UserInfo> peopleList;
     ArrayList<AlgoliaTagData> tagList;
-    ArrayList<String> recordList;
+    ArrayList<RecordData> recordList;
 
 
     //리사이클러 뷰
@@ -197,12 +197,20 @@ public class SubSearchPage extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbHandler.close();
+    }
+
     public void searchButtonClicked(String keyword){
-        dbHandler.insert(keyword);
+        if(keyword != null)
+            dbHandler.insert(keyword);
         deleteFragment(fragmentRecord);
         getRegionSearchResult(keyword);
         getPeopleSearchResult(keyword);
-        getTagSearchResult(keyword);
+        //TODO: TAG data 일단 검색 막았음!!!
+//        getTagSearchResult(keyword);
         getStoreSearchResult(keyword);
     }
 
@@ -480,7 +488,7 @@ public class SubSearchPage extends AppCompatActivity {
         return tagList;
     }
 
-    public ArrayList<String> getRecordList(){
+    public ArrayList<RecordData> getRecordList(){
         return recordList;
     }
     public double getLat(){

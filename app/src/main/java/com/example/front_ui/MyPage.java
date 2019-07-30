@@ -334,10 +334,14 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                     ByteArrayOutputStream outputStream =new ByteArrayOutputStream();
                     bmp.compress(Bitmap.CompressFormat.JPEG, 60, outputStream);
                     byte[] byteArray = outputStream.toByteArray();
+                    String path;
                     Storage.INSTANCE.uploadProfileImage(byteArray, progressDialog);
                     GlideApp.with(this)
                             .load(bmp)
                             .into(circleImageView);
+
+                    //TODO:태완-path에 profile path를 넣어주세요
+                    //TODO:태헌-path를 알골리아에 업데이트
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

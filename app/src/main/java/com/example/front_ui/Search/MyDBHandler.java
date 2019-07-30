@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.icu.text.AlphabeticIndex;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class MyDBHandler {
     {
         Log.d(TAG, "delete");
         mDB = mHelper.getWritableDatabase();
-        mDB.delete("SEARCH_TABLE", "id=?", new String[]{Integer.toString(id)});
+        mDB.delete("SEARCH_TABLE", "_ID=?", new String[]{Integer.toString(id)});
     }
 
     public void close() {
@@ -56,22 +57,24 @@ public class MyDBHandler {
     }
 
     //TODO: 예쁘게 바꿔보
-    public void getAllRecordData(ArrayList<String> list) {
+    public void getAllRecordData(ArrayList<RecordData> list) {
         Log.d(TAG, "getAllRecordData");
         StringBuffer sb = new StringBuffer();
-        sb.append(" SELECT _ID, RECORD FROM SEARCH_TABLE ");
+        sb.append(" SELECT _ID, RECORD FROM SEARCH_TABLE ORDER BY _ID DESC");
      // 읽기 전용 DB 객체를 만든다
         SQLiteDatabase db = mHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery(sb.toString(), null);
         List people = new ArrayList();
-//        Person person = null;
-// moveToNext 다음에 데이터가 있으면 true 없으면 false
+        RecordData recordData = null;
+        // moveToNext 다음에 데이터가 있으면 true 없으면 false
         while( cursor.moveToNext() ) {
             Log.d(TAG, "id : " + cursor.getInt(0));
             Log.d(TAG, "record : " + cursor.getString(1));
-            list.add(cursor.getString(1));
-//            person = new Person();
-//            person.set_id(cursor.getInt(0));
+
+            recordData = new RecordData(cursor.getInt(0),cursor.getString(1));
+            list.add(recordData);
+
+            //            person.set_id(cursor.getInt(0));
 //            person.setName(cursor.getString(1));
 //            person.setAge(cursor.getInt(2));
 //            person.setPhone(cursor.getString(3));
