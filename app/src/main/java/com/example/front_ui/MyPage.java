@@ -54,6 +54,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import kotlin.jvm.internal.Intrinsics;
 import me.rishabhkhanna.customtogglebutton.CustomToggleButton;
 
 //interface for datapass to MyPage
@@ -334,7 +338,16 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                     ByteArrayOutputStream outputStream =new ByteArrayOutputStream();
                     bmp.compress(Bitmap.CompressFormat.JPEG, 60, outputStream);
                     byte[] byteArray = outputStream.toByteArray();
-                    Storage.INSTANCE.uploadProfileImage(byteArray, progressDialog);
+                    Storage.INSTANCE.uploadProfileImage(byteArray, progressDialog, new Function1<Uri, Unit>() {
+                        @Override
+                        public Unit invoke(Uri uri) {
+                            //todo : 여기서 받은 uri가 프로필 이미지 path입니다.
+                            Uri profileImagePath = uri;
+                            //todo : 이걸로 알아서 사용하시면 될 듯합니다.
+                            return null;
+                        }
+                    });
+
                     GlideApp.with(this)
                             .load(bmp)
                             .into(circleImageView);

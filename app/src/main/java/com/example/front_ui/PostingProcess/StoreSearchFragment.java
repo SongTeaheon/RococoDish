@@ -7,7 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import com.example.front_ui.DataModel.KakaoMetaData;
 import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.R;
+import com.example.front_ui.StoreSearchFragVpAdapter;
 import com.example.front_ui.Utils.JsonParsing;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
 import com.example.front_ui.Utils.RecyclerItemClickListener;
@@ -73,6 +76,10 @@ public class StoreSearchFragment extends Fragment {
 
     InputMethodManager imm;
 
+    TabLayout tabLayout;
+    ViewPager viewPager;
+    StoreSearchFragVpAdapter storeSearchFragVpAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,9 +87,9 @@ public class StoreSearchFragment extends Fragment {
         Log.d(TAG, "OnCreateView : started");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_store_search, container, false);
-        mRecyclerView = view.findViewById(R.id.recyclerview);
+//        mRecyclerView = view.findViewById(R.id.recyclerview);
         imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        constraint = view.findViewById(R.id.constraint_tv);
+//        constraint = view.findViewById(R.id.constraint_tv);
 
         storeInfoArrayList = new ArrayList<>();
 
@@ -115,34 +122,41 @@ public class StoreSearchFragment extends Fragment {
             }
         });
 
-        //recyclerview setup
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
-
-
-        //recyclerView 아이템 터치 리스터. recycler view 중 가게를 하나 선택하면 다음 프래그먼트로 이동
-        mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-
-                        //선택한 아이템뷰 확인 및 데이터 전달
-                        int itemPosition = mRecyclerView.getChildLayoutPosition(view);
-                        Log.d(TAG, "item clicked : " + storeInfoArrayList.get(itemPosition).place_name);
-                        Log.d(TAG, "move to Gallery");
-                        //activity로 store정보를 보내준다.
-                        MainShareActivity activity = (MainShareActivity) getActivity();
-                        activity.setKakaoStoreInfo(storeInfoArrayList.get(itemPosition));
-                        //선택한 가게 정보 데이터를 bundle에 넣고 다음 프래그먼트로 이동
-                        setFragmentAndMove(getContext());
-
-                    }
-
-                    @Override public void onLongItemClick(View view, int position) {
-                        // do whatever
-                    }
-                })
-        );
+        //todo : 기존에 태헌님이 만드신 리사이클러뷰는 일단 주석처리해놓을께요.
+//        //recyclerview setup
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+//        mRecyclerView.setLayoutManager(layoutManager);
+//
+//
+//        //recyclerView 아이템 터치 리스터. recycler view 중 가게를 하나 선택하면 다음 프래그먼트로 이동
+//        mRecyclerView.addOnItemTouchListener(
+//                new RecyclerItemClickListener(getActivity(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+//
+//                        //선택한 아이템뷰 확인 및 데이터 전달
+//                        int itemPosition = mRecyclerView.getChildLayoutPosition(view);
+//                        Log.d(TAG, "item clicked : " + storeInfoArrayList.get(itemPosition).place_name);
+//                        Log.d(TAG, "move to Gallery");
+//                        //activity로 store정보를 보내준다.
+//                        MainShareActivity activity = (MainShareActivity) getActivity();
+//                        activity.setKakaoStoreInfo(storeInfoArrayList.get(itemPosition));
+//                        //선택한 가게 정보 데이터를 bundle에 넣고 다음 프래그먼트로 이동
+//                        setFragmentAndMove(getContext());
+//
+//                    }
+//
+//                    @Override public void onLongItemClick(View view, int position) {
+//                        // do whatever
+//                    }
+//                })
+//        );
+        //todo : 탭이랑 뷰페이저 설정 - 태완
+        tabLayout = view.findViewById(R.id.tablayout_fragStoreSearch);
+        viewPager = view.findViewById(R.id.viewpager_fragStoreSearch);
+        storeSearchFragVpAdapter = new StoreSearchFragVpAdapter(getFragmentManager());
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.setAdapter(storeSearchFragVpAdapter);
 
 
         return view;

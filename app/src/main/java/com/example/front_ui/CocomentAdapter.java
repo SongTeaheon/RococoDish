@@ -94,17 +94,17 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
                             Log.d(TAG, e.getMessage());
                         }
                         if(documentSnapshot.exists()){
-
+                            //이미지 부분
                             GlideApp.with(context.getApplicationContext())
                                     .load(documentSnapshot.get("profileImage"))
                                     .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
                                     .into(cocomentViewHolder.userImage);
+                            //작성자 이름 부분
+                            cocomentViewHolder.userName.setText(documentSnapshot.get("nickname").toString());
                         }
                     }
                 });
 
-        //유저이름 부분
-        cocomentViewHolder.userName.setText(cocomentList.get(i).getWriterName());
 
         //댓글 내용부분
         cocomentViewHolder.desc.setText(cocomentList.get(i).getComment());
