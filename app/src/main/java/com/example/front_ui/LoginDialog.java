@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -191,8 +192,9 @@ public class LoginDialog extends AppCompatActivity {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     Log.d(TAG, "새로운 유저 등록에 성공했습니다.");
-                                                    startActivity(new Intent(LoginDialog.this, Login2Activity.class));
-                                                    finish();
+                                                    Intent intent = new Intent(LoginDialog.this, Login2Activity.class);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                    startActivity(intent);
                                                     progressDialog.dismiss();
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
@@ -205,8 +207,9 @@ public class LoginDialog extends AppCompatActivity {
                                         }
                                         else{
                                             Log.d(TAG, "이미 가입한 유저입니다.");
-                                            startActivity(new Intent(LoginDialog.this, SubActivity.class));
-                                            finish();
+                                            Intent intent = new Intent(LoginDialog.this, SubActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
                                             progressDialog.dismiss();
                                         }
                                     }
@@ -278,8 +281,9 @@ public class LoginDialog extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.d(TAG, "새로운 유저 등록에 성공했습니다.");
-                                    startActivity(new Intent(LoginDialog.this, Login2Activity.class));
-                                    finish();
+                                    Intent intent = new Intent(LoginDialog.this, Login2Activity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
                                     progressDialog.dismiss();
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -292,8 +296,9 @@ public class LoginDialog extends AppCompatActivity {
                         }
                         else{
                             Log.d(TAG, "이미 가입한 유저입니다.");
-                            startActivity(new Intent(LoginDialog.this, SubActivity.class));
-                            finish();
+                            Intent intent = new Intent(LoginDialog.this, SubActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
                             progressDialog.dismiss();
                         }
                     }
@@ -355,8 +360,9 @@ public class LoginDialog extends AppCompatActivity {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
                                                         Log.d(TAG, "새로운 유저 등록에 성공했습니다.");
-                                                        startActivity(new Intent(LoginDialog.this, Login2Activity.class));
-                                                        finish();
+                                                        Intent intent = new Intent(LoginDialog.this, Login2Activity.class);
+                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                        startActivity(intent);
                                                         progressDialog.dismiss();
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
@@ -369,8 +375,9 @@ public class LoginDialog extends AppCompatActivity {
                                             }
                                             else{
                                                 Log.d(TAG, "이미 가입한 유저입니다.");
-                                                startActivity(new Intent(LoginDialog.this, SubActivity.class));
-                                                finish();
+                                                Intent intent = new Intent(LoginDialog.this, SubActivity.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                startActivity(intent);
                                                 progressDialog.dismiss();
                                             }
                                         }
