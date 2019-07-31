@@ -2,6 +2,7 @@ package com.example.front_ui;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -94,18 +95,29 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
                             Log.d(TAG, e.getMessage());
                         }
                         if(documentSnapshot.exists()){
-                            //이미지 부분
+
                             GlideApp.with(context.getApplicationContext())
                                     .load(documentSnapshot.get("profileImage"))
                                     .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
                                     .into(cocomentViewHolder.userImage);
-                            //작성자 이름 부분
-                            cocomentViewHolder.userName.setText(documentSnapshot.get("nickname").toString());
                         }
                     }
                 });
 
-
+        //유저이름 부분
+        cocomentViewHolder.userName.setText(cocomentList.get(i).getWriterName());
+        cocomentViewHolder.userName.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                moveToMyPage(i);
+            }
+        });
+        cocomentViewHolder.userImage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                moveToMyPage(i);
+            }
+        });
         //댓글 내용부분
         cocomentViewHolder.desc.setText(cocomentList.get(i).getComment());
 
@@ -159,6 +171,12 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
     @Override
     public int getItemCount() {
         return cocomentList.size();
+    }
+
+    private void moveToMyPage(int i){
+        Intent intent = new Intent(context, MyPage.class);
+        intent.putExtra("userUUID", cocomentList.get(i).getCommentWriterId());
+        context.startActivity(intent);
     }
 }
 

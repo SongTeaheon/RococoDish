@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.front_ui.R;
@@ -23,7 +22,6 @@ public class FragmentTag2 extends Fragment {
     TextView tagName;
     ImageView backBtn;
     ImageView sortBtn;
-    ProgressBar progressBar;
     FragmentTag2Adapter fragmentTag2Adapter;
 
 
@@ -34,10 +32,9 @@ public class FragmentTag2 extends Fragment {
         View view = inflater.inflate(R.layout.store_page, container, false);
 
         tagGridview = view.findViewById(R.id.gridView0);
-        tagName = view.findViewById(R.id.mainText);
+//        tagName = view.findViewById(R.id.tvStore);
         backBtn = view.findViewById(R.id.backButton);
         sortBtn = view.findViewById(R.id.sort_button);
-        progressBar = view.findViewById(R.id.progressbar_storeActivity);
 
 //        tagName.setText();
         backBtn.setOnClickListener(new View.OnClickListener() {

@@ -53,8 +53,6 @@ public class FragmantRegionRecyclerViewAdapter extends RecyclerView.Adapter<Frag
                 intent.putExtra("longtitude", searchedData.getX());
                 intent.putExtra("latitude", searchedData.getY());
                 mContext.startActivity(intent);
-                ((SubSearchPage)mContext).finish();
-
             }
         });
     }

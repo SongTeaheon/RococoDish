@@ -43,6 +43,8 @@ import com.example.front_ui.Interface.FirebasePredicate;
 import com.example.front_ui.PostingProcess.MainShareActivity;
 import com.example.front_ui.Search.SubSearchPage;
 import com.example.front_ui.Utils.DataPassUtils;
+import com.example.front_ui.Utils.LocationUtil;
+import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -68,7 +70,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     RecyclerView main_recyclerview;
     RecyclerView myPage_recyclerview;
     NestedScrollView nestedScrollView;
-    private Location mCurrentLocation;
+    public static Location mCurrentLocation;
     private Location searchLocation;
 
     private boolean mLocationPermissionGranted = false;
@@ -476,5 +478,11 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                          Log.e(TAG, "해당 데이터가 삭제되었습니다.");
                 }
         });
+    }
+
+    public static String getDistanceStr(double lat, double lon){
+        double distance = LocationUtil.getDistanceFromMe(mCurrentLocation, lat, lon);//내 위치로부터의 거리 측정.
+        String distanceStr = MathUtil.adjustedDistance(distance);
+        return distanceStr;
     }
 }
