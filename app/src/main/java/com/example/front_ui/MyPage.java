@@ -56,6 +56,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import me.rishabhkhanna.customtogglebutton.CustomToggleButton;
 
 //interface for datapass to MyPage
@@ -338,15 +341,18 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                     ByteArrayOutputStream outputStream =new ByteArrayOutputStream();
                     bmp.compress(Bitmap.CompressFormat.JPEG, 60, outputStream);
                     byte[] byteArray = outputStream.toByteArray();
-                    String path;
-                    Storage.INSTANCE.uploadProfileImage(byteArray, progressDialog);
+                    Storage.INSTANCE.uploadProfileImage(byteArray, progressDialog, new Function1<Uri, Unit>() {
+                        @Override
+                        public Unit invoke(Uri uri) {
+                            AlgoliaUtils.changeProfileImagePath(userInfo, uri.toString());
+                            return null;
+                        }
+                    });
                     GlideApp.with(this)
                             .load(bmp)
+                            .placeholder(GlidePlaceHolder.circularPlaceHolder(this))
                             .into(circleImageView);
 
-                    //TODO:태완-path에 profile path를 넣어주세요
-                    //TODO:태헌-path를 알골리아에 업데이트 - 테스트 필요 XXX
-//                    AlgoliaUtils.changeProfileImagePath(userInfo, path);
 
                 } catch (IOException e) {
                     e.printStackTrace();

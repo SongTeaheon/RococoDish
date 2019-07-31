@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -51,7 +52,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.List;
 
-public class LoginDialog extends Activity {
+public class LoginDialog extends AppCompatActivity {
 
     private String TAG = "TAGLoginDialog";
 
@@ -156,68 +157,69 @@ public class LoginDialog extends Activity {
 
             private void handleFacebookAccessToken(AccessToken token){
                 Log.d(TAG, "handleFacebookAccessToken : "+token);
+                if(token != null){
+                    final ProgressDialog progressDialog = new ProgressDialog(LoginDialog.this);
+                    progressDialog.setMessage("회원정보 확인중입니다");
+                    progressDialog.show();
 
-                final ProgressDialog progressDialog = new ProgressDialog(LoginDialog.this);
-                progressDialog.setMessage("회원정보 확인중입니다");
-                progressDialog.show();
+                    AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+                    auth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@android.support.annotation.NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()){
+                                Log.d(TAG, "signInWithCredential이 성공적");
 
-                AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-                auth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@android.support.annotation.NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            Log.d(TAG, "signInWithCredential이 성공적");
+                                final FirebaseUser user = auth.getCurrentUser();
+                                final DocumentReference userRef = firestore.collection("사용자").document(auth.getUid());
 
-                            final FirebaseUser user = auth.getCurrentUser();
-                            final DocumentReference userRef = firestore.collection("사용자").document(auth.getUid());
+                                userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        if(!documentSnapshot.exists()){
+                                            UserInfo newUser = new UserInfo(
+                                                    FirebaseAuth.getInstance().getUid(),
+                                                    user.getEmail(),
+                                                    user.getDisplayName(),
+                                                    MyPage.basicProfile,
+                                                    null,
+                                                    null,
+                                                    0
+                                            );
+                                            AlgoliaUtils.addObject("user", newUser);
 
-                            userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    if(!documentSnapshot.exists()){
-                                        UserInfo newUser = new UserInfo(
-                                                FirebaseAuth.getInstance().getUid(),
-                                                user.getEmail(),
-                                                user.getDisplayName(),
-                                                MyPage.basicProfile,
-                                                null,
-                                                null,
-                                                0
-                                        );
-                                        AlgoliaUtils.addObject("user", newUser);
-
-                                        userRef.set(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Log.d(TAG, "새로운 유저 등록에 성공했습니다.");
-                                                startActivity(new Intent(LoginDialog.this, SubActivity.class));
-                                                finish();
-                                                progressDialog.dismiss();
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.d(TAG, "새로운 유저 등록에 실패했습니다.");
-                                                progressDialog.dismiss();
-                                            }
-                                        });
+                                            userRef.set(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d(TAG, "새로운 유저 등록에 성공했습니다.");
+                                                    startActivity(new Intent(LoginDialog.this, SubActivity.class));
+                                                    finish();
+                                                    progressDialog.dismiss();
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d(TAG, "새로운 유저 등록에 실패했습니다.");
+                                                    progressDialog.dismiss();
+                                                }
+                                            });
+                                        }
+                                        else{
+                                            Log.d(TAG, "이미 가입한 유저입니다.");
+                                            startActivity(new Intent(LoginDialog.this, SubActivity.class));
+                                            finish();
+                                            progressDialog.dismiss();
+                                        }
                                     }
-                                    else{
-                                        Log.d(TAG, "이미 가입한 유저입니다.");
-                                        startActivity(new Intent(LoginDialog.this, SubActivity.class));
-                                        finish();
-                                        progressDialog.dismiss();
-                                    }
-                                }
-                            });
+                                });
 
+                            }
+                            else{
+                                Log.d(TAG, "signInWithCredential이 실패 => "+ task.getException());
+                                Toast.makeText(LoginDialog.this, "페이스북 인증에 실패했습니다.", Toast.LENGTH_LONG).show();
+                            }
                         }
-                        else{
-                            Log.d(TAG, "signInWithCredential이 실패 => "+ task.getException());
-                            Toast.makeText(LoginDialog.this, "페이스북 인증에 실패했습니다.", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+                    });
+                }
             }
 
             //생략가능
@@ -245,6 +247,9 @@ public class LoginDialog extends Activity {
          * **/
         if(requestCode == RC_EMAIL_LOGIN){
             final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("회원정보 확인중입니다.");
+            progressDialog.show();
 
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
@@ -294,10 +299,10 @@ public class LoginDialog extends Activity {
                     }
                 });
             }
-//            else{
+            else{
 //                Toast.makeText(this, "다른 계정으로 가입한 이메일입니다.", Toast.LENGTH_SHORT).show();
-//                progressDialog.dismiss();
-//            }
+                progressDialog.dismiss();
+            }
         }
         /**
          * 페이스북 로그인 응답
@@ -312,8 +317,11 @@ public class LoginDialog extends Activity {
         if(requestCode == RC_GOOGLE_LOGIN){
             Task task = GoogleSignIn.getSignedInAccountFromIntent(data);
 
+            Log.d(TAG, "구글로그인에서 onActivityResult는 진입");
+
             final ProgressDialog progressDialog = new ProgressDialog(LoginDialog.this);
             progressDialog.setMessage("회원정보 확인중입니다.");
+            progressDialog.setCancelable(false);
             progressDialog.show();
             try{
                 GoogleSignInAccount account = (GoogleSignInAccount) task.getResult(ApiException.class);
@@ -372,6 +380,8 @@ public class LoginDialog extends Activity {
                         });
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
+                Log.d(TAG, throwable.getMessage());
+                progressDialog.dismiss();
             }
         }
     }
