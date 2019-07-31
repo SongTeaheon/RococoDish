@@ -11,7 +11,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="12dp"
-        app:cardCornerRadius="25dp"
         app:cardElevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
@@ -37,27 +36,30 @@
         android:id="@+id/profileUpper_textview_followRecy"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/bmhanna_11yrs"
-        android:textSize="17sp"
-        android:textColor="#000"
-        android:layout_marginStart="16dp"
+        android:fontFamily="@font/bmjua"
+        android:textSize="16dp"
+        android:textColor="@color/GGrey"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="90tan4310"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpUsage" />
 
     <TextView
         android:id="@+id/profileLower_textview_followRecy"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
-        android:fontFamily="@font/bmhanna_11yrs"
+        android:textSize="12dp"
+        android:fontFamily="@font/bmjua"
         android:text="홍대 미학과 18학번"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/profileUpper_textview_followRecy"
-        app:layout_constraintTop_toBottomOf="@+id/profileUpper_textview_followRecy" />
+        app:layout_constraintTop_toBottomOf="@+id/profileUpper_textview_followRecy"
+        tools:ignore="SpUsage" />
 
 </android.support.constraint.ConstraintLayout>

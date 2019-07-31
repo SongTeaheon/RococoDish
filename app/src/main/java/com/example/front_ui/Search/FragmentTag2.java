@@ -34,8 +34,8 @@ public class FragmentTag2 extends Fragment {
         tagGridview = view.findViewById(R.id.gridView0);
 //        tagName = view.findViewById(R.id.tvStore);
         backBtn = view.findViewById(R.id.backButton);
-        sortBtn = view.findViewById(R.id.sort_button);
-
+//        sortBtn = view.findViewById(R.id.sort_button);
+//
 //        tagName.setText();
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,12 +43,12 @@ public class FragmentTag2 extends Fragment {
                 getActivity().finish();
             }
         });
-        sortBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //todo : 분류는 아직
-            }
-        });
+//        sortBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //todo : 분류는 아직
+//            }
+//        });
 
         fragmentTag2Adapter = new FragmentTag2Adapter(getActivity(), tagName.getText().toString());
         tagGridview.setAdapter(fragmentTag2Adapter);

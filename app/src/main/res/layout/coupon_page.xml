@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/relLayoutCoupon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include layout="@layout/coupon_page_toolbar" />
+        <!--toolbar-->
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/img_coupon"
+        android:layout_width="65dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_coupon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relLayoutCoupon" />
+
+    <TextView
+        android:id="@+id/numOfCoupon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="18dp"
+        android:fontFamily="@font/bmjua"
+        android:text="0 장"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@+id/img_coupon"
+        app:layout_constraintTop_toBottomOf="@+id/relLayoutCoupon"
+        tools:ignore="SpUsage" />
+
+    <ImageView
+        android:id="@+id/numOfCouponUsage"
+        android:layout_width="80dp"
+        android:layout_height="14dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_couponusage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relLayoutCoupon" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_coupon" />
+
+    <!--여기에 coupon_page_item 넣어주시면 됩니당! todo-->
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relLayoutCoupon">
+    </FrameLayout>
+
+    <!--여기에 coupon_page_detail_fragment가 각 구폰 눌렀을 때 나오면 됩니당! todo-->
+
+</android.support.constraint.ConstraintLayout>

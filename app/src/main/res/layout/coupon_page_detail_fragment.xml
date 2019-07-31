@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/couponName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:fontFamily="@font/bmjua"
+        android:text="음식점이름 할인 쿠폰"
+        android:textColor="@color/GGrey"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/couponDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:fontFamily="@font/bmjua"
+        android:text="유효기간 2019-04-30 ~ 2019-08-01"
+        android:textColor="@color/Grey"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/couponName"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/couponValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="4dp"
+        android:fontFamily="@font/bmjua"
+        android:text="0000"
+        android:textColor="@color/MainColor"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/couponPrice"
+        app:layout_constraintTop_toBottomOf="@+id/couponName"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/couponPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="0dp"
+        android:fontFamily="@font/bmjua"
+        android:text="원 할인"
+        android:textColor="@color/Grey"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/couponName"
+        tools:ignore="SpUsage" />
+
+    <ImageView
+        android:id="@+id/imageViewLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="0dp"
+        android:background="@color/LightGrey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/couponPrice"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/couponAd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/bmjua"
+        android:text="쿠폰 사용조건"
+        android:textSize="16dp"
+        android:textColor="@color/GGrey"
+        app:layout_goneMarginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageViewLine"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/couponAdvantage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/bmjua"
+        android:text="최소 0000원 이상 구매 시 사용가능"
+        android:textColor="@color/Grey"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/couponAd"
+        tools:ignore="SpUsage" />
+
+    <ImageView
+        android:id="@+id/imageViewLine2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="0dp"
+        android:background="@color/LightGrey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/couponAdvantage"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/couponCaution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/bmjua"
+        android:text="유의사항"
+        android:textSize="16dp"
+        android:textColor="@color/GGrey"
+        app:layout_goneMarginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageViewLine2"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/couponCautionContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/bmjua"
+        android:text="- 주문 1회 당 쿠폰은 1개 만 사용 가능합니다 등등"
+        android:textColor="@color/Grey"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/couponCaution"
+        tools:ignore="SpUsage" />
+
+
+</android.support.constraint.ConstraintLayout>

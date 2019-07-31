@@ -49,12 +49,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/cardview_imagefood0"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="-3dp"
+        android:layout_marginTop="-2dp"
         android:layout_toEndOf="@id/storePageStar"
         android:fontFamily="@font/bmjua"
         android:text="0.0"
         android:textSize="20dp"
-        android:textColor="@color/Black"
+        android:textColor="@color/Grey"
         tools:ignore="SpUsage" />
 
     <ImageView
@@ -65,7 +65,7 @@
         android:layout_marginStart="28dp"
         android:layout_marginTop="-2dp"
         android:layout_toEndOf="@+id/storePageScore"
-        android:src="@mipmap/ic_heart"/>
+        android:src="@drawable/ic_heart"/>
 
     <TextView
         android:id="@+id/storePageLike"
@@ -73,12 +73,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/cardview_imagefood0"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="-3dp"
+        android:layout_marginTop="-2dp"
         android:layout_toEndOf="@id/storePageHeart"
         android:fontFamily="@font/bmjua"
         android:text="0"
         android:textSize="20dp"
-        android:textColor="@color/Black"
+        android:textColor="@color/Grey"
         tools:ignore="SpUsage" />
 
 </RelativeLayout>

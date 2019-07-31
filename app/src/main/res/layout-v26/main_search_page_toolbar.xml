@@ -24,7 +24,7 @@
                     android:layout_height="26dp"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="20dp"
-                    android:src="@mipmap/ic_back" />
+                    android:src="@drawable/ic_back" />
 
                 <EditText
                     android:id="@+id/mainsearch_text"
@@ -36,9 +36,12 @@
                     android:layout_toEndOf="@+id/backButton"
                     android:fontFamily="@font/bmjua"
                     android:hint="가게, 지역, 태그, 이름으로 검색"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/GGrey"
                     android:textSize="20dp"
                     android:background="@drawable/search_edittext"
+                    android:maxLines="1"
+                    android:inputType="text"
+                    android:imeOptions="actionSearch"
                     tools:ignore="RtlSymmetry,SpUsage" />
 
                 <ImageView
@@ -48,7 +51,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="16dp"
-                    android:src="@mipmap/ic_search"
+                    android:src="@drawable/ic_search"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

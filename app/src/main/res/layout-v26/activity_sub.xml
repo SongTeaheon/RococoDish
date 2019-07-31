@@ -143,7 +143,7 @@
                             android:fontFamily="@font/bmjua"
                             android:gravity="center"
                             android:text="오늘은 뭘 먹지?"
-                            android:textColor="@color/Black"
+                            android:textColor="@color/GGrey"
                             android:textSize="20dp"
                             tools:ignore="SpUsage" />
 

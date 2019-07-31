@@ -39,7 +39,7 @@
                         android:layout_marginBottom="@dimen/spacing_small"
                         android:fontFamily="@font/bmjua"
                         android:text="가게이름"
-                        android:textColor="@color/Grey"
+                        android:textColor="@color/GGrey"
                         android:textSize="20dp"
                         tools:ignore="SpUsage" />
 
@@ -106,7 +106,8 @@
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="12dp"
-                        android:background="@color/Grey" />
+                        android:background="@color/GGrey"
+                        tools:ignore="ContentDescription" />
 
                 </RelativeLayout>
 

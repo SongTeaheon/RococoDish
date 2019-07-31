@@ -21,17 +21,29 @@
         <!--app:layout_constraintStart_toStartOf="parent"-->
         <!--app:layout_constraintTop_toTopOf="parent"-->
         <!--app:srcCompat="@android:drawable/screen_background_light_transparent" />-->
+    <RelativeLayout
+        android:id="@+id/relLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include layout="@layout/my_page_toolbar" />
+        <!--toolbar-->
+    </RelativeLayout>
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardview_circleImage"
-        app:cardElevation="10dp"
-        app:cardCornerRadius="75dp"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:cardCornerRadius="50dp"
+        app:cardElevation="5dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/relLayout3">
+
         <ImageView
             android:id="@+id/circleImage"
             android:layout_width="match_parent"
@@ -43,76 +55,107 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:fontFamily="@font/bmjua"
         android:gravity="center"
-        android:text="추 억"
-        android:textColor="@color/colorAccent"
-        android:textSize="20dp"
+        android:text="게시물"
+        android:textColor="@color/Grey"
+        android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="@+id/cardview_circleImage"
         app:layout_constraintStart_toEndOf="@+id/cardview_circleImage"
         app:layout_constraintTop_toTopOf="@+id/cardview_circleImage"
+        app:layout_constraintVertical_bias="0.759"
         tools:ignore="SpUsage" />
 
     <TextView
         android:id="@+id/textNumOfData"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/bmjua"
         android:gravity="center"
         android:text="0"
-        android:textColor="@color/colorAccent"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="@+id/textView"
+        android:textColor="@color/Grey"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintStart_toEndOf="@+id/cardview_circleImage"
         tools:ignore="SpUsage" />
 
     <TextView
         android:id="@+id/follow_textview"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/bmjua"
         android:gravity="center"
-        android:text="팔로우"
-        android:textColor="@color/colorAccent"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/textView"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        android:text="팔로워"
+        android:textColor="@color/Grey"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/textNumOfFollower"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/bmjua"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="@color/Grey"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toTopOf="@+id/follow_textview"
+        app:layout_constraintStart_toEndOf="@+id/textNumOfData"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/following_textview"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="0dp"
+        android:fontFamily="@font/bmjua"
+        android:gravity="center"
+        android:text="팔로워"
+        android:textColor="@color/Grey"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="@+id/follow_textview"
+        app:layout_constraintStart_toEndOf="@+id/follow_textview"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/textNumOfFollowing"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/bmjua"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="@color/Grey"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toTopOf="@+id/follow_textview"
+        app:layout_constraintStart_toEndOf="@+id/textNumOfFollower"
+        tools:ignore="SpUsage" />
 
     <GridView
         android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
         android:background="@drawable/corner_background"
         android:gravity="center"
         android:numColumns="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardview_circleImage" />
-
-    <me.rishabhkhanna.customtogglebutton.CustomToggleButton
-        android:id="@+id/followToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:textOff="팔로우"
-        android:textOn="팔로잉"
-        app:borderWidth="2dp"
-        app:checkedColor="#333"
-        app:checkedTextColor="#fff"
-        app:layout_constraintBottom_toTopOf="@+id/textNumOfData"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:radius="20dp"
-        app:uncheckedColor="#444"
-        app:uncheckedTextColor="#000" />
+        app:layout_constraintTop_toBottomOf="@+id/cardview_circleImage"
+        app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>

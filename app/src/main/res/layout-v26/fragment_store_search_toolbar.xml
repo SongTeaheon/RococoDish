@@ -24,7 +24,7 @@
                     android:layout_height="26dp"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="20dp"
-                    android:src="@mipmap/ic_back" />
+                    android:src="@drawable/ic_back" />
 
                 <TextView
                     android:id="@+id/mainText"
@@ -37,7 +37,7 @@
                     android:fontFamily="@font/bmjua"
                     android:gravity="center"
                     android:text="다녀온 맛집"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/GGrey"
                     android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="16dp"
                     android:autoSizeMaxTextSize="28dp"

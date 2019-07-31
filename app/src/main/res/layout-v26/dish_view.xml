@@ -49,7 +49,7 @@
                     android:id="@+id/profile_cardview_dishView"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    android:layout_margin="10dp"
+                    android:layout_margin="16dp"
                     app:cardCornerRadius="22dp"
                     app:cardElevation="10dp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -57,10 +57,10 @@
 
                     <ImageView
                         android:id="@+id/profile_imageview_dishView"
-                        android:src="@drawable/basic_user_image"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="centerCrop" />
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/basic_user_image" />
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
@@ -94,7 +94,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:fontFamily="@font/bmhanna_11yrs"
+                    android:fontFamily="@font/bmjua"
                     android:text=""
                     android:textColor="@color/Grey"
                     android:textSize="16dp"
@@ -110,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
-                    android:fontFamily="@font/bmhanna_11yrs"
+                    android:fontFamily="@font/bmjua"
                     android:text="여기로부터"
                     android:textColor="@color/MainColor"
                     android:textSize="16dp"
@@ -125,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="24dp"
-                    android:fontFamily="@font/bmhanna_11yrs"
+                    android:fontFamily="@font/bmjua"
                     android:text="0.0km!"
                     android:textColor="@color/MainColor"
                     android:textSize="16dp"
@@ -136,21 +136,21 @@
 
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="10dp"
-                    android:layout_height="19dp"
+                    android:layout_width="12dp"
+                    android:layout_height="20dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="6dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView2"
-                    app:srcCompat="@mipmap/ic_pin" />
+                    app:srcCompat="@drawable/ic_pin" />
 
                 <TextView
                     android:id="@+id/textViewAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="8dp"
-                    android:fontFamily="@font/bmhanna_11yrs"
+                    android:fontFamily="@font/bmjua"
                     android:text="서울 동대문구 서울시립대로 29길 3"
                     android:textColor="@color/Grey"
                     android:textSize="16dp"
@@ -162,11 +162,11 @@
                     android:id="@+id/imageView2"
                     android:layout_width="28dp"
                     android:layout_height="27dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="26dp"
                     android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toStartOf="@+id/textViewScore"
                     app:layout_constraintTop_toBottomOf="@+id/cardview_image"
-                    app:srcCompat="@mipmap/ic_star" />
+                    app:srcCompat="@drawable/ic_star" />
 
                 <TextView
                     android:id="@+id/textViewScore"
@@ -200,10 +200,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/bmhannaair"
+                        android:fontFamily="@font/bmjua"
                         android:text="내용이 들어가는 부분입니다."
-                        android:textColor="@color/Black"
+                        android:textColor="@color/GGrey"
                         android:textSize="16dp"
                         tools:ignore="SpUsage" />
 
@@ -212,7 +211,7 @@
                     <!--android:layout_width="match_parent"-->
                     <!--android:layout_height="wrap_content"-->
                     <!--android:layout_marginTop="8dp"-->
-                    <!--android:fontFamily="@font/bmhannaair"-->
+                    <!--android:fontFamily="@font/bmjua"-->
                     <!--android:text="내용이 들어가는 부분입니다."-->
                     <!--android:textColor="#000"-->
                     <!--android:textSize="14dp"-->
@@ -228,7 +227,7 @@
                     android:layout_marginTop="16dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/description_box_dishView"
-                    app:srcCompat="@mipmap/ic_grey_heart" />
+                    app:srcCompat="@drawable/ic_grey_heart" />
 
                 <ImageView
                     android:id="@+id/share_imageview"
@@ -238,7 +237,7 @@
                     android:layout_marginTop="16dp"
                     app:layout_constraintStart_toEndOf="@+id/like_imageview_dishView"
                     app:layout_constraintTop_toBottomOf="@+id/description_box_dishView"
-                    app:srcCompat="@mipmap/ic_share" />
+                    app:srcCompat="@drawable/ic_share" />
 
                 <TextView
                     android:id="@+id/likeNum_textview_dishView"
@@ -247,7 +246,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="5dp"
                     android:textColor="@color/MainColor"
-                    android:fontFamily="@font/bmhanna_11yrs"
+                    android:fontFamily="@font/bmjua"
                     android:textSize="10dp"
                     android:text="좋아하는 사람 0명"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -262,6 +261,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:text="게시한 날짜/시간"
+                    android:fontFamily="@font/bmjua"
                     android:textSize="10dp"
                     android:textColor="@color/Grey"
                     app:layout_constraintStart_toStartOf="parent"
@@ -340,6 +340,8 @@
                     android:hint="댓글달기"
                     android:inputType="textMultiLine"
                     android:textSize="12dp"
+                    android:textColor="@color/Grey"
+                    android:fontFamily="@font/bmjua"
                     app:layout_constraintBottom_toBottomOf="@+id/myProfile_commentInput"
                     app:layout_constraintEnd_toStartOf="@+id/send_imageview_commentInput"
                     app:layout_constraintStart_toEndOf="@+id/myProfile_commentInput"

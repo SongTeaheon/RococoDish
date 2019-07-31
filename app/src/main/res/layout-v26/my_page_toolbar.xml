@@ -26,9 +26,8 @@
                     android:layout_marginEnd="20dp"
                     android:src="@drawable/ic_back" />
 
-                <!--가게이름 10글자 넘어가면 안되게 해야함...ㅜㅜ-->
                 <TextView
-                    android:id="@+id/mainText"
+                    android:id="@+id/userName"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_alignParentStart="true"
@@ -37,36 +36,19 @@
                     android:layout_marginEnd="92dp"
                     android:fontFamily="@font/bmjua"
                     android:gravity="center"
-                    android:text="가게이름"
-                    android:textColor="@color/GGrey"
+                    android:text="유저이름"
+                    android:textColor="@android:color/black"
                     android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="16dp"
                     android:autoSizeMaxTextSize="28dp"
                     tools:ignore="SpUsage" />
 
                 <TextView
-                    android:id="@+id/edit_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/mainText"
-                    android:layout_alignBottom="@+id/mainText"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_toStartOf="@+id/delete_button"
-                    android:fontFamily="@font/bmjua"
-                    android:text="수정"
-                    android:textColor="@color/MainColor"
-                    android:textSize="20dp"
-                    android:visibility="invisible"
-                    tools:ignore="SpUsage" />
-
-                <TextView
                     android:id="@+id/delete_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/mainText"
-                    android:layout_alignBottom="@+id/mainText"
+                    android:layout_alignTop="@+id/userName"
+                    android:layout_alignBottom="@+id/userName"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="16dp"
@@ -77,6 +59,42 @@
                     android:textSize="20dp"
                     android:visibility="invisible"
                     tools:ignore="SpUsage" />
+
+                <me.rishabhkhanna.customtogglebutton.CustomToggleButton
+                    android:id="@+id/followToggle"
+                    android:layout_width="65dp"
+                    android:layout_height="0dp"
+                    android:layout_alignTop="@+id/userName"
+                    android:layout_alignBottom="@+id/userName"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="1dp"
+                    android:textOff="팔로우"
+                    android:textOn="팔로잉"
+                    android:textSize="16dp"
+                    android:fontFamily="@font/bmjua"
+                    android:visibility="visible"
+                    app:borderWidth="2dp"
+                    app:checkedColor="@color/MainColor"
+                    app:checkedTextColor="@color/colorWhite"
+                    app:radius="3dp"
+                    app:uncheckedColor="@color/colorWhite"
+                    app:uncheckedTextColor="@color/MainColor"
+                    tools:ignore="SpUsage" />
+
+                <ImageView
+                    android:id="@+id/img_coupon"
+                    android:layout_width="65dp"
+                    android:layout_height="0dp"
+                    android:layout_alignTop="@+id/userName"
+                    android:layout_alignBottom="@+id/userName"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="1dp"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_coupon"/>
 
             </RelativeLayout>
         </android.support.v7.widget.Toolbar>

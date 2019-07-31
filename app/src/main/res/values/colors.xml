@@ -14,7 +14,7 @@
 <color name="LightGrey">#ECEFF0</color>
 <color name="Black">#000000</color>
 <color name="Grey">#7F7F7F</color>
-<color name="GGrey">#464747</color>
+<color name="GGrey">#636363</color>
 <color name="tab_selected">@color/colorWhite</color>
 <color name="tab_nonselected">#B39797</color>
 

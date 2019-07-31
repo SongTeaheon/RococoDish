@@ -1,12 +1,17 @@
 package com.example.front_ui.Search;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,7 +36,7 @@ public class MainSearchActivity extends AppCompatActivity {
 
     private final String TAG = "TAGMainSearchActivity";
     RecyclerView mRecyclerView;
-    TextView search_tv;
+    EditText search_tv;
     ImageView search_btn;
 
     Retrofit retrofit;
@@ -58,8 +63,7 @@ public class MainSearchActivity extends AppCompatActivity {
     private int subwayCnt;
     private int attractionCnt;
 
-
-
+    InputMethodManager imm;
 
 
 
@@ -71,6 +75,7 @@ public class MainSearchActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.mrecyclerView);
         search_tv = findViewById(R.id.mainsearch_text);
         search_btn = findViewById(R.id.main_search_btn);
+        imm = (InputMethodManager) getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
 
         search_btn.setOnClickListener(new View.OnClickListener(){
@@ -79,34 +84,47 @@ public class MainSearchActivity extends AppCompatActivity {
                 String search_word = search_tv.getText().toString();
                 Log.d(TAG, "search!! keyword : " + search_word);
                 requestSearchApi(search_word);
+                imm.hideSoftInputFromWindow(search_tv.getWindowToken(), 0);
             }
         });
 
+        search_tv.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String search_word = search_tv.getText().toString();
+                    Log.d(TAG, "search!! keyword : " + search_word);
+                    requestSearchApi(search_word);
+                }
+                return false;
+            }
+        });
 
-        //recyclerView 아이템 터치 리스터. recycler view 중 가게를 하나 선택하면 다음 프래그먼트로 이동
-        mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
+                //recyclerView 아이템 터치 리스터. recycler view 중 가게를 하나 선택하면 다음 프래그먼트로 이동
+                mRecyclerView.addOnItemTouchListener(
+                        new RecyclerItemClickListener(this, mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
 
-                        //선택한 아이템뷰 확인 및 데이터 전달
-                        int itemPosition = mRecyclerView.getChildLayoutPosition(view);
-                        Log.d(TAG, "item clicked : " + total_list.get(itemPosition).place_name);
-                        Log.d(TAG, "Search view");
+                                //선택한 아이템뷰 확인 및 데이터 전달
+                                int itemPosition = mRecyclerView.getChildLayoutPosition(view);
+                                Log.d(TAG, "item clicked : " + total_list.get(itemPosition).place_name);
+                                Log.d(TAG, "Search view");
 
-                        Intent intent = new Intent();
-                        intent.putExtra("SearchedData", total_list.get(itemPosition));
-                        Log.d(TAG, "searchedData : placename, x, y" + total_list.get(itemPosition).place_name+ total_list.get(itemPosition).x+total_list.get(itemPosition).y);
-                        //선택한 가게 정보 데이터를 bundle에 넣고 다음 프래그먼트로 이동
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
+                                Intent intent = new Intent();
+                                intent.putExtra("SearchedData", total_list.get(itemPosition));
+                                Log.d(TAG, "searchedData : placename, x, y" + total_list.get(itemPosition).place_name + total_list.get(itemPosition).x + total_list.get(itemPosition).y);
+                                //선택한 가게 정보 데이터를 bundle에 넣고 다음 프래그먼트로 이동
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            }
 
-                    @Override public void onLongItemClick(View view, int position) {
-                        // do whatever
-                    }
-                })
-        );
+                            @Override
+                            public void onLongItemClick(View view, int position) {
+                                // do whatever
+                            }
+                        })
+                );
 
     }
 
@@ -238,7 +256,4 @@ public class MainSearchActivity extends AppCompatActivity {
         //recyclerview 세팅 필요!!!
 
     }
-
-
-
 }

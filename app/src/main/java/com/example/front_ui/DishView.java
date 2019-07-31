@@ -519,7 +519,7 @@ public class DishView extends AppCompatActivity {
 
                 if(documentSnapshot.exists()){
 
-                    int img = documentSnapshot.getBoolean("isLiked")? R.mipmap.ic_heart : R.mipmap.ic_grey_heart;
+                    int img = documentSnapshot.getBoolean("isLiked")? R.drawable.ic_heart : R.drawable.ic_grey_heart;
                     likeImage.setImageResource(img);
 
                     isLiked = documentSnapshot.getBoolean("isLiked");
@@ -600,7 +600,7 @@ public class DishView extends AppCompatActivity {
             public void onClick(View v) {
                 //한번더 클릭하면 기존의 값과 반대로 바꿈.
                 boolean _isLiked = !isLiked;
-                likeImage.setImageResource(_isLiked? R.drawable.ic_like : R.mipmap.ic_grey_heart);
+                likeImage.setImageResource(_isLiked? R.drawable.ic_heart : R.drawable.ic_grey_heart);
                 //이미지 바꾸고 디비 업데이트함.
                 likeRef.update("isLiked", _isLiked);
             }

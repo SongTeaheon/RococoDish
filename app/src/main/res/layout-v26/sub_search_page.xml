@@ -58,10 +58,10 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="@dimen/spacing_small"
-                        android:fontFamily="@font/bmhanna_11yrs"
+                        android:fontFamily="@font/bmjua"
                         android:paddingStart="16dp"
                         android:text="가게"
-                        android:textColor="@color/Black"
+                        android:textColor="@color/GGrey"
                         android:textSize="20dp"
                         tools:ignore="RtlSymmetry,SpUsage" />
 
@@ -107,10 +107,10 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="@dimen/spacing_small"
-                        android:fontFamily="@font/bmhanna_11yrs"
+                        android:fontFamily="@font/bmjua"
                         android:paddingStart="16dp"
                         android:text="지역"
-                        android:textColor="@color/Black"
+                        android:textColor="@color/GGrey"
                         android:textSize="20dp"
                         tools:ignore="RtlSymmetry,SpUsage" />
 
@@ -156,10 +156,10 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="@dimen/spacing_small"
-                        android:fontFamily="@font/bmhanna_11yrs"
+                        android:fontFamily="@font/bmjua"
                         android:paddingStart="16dp"
                         android:text="태그"
-                        android:textColor="@color/Black"
+                        android:textColor="@color/GGrey"
                         android:textSize="20dp"
                         tools:ignore="RtlSymmetry,SpUsage" />
 
@@ -205,10 +205,10 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="@dimen/spacing_small"
-                        android:fontFamily="@font/bmhanna_11yrs"
+                        android:fontFamily="@font/bmjua"
                         android:paddingStart="16dp"
                         android:text="사람"
-                        android:textColor="@color/Black"
+                        android:textColor="@color/GGrey"
                         android:textSize="20dp"
                         tools:ignore="RtlSymmetry,SpUsage" />
 
