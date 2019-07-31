@@ -32,7 +32,7 @@ public class FragmentTag2 extends Fragment {
         View view = inflater.inflate(R.layout.store_page, container, false);
 
         tagGridview = view.findViewById(R.id.gridView0);
-        tagName = view.findViewById(R.id.tvStore);
+//        tagName = view.findViewById(R.id.tvStore);
         backBtn = view.findViewById(R.id.backButton);
         sortBtn = view.findViewById(R.id.sort_button);
 
