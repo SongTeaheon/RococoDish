@@ -191,7 +191,7 @@ public class LoginDialog extends AppCompatActivity {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     Log.d(TAG, "새로운 유저 등록에 성공했습니다.");
-                                                    startActivity(new Intent(LoginDialog.this, SubActivity.class));
+                                                    startActivity(new Intent(LoginDialog.this, Login2Activity.class));
                                                     finish();
                                                     progressDialog.dismiss();
                                                 }
@@ -278,7 +278,7 @@ public class LoginDialog extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.d(TAG, "새로운 유저 등록에 성공했습니다.");
-                                    startActivity(new Intent(LoginDialog.this, SubActivity.class));
+                                    startActivity(new Intent(LoginDialog.this, Login2Activity.class));
                                     finish();
                                     progressDialog.dismiss();
                                 }
@@ -355,7 +355,7 @@ public class LoginDialog extends AppCompatActivity {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
                                                         Log.d(TAG, "새로운 유저 등록에 성공했습니다.");
-                                                        startActivity(new Intent(LoginDialog.this, SubActivity.class));
+                                                        startActivity(new Intent(LoginDialog.this, Login2Activity.class));
                                                         finish();
                                                         progressDialog.dismiss();
                                                     }

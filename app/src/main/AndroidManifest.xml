@@ -16,13 +16,16 @@
         android:roundIcon="@mipmap/ic_app_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".CocomentActivity"
+        <activity android:name=".Login2Activity"></activity>
+        <activity
+            android:name=".CocomentActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"></activity>
-        <activity android:name=".Search.RegionSearchActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".StartActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Search.RegionSearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".StartActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,10 +33,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DoubleRecyActivity"
-            android:screenOrientation="portrait"/>
-
-        <!--페이스북-->
+        <activity
+            android:name=".DoubleRecyActivity"
+            android:screenOrientation="portrait" /> <!-- 페이스북 -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"
@@ -59,36 +61,46 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
 
-        <activity android:name=".SettingActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Search.SubSearchPage"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Edit.EditActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".SignUpActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".AlgoliaTest.StoreNameSearchAcitivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Search.MainSearchActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".SettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Search.SubSearchPage"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Edit.EditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AlgoliaTest.StoreNameSearchAcitivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Search.MainSearchActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".MyPage"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".PostingProcess.MainShareActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".StorePageActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".FollowActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".LoginDialog"
-            android:theme="@style/Theme.MaterialComponents.Light.Dialog"/>
-        <activity android:name=".SubActivity"
+        <activity
+            android:name=".MyPage"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PostingProcess.MainShareActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".StorePageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FollowActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LoginDialog"
+            android:theme="@style/Theme.MaterialComponents.Light.Dialog" />
+        <activity
+            android:name=".SubActivity"
             android:screenOrientation="portrait">
-          
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

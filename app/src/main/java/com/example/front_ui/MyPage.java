@@ -90,6 +90,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_page);
 
+        //이스터에그로 넘어감.
         TextView textView = findViewById(R.id.textView);
         textView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -99,13 +100,14 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                 return false;
             }
         });
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), DoubleRecyActivity.class);
-                startActivity(intent);
-            }
-        });
+        //리팩토링한 SubActivity(필요없을 것 같음.)
+//        textView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(), DoubleRecyActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
 
         /**
