@@ -104,13 +104,6 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
             itemRowHolder.recycler_view_list.setHasFixedSize(true);
             itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
             itemRowHolder.recycler_view_list.setAdapter(itemListDataAdapter);
-            if(isCalled == 3) { //3번 째가 불리면 눈에 보이는 데이터는 일단 내려왔다고 생각!
-                //TODO: 태완님 여기가 보이는 창 로딩 완료 위치입니다.
-                //todo : 가게목록만 불러오는게 끝나는 부분입니다. 여기서 로딩을 멈추면 포스팅에 이미지 불러오는데 기다려야합니다.
-                Toast.makeText(mContext, "done timing2", Toast.LENGTH_SHORT).show();
-            }
-
-
             isCalled = i+1;
         }
 

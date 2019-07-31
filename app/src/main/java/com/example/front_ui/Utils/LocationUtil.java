@@ -16,6 +16,17 @@ public class LocationUtil {
         return distance;
     }
 
+    public static double getDistanceFromMe(Location mCurrent, double lat, double lon){
+        double distance;
+        Location location = new Location("dummyprovider");
+        location.setLatitude(lat);
+        location.setLongitude(lon);
+
+        distance = mCurrent.distanceTo(location);
+
+        return distance;
+    }
+
     public static double getDistanceFromMe(double currentLat, double currentLon, GeoPoint geoPoint){
         double distance;
         Location location = new Location("dummyprovider");

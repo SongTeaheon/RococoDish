@@ -28,7 +28,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.DataModel.StoreInfo;
+import com.example.front_ui.DataModel.UserInfo;
 import com.example.front_ui.Edit.BroadcastUtils;
+import com.example.front_ui.Utils.AlgoliaUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.GlidePlaceHolder;
 import com.example.front_ui.Utils.LocationUtil;
@@ -54,6 +56,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import me.rishabhkhanna.customtogglebutton.CustomToggleButton;
 
 //interface for datapass to MyPage
@@ -65,6 +70,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
     double currentLatitude;
     double currentLongtitude;
     TextView followText;
+    UserInfo userInfo;
     static final String basicProfile = "https://firebasestorage.googleapis.com/v0/b/rococodish.appspot.com/o/user6.png?alt=media&token=f6f73ce5-bfe1-4dac-bbf2-29fb94706e09";
 
     @Override
@@ -107,8 +113,8 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
          * **/
         //현재 위치 정보를 가져온다.
         Intent intent = this.getIntent();
-        currentLatitude = intent.getDoubleExtra("latitude", 0.0);
-        currentLongtitude = intent.getDoubleExtra("longitude", 0.0);
+        currentLatitude = SubActivity.mCurrentLocation.getLatitude();
+        currentLongtitude = SubActivity.mCurrentLocation.getLongitude();
 
         //이전 페이지에서 사용자의 uuid를 가져옴.
         final String userUUID = intent.getStringExtra("userUUID");
@@ -239,6 +245,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                         if(e != null){
                             Log.d(TAG, e.getMessage());
                         }
+//                        userInfo = documentSnapshot.toObject(UserInfo.class);//TODO:바꾸는중 XXX
                         if(documentSnapshot.get("profileImage") != null){//프로필 사진이 있을 경우
                             CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(getApplicationContext());
                             circularProgressDrawable.setStrokeCap(Paint.Cap.ROUND);
@@ -334,10 +341,19 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                     ByteArrayOutputStream outputStream =new ByteArrayOutputStream();
                     bmp.compress(Bitmap.CompressFormat.JPEG, 60, outputStream);
                     byte[] byteArray = outputStream.toByteArray();
-                    Storage.INSTANCE.uploadProfileImage(byteArray, progressDialog);
+                    Storage.INSTANCE.uploadProfileImage(byteArray, progressDialog, new Function1<Uri, Unit>() {
+                        @Override
+                        public Unit invoke(Uri uri) {
+                            AlgoliaUtils.changeProfileImagePath(userInfo, uri.toString());
+                            return null;
+                        }
+                    });
                     GlideApp.with(this)
                             .load(bmp)
+                            .placeholder(GlidePlaceHolder.circularPlaceHolder(this))
                             .into(circleImageView);
+
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

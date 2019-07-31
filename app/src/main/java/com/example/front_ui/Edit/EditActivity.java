@@ -76,8 +76,6 @@ public class EditActivity extends AppCompatActivity {
         storeInfo = (SerializableStoreInfo) intent.getSerializableExtra("storeInfo");
         Log.d(TAG, "store Info id : " + storeInfo.getStoreId() + " store name : " + storeInfo.getName() + " store map :" + storeInfo.getLat() + ", " + storeInfo.getLon() +
                 " star :  " + storeInfo.getAver_star());
-        distance = (double) intent.getDoubleExtra("distance", 0.0);
-        Log.d(TAG, "거리(미터단위) : " + distance);
         oldAverStar = postingInfo.getAver_star();
         oldTagMap = postingInfo.getTag();
 

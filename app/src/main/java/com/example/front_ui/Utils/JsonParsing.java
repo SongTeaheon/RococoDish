@@ -236,4 +236,17 @@ public class JsonParsing {
         return postingIds;
     }
 
+    public static String getFirstAlgoliaEmail(JSONArray jsonArray){
+        String eMail = null;
+        Log.d(TAG, "getFirstAlgoliaEmail" + jsonArray.toString());
+        try {
+            eMail = jsonArray.getJSONObject(0).getString("eMail");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "eMail : " + eMail);
+        return eMail;
+    }
+
+
 }

@@ -48,13 +48,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     private List<CommentInfo> parentList;
     private Context context;
     private String TAG = "TAGCommentAdapter";
-    private commentAdapterToDishView commentAdapterToDishView;//2. 인터페이스를 변수로 가져옴.
     private String myUid = FirebaseAuth.getInstance().getUid();
 
-    //3. DishView에서 사용할 수 있는 리스너를 만들어줌.(데이터를 받아야하니까)
-    public void getDocIdListener(commentAdapterToDishView _commentAdapterToDishView){
-        commentAdapterToDishView = _commentAdapterToDishView;//어댑터에서 보낸 데이터를 다른 변수로 받는다는 소리.
-    }
 
 
     public CommentAdapter(Context context,
@@ -98,7 +93,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 //        GlideApp.with(context)
 //                .load(parentList.get(i).getImgPath())
 //                .into(commentViewHolder.image);
-        //todo : 이전과 다르게 실시간 댓글 작성자 프로필 이미지 반영
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(parentList.get(i).getCommentWriterId())
@@ -109,11 +103,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                             Log.d(TAG, e.getMessage());
                         }
                         if(documentSnapshot.exists()){
-
+                            //프로필 이미지 부분
                             GlideApp.with(context.getApplicationContext())
                                     .load(documentSnapshot.get("profileImage"))
                                     .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
                                     .into(commentViewHolder.image);
+
+                            //프로필 이름 부분
+                            commentViewHolder.userName.setText(documentSnapshot.get("nickname").toString());
                         }
                     }
                 });
@@ -125,9 +122,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         String result = dateFormat.format(date);
         commentViewHolder.time.setText(result);
 
-
-        //유저 이름 부분
-        commentViewHolder.userName.setText(parentList.get(i).getWriterName());
 
         //댓글 부분
         commentViewHolder.userComment.setText(parentList.get(i).getComment());

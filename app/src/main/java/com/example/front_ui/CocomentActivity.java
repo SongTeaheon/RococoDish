@@ -91,7 +91,7 @@ public class CocomentActivity extends AppCompatActivity {
         if(commentInfo != null && postingInfo != null){
 
             //댓글 정보를 가져와서 붙임 & 대댓글에 내 프로필 이미지 적용
-            setCommentAndMyImage(commentInfo);
+            setComment(commentInfo);
 
             //대댓글 작성을 눌렀을 경우 실행
             final String cocomentUuid = UUID.randomUUID().toString();
@@ -139,7 +139,7 @@ public class CocomentActivity extends AppCompatActivity {
         }
     }
 
-    public void setCommentAndMyImage(CommentInfo commentInfo){
+    public void setComment(CommentInfo commentInfo){
         //댓글 이미지
         FirebaseFirestore.getInstance()
                 .collection("사용자")
@@ -152,14 +152,18 @@ public class CocomentActivity extends AppCompatActivity {
                         }
                         if(documentSnapshot.exists()){
 
+                            //댓글 이미지
                             GlideApp.with(getApplicationContext())
                                     .load(documentSnapshot.get("profileImage"))
                                     .into(commentImage);
+
+                            //댓글 이름
+                            commentName.setText(documentSnapshot.get("nickname").toString());
                         }
                     }
                 });
         //댓글 이름
-        commentName.setText(commentInfo.getWriterName());
+//        commentName.setText(commentInfo.getWriterName());
         //댓글 내용
         commentDesc.setText(commentInfo.getComment());
         //댓글의 시간
