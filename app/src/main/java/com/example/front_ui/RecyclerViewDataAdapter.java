@@ -138,7 +138,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         return storeInfo.getViewId();
     }
 
-    static class ItemRowHolder extends RecyclerView.ViewHolder {
+    class ItemRowHolder extends RecyclerView.ViewHolder {
 
         public CardView touchStore;
         public TextView storeName;
