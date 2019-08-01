@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/MainColor"
+        android:background="@color/colorWhite"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,11 +39,12 @@
                 android:fontFamily="@font/bmjua"
                 android:padding="12dp"
                 android:text="프로필 사진 등록"
-                android:textColor="#fff"
+                android:textColor="@color/MainColor"
                 android:textSize="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="SpUsage" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cardview_login2Activity"
@@ -52,8 +53,9 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
+                android:backgroundTint="@color/colorWhite"
                 app:cardCornerRadius="75dp"
-                app:cardElevation="10dp"
+                app:cardElevation="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView4">
@@ -83,11 +85,12 @@
                 android:fontFamily="@font/bmjua"
                 android:padding="12dp"
                 android:text="닉네임 설정"
-                android:textColor="#fff"
+                android:textColor="@color/MainColor"
                 android:textSize="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardview_login2Activity" />
+                app:layout_constraintTop_toBottomOf="@+id/cardview_login2Activity"
+                tools:ignore="SpUsage" />
 
             <EditText
                 android:id="@+id/userName_etv_login2Activity"
@@ -98,10 +101,11 @@
                 android:hint="닉네임을 입력해주세요."
                 android:inputType="textPersonName"
                 android:padding="12dp"
-                android:textSize="15sp"
+                android:textSize="15dp"
                 app:layout_constraintEnd_toEndOf="@+id/textView6"
                 app:layout_constraintStart_toStartOf="@+id/textView6"
-                app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                app:layout_constraintTop_toBottomOf="@+id/textView6"
+                tools:ignore="SpUsage" />
         </android.support.constraint.ConstraintLayout>
 
     </RelativeLayout>
@@ -115,10 +119,11 @@
         android:background="@drawable/login2_style"
         android:fontFamily="@font/bmjua"
         android:text="완료"
-        android:textColor="@color/MainColor"
-        android:textSize="20sp"
+        android:textColor="@color/colorWhite"
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="SpUsage" />
 
     <Button
         android:id="@+id/goToStart_login2Activity"
@@ -129,10 +134,11 @@
         android:background="@drawable/login2_style"
         android:fontFamily="@font/bmjua"
         android:text="이전"
-        android:textColor="@color/MainColor"
-        android:textSize="20sp"
+        android:textColor="@color/colorWhite"
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="SpUsage" />
 
 
 </android.support.constraint.ConstraintLayout>

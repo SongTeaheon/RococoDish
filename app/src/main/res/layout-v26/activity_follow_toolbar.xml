@@ -20,41 +20,29 @@
 
                 <ImageView
                     android:id="@+id/backButton"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="20dp"
                     android:src="@drawable/ic_back" />
 
-                <!--여기 TextView를 터치하면 다시 main_search_page로 가게 하는 것이 가장 편할 듯 합니당-->
                 <TextView
-                    android:id="@+id/subsearchStore"
+                    android:id="@+id/userName"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:layout_marginStart="-4dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_toStartOf="@+id/sub_search_btn"
-                    android:layout_toEndOf="@+id/backButton"
-                    android:fontFamily="@font/bmjua"
-                    android:paddingStart="12dp"
-                    android:text="검색된 가게"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/GGrey"
-                    android:textSize="20dp"
-                    android:background="@drawable/search_edittext"
-                    tools:ignore="SpUsage" />
-
-                <ImageView
-                    android:id="@+id/sub_search_btn"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="16dp"
-                    android:src="@drawable/ic_search"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_marginStart="76dp"
+                    android:layout_marginEnd="92dp"
+                    android:fontFamily="@font/bmjua"
+                    android:gravity="center"
+                    android:text="유저이름"
+                    android:textColor="@color/GGrey"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="16dp"
+                    android:autoSizeMaxTextSize="28dp"
+                    tools:ignore="SpUsage" />
+                <!--여기에 유저이름 나오게 todo-->
 
             </RelativeLayout>
         </android.support.v7.widget.Toolbar>
