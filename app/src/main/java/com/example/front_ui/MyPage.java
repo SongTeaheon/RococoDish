@@ -71,6 +71,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
     double currentLongtitude;
     TextView followText;
     UserInfo userInfo;
+    TextView userName;
     static final String basicProfile = "https://firebasestorage.googleapis.com/v0/b/rococodish.appspot.com/o/user6.png?alt=media&token=f6f73ce5-bfe1-4dac-bbf2-29fb94706e09";
 
     @Override
@@ -131,6 +132,24 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                 startActivity(intent);
             }
         });
+
+        //유저 이름 띄우기
+        userName = findViewById(R.id.userName);
+        FirebaseFirestore.getInstance()
+                .collection("사용자")
+                .document(userUUID)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if(e != null){
+                            Log.d(TAG, e.getMessage());
+                        }
+                        if(documentSnapshot.exists() && documentSnapshot != null){
+
+                            userName.setText(documentSnapshot.get("nickname").toString());
+                        }
+                    }
+                });
 
         /**
          * 팔로우 버튼 처리

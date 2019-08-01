@@ -33,7 +33,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.front_ui.AlgoliaTest.StoreNameSearchAcitivity;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.DataModel.SearchedData;
@@ -56,7 +55,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
-
 
 public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
@@ -184,7 +182,6 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 //        마이페이지용 리사이클러 뷰 변수
         myPostViewPager = findViewById(R.id.myPage_viewpager_activitySub);
         myPostViewPager.setPageTransformer(true, new Carousel(this));
-        myPostViewPager.setCurrentItem(1);
         viewPagerAdapter = new SubViewPagerAdapter(this);
         myPostViewPager.setAdapter(viewPagerAdapter);
         myPostViewPager.setOffscreenPageLimit(3);
@@ -193,6 +190,9 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         myPostViewPager.setPadding(40, 0, 40, 0);
         myPostViewPager.setPageMargin(-300);
         myPostViewPager.setOverScrollMode(2);
+        if(viewPagerAdapter.getCount() >= 2){
+            myPostViewPager.setCurrentItem(1);
+        }
 
 //        myPage_recyclerview = findViewById(R.id.myPage_recyclerview_activitySub);
 //        Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
