@@ -334,13 +334,13 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             Uri selectedImageFromGallery = data.getData();
 
             UCrop.Options options = new UCrop.Options();
-//            options.setStatusBarColor(getResources().getColor(R.color.MainColor));
-//            options.setActiveControlsWidgetColor(getResources().getColor(R.color.MainColor));
-//            options.setCropGridColor(getResources().getColor(R.color.MainColor));
-//            options.setDimmedLayerColor(getResources().getColor(R.color.MainColor));
-//            options.setToolbarColor(getResources().getColor(R.color.MainColor));
-//            options.setLogoColor(getResources().getColor(R.color.MainColor));
-            options.setCropFrameColor(getResources().getColor(R.color.MainColor));
+            options.setStatusBarColor(getResources().getColor(R.color.MainColor));
+//            options.setActiveControlsWidgetColor(getResources().getColor(R.color.MainColor));//하단 컨트롤러에 아이콘 색
+//            options.setCropGridColor(getResources().getColor(R.color.MainColor));//조정 선 색
+//            options.setDimmedLayerColor(getResources().getColor(R.color.MainColor));//테두리 바깥
+//            options.setToolbarColor(getResources().getColor(R.color.MainColor));//툴바 색
+//            options.setLogoColor(getResources().getColor(R.color.MainColor));//뒷배경
+//            options.setCropFrameColor(getResources().getColor(R.color.MainColor));//테두리
 //            options.setToolbarWidgetColor(getResources().getColor(R.color.MainColor));// 색변환
 //            options.setActiveWidgetColor(getResources().getColor(R.color.MainColor)); //아무변화 없음
 
@@ -354,7 +354,8 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
 
         if(requestCode == UCrop.REQUEST_CROP && resultCode == Activity.RESULT_OK) {
             final Uri resultUri = UCrop.getOutput(data);
-            final ProgressDialog progressDialog  = ProgressDialog.show(this, "로딩중", "잠시만 기다려주세요...");
+            final ProgressDialog progressDialog  = ProgressDialog.show(this, null, "사진을 등록중입니다.");
+            progressDialog.setCancelable(false);
             if (resultUri != null) {
                 Bitmap bmp = null;
                 try {
@@ -365,6 +366,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                     Storage.INSTANCE.uploadProfileImage(byteArray, progressDialog, new Function1<Uri, Unit>() {
                         @Override
                         public Unit invoke(Uri uri) {
+                            //todo : userInfo가 initialize되지 않아서 에러생깁니다.
                             AlgoliaUtils.changeProfileImagePath(userInfo, uri.toString());
                             return null;
                         }
