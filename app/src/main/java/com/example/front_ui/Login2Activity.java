@@ -24,6 +24,7 @@ import com.example.front_ui.Utils.GlidePlaceHolder;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
@@ -69,6 +70,9 @@ public class Login2Activity extends AppCompatActivity {
             }
         });
 
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("잠시만 기다려주세요.");
+
         //완료 버튼 누를 경우
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +84,7 @@ public class Login2Activity extends AppCompatActivity {
                     Toast.makeText(Login2Activity.this, "빈칸을 채워주세요.", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    progressDialog.show();
                     FirebaseFirestore.getInstance()
                             .collection("사용자")
                             .document(FirebaseAuth.getInstance().getUid())
@@ -89,6 +94,7 @@ public class Login2Activity extends AppCompatActivity {
                                 public void onSuccess(Void aVoid) {
                                     startActivity(new Intent(Login2Activity.this, SubActivity.class));
                                     finish();
+                                    progressDialog.dismiss();
                                 }
                             });
                 }
@@ -154,7 +160,7 @@ public class Login2Activity extends AppCompatActivity {
 
         if(requestCode == UCrop.REQUEST_CROP && resultCode == Activity.RESULT_OK) {
             final Uri resultUri = UCrop.getOutput(data);
-            final ProgressDialog progressDialog  = ProgressDialog.show(this, "로딩중", "잠시만 기다려주세요...");
+            final ProgressDialog progressDialog  = ProgressDialog.show(this,  null,"사진을 등록중입니다.");
             if (resultUri != null) {
                 Bitmap bmp = null;
                 try {

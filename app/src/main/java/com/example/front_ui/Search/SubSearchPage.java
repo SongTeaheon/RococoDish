@@ -90,6 +90,7 @@ public class SubSearchPage extends AppCompatActivity {
     TextView tvPeople;
     TextView tvTag;
 
+
     double currentLatitude;
     double currentLongtitude;
 
@@ -123,6 +124,8 @@ public class SubSearchPage extends AppCompatActivity {
         tvRegion = findViewById(R.id.tv_region);
         tvTag = findViewById(R.id.tv_tag);
 
+        backBtn = findViewById(R.id.backButton);
+
         editText = findViewById(R.id.mainsearch_text);
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -144,6 +147,13 @@ public class SubSearchPage extends AppCompatActivity {
                 Log.d(TAG, "search button is clicked");
                 String keyword = editText.getText().toString();
                 searchButtonClicked(keyword);
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
