@@ -185,14 +185,11 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         viewPagerAdapter = new SubViewPagerAdapter(this);
         myPostViewPager.setAdapter(viewPagerAdapter);
         myPostViewPager.setOffscreenPageLimit(3);
-        myPostViewPager.setClipChildren(false);
-        myPostViewPager.setClipToPadding(false);
-        myPostViewPager.setPadding(40, 0, 40, 0);
+//        myPostViewPager.setClipChildren(false);
+//        myPostViewPager.setClipToPadding(false);
+        myPostViewPager.setPadding(60, 0, 60, 0);
         myPostViewPager.setPageMargin(-300);
-        myPostViewPager.setOverScrollMode(2);
-        if(viewPagerAdapter.getCount() >= 2){
-            myPostViewPager.setCurrentItem(1);
-        }
+//        myPostViewPager.setOverScrollMode(2);
 
 //        myPage_recyclerview = findViewById(R.id.myPage_recyclerview_activitySub);
 //        Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
@@ -402,10 +399,11 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 //        myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 //        myPage_recyclerview.setAdapter(myPageAdapter);
         //TODO : 뷰페이저로 수정
-
+        viewPagerAdapter = new SubViewPagerAdapter(this);
 
         // 새로고침 완료
         recyclerViewDataAdapter.notifyDataSetChanged();
+        viewPagerAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
