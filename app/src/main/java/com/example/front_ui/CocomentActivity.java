@@ -98,7 +98,7 @@ public class CocomentActivity extends AppCompatActivity {
             writeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(TextUtils.isEmpty(cocomentEdit.getText())){
+                    if(TextUtils.isEmpty(cocomentEdit.getText().toString().trim())){
                         Toast.makeText(CocomentActivity.this, "빈 칸을 채워주세요.", Toast.LENGTH_SHORT).show();
                     }
                     else{

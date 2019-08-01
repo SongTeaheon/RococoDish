@@ -16,6 +16,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -473,7 +474,7 @@ public class DishView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(commentEdit.getText().toString().isEmpty()){
+                if(TextUtils.isEmpty(commentEdit.getText().toString().trim())){
                     Toast.makeText(DishView.this, "빈칸을 채워주세요.", Toast.LENGTH_SHORT).show();
                 }
                 else{
