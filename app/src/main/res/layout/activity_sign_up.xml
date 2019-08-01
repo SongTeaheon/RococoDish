@@ -46,9 +46,8 @@
         android:id="@+id/viewpager_activitySignUp"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
         android:background="@color/MainColor"
-        app:layout_constraintBottom_toTopOf="@+id/viewpager_indicator_activitySignUp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -56,31 +55,17 @@
     <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
         android:id="@+id/viewpager_indicator_activitySignUp"
         android:layout_width="wrap_content"
-        app:spi_dotSpacing="32dp"
-        app:spi_dotSize="8dp"
-        app:spi_dotSelectedSize="12dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/goLogin_button_activitySignUp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:spi_dotSelectedSize="12dp"
+        app:spi_dotSize="8dp"
+        app:spi_dotSpacing="32dp" />
 
-    <Button
-        android:id="@+id/goLogin_button_activitySignUp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/button_style2"
-        android:fontFamily="@font/bmjua"
-        android:text="담으러 가기"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -75,7 +75,7 @@ public class SignUpActivity extends AppCompatActivity {
 //    FirebaseAuth auth = FirebaseAuth.getInstance();
 //    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 //    @Nullable CallbackManager callbackManager;
-    Button goLogin;
+//    Button goLogin;
     ViewPager viewPager;
     SignUpAdapter signUpAdapter;
     ScrollingPagerIndicator scrollingPagerIndicator;
@@ -89,21 +89,37 @@ public class SignUpActivity extends AppCompatActivity {
 //        //해시키 가져오기
 //        getHashKey(this);
 
-        goLogin = findViewById(R.id.goLogin_button_activitySignUp);
-        goLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SignUpActivity.this, LoginDialog.class));
-            }
-        });
+//        goLogin = findViewById(R.id.goLogin_button_activitySignUp);
+//        goLogin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(SignUpActivity.this, LoginDialog.class));
+//            }
+//        });
 
         viewPager = findViewById(R.id.viewpager_activitySignUp);
         signUpAdapter = new SignUpAdapter(this);
         viewPager.setAdapter(signUpAdapter);
+        viewPager.setPageTransformer(false, new ViewPager.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View view, float position) {
+                if (position <= -1.0F || position >= 1.0F) {
+                    view.setTranslationX(view.getWidth() * position);
+                    view.setAlpha(0.0F);
+                } else if (position == 0.0F) {
+                    view.setTranslationX(view.getWidth() * position);
+                    view.setAlpha(1.0F);
+                } else {
+                    // position is between -1.0F & 0.0F OR 0.0F & 1.0F
+                    view.setTranslationX(view.getWidth() * -position);
+                    view.setAlpha(1.0F - Math.abs(position));
+                }
+            }
+        });
         scrollingPagerIndicator = findViewById(R.id.viewpager_indicator_activitySignUp);
         scrollingPagerIndicator.attachToPager(viewPager);
-        scrollingPagerIndicator.setDotColor(getResources().getColor(R.color.colorAccent));
-        scrollingPagerIndicator.setSelectedDotColor(getResources().getColor(R.color.MainColor));
+        scrollingPagerIndicator.setDotColor(getResources().getColor(R.color.colorWhite));
+        scrollingPagerIndicator.setSelectedDotColor(getResources().getColor(R.color.colorAccent));
 //
 //        //이메일로 시작하기
 //        emailLogin = findViewById(R.id.emailLogin_textview_signUpActivity);

@@ -90,9 +90,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     public void onBindViewHolder(@NonNull final CommentViewHolder commentViewHolder, final int i) {
 
         //프로필 사진 부분
-//        GlideApp.with(context)
-//                .load(parentList.get(i).getImgPath())
-//                .into(commentViewHolder.image);
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(parentList.get(i).getCommentWriterId())
@@ -114,6 +111,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                         }
                     }
                 });
+        //이미지 누를시 상대방 마이페이지 이동
+        commentViewHolder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToMyPage(i);
+            }
+        });
+        //이름 누를시에도 상대방 마이페이지 이동
+        commentViewHolder.userName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToMyPage(i);
+            }
+        });
 
         //시간 부분
         Long time = parentList.get(i).getTime();
@@ -149,9 +160,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 //        });
         //isExpanded가 참일 때 리사이클러뷰가 나오게함. 거짓이면 사라짐.
 //        commentViewHolder.childRecyclerView.setVisibility(isExpanded? View.VISIBLE : View.GONE);
-
-
-        //긴 클릭 => 대댓 적을 수 있게함.(여기선 파이어스토어에 업로드만 함. 패치는 DishView에서 실시간으로 하면 자동으로 추가됨.)
 
         final String docId = parentList.get(i).getDocUuid();//해당 댓글에 대해서만 UUID를 가져옴.
 
@@ -292,12 +300,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         //댓글 올라오는 애니메이션
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.up_from_bottom);
         commentViewHolder.itemView.startAnimation(animation);
-
-
     }
 
     @Override
     public int getItemCount() {
         return parentList.size();
+    }
+
+    private void moveToMyPage(int i){
+        Intent intent = new Intent(context, MyPage.class);
+        intent.putExtra("userUUID", parentList.get(i).getCommentWriterId());
+        context.startActivity(intent);
     }
 }
