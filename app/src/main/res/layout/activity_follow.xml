@@ -16,7 +16,7 @@
     <android.support.design.widget.TabLayout
         android:id="@+id/follow_tablayout_followActivity"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2">
@@ -24,14 +24,14 @@
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="팔로워"
-            android:icon="@drawable/basic_user_image"/>
+            android:icon="@drawable/basic_user_image"
+            android:text="팔로워" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="팔로잉"
-            android:icon="@drawable/basic_user_image"/>
+            android:icon="@drawable/basic_user_image"
+            android:text="팔로잉" />
     </android.support.design.widget.TabLayout>
 
     <android.support.v4.view.ViewPager

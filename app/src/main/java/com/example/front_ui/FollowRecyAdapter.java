@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +15,34 @@ import android.widget.Toast;
 import com.example.front_ui.DataModel.FollowInfo;
 import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.GlidePlaceHolder;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class FollowRecyAdapter extends RecyclerView.Adapter<FollowRecyAdapter.FollowViewHolder> {
 
+    private  String TAG = "TAGFollowRecyAdapter";
     Context context;
-    List<FollowInfo> followerList;
+    List<FollowInfo> list;
+    String userUUID;
+    String collectionName;
 
-    public FollowRecyAdapter(Context context, List<FollowInfo> followerList){
+    public FollowRecyAdapter(Context context,
+                             String userUUID,
+                             String collectionName){
         this.context = context;
-        this.followerList = followerList;
+        this.userUUID = userUUID;
+        this.collectionName = collectionName;
+
+        list = new ArrayList<>();
+        getFollowData();
     }
 
     public class FollowViewHolder extends RecyclerView.ViewHolder{
@@ -52,22 +70,22 @@ public class FollowRecyAdapter extends RecyclerView.Adapter<FollowRecyAdapter.Fo
     @Override
     public void onBindViewHolder(@NonNull FollowViewHolder followViewHolder, final int i) {
 
-        if(followerList.get(i).getProfileImagePath() != null){
+        if(list.get(i).getProfileImagePath() != null){
             GlideApp.with(context)
-                    .load(followerList.get(i).getProfileImagePath())
+                    .load(list.get(i).getProfileImagePath())
                     .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
                     .into(followViewHolder.profileImage);
         }
 
-        followViewHolder.profileUpper.setText(followerList.get(i).getProfileTextUpper());
+        followViewHolder.profileUpper.setText(list.get(i).getProfileTextUpper());
 
-        followViewHolder.profileLower.setText(followerList.get(i).getProfileTextLower());
+        followViewHolder.profileLower.setText(list.get(i).getProfileTextLower());
 
         followViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MyPage.class);
-                intent.putExtra("userUUID", followerList.get(i).getUserUID());
+                intent.putExtra("userUUID", list.get(i).getUserUID());
                 context.startActivity(intent);
             }
         });
@@ -75,8 +93,57 @@ public class FollowRecyAdapter extends RecyclerView.Adapter<FollowRecyAdapter.Fo
 
     @Override
     public int getItemCount() {
-        return followerList.size();
+        return list.size();
     }
 
+    public void getFollowData(){
+        FirebaseFirestore.getInstance()
+                .collection("사용자")
+                .document(userUUID)
+                .collection(collectionName)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable final QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if(e != null){
+                            Log.d(TAG, e.getMessage());
+                        }
+                        if(!queryDocumentSnapshots.isEmpty() && queryDocumentSnapshots != null){
 
+                            list.clear();//삭제 반영을 위해서 미리 깨끗하게 지움(아이템 중복 방지)
+
+                            for(DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
+
+                                String docId = dc.getId();
+
+
+                                FirebaseFirestore.getInstance()
+                                        .collection("사용자")
+                                        .document(docId)
+                                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                                if(e != null){
+                                                    Log.d(TAG, e.getMessage());
+                                                }
+                                                if(documentSnapshot.exists() && documentSnapshot != null){
+
+                                                    String imagePath = documentSnapshot.get("profileImage").toString();
+                                                    String name = documentSnapshot.get("nickname").toString();
+                                                    String email = documentSnapshot.get("eMail").toString();
+                                                    String uid = documentSnapshot.getId();
+
+                                                    list.add(new FollowInfo(imagePath, name, email, uid));
+
+//                                                    notifyItemChanged(list.size()-1);
+                                                    notifyDataSetChanged();
+                                                }
+                                            }
+                                        });
+                            }
+                            notifyDataSetChanged();
+
+                        }
+                    }
+                });
+    }
 }

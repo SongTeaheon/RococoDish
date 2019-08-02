@@ -140,15 +140,11 @@ public class Login2Activity extends AppCompatActivity {
             Uri selectedImageFromGallery = data.getData();
 
             UCrop.Options options = new UCrop.Options();
-//            options.setStatusBarColor(getResources().getColor(R.color.MainColor));
-//            options.setActiveControlsWidgetColor(getResources().getColor(R.color.MainColor));
-//            options.setCropGridColor(getResources().getColor(R.color.MainColor));
-//            options.setDimmedLayerColor(getResources().getColor(R.color.MainColor));
-//            options.setToolbarColor(getResources().getColor(R.color.MainColor));
-//            options.setLogoColor(getResources().getColor(R.color.MainColor));
-            options.setCropFrameColor(getResources().getColor(R.color.MainColor));
-//            options.setToolbarWidgetColor(getResources().getColor(R.color.MainColor));// 색변환
-//            options.setActiveWidgetColor(getResources().getColor(R.color.MainColor)); //아무변화 없음
+            options.setToolbarWidgetColor(getResources().getColor(R.color.colorWhite));//툴바 글자색
+            options.setToolbarColor(getResources().getColor(R.color.MainColor));//툴바 색
+            options.setCropFrameColor(getResources().getColor(R.color.MainColor));//테두리
+            options.setHideBottomControls(true);//아래 보라색 없애버림
+
 
             Uri destinationUri = Uri.fromFile(new File(getApplicationContext().getCacheDir(), "IMG_" + System.currentTimeMillis()));
             UCrop.of(selectedImageFromGallery, destinationUri)

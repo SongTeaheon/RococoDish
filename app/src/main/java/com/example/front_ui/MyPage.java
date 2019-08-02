@@ -334,15 +334,10 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             Uri selectedImageFromGallery = data.getData();
 
             UCrop.Options options = new UCrop.Options();
-            options.setStatusBarColor(getResources().getColor(R.color.MainColor));
-//            options.setActiveControlsWidgetColor(getResources().getColor(R.color.MainColor));//하단 컨트롤러에 아이콘 색
-//            options.setCropGridColor(getResources().getColor(R.color.MainColor));//조정 선 색
-//            options.setDimmedLayerColor(getResources().getColor(R.color.MainColor));//테두리 바깥
-//            options.setToolbarColor(getResources().getColor(R.color.MainColor));//툴바 색
-//            options.setLogoColor(getResources().getColor(R.color.MainColor));//뒷배경
-//            options.setCropFrameColor(getResources().getColor(R.color.MainColor));//테두리
-//            options.setToolbarWidgetColor(getResources().getColor(R.color.MainColor));// 색변환
-//            options.setActiveWidgetColor(getResources().getColor(R.color.MainColor)); //아무변화 없음
+            options.setToolbarWidgetColor(getResources().getColor(R.color.colorWhite));//툴바 글자색
+            options.setToolbarColor(getResources().getColor(R.color.MainColor));//툴바 색
+            options.setCropFrameColor(getResources().getColor(R.color.MainColor));//테두리
+            options.setHideBottomControls(true);
 
             Uri destinationUri = Uri.fromFile(new File(getApplicationContext().getCacheDir(), "IMG_" + System.currentTimeMillis()));
             UCrop.of(selectedImageFromGallery, destinationUri)

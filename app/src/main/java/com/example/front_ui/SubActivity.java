@@ -185,11 +185,11 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         viewPagerAdapter = new SubViewPagerAdapter(this);
         myPostViewPager.setAdapter(viewPagerAdapter);
         myPostViewPager.setOffscreenPageLimit(3);
-//        myPostViewPager.setClipChildren(false);
-//        myPostViewPager.setClipToPadding(false);
-        myPostViewPager.setPadding(60, 0, 60, 0);
+        myPostViewPager.setClipChildren(false);
+        myPostViewPager.setClipToPadding(false);
+        myPostViewPager.setPadding(40, 0, 40, 0);
         myPostViewPager.setPageMargin(-300);
-//        myPostViewPager.setOverScrollMode(2);
+        myPostViewPager.setOverScrollMode(2);
 
 //        myPage_recyclerview = findViewById(R.id.myPage_recyclerview_activitySub);
 //        Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
