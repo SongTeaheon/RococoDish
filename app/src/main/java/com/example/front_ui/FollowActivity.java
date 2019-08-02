@@ -77,7 +77,5 @@ public class FollowActivity extends AppCompatActivity {
     }
     public void initTabLayout(){
         followTabLayout.setupWithViewPager(followViewPager);
-        followTabLayout.getTabAt(0).setIcon(R.drawable.basic_user_image);
-        followTabLayout.getTabAt(1).setIcon(R.drawable.basic_user_image);
     }
 }
