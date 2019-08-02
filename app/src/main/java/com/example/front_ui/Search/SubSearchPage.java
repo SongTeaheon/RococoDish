@@ -153,9 +153,6 @@ public class SubSearchPage extends AppCompatActivity {
                     Log.d(TAG, "search button is clicked");
                     String keyword = editText.getText().toString();
                     searchButtonClicked(keyword);
-                    Log.d(TAG, "search button is clicked");
-                    String keyword = editText.getText().toString();
-                    searchButtonClicked(keyword);
                     InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                 }
