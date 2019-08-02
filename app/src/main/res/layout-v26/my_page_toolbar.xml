@@ -20,8 +20,8 @@
 
                 <ImageView
                     android:id="@+id/backButton"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="20dp"
                     android:src="@drawable/ic_back" />
@@ -37,27 +37,10 @@
                     android:fontFamily="@font/bmjua"
                     android:gravity="center"
                     android:text="유저이름"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/GGrey"
                     android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="16dp"
                     android:autoSizeMaxTextSize="28dp"
-                    tools:ignore="SpUsage" />
-
-                <TextView
-                    android:id="@+id/delete_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/userName"
-                    android:layout_alignBottom="@+id/userName"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="4dp"
-                    android:fontFamily="@font/bmjua"
-                    android:text="삭제"
-                    android:textColor="@color/MainColor"
-                    android:textSize="20dp"
-                    android:visibility="invisible"
                     tools:ignore="SpUsage" />
 
                 <me.rishabhkhanna.customtogglebutton.CustomToggleButton

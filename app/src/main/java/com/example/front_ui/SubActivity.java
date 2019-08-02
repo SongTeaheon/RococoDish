@@ -120,14 +120,14 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         /*
         * 임시 기능입니다. 임시가게이름 검색!
         * */
-        TextView tv_storeSearch = findViewById(R.id.textview_storesearch);
-        tv_storeSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SubActivity.this, StoreNameSearchAcitivity.class);
-                startActivity(intent);
-            }
-        });
+//        TextView tv_storeSearch = findViewById(R.id.textview_storesearch);
+//        tv_storeSearch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(SubActivity.this, StoreNameSearchAcitivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
 
         //로그아웃 기능
@@ -184,23 +184,34 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         myPostViewPager.setPageTransformer(true, new Carousel(this));
         viewPagerAdapter = new SubViewPagerAdapter(this);
         myPostViewPager.setAdapter(viewPagerAdapter);
-        myPostViewPager.setOffscreenPageLimit(3);
+//         myPostViewPager.setOffscreenPageLimit(3);
         myPostViewPager.setClipChildren(false);
         myPostViewPager.setClipToPadding(false);
         myPostViewPager.setPadding(40, 0, 40, 0);
-        myPostViewPager.setPageMargin(-300);
+//         myPostViewPager.setPageMargin(-300);
         myPostViewPager.setOverScrollMode(2);
 
 //        myPage_recyclerview = findViewById(R.id.myPage_recyclerview_activitySub);
 //        Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
 //        myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 //        myPage_recyclerview.setAdapter(myPageAdapter);
+        myPostViewPager.setOffscreenPageLimit(4);
+//        myPostViewPager.setClipChildren(false);
+//        myPostViewPager.setClipToPadding(false);
+//        myPostViewPager.setPadding(0, 0, -20, 0);
+        myPostViewPager.setPageMargin(-900);
+////        myPostViewPager.setOverScrollMode(2);
 //
-//        //마이페이지 글자 누를시 이벤트
-//        main_recyclerview.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                nestedScrollView.setOnTouchListener(new View.OnTouchListener() {
+////        myPage_recyclerview = findViewById(R.id.myPage_recyclerview_activitySub);
+////        Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
+////        myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+////        myPage_recyclerview.setAdapter(myPageAdapter);
+////
+////        //마이페이지 글자 누를시 이벤트
+////        main_recyclerview.setOnTouchListener(new View.OnTouchListener() {
+////            @Override
+////            public boolean onTouch(View v, MotionEvent event) {
+////                nestedScrollView.setOnTouchListener(new View.OnTouchListener() {
 //                    @Override
 //                    public boolean onTouch(View v, MotionEvent event) {
 //                        return true;

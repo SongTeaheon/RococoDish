@@ -23,6 +23,7 @@ import com.example.front_ui.Utils.Permissions;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 
@@ -119,6 +120,18 @@ public class MainShareActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         Log.d(TAG, "StoreSearchFragment에서 크롭에 들어갑니다.");
+
+        if(requestCode == 1001 && resultCode == Activity.RESULT_OK){
+            Log.d(TAG, "그 갤러리에서 넘어왔을 듯");
+
+            Uri galleryUri = data.getData();
+            //destinationUri의 경우는 크롭후 저장되는 위치를 의미, 결국 이 위치에 있는 사진을 result로 반환하기 위함.
+            Uri destinationUri = Uri.fromFile(new File(this.getCacheDir(), "IMG_" + System.currentTimeMillis()));
+            UCrop.of(galleryUri, destinationUri)
+                    .withAspectRatio(4, 3)
+                    .withMaxResultSize(600, 600)
+                    .start(this);
+        }
 
         //Ucrop이라는 라이브러리
         if(requestCode == UCrop.REQUEST_CROP && resultCode == Activity.RESULT_OK){
