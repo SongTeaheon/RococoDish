@@ -20,16 +20,16 @@
 
                 <!--android:id="@+id/hamburgerButton" 원래는 이거임-->
                 <!--<ImageView-->
-                    <!--android:id="@+id/myPage_textview_activitySub"-->
-                    <!--android:layout_width="26dp"-->
-                    <!--android:layout_height="26dp"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:layout_marginEnd="20dp"-->
-                    <!--android:src="@mipmap/ic_hamburger" />-->
+                <!--android:id="@+id/myPage_textview_activitySub"-->
+                <!--android:layout_width="26dp"-->
+                <!--android:layout_height="26dp"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_marginEnd="20dp"-->
+                <!--android:src="@mipmap/ic_hamburger" />-->
 
                 <!--가게이름 10글자 넘어가면 안되게 해야함...ㅜㅜ-->
                 <ImageView
-                    android:id="@+id/mainText"
+                    android:id="@+id/iv_mainText"
                     android:layout_width="100dp"
                     android:layout_height="35.45dp"
                     android:layout_alignParentStart="true"
@@ -41,6 +41,21 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+
+                <TextView
+                    android:id="@+id/tv_mainText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="검색결과"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/search_btn"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/search_btn"

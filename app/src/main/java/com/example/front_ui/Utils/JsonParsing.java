@@ -137,13 +137,15 @@ public class JsonParsing {
                 String nickname = jsonObject1.getString("nickname");
                 String eMail = jsonObject2.getJSONObject("eMail").getString("value");
                 String idStr = jsonObject2.getJSONObject("userId").getString("value");
+                Log.d(TAG, nickname +" " + eMail + " " + idStr);
+
                 nickname = nickname.replace("<em>", "");
                 nickname = nickname.replace("</em>", "");
                 eMail = eMail.replace("<em>", "");
                 eMail = eMail.replace("</em>", "");
                 idStr = idStr.replace("<em>", "");
                 idStr = idStr.replace("</em>", "");
-
+                Log.d(TAG, nickname +" " + eMail + " " + idStr);
                 userInfo.nickname = nickname;
                 userInfo.eMail = eMail;
                 userInfo.userId = idStr;

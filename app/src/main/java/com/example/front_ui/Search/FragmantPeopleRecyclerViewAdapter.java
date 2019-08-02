@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<FragmantPeopleRecyclerViewAdapter.ItemViewHolder> {
 
-    private final String TAG = "FragmentPeopleRecycler";
+    private final String TAG = "TAGFragmentPeopleRecyc";
     private ArrayList<UserInfo> listData;
     private Context mContext;
     private double currentLat;
@@ -89,6 +89,9 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
 
         void onBind(UserInfo userInfo) {
             //TODO:이거 데이터 어떻게 가져오는지 태완님한테 물어봐야할 듯
+            Log.d(TAG, "nickname : " + userInfo.getNickname());
+            Log.d(TAG, "email : " + userInfo.eMail);
+
             itemPeopleName.setText(userInfo.getNickname());
 //            imageViewPeople;
             itemPeopleEmail.setText(userInfo.eMail);

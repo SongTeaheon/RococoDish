@@ -233,7 +233,7 @@ public class DeleteUtils {
     private static void subtractUserPostingNum(final FirebaseFirestore db){
 
         final String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.d(TAG, "updateUserPosting num. user uid : " + userUid);
+        Log.d(TAG, "updateUserPosting num. user userId : " + userUid);
         db.collection("사용자")
                 .document(userUid)
                 .get()

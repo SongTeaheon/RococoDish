@@ -266,7 +266,8 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                         if(e != null){
                             Log.d(TAG, e.getMessage());
                         }
-//                        userInfo = documentSnapshot.toObject(UserInfo.class);//TODO:바꾸는중 XXX
+                        userInfo = documentSnapshot.toObject(UserInfo.class);
+                        userInfo.setUserId(documentSnapshot.getId());
                         if(documentSnapshot.get("profileImage") != null){//프로필 사진이 있을 경우
                             CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(getApplicationContext());
                             circularProgressDrawable.setStrokeCap(Paint.Cap.ROUND);
@@ -367,6 +368,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                         @Override
                         public Unit invoke(Uri uri) {
                             //todo : userInfo가 initialize되지 않아서 에러생깁니다.
+                            Log.d(TAG, "check Image uri : " + uri.toString() );
                             AlgoliaUtils.changeProfileImagePath(userInfo, uri.toString());
                             return null;
                         }

@@ -250,6 +250,7 @@ public class SubSearchPage extends AppCompatActivity {
         //가게 안에 목록 가져오는 리사이클러뷰
         recyclerViewStore.setHasFixedSize(true);
         FragmantStoreRecyclerViewAdapter storeRecyclerViewAdapter = new FragmantStoreRecyclerViewAdapter(this, shortList);
+        storeRecyclerViewAdapter.notifyDataSetChanged();
         recyclerViewStore.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewStore.setAdapter(storeRecyclerViewAdapter);
     }
@@ -265,11 +266,12 @@ public class SubSearchPage extends AppCompatActivity {
         //가게 안에 목록 가져오는 리사이클러뷰
         recyclerViewPeople.setHasFixedSize(true);
         FragmantPeopleRecyclerViewAdapter peopleRecyclerViewAdapter = new FragmantPeopleRecyclerViewAdapter(this, shortList, currentLatitude, currentLongtitude);
+        peopleRecyclerViewAdapter.notifyDataSetChanged();
         recyclerViewPeople.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewPeople.setAdapter(peopleRecyclerViewAdapter);
     }
     void initRecyclerViewRegion(){
-        Log.d(TAG, "initRecyclerViewStore");
+        Log.d(TAG, "initRecyclerViewRegion");
         //가게 데이터를 4개만 가져간다.
         ArrayList<SearchedData> shortList = new ArrayList<>();
         int size = (4 < regionList.size()? 4 : regionList.size());
@@ -278,6 +280,7 @@ public class SubSearchPage extends AppCompatActivity {
         //가게 안에 목록 가져오는 리사이클러뷰
         recyclerViewRegion.setHasFixedSize(true);
         FragmantRegionRecyclerViewAdapter regionRecyclerViewAdapter = new FragmantRegionRecyclerViewAdapter(this, shortList);
+        regionRecyclerViewAdapter.notifyDataSetChanged();
         recyclerViewRegion.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewRegion.setAdapter(regionRecyclerViewAdapter);
     }
@@ -291,6 +294,7 @@ public class SubSearchPage extends AppCompatActivity {
         //가게 안에 목록 가져오는 리사이클러뷰
         recyclerViewTag.setHasFixedSize(true);
         FragmantTagRecyclerViewAdapter tagRecyclerViewAdapter = new FragmantTagRecyclerViewAdapter(this, shortList);
+        tagRecyclerViewAdapter.notifyDataSetChanged();
         recyclerViewTag.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewTag.setAdapter(tagRecyclerViewAdapter);
     }
@@ -314,6 +318,7 @@ public class SubSearchPage extends AppCompatActivity {
                 if(storeList.size() != 0) {
                     initRecyclerViewStore();
                     cardViewStore.setVisibility(View.VISIBLE);
+                    recyclerViewStore.setVisibility(View.VISIBLE);
                 }else {
                     Log.d(TAG, "no data for Store");
                     recyclerViewStore.setVisibility(View.GONE);
@@ -334,6 +339,7 @@ public class SubSearchPage extends AppCompatActivity {
                 if(peopleList.size() != 0) {
                     initRecyclerViewPeople();
                     cardViewPeople.setVisibility(View.VISIBLE);
+                    recyclerViewPeople.setVisibility(View.VISIBLE);
                 }else {
                     Log.d(TAG, "no data for People");
                     recyclerViewPeople.setVisibility(View.GONE);
@@ -355,6 +361,7 @@ public class SubSearchPage extends AppCompatActivity {
                 if(tagList.size() != 0) {
                     initRecyclerViewTag();
                     cardViewTag.setVisibility(View.VISIBLE);
+                    recyclerViewTag.setVisibility(View.VISIBLE);
                 }else {
                     Log.d(TAG, "no data for Tag");
                     recyclerViewTag.setVisibility(View.GONE);
@@ -491,6 +498,7 @@ public class SubSearchPage extends AppCompatActivity {
         if(regionList.size() != 0) {
             initRecyclerViewRegion();
             cardViewRegion.setVisibility(View.VISIBLE);
+            recyclerViewRegion.setVisibility(View.VISIBLE);
         }else {
             Log.d(TAG, "no data for region");
             recyclerViewRegion.setVisibility(View.GONE);

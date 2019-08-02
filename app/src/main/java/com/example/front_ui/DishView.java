@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,7 +29,6 @@ import com.example.front_ui.DataModel.SerializableStoreInfo;
 import com.example.front_ui.Edit.EditActivity;
 import com.example.front_ui.Utils.DeleteUtils;
 import com.example.front_ui.Utils.GlideApp;
-import com.example.front_ui.Utils.MathUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.ImmutableMap;
 import com.google.firebase.auth.FirebaseAuth;
@@ -202,7 +200,7 @@ public class DishView extends AppCompatActivity {
             hashTagText.setText("게시물 내용이 없습니다.");
         }
 
-        tvStoreName = findViewById(R.id.mainText);
+        tvStoreName = findViewById(R.id.tv_mainText);
         tvStoreName.setText(storeInfo.getName());
         tvAddress.setText(storeInfo.getAddress());
         tvScore = findViewById(R.id.textViewScore);
@@ -502,7 +500,7 @@ public class DishView extends AppCompatActivity {
     //좋아요 기능(클릭 함수까지 포함.)
     public void likeFunc(){
 
-        //포스팅 -> 컬렉션 좋아요 -> 좋아요 한 사람의 uid 도큐먼트 -> isLiked를 bool값으로 true일 경우 빨간색 아예 도큐먼트가 없을 경우는 빈 하트
+        //포스팅 -> 컬렉션 좋아요 -> 좋아요 한 사람의 userId 도큐먼트 -> isLiked를 bool값으로 true일 경우 빨간색 아예 도큐먼트가 없을 경우는 빈 하트
         final ImageView likeImage = findViewById(R.id.like_imageview_dishView);
 
         //좋아요 했으면 빨간색으로 설정

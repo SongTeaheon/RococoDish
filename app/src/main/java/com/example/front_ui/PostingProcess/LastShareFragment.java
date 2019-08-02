@@ -111,7 +111,7 @@ public class LastShareFragment extends Fragment {
 //        text_description = view.findViewById(R.id.search_btn);
         mRatingBar = view.findViewById(R.id.ratingBar);
         mStarText = view.findViewById(R.id.starText);
-        storeName = view.findViewById(R.id.mainText);
+        storeName = view.findViewById(R.id.tv_mainText);
         storeName.setText(kakaoStoreInfo.place_name);
 //        String text = text_description.getText().toString();
         postingImage = view.findViewById(R.id.imageView1);
@@ -517,7 +517,7 @@ public class LastShareFragment extends Fragment {
     void updateUserPostingNum(){
 
         final String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.d(TAG, "updateUserPosting num. user uid : " + userUid);
+        Log.d(TAG, "updateUserPosting num. user userId : " + userUid);
         db.collection("사용자")
                 .document(userUid)
                 .get()

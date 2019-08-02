@@ -1,25 +1,24 @@
 package com.example.front_ui.DataModel;
 
 public class UserInfo {
-    public String uid;
+    public String userId;
     public String eMail;
     public String nickname;
     public String profileImage;
     public String follower;
     public String following;
     public int postingNum;
-    public String userId;
     //망할 깃헙 테스트
 
 
-    public UserInfo(String uid,
+    public UserInfo(String userId,
                     String eMail,
                     String nickName,
                     String profileImage,
                     String follower,
                     String following,
                     int postingNum) {
-        this.uid = uid;
+        this.userId = userId;
         this.eMail = eMail;
         this.nickname = nickName;
         this.profileImage = profileImage;

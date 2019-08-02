@@ -32,12 +32,16 @@ public class FragmantStoreRecyclerViewAdapter extends RecyclerView.Adapter<Fragm
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d(TAG, "store onCreateViewHolder");
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_store_item, parent, false);
         return new ItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+        Log.d(TAG, "store onBindViewHolder");
+
         holder.onBind(listData.get(position));
         final StoreInfo storeInfo = listData.get(position);
 

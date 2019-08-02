@@ -2,6 +2,7 @@ package com.example.front_ui.Search;
 
 import android.content.Intent;
 import android.location.Location;
+import android.support.v4.app.INotificationSideChannel;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ public class RegionSearchActivity extends AppCompatActivity {
     FrameLayout loadingFrame;
     RecyclerViewDataAdapter recyclerViewDataAdapter;
     TextView searchWord;
+    ImageView logo;
     ImageView search_btn;//should be gone
 
 
@@ -42,8 +44,11 @@ public class RegionSearchActivity extends AppCompatActivity {
 
         search_btn = findViewById(R.id.search_btn);
         search_btn.setVisibility(View.GONE);
-        searchWord = findViewById(R.id.mainText);
+        searchWord = findViewById(R.id.tv_mainText);
         searchWord.setText(placeName);
+        searchWord.setVisibility(View.VISIBLE);
+        logo = findViewById(R.id.iv_mainText);
+        logo.setVisibility(View.INVISIBLE);
         main_recyclerview = findViewById(R.id.mrecyclerView);
         initRecyclerView(mSearchLocation);
 
