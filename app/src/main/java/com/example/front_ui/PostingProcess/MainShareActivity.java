@@ -127,8 +127,15 @@ public class MainShareActivity extends AppCompatActivity {
             Uri galleryUri = data.getData();
             //destinationUri의 경우는 크롭후 저장되는 위치를 의미, 결국 이 위치에 있는 사진을 result로 반환하기 위함.
             Uri destinationUri = Uri.fromFile(new File(this.getCacheDir(), "IMG_" + System.currentTimeMillis()));
+
+            UCrop.Options options = new UCrop.Options();
+            options.setToolbarWidgetColor(getResources().getColor(R.color.colorWhite));//툴바 글자색
+            options.setToolbarColor(getResources().getColor(R.color.MainColor));//툴바 색
+            options.setCropFrameColor(getResources().getColor(R.color.MainColor));//테두리
+            options.setHideBottomControls(true);
             UCrop.of(galleryUri, destinationUri)
                     .withAspectRatio(4, 3)
+                    .withOptions(options)
                     .withMaxResultSize(600, 600)
                     .start(this);
         }

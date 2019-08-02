@@ -559,6 +559,8 @@ class MyAdapter extends BaseAdapter {
                         }
                         if (!queryDocumentSnapshots.isEmpty()) {
 
+                            list.clear();
+
                             for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 //store 정보를 가져오고, id를 따로 저장한다.
@@ -567,6 +569,7 @@ class MyAdapter extends BaseAdapter {
                                 list.add(postingInfo);
                                 notifyDataSetChanged();
                             }
+                            notifyDataSetChanged();
                             Log.d(TAG, "getPostingData size : " + queryDocumentSnapshots.getDocuments().size());
                             mCallback.setNumberOfData(queryDocumentSnapshots.getDocuments().size());
                         } else {
@@ -577,27 +580,5 @@ class MyAdapter extends BaseAdapter {
                     }
                 });
     }
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Log.d(TAG, document.getId() + " => " + document.getData());
-//                                //store 정보를 가져오고, id를 따로 저장한다.
-//                                PostingInfo postingInfo = document.toObject(PostingInfo.class);
-//                                //해당 가게 정보의 post데이터를 가져온다.
-//                                list.add(postingInfo);
-//                                notifyDataSetChanged();
-//                            }
-//                            Log.d(TAG, "getPostingData size : " + task.getResult().size());
-//                            mCallback.setNumberOfData(task.getResult().size());
-//                        } else {
-//                            Log.w(TAG, "Error getting documents.", task.getException());
-//                        }
-//                    }
-//                });
-//    }
-
 }
 

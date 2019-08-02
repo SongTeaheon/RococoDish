@@ -73,6 +73,8 @@ public class StoreSearchFragment extends Fragment {
     ViewPager viewPager;
     StoreSearchFragVpAdapter storeSearchFragVpAdapter;
 
+    ImageView backBtn;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,6 +87,13 @@ public class StoreSearchFragment extends Fragment {
 //        constraint = view.findViewById(R.id.constraint_tv);
 
         storeInfoArrayList = new ArrayList<>();
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
 
         //search 버튼(EditText에 있는 단어를 받아서 검색)
         searchWordText = view.findViewById(R.id.searchWord);

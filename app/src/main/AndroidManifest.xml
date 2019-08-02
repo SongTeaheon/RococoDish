@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_app_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Login2Activity"></activity>
+        <activity android:name=".QnaActivity"></activity>
+        <activity android:name=".Login2Activity" />
         <activity
             android:name=".CocomentActivity"
             android:screenOrientation="portrait"

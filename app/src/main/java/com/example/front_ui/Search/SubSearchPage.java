@@ -1,5 +1,6 @@
 package com.example.front_ui.Search;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -134,6 +136,8 @@ public class SubSearchPage extends AppCompatActivity {
                     Log.d(TAG, "search button is clicked");
                     String keyword = editText.getText().toString();
                     searchButtonClicked(keyword);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                 }
                 return true;
             }
@@ -147,6 +151,8 @@ public class SubSearchPage extends AppCompatActivity {
                 Log.d(TAG, "search button is clicked");
                 String keyword = editText.getText().toString();
                 searchButtonClicked(keyword);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
             }
         });
 
