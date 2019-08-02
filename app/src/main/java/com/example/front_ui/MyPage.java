@@ -69,9 +69,13 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
     TextView tvOfNum;
     double currentLatitude;
     double currentLongtitude;
-    TextView followText;
+    TextView followerText;
+    TextView followingText;
+    TextView followerNum;
+    TextView followingNum;
     UserInfo userInfo;
     TextView userName;
+    ImageView backBtn;
     static final String basicProfile = "https://firebasestorage.googleapis.com/v0/b/rococodish.appspot.com/o/user6.png?alt=media&token=f6f73ce5-bfe1-4dac-bbf2-29fb94706e09";
 
     @Override
@@ -101,14 +105,14 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                 return false;
             }
         });
-        //리팩토링한 SubActivity(필요없을 것 같음.)
-//        textView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), DoubleRecyActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+
+        backBtn = findViewById(R.id.backButton);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
         /**
@@ -123,15 +127,34 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         final String userUUID = intent.getStringExtra("userUUID");
 
         //팔로우 글자 누르면 팔로우 리스트 창 이동
-        followText = findViewById(R.id.follow_textview);
-        followText.setOnClickListener(new View.OnClickListener() {
+        followerText = findViewById(R.id.follow_textview);
+        followerText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MyPage.this, FollowActivity.class);
                 intent.putExtra("userUUID", userUUID);
+                intent.putExtra("pageNum", 0);//바로 팔로워 페이지 보이게
                 startActivity(intent);
             }
         });
+        //팔로잉 창 누르면 팔로잉 창으로 이동
+        followingText = findViewById(R.id.following_textview);
+        followingText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyPage.this, FollowActivity.class);
+                intent.putExtra("userUUID", userUUID);
+                intent.putExtra("pageNum", 1);// 바로 팔로잉 페이지 보이게
+                startActivity(intent);
+            }
+        });
+        //팔로워 숫자 설정
+        followerNum = findViewById(R.id.textNumOfFollower);
+        followingNum = findViewById(R.id.textNumOfFollowing);
+
+        setNumOfFollow(userUUID, followerNum, "팔로워");
+        setNumOfFollow(userUUID, followingNum, "팔로잉");
+
 
         //유저 이름 띄우기
         userName = findViewById(R.id.userName);
@@ -327,6 +350,28 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
 
     }
 
+    private void setNumOfFollow(String userUUID, final TextView textView, String collectionName){
+        FirebaseFirestore.getInstance()
+                .collection("사용자")
+                .document(userUUID)
+                .collection(collectionName)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if(e != null){
+                            Log.d(TAG, e.getMessage());
+                        }
+                        if(!queryDocumentSnapshots.isEmpty()){
+
+                            textView.setText(String.valueOf(queryDocumentSnapshots.getDocuments().size()));
+                        }
+                        else{
+                            textView.setText("0");
+                        }
+                    }
+                });
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -335,15 +380,10 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             Uri selectedImageFromGallery = data.getData();
 
             UCrop.Options options = new UCrop.Options();
-            options.setStatusBarColor(getResources().getColor(R.color.MainColor));
-//            options.setActiveControlsWidgetColor(getResources().getColor(R.color.MainColor));//하단 컨트롤러에 아이콘 색
-//            options.setCropGridColor(getResources().getColor(R.color.MainColor));//조정 선 색
-//            options.setDimmedLayerColor(getResources().getColor(R.color.MainColor));//테두리 바깥
-//            options.setToolbarColor(getResources().getColor(R.color.MainColor));//툴바 색
-//            options.setLogoColor(getResources().getColor(R.color.MainColor));//뒷배경
-//            options.setCropFrameColor(getResources().getColor(R.color.MainColor));//테두리
-//            options.setToolbarWidgetColor(getResources().getColor(R.color.MainColor));// 색변환
-//            options.setActiveWidgetColor(getResources().getColor(R.color.MainColor)); //아무변화 없음
+            options.setToolbarWidgetColor(getResources().getColor(R.color.colorWhite));//툴바 글자색
+            options.setToolbarColor(getResources().getColor(R.color.MainColor));//툴바 색
+            options.setCropFrameColor(getResources().getColor(R.color.MainColor));//테두리
+            options.setHideBottomControls(true);
 
             Uri destinationUri = Uri.fromFile(new File(getApplicationContext().getCacheDir(), "IMG_" + System.currentTimeMillis()));
             UCrop.of(selectedImageFromGallery, destinationUri)

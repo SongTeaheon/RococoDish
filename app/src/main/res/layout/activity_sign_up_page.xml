@@ -47,11 +47,13 @@
         android:padding="8dp"
         android:text="로코코디쉬"
         android:textAlignment="center"
-        android:textColor="#fff"
-        android:textSize="15sp"
+        android:textColor="@color/colorWhite"
+        android:textSize="25dp"
+        android:lineSpacingMultiplier="1.5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+        tools:ignore="SpUsage" />
 
     <Button
         android:id="@+id/startBtn_btn_activitySignUpPage"
@@ -64,9 +66,10 @@
         android:fontFamily="@font/bmjua"
         android:text="시작하기"
         android:textColor="@color/MainColor"
-        android:textSize="20sp"
+        android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="SpUsage" />
 
 </android.support.constraint.ConstraintLayout>

@@ -29,10 +29,11 @@
             android:layout_marginTop="50dp"
             android:text="안녕하세요"
             android:fontFamily="@font/bmjua"
-            android:textSize="20sp"
+            android:textSize="20dp"
             android:textColor="@color/MainColor"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpUsage" />
 
         <TextView
             android:id="@+id/userName_textview_drawer"
@@ -43,27 +44,75 @@
             android:fontFamily="@font/bmjua"
             android:text=""
             android:textColor="@color/MainColor"
-            android:textSize="25sp"
+            android:textSize="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textView5"
-            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+            app:layout_constraintTop_toBottomOf="@+id/textView5"
+            tools:ignore="SpUsage" />
 
         <TextView
             android:id="@+id/myPage_textview_activitySub"
-            android:textSize="30sp"
-            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="28dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="마이페이지"
             android:fontFamily="@font/bmjua"
+            android:text="마이페이지"
             android:textColor="@color/MainColor"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/userName_textview_drawer"
+            tools:ignore="SpUsage" />
+
+        <TextView
+            android:id="@+id/notice_textview_activitySub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/bmjua"
+            android:text="공지사항"
+            android:textColor="@color/MainColor"
+            android:textSize="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myPage_textview_activitySub"
+            tools:ignore="SpUsage" />
+
+        <TextView
+            android:id="@+id/setting_textview_activitySub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/bmjua"
+            android:text="환경설정"
+            android:textColor="@color/MainColor"
+            android:textSize="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notice_textview_activitySub"
+            tools:ignore="SpUsage" />
+
+        <TextView
+            android:id="@+id/qna_textview_activitySub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/bmjua"
+            android:text="문의하기"
+            android:textColor="@color/MainColor"
+            android:textSize="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/setting_textview_activitySub"
+            tools:ignore="SpUsage" />
 
         <TextView
             android:id="@+id/logOut_textview_drawer"
@@ -75,26 +124,12 @@
             android:fontFamily="@font/bmjua"
             android:text="로그아웃"
             android:textColor="@color/MainColor"
-            android:textSize="30sp"
-            android:textStyle="bold"
+            android:textSize="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/textview_storesearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/bmjua"
-            android:text="임시가게검색"
-            android:textColor="@color/MainColor"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toTopOf="@+id/logOut_textview_drawer"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/myPage_textview_activitySub" />
+            tools:ignore="SpUsage" />
+
 
 
     </android.support.constraint.ConstraintLayout>

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#fff"
+    android:background="@color/colorWhite"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <android.support.constraint.ConstraintLayout
@@ -43,7 +43,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
                 app:cardCornerRadius="15dp"
-                app:cardElevation="7dp">
+                app:cardElevation="5dp">
 
                 <ImageView
                     android:id="@+id/userImage_cocoment"
@@ -60,7 +60,6 @@
             android:layout_marginStart="4dp"
             android:layout_marginTop="8dp"
             android:textSize="12dp"
-            android:fontFamily="@font/bmjua"
             android:textStyle="bold"
             android:text="유저이름"
             app:layout_constraintStart_toEndOf="@+id/linearLayout2"
@@ -75,8 +74,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/bmhanna_11yrs"
+            android:layout_marginBottom="4dp"
             android:text="댓글내용들어갑니다."
             app:layout_constraintBottom_toTopOf="@+id/time_cocoment"
             app:layout_constraintEnd_toEndOf="parent"
@@ -89,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:textSize="6dp"
             android:text="2019년 7월 12일 오후 8시"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -6,7 +6,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:cardCornerRadius="25dp"
-    app:cardBackgroundColor="#fff">
+    app:cardBackgroundColor="@color/colorWhite">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,12 +40,12 @@
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/bmjua"
                 android:text="이메일로 시작하기"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:textSize="20dp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toTopOf="@+id/imageView3" />
+                app:layout_constraintTop_toTopOf="@+id/imageView3"
+                tools:ignore="SpUsage" />
         </android.support.constraint.ConstraintLayout>
 
         <!--구글로 시작하기-->
@@ -74,12 +74,12 @@
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/bmjua"
                 android:text="구글로 시작하기"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:textSize="20dp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView4"
-                app:layout_constraintTop_toTopOf="@+id/imageView4" />
+                app:layout_constraintTop_toTopOf="@+id/imageView4"
+                tools:ignore="SpUsage" />
         </android.support.constraint.ConstraintLayout>
 
         <!--페이스북으로 시작하기-->
@@ -108,12 +108,12 @@
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/bmjua"
                 android:text="페이스북으로 시작하기"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:textSize="20dp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView5"
-                app:layout_constraintTop_toTopOf="@+id/imageView5" />
+                app:layout_constraintTop_toTopOf="@+id/imageView5"
+                tools:ignore="SpUsage" />
         </android.support.constraint.ConstraintLayout>
     </LinearLayout>
 

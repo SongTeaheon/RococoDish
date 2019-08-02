@@ -29,7 +29,7 @@
             android:textColor="@color/GGrey"
             android:textSize="20dp"
             android:text="음식점 이름"
-            android:fontFamily="@font/bmhanna_11yrs"
+            android:fontFamily="@font/bmjua"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
