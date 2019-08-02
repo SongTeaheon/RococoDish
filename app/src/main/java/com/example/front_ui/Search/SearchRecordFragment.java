@@ -2,6 +2,7 @@ package com.example.front_ui.Search;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,9 +66,10 @@ class CustomUsersAdapter extends ArrayAdapter {
         // Lookup view for data population
         TextView tvName = convertView.findViewById(R.id.lastStoreTv);
         ImageView ivCancel = convertView.findViewById(R.id.imageViewCancel);
+        ConstraintLayout constraintLayout = convertView.findViewById(R.id.constraint_record);
         // Populate the data into the template view using the data object
         tvName.setText(record.getRecord());
-        tvName.setOnClickListener(new View.OnClickListener(){
+        constraintLayout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 ((SubSearchPage)mContext).searchButtonClicked(record.getRecord()); //버튼 클릭시 이동

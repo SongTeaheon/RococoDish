@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -130,7 +131,7 @@ public class SubSearchPage extends AppCompatActivity {
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                if(actionId == EditorInfo.IME_ACTION_SEARCH && !TextUtils.isEmpty( editText.getText().toString().trim())){
                     Log.d(TAG, "search button is clicked");
                     String keyword = editText.getText().toString();
                     searchButtonClicked(keyword);
@@ -144,9 +145,11 @@ public class SubSearchPage extends AppCompatActivity {
         searchBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "search button is clicked");
-                String keyword = editText.getText().toString();
-                searchButtonClicked(keyword);
+                if(!TextUtils.isEmpty( editText.getText().toString().trim())) {
+                    Log.d(TAG, "search button is clicked");
+                    String keyword = editText.getText().toString();
+                    searchButtonClicked(keyword);
+                }
             }
         });
 
@@ -229,7 +232,7 @@ public class SubSearchPage extends AppCompatActivity {
     public void searchButtonClicked(String keyword){
         if(keyword != null)
             dbHandler.insert(keyword);
-        deleteFragment(fragmentRecord);
+        deleteFragment();
         getRegionSearchResult(keyword);
         getPeopleSearchResult(keyword);
         //TODO: TAG data 일단 검색 막았음!!!
@@ -302,8 +305,12 @@ public class SubSearchPage extends AppCompatActivity {
     void initFragment(Fragment fragment){
         fragmentManager.beginTransaction().replace(R.id.resultFrameLayout, fragment).commit();
     }
-    void deleteFragment(Fragment fragment){
-        fragmentManager.beginTransaction().remove(fragment).commit();
+    void deleteFragment(){
+        fragmentManager.beginTransaction().remove(fragmentStore).commit();
+        fragmentManager.beginTransaction().remove(fragmentRegion).commit();
+        fragmentManager.beginTransaction().remove(fragmentPeople).commit();
+//        fragmentManager.beginTransaction().remove(fragmentTag).commit();
+        fragmentManager.beginTransaction().remove(fragmentRecord).commit();
     }
 
     /********************************* 가게, 지역, 사람 검색 만들기 필요 변수 및 함수  *********************************/
