@@ -1,6 +1,8 @@
 package com.example.front_ui.DataModel;
 
-public class UserInfo {
+import java.io.Serializable;
+
+public class UserInfo implements Serializable {
     public String uid;
     public String eMail;
     public String nickname;

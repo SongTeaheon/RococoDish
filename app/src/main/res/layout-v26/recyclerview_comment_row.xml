@@ -84,7 +84,7 @@
 
     <!--대댓이 달리는 부분-->
     <android.support.v7.widget.RecyclerView
-        android:background="#e6e6e6"
+        android:background="#fff"
         android:id="@+id/cocoment_recyclerview"
         android:nestedScrollingEnabled="false"
         android:layout_width="match_parent"

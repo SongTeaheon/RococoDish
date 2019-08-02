@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.front_ui.DataModel.UserInfo;
+import com.example.front_ui.Interface.MyPageDataPass;
 import com.example.front_ui.Utils.AlgoliaUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.GlidePlaceHolder;
@@ -45,12 +47,29 @@ public class Login2Activity extends AppCompatActivity {
 
     private int RC_GALLERY = 1234;
 
+    DishViewProfileImgPass dishViewProfileImgPass;
+
+    public void OnGetStringData(DishViewProfileImgPass _dishViewProfileImgPass){
+        dishViewProfileImgPass = _dishViewProfileImgPass;
+    }
+
+    String imagePath;
+
     UserInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login2);
+
+        Intent intent = getIntent();
+        userInfo = (UserInfo) intent.getSerializableExtra("userInfo");
+
+        if(userInfo == null){
+            Toast.makeText(this, "회원가입에서 에러가 발생했습니다.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(Login2Activity.this, SignUpActivity.class));
+            finish();
+        }
 
         //todo : 로그인 후 여기로 넘어와서 프로필 사진이랑 이름 변경가능하게 함.
 
@@ -73,25 +92,42 @@ public class Login2Activity extends AppCompatActivity {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("잠시만 기다려주세요.");
 
+
+        OnGetStringData(new DishViewProfileImgPass() {
+            @Override
+            public void passProfileImgPath(String imgPath) {
+
+                if(imgPath != null){
+
+                    imagePath = imgPath;
+                }
+                else{
+                    imagePath = null;
+                }
+            }
+        });
+
         //완료 버튼 누를 경우
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //프로필은 이미 위에서 끝냈으니 괜춘.
                 //이름 수정
-                String nameString = nameEditText.getText().toString();
-                if(nameString.isEmpty()){
+                final String nameString = nameEditText.getText().toString();
+                if(TextUtils.isEmpty(nameString.trim())){
                     Toast.makeText(Login2Activity.this, "빈칸을 채워주세요.", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     progressDialog.show();
                     FirebaseFirestore.getInstance()
                             .collection("사용자")
-                            .document(FirebaseAuth.getInstance().getUid())
+                            .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                             .update("nickname", nameString)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
+                                    userInfo.nickname = nameString;
+                                    AlgoliaUtils.changeProfileImagePath(userInfo, imagePath);
                                     startActivity(new Intent(Login2Activity.this, SubActivity.class));
                                     finish();
                                     progressDialog.dismiss();
@@ -168,6 +204,7 @@ public class Login2Activity extends AppCompatActivity {
                         @Override
                         public Unit invoke(Uri uri) {
 //                            AlgoliaUtils.changeProfileImagePath(userInfo, uri.toString());
+                            dishViewProfileImgPass.passProfileImgPath(uri.toString());
                             return null;
                         }
                     });

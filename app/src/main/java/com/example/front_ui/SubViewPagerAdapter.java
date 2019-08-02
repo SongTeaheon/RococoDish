@@ -125,7 +125,9 @@ public class SubViewPagerAdapter extends PagerAdapter {
                             Log.d(TAG, e.getMessage());
                         }
 
-                        if(!queryDocumentSnapshots.isEmpty()){
+                        list.clear();
+
+                       if(!queryDocumentSnapshots.isEmpty()){
 
                             for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
 
@@ -135,7 +137,7 @@ public class SubViewPagerAdapter extends PagerAdapter {
 
                                 notifyDataSetChanged();
                             }
-
+                            notifyDataSetChanged();
                         }
                     }
                 });

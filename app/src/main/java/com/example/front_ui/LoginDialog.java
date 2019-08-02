@@ -177,7 +177,7 @@ public class LoginDialog extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         if(!documentSnapshot.exists()){
-                                            UserInfo newUser = new UserInfo(
+                                            final UserInfo newUser = new UserInfo(
                                                     FirebaseAuth.getInstance().getUid(),
                                                     user.getEmail(),
                                                     user.getDisplayName(),
@@ -194,6 +194,9 @@ public class LoginDialog extends AppCompatActivity {
                                                     Log.d(TAG, "새로운 유저 등록에 성공했습니다.");
                                                     Intent intent = new Intent(LoginDialog.this, Login2Activity.class);
                                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putSerializable("userInfo", newUser);
+                                                    intent.putExtras(bundle);
                                                     startActivity(intent);
                                                     progressDialog.dismiss();
                                                 }
@@ -283,6 +286,9 @@ public class LoginDialog extends AppCompatActivity {
                                     Log.d(TAG, "새로운 유저 등록에 성공했습니다.");
                                     Intent intent = new Intent(LoginDialog.this, Login2Activity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("userInfo", newUser);
+                                    intent.putExtras(bundle);
                                     startActivity(intent);
                                     progressDialog.dismiss();
                                 }
@@ -345,7 +351,7 @@ public class LoginDialog extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                                             if(!documentSnapshot.exists()){
-                                                UserInfo newUser = new UserInfo(
+                                                final UserInfo newUser = new UserInfo(
                                                         FirebaseAuth.getInstance().getUid(),
                                                         auth.getCurrentUser().getEmail(),
                                                         auth.getCurrentUser().getDisplayName(),
@@ -362,6 +368,9 @@ public class LoginDialog extends AppCompatActivity {
                                                         Log.d(TAG, "새로운 유저 등록에 성공했습니다.");
                                                         Intent intent = new Intent(LoginDialog.this, Login2Activity.class);
                                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                        Bundle bundle = new Bundle();
+                                                        bundle.putSerializable("userInfo", newUser);
+                                                        intent.putExtras(bundle);
                                                         startActivity(intent);
                                                         progressDialog.dismiss();
                                                     }

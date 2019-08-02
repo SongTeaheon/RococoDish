@@ -2,7 +2,6 @@ package com.example.front_ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
@@ -13,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
@@ -25,17 +23,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.front_ui.AlgoliaTest.StoreNameSearchAcitivity;
+
 import com.example.front_ui.DataModel.PostingInfo;
-import com.example.front_ui.DataModel.SearchedData;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.Edit.BroadcastUtils;
 import com.example.front_ui.Interface.FirebasePredicate;
@@ -52,9 +46,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
+
+import javax.annotation.Nullable;
 
 public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
@@ -80,6 +78,9 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     SlidingRootNav slidingRootNav;
     TextView logOutText;
     TextView userNameText;
+    TextView tv_notice;
+    TextView tv_setting;
+    TextView tv_qna;
     RecyclerViewDataAdapter recyclerViewDataAdapter;
     FloatingActionButton addPosting;
     FrameLayout loadingFrame;
@@ -160,6 +161,30 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                 }, 1000);//1초 텀두고 메뉴를 닫아줌.(텀을 안두면 intent이동이랑 멤뉴 닫는거랑 겹쳐서 앱 속도 느려짐.)
             }
         });
+
+        tv_notice = findViewById(R.id.notice_textview_activitySub);
+        tv_setting = findViewById(R.id.setting_textview_activitySub);
+        tv_qna = findViewById(R.id.qna_textview_activitySub);
+
+        tv_notice.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(SubActivity.this, "추후 예정", Toast.LENGTH_SHORT).show();
+            }
+        });
+        tv_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(SubActivity.this, "추후 예정", Toast.LENGTH_SHORT).show();
+            }
+        });
+        tv_qna.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SubActivity.this, QnaActivity.class));
+            }
+        });
+
 
 
         /**
@@ -408,11 +433,14 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 //        myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 //        myPage_recyclerview.setAdapter(myPageAdapter);
         //TODO : 뷰페이저로 수정
-        viewPagerAdapter = new SubViewPagerAdapter(this);
+        myPostViewPager.removeAllViews();//다 지워주고(중복 방지)
+        viewPagerAdapter = new SubViewPagerAdapter(this);//데이터 불러옴
+        myPostViewPager.setAdapter(viewPagerAdapter);
+        viewPagerAdapter.notifyDataSetChanged();//다시 불러온거 업데이트
+
 
         // 새로고침 완료
         recyclerViewDataAdapter.notifyDataSetChanged();
-        viewPagerAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
@@ -427,7 +455,23 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         }
         else{
             userNameText = findViewById(R.id.userName_textview_drawer);
-            userNameText.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            FirebaseFirestore.getInstance()
+                    .collection("사용자")
+                    .document(FirebaseAuth.getInstance().getUid())
+                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                            if(e != null){
+                                Log.d(TAG, e.getMessage());
+                            }
+                            if(documentSnapshot.exists() && documentSnapshot != null){
+
+                                String name = documentSnapshot.get("nickname").toString();
+                                userNameText.setText(name);
+                            }
+                        }
+                    });
+
         }
     }
 
