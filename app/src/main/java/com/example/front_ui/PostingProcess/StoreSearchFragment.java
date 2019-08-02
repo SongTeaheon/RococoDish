@@ -88,6 +88,7 @@ public class StoreSearchFragment extends Fragment {
 
         storeInfoArrayList = new ArrayList<>();
 
+        backBtn = view.findViewById(R.id.backButton);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
