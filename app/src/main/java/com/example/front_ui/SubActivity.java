@@ -279,7 +279,12 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 
                 final String postingId = uri.getQueryParameter("postingId");
                 final String storeId = uri.getQueryParameter("storeId");
-                final String disStr = uri.getQueryParameter("distance");
+                String disStr = uri.getQueryParameter("distance");
+                disStr = disStr.replace("m", "");
+                disStr = disStr.replace("km", "");
+
+                final String disNumStr = disStr;
+
 
                 getDataWithId("포스팅", postingId, new FirebasePredicate() {
                     @Override
@@ -290,7 +295,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                                 @Override
                                 public void afterGetData(DocumentSnapshot document) {
                                     StoreInfo storeInfo = document.toObject(StoreInfo.class);
-                                    Double distance = Double.parseDouble(disStr);
+                                    Double distance = Double.parseDouble(disNumStr);
                                     Intent intent = new Intent(SubActivity.this, DishView.class);
                                     DataPassUtils.makeIntentForData(intent, postingInfo, storeInfo, distance);
                                     SubActivity.this.startActivity(intent);
