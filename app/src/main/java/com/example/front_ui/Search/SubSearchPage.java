@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -132,7 +133,7 @@ public class SubSearchPage extends AppCompatActivity {
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                if(actionId == EditorInfo.IME_ACTION_SEARCH && !TextUtils.isEmpty( editText.getText().toString().trim())){
                     Log.d(TAG, "search button is clicked");
                     String keyword = editText.getText().toString();
                     searchButtonClicked(keyword);
@@ -148,11 +149,16 @@ public class SubSearchPage extends AppCompatActivity {
         searchBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "search button is clicked");
-                String keyword = editText.getText().toString();
-                searchButtonClicked(keyword);
-                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                if(!TextUtils.isEmpty( editText.getText().toString().trim())) {
+                    Log.d(TAG, "search button is clicked");
+                    String keyword = editText.getText().toString();
+                    searchButtonClicked(keyword);
+                    Log.d(TAG, "search button is clicked");
+                    String keyword = editText.getText().toString();
+                    searchButtonClicked(keyword);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                }
             }
         });
 
@@ -235,7 +241,7 @@ public class SubSearchPage extends AppCompatActivity {
     public void searchButtonClicked(String keyword){
         if(keyword != null)
             dbHandler.insert(keyword);
-        deleteFragment(fragmentRecord);
+        deleteFragment();
         getRegionSearchResult(keyword);
         getPeopleSearchResult(keyword);
         //TODO: TAG data 일단 검색 막았음!!!
@@ -256,6 +262,7 @@ public class SubSearchPage extends AppCompatActivity {
         //가게 안에 목록 가져오는 리사이클러뷰
         recyclerViewStore.setHasFixedSize(true);
         FragmantStoreRecyclerViewAdapter storeRecyclerViewAdapter = new FragmantStoreRecyclerViewAdapter(this, shortList);
+        storeRecyclerViewAdapter.notifyDataSetChanged();
         recyclerViewStore.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewStore.setAdapter(storeRecyclerViewAdapter);
     }
@@ -271,11 +278,12 @@ public class SubSearchPage extends AppCompatActivity {
         //가게 안에 목록 가져오는 리사이클러뷰
         recyclerViewPeople.setHasFixedSize(true);
         FragmantPeopleRecyclerViewAdapter peopleRecyclerViewAdapter = new FragmantPeopleRecyclerViewAdapter(this, shortList, currentLatitude, currentLongtitude);
+        peopleRecyclerViewAdapter.notifyDataSetChanged();
         recyclerViewPeople.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewPeople.setAdapter(peopleRecyclerViewAdapter);
     }
     void initRecyclerViewRegion(){
-        Log.d(TAG, "initRecyclerViewStore");
+        Log.d(TAG, "initRecyclerViewRegion");
         //가게 데이터를 4개만 가져간다.
         ArrayList<SearchedData> shortList = new ArrayList<>();
         int size = (4 < regionList.size()? 4 : regionList.size());
@@ -284,6 +292,7 @@ public class SubSearchPage extends AppCompatActivity {
         //가게 안에 목록 가져오는 리사이클러뷰
         recyclerViewRegion.setHasFixedSize(true);
         FragmantRegionRecyclerViewAdapter regionRecyclerViewAdapter = new FragmantRegionRecyclerViewAdapter(this, shortList);
+        regionRecyclerViewAdapter.notifyDataSetChanged();
         recyclerViewRegion.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewRegion.setAdapter(regionRecyclerViewAdapter);
     }
@@ -297,6 +306,7 @@ public class SubSearchPage extends AppCompatActivity {
         //가게 안에 목록 가져오는 리사이클러뷰
         recyclerViewTag.setHasFixedSize(true);
         FragmantTagRecyclerViewAdapter tagRecyclerViewAdapter = new FragmantTagRecyclerViewAdapter(this, shortList);
+        tagRecyclerViewAdapter.notifyDataSetChanged();
         recyclerViewTag.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewTag.setAdapter(tagRecyclerViewAdapter);
     }
@@ -304,8 +314,12 @@ public class SubSearchPage extends AppCompatActivity {
     void initFragment(Fragment fragment){
         fragmentManager.beginTransaction().replace(R.id.resultFrameLayout, fragment).commit();
     }
-    void deleteFragment(Fragment fragment){
-        fragmentManager.beginTransaction().remove(fragment).commit();
+    void deleteFragment(){
+        fragmentManager.beginTransaction().remove(fragmentStore).commit();
+        fragmentManager.beginTransaction().remove(fragmentRegion).commit();
+        fragmentManager.beginTransaction().remove(fragmentPeople).commit();
+//        fragmentManager.beginTransaction().remove(fragmentTag).commit();
+        fragmentManager.beginTransaction().remove(fragmentRecord).commit();
     }
 
     /********************************* 가게, 지역, 사람 검색 만들기 필요 변수 및 함수  *********************************/
@@ -320,6 +334,7 @@ public class SubSearchPage extends AppCompatActivity {
                 if(storeList.size() != 0) {
                     initRecyclerViewStore();
                     cardViewStore.setVisibility(View.VISIBLE);
+                    recyclerViewStore.setVisibility(View.VISIBLE);
                 }else {
                     Log.d(TAG, "no data for Store");
                     recyclerViewStore.setVisibility(View.GONE);
@@ -340,6 +355,7 @@ public class SubSearchPage extends AppCompatActivity {
                 if(peopleList.size() != 0) {
                     initRecyclerViewPeople();
                     cardViewPeople.setVisibility(View.VISIBLE);
+                    recyclerViewPeople.setVisibility(View.VISIBLE);
                 }else {
                     Log.d(TAG, "no data for People");
                     recyclerViewPeople.setVisibility(View.GONE);
@@ -361,6 +377,7 @@ public class SubSearchPage extends AppCompatActivity {
                 if(tagList.size() != 0) {
                     initRecyclerViewTag();
                     cardViewTag.setVisibility(View.VISIBLE);
+                    recyclerViewTag.setVisibility(View.VISIBLE);
                 }else {
                     Log.d(TAG, "no data for Tag");
                     recyclerViewTag.setVisibility(View.GONE);
@@ -497,6 +514,7 @@ public class SubSearchPage extends AppCompatActivity {
         if(regionList.size() != 0) {
             initRecyclerViewRegion();
             cardViewRegion.setVisibility(View.VISIBLE);
+            recyclerViewRegion.setVisibility(View.VISIBLE);
         }else {
             Log.d(TAG, "no data for region");
             recyclerViewRegion.setVisibility(View.GONE);

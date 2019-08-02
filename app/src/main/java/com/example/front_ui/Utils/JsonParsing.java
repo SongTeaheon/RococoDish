@@ -9,7 +9,6 @@ import com.example.front_ui.DataModel.KakaoStoreInfo;
 import com.example.front_ui.DataModel.SearchedData;
 import com.example.front_ui.DataModel.StoreInfo;
 import com.example.front_ui.DataModel.UserInfo;
-import com.firebase.ui.auth.data.model.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -19,7 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class JsonParsing {
 
@@ -136,17 +134,25 @@ public class JsonParsing {
 
                 String nickname = jsonObject1.getString("nickname");
                 String eMail = jsonObject2.getJSONObject("eMail").getString("value");
-                String idStr = jsonObject2.getJSONObject("userId").getString("value");
+                String idStr = jsonObject2.getJSONObject("uid").getString("value");
+                String profilePath = jsonObject2.getJSONObject("profileImage").getString("value");
+
+                Log.d(TAG, nickname +" " + eMail + " " + idStr + " " + profilePath);
+
                 nickname = nickname.replace("<em>", "");
                 nickname = nickname.replace("</em>", "");
                 eMail = eMail.replace("<em>", "");
                 eMail = eMail.replace("</em>", "");
                 idStr = idStr.replace("<em>", "");
                 idStr = idStr.replace("</em>", "");
-
+                profilePath = profilePath.replace("<em>", "");
+                profilePath = profilePath.replace("</em>", "");
+                Log.d(TAG, nickname +" " + eMail + " " + idStr + " " + profilePath);
                 userInfo.nickname = nickname;
                 userInfo.eMail = eMail;
-                userInfo.userId = idStr;
+                userInfo.uid = idStr;
+                userInfo.profileImage = profilePath;
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

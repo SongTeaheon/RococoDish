@@ -102,7 +102,7 @@ public class EditActivity extends AppCompatActivity {
         addressText = findViewById(R.id.textViewAddress);
         addressText.setText(postingInfo.getAddress());
 
-        storeName = findViewById(R.id.mainText);
+        storeName = findViewById(R.id.tv_mainText);
         storeName.setText(storeInfo.getName());
 
         starText = findViewById(R.id.starText);

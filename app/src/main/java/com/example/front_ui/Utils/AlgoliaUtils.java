@@ -227,8 +227,12 @@ public class AlgoliaUtils {
                 if(preMail != null && userInfo.eMail.equals(preMail)){
                     //태그 데이터 존재.
                     Log.d(TAG, "email 찾았음 : " + userInfo.eMail);
-                    String objectId = JsonParsing.getFirstAlgoliaId(jsonArray);
+                    Log.d(TAG, "image uri :  " + path);
 
+                    String objectId = JsonParsing.getFirstAlgoliaId(jsonArray);
+                    Log.d(TAG, " objectId :  " + objectId);
+
+                    userInfo.profileImage = path;
                     //storeInfo를 바꾸어준다.
                     Gson gson = new Gson();
                     String jsonStr = gson.toJson(userInfo);

@@ -25,6 +25,7 @@ public class FragmantRegionRecyclerViewAdapter extends RecyclerView.Adapter<Frag
     private Context mContext;
 
     public FragmantRegionRecyclerViewAdapter(Context context, ArrayList<SearchedData> list) {
+        Log.d(TAG, "FragmantRegionRecyclerViewAdapter constructor");
         this.listData = list;
         this.mContext = context;
     }
@@ -32,12 +33,16 @@ public class FragmantRegionRecyclerViewAdapter extends RecyclerView.Adapter<Frag
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d(TAG, "Reion onCreateViewHolder");
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_region_item, parent, false);
         return new ItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+        Log.d(TAG, "Reion onBindViewHolder");
+
         holder.onBind(listData.get(position));
         final SearchedData searchedData = listData.get(position);
 

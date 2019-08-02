@@ -10,7 +10,6 @@ public class UserInfo implements Serializable {
     public String follower;
     public String following;
     public int postingNum;
-    public String userId;
     //망할 깃헙 테스트
 
 
@@ -41,11 +40,11 @@ public class UserInfo implements Serializable {
     public UserInfo() {
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

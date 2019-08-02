@@ -2,6 +2,7 @@ package com.example.front_ui.Search;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 public class SearchRecordFragment extends Fragment {
     private final String TAG = "TAGSearchRecordFrag";
     ListView listView;
+    TextView deleteAllRecord_tv;
     ArrayList<RecordData> recordList = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -23,7 +25,17 @@ public class SearchRecordFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_search_record, container, false);
         listView = rootView.findViewById(R.id.listview_record);
         recordList = ((SubSearchPage)getActivity()).getRecordList();
-        CustomUsersAdapter adapter = new CustomUsersAdapter(getActivity(), recordList);
+        final CustomUsersAdapter adapter = new CustomUsersAdapter(getActivity(), recordList);
+        deleteAllRecord_tv = rootView.findViewById(R.id.textAllDelete);
+        deleteAllRecord_tv.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                //delete all record
+                SubSearchPage.dbHandler.deleteAll();
+                recordList.clear();
+                adapter.notifyDataSetChanged();
+            }
+        });
         listView.setAdapter(adapter);
         return rootView;
     }
@@ -54,9 +66,10 @@ class CustomUsersAdapter extends ArrayAdapter {
         // Lookup view for data population
         TextView tvName = convertView.findViewById(R.id.lastStoreTv);
         ImageView ivCancel = convertView.findViewById(R.id.imageViewCancel);
+        ConstraintLayout constraintLayout = convertView.findViewById(R.id.constraint_record);
         // Populate the data into the template view using the data object
         tvName.setText(record.getRecord());
-        tvName.setOnClickListener(new View.OnClickListener(){
+        constraintLayout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 ((SubSearchPage)mContext).searchButtonClicked(record.getRecord()); //버튼 클릭시 이동

@@ -137,7 +137,7 @@ public class StoreNameSearchAcitivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getString("nickname"));
                                 UserInfo userInfo = document.toObject(UserInfo.class);
-                                userInfo.setUserId(document.getId());
+                                userInfo.setUid(document.getId());
 
                                 AlgoliaUtils.addObject("user", userInfo);
                             }

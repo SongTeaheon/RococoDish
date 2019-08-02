@@ -11,13 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.front_ui.DataModel.FragmentPeopleData;
 import com.example.front_ui.DataModel.UserInfo;
 import com.example.front_ui.MyPage;
 import com.example.front_ui.R;
-import com.example.front_ui.SubActivity;
 import com.example.front_ui.Utils.GlideApp;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -25,7 +22,7 @@ import java.util.ArrayList;
 
 public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<FragmantPeopleRecyclerViewAdapter.ItemViewHolder> {
 
-    private final String TAG = "FragmentPeopleRecycler";
+    private final String TAG = "TAGFragmentPeopleRecyc";
     private ArrayList<UserInfo> listData;
     private Context mContext;
     private double currentLat;
@@ -57,9 +54,9 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "item is cliceked. go to MyPage userid : " + userInfo.getUserId());
+                Log.d(TAG, "item is cliceked. go to MyPage userid : " + userInfo.getUid());
                 Intent intent = new Intent(mContext, MyPage.class);
-                intent.putExtra("userUUID", userInfo.getUserId());
+                intent.putExtra("userUUID", userInfo.getUid());
                 mContext.startActivity(intent);
             }
         });
@@ -82,19 +79,24 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
 
         ItemViewHolder(View itemView) {
             super(itemView);
-
+            imageViewPeople = itemView.findViewById(R.id.imageViewPeople);
             itemPeopleName = itemView.findViewById(R.id.itemPeopleName);
             itemPeopleEmail = itemView.findViewById(R.id.itemPeopleEmail);
         }
 
         void onBind(UserInfo userInfo) {
             //TODO:이거 데이터 어떻게 가져오는지 태완님한테 물어봐야할 듯
+            Log.d(TAG, "nickname : " + userInfo.getNickname());
+            Log.d(TAG, "email : " + userInfo.eMail);
+
             itemPeopleName.setText(userInfo.getNickname());
 //            imageViewPeople;
             itemPeopleEmail.setText(userInfo.eMail);
             //profileImage는 Null!!!
-//            StorageReference fileReference = storage.getReferenceFromUrl(userInfo.profileImage);
-//            GlideApp.with(mContext).load(fileReference).into(imageViewPeople);
+            if(userInfo.profileImage != null) {
+                StorageReference fileReference = storage.getReferenceFromUrl(userInfo.profileImage);
+                GlideApp.with(mContext).load(fileReference).into(imageViewPeople);
+            }
         }
     }
 }
