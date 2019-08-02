@@ -52,6 +52,13 @@ public class MyDBHandler {
         mDB.delete("SEARCH_TABLE", "_ID=?", new String[]{Integer.toString(id)});
     }
 
+    public void deleteAll()
+    {
+        Log.d(TAG, "deleteAll");
+        mDB = mHelper.getWritableDatabase();
+        mDB.execSQL("delete from "+ "SEARCH_TABLE");
+    }
+
     public void close() {
         mHelper.close();
     }

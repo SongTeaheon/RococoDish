@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class SearchRecordFragment extends Fragment {
     private final String TAG = "TAGSearchRecordFrag";
     ListView listView;
+    TextView deleteAllRecord_tv;
     ArrayList<RecordData> recordList = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -23,7 +24,17 @@ public class SearchRecordFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_search_record, container, false);
         listView = rootView.findViewById(R.id.listview_record);
         recordList = ((SubSearchPage)getActivity()).getRecordList();
-        CustomUsersAdapter adapter = new CustomUsersAdapter(getActivity(), recordList);
+        final CustomUsersAdapter adapter = new CustomUsersAdapter(getActivity(), recordList);
+        deleteAllRecord_tv = rootView.findViewById(R.id.textAllDelete);
+        deleteAllRecord_tv.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                //delete all record
+                SubSearchPage.dbHandler.deleteAll();
+                recordList.clear();
+                adapter.notifyDataSetChanged();
+            }
+        });
         listView.setAdapter(adapter);
         return rootView;
     }

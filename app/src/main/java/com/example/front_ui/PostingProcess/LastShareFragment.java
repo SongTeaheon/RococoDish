@@ -517,7 +517,7 @@ public class LastShareFragment extends Fragment {
     void updateUserPostingNum(){
 
         final String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.d(TAG, "updateUserPosting num. user userId : " + userUid);
+        Log.d(TAG, "updateUserPosting num. user uid : " + userUid);
         db.collection("사용자")
                 .document(userUid)
                 .get()

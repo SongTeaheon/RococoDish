@@ -500,7 +500,7 @@ public class DishView extends AppCompatActivity {
     //좋아요 기능(클릭 함수까지 포함.)
     public void likeFunc(){
 
-        //포스팅 -> 컬렉션 좋아요 -> 좋아요 한 사람의 userId 도큐먼트 -> isLiked를 bool값으로 true일 경우 빨간색 아예 도큐먼트가 없을 경우는 빈 하트
+        //포스팅 -> 컬렉션 좋아요 -> 좋아요 한 사람의 uid 도큐먼트 -> isLiked를 bool값으로 true일 경우 빨간색 아예 도큐먼트가 없을 경우는 빈 하트
         final ImageView likeImage = findViewById(R.id.like_imageview_dishView);
 
         //좋아요 했으면 빨간색으로 설정

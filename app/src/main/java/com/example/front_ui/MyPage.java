@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.app.AlertDialog;
@@ -41,13 +40,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.io.ByteArrayOutputStream;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.Interface.MyPageDataPass;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -290,7 +286,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                             Log.d(TAG, e.getMessage());
                         }
                         userInfo = documentSnapshot.toObject(UserInfo.class);
-                        userInfo.setUserId(documentSnapshot.getId());
+                        userInfo.setUid(documentSnapshot.getId());
                         if(documentSnapshot.get("profileImage") != null){//프로필 사진이 있을 경우
                             CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(getApplicationContext());
                             circularProgressDrawable.setStrokeCap(Paint.Cap.ROUND);
