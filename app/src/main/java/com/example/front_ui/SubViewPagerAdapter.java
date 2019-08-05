@@ -126,8 +126,8 @@ public class SubViewPagerAdapter extends PagerAdapter {
                         }
 
                         list.clear();
-
-                       if(!queryDocumentSnapshots.isEmpty()){
+                        assert queryDocumentSnapshots != null;
+                        if(!queryDocumentSnapshots.isEmpty()){
 
                             for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
 

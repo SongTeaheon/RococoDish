@@ -469,7 +469,8 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                             if(e != null){
                                 Log.d(TAG, e.getMessage());
                             }
-                            if(documentSnapshot.exists() && documentSnapshot != null){
+                            assert documentSnapshot != null;
+                            if(documentSnapshot.exists()){
 
                                 String name = documentSnapshot.get("nickname").toString();
                                 userNameText.setText(name);

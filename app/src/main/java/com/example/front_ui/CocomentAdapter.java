@@ -81,10 +81,6 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
     @Override
     public void onBindViewHolder(@NonNull final CocomentViewHolder cocomentViewHolder, final int i) {
         //프로필 이미지 부분
-//        GlideApp.with(context)
-//                .load(cocomentList.get(i).getImgPath())
-//                .into(cocomentViewHolder.userImage);
-        //todo : 이전과 다르게 실시간 이미지 반영
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(cocomentList.get(i).getCommentWriterId())
@@ -96,8 +92,10 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
                         }
                         if(documentSnapshot.exists()){
 
+                            @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
+
                             GlideApp.with(context.getApplicationContext())
-                                    .load(documentSnapshot.get("profileImage"))
+                                    .load(imagePath != null? imagePath : R.drawable.basic_user_image)
                                     .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
                                     .into(cocomentViewHolder.userImage);
                         }

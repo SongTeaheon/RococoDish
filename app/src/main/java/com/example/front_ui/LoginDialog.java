@@ -94,6 +94,7 @@ public class LoginDialog extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(AuthUI.getInstance().createSignInIntentBuilder()
                         .setAvailableProviders(providers)
+                        .setIsSmartLockEnabled(false)
                         .build());
                 startActivityForResult(intent, RC_EMAIL_LOGIN);
             }
@@ -181,7 +182,7 @@ public class LoginDialog extends AppCompatActivity {
                                                     FirebaseAuth.getInstance().getUid(),
                                                     user.getEmail(),
                                                     user.getDisplayName(),
-                                                    MyPage.basicProfile,
+                                                    null,
                                                     null,
                                                     null,
                                                     0
@@ -273,7 +274,7 @@ public class LoginDialog extends AppCompatActivity {
                                     FirebaseAuth.getInstance().getUid(),
                                     auth.getCurrentUser().getEmail(),
                                     auth.getCurrentUser().getDisplayName(),
-                                    MyPage.basicProfile,
+                                    null,
                                     null,
                                     null,
                                     0);
@@ -355,7 +356,7 @@ public class LoginDialog extends AppCompatActivity {
                                                         FirebaseAuth.getInstance().getUid(),
                                                         auth.getCurrentUser().getEmail(),
                                                         auth.getCurrentUser().getDisplayName(),
-                                                        MyPage.basicProfile,
+                                                        null,
                                                         null,
                                                         null,
                                                         0

@@ -72,7 +72,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
     UserInfo userInfo;
     TextView userName;
     ImageView backBtn;
-    static final String basicProfile = "https://firebasestorage.googleapis.com/v0/b/rococodish.appspot.com/o/user6.png?alt=media&token=f6f73ce5-bfe1-4dac-bbf2-29fb94706e09";
+//    static final String basicProfile = "https://firebasestorage.googleapis.com/v0/b/rococodish.appspot.com/o/user6.png?alt=media&token=f6f73ce5-bfe1-4dac-bbf2-29fb94706e09";
 
     @Override
     public void setNumberOfData(int value) {
@@ -285,28 +285,21 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                         if(e != null){
                             Log.d(TAG, e.getMessage());
                         }
+
+                        assert documentSnapshot.exists();
+
                         userInfo = documentSnapshot.toObject(UserInfo.class);
                         userInfo.setUid(documentSnapshot.getId());
-                        if(documentSnapshot.get("profileImage") != null){//프로필 사진이 있을 경우
-                            CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(getApplicationContext());
-                            circularProgressDrawable.setStrokeCap(Paint.Cap.ROUND);
-                            circularProgressDrawable.setCenterRadius(10f);
-                            circularProgressDrawable.setBackgroundColor(R.color.colorMainSearch);
-                            circularProgressDrawable.start();
 
-                            String path = documentSnapshot.get("profileImage").toString();
-                            GlideApp.with(getApplicationContext())
-                                    .load(path)
-                                    .placeholder(circularProgressDrawable)
-                                    .into(circleImageView);
-                            progressDialog.dismiss();
-                        }
-                        else{//프로필 사진이 없을 경우 걍 로딩 없앰.
-                            progressDialog.dismiss();
-                        }
+                        @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
+
+                        GlideApp.with(getApplicationContext())
+                                .load(imagePath != null? imagePath : R.drawable.basic_user_image)
+                                .placeholder(GlidePlaceHolder.circularPlaceHolder(getApplicationContext()))
+                                .into(circleImageView);
+                        progressDialog.dismiss();
                     }
                 });
-        //todo : 타인의 프로필 변경은 막기
         //자신일 경우에만 프로필 변경 가능
         if(userUUID.equals(FirebaseAuth.getInstance().getUid())){
             circleImageView.setOnClickListener(new View.OnClickListener() {
@@ -328,10 +321,10 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                                                 case "기본 이미지로 변경":
                                                     FirebaseFirestore.getInstance().collection("사용자")
                                                             .document(userUUID)
-                                                            .update("profileImage", basicProfile);
+                                                            .update("profileImage", null);
                                                     //todo : 나갔다 들어오면서 이전 액티비티에서 전해오는 userUUID가 NULL이ㄷ 되버리는 에러
                                                     GlideApp.with(getApplicationContext())
-                                                            .load(basicProfile)
+                                                            .load(R.drawable.basic_user_image)
                                                             .into(circleImageView);
                                                     break;
                                             }
