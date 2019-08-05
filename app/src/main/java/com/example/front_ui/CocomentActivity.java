@@ -65,7 +65,7 @@ public class CocomentActivity extends AppCompatActivity {
         final PostingInfo postingInfo = (PostingInfo) intent.getSerializableExtra("postingInfo");
 
         //대댓글에 내 이미지 등록
-        final Map<Integer, String> myImagePath = new HashMap<>();//초기화
+        @Nullable final Map<Integer, String> myImagePath = new HashMap<>();//초기화
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
@@ -77,10 +77,12 @@ public class CocomentActivity extends AppCompatActivity {
                         }
                         if(documentSnapshot.exists()){
 
-                            myImagePath.put(0, documentSnapshot.getData().get("profileImage").toString());
+                            @Nullable String imagePath = (String) documentSnapshot.getData().get("profileImage");
+
+                            myImagePath.put(0, imagePath);
 
                             GlideApp.with(getApplicationContext())
-                                    .load(myImagePath.get(0))
+                                    .load(myImagePath.get(0) != null? imagePath : R.drawable.basic_user_image)
                                     .into(cocomentImage);
 
                         }
@@ -152,9 +154,11 @@ public class CocomentActivity extends AppCompatActivity {
                         }
                         if(documentSnapshot.exists()){
 
+                            @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
+
                             //댓글 이미지
                             GlideApp.with(getApplicationContext())
-                                    .load(documentSnapshot.get("profileImage"))
+                                    .load(imagePath != null? imagePath : R.drawable.basic_user_image)
                                     .into(commentImage);
 
                             //댓글 이름
@@ -162,8 +166,6 @@ public class CocomentActivity extends AppCompatActivity {
                         }
                     }
                 });
-        //댓글 이름
-//        commentName.setText(commentInfo.getWriterName());
         //댓글 내용
         commentDesc.setText(commentInfo.getComment());
         //댓글의 시간

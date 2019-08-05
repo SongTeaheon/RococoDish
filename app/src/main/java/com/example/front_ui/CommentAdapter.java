@@ -101,13 +101,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                         }
                         if(documentSnapshot.exists()){
                             //프로필 이미지 부분
-                            GlideApp.with(context.getApplicationContext())
-                                    .load(documentSnapshot.get("profileImage"))
-                                    .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
-                                    .into(commentViewHolder.image);
+                            @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
 
                             //프로필 이름 부분
                             commentViewHolder.userName.setText(documentSnapshot.get("nickname").toString());
+
+                            GlideApp.with(context.getApplicationContext())
+                                    .load(imagePath != null? imagePath : R.drawable.basic_user_image)
+                                    .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
+                                    .into(commentViewHolder.image);
+
                         }
                     }
                 });

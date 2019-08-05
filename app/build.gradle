@@ -118,8 +118,7 @@ dependencies {
     //뷰페이저 하단 인디케이터
     implementation "ru.tinkoff.scrollingpagerindicator:scrollingpagerindicator:1.0.6"
     implementation 'com.android.support:recyclerview-v7:28.0.0'
-//    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-//    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+
 
 }
 
