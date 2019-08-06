@@ -3,11 +3,10 @@ package com.example.front_ui.Edit;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.example.front_ui.DataModel.PostingInfo;
-import com.example.front_ui.DataModel.StoreInfo;
 
 import java.util.HashMap;
 

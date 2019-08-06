@@ -34,6 +34,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Coupon.CouponActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".DoubleRecyActivity"
             android:screenOrientation="portrait" /> <!-- 페이스북 -->

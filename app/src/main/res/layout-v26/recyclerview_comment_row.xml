@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <!--이 레이아웃으로 감싸는 이유는 이미지가 항상 위에 있게 하기 위함.-->
@@ -21,7 +21,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <!--이미지 들어가는 부분-->
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/image_cardview"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -35,7 +35,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop" />
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
         </RelativeLayout>
 
 
@@ -80,10 +80,10 @@
             tools:text=""
             tools:ignore="SpUsage" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--대댓이 달리는 부분-->
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:background="#fff"
         android:id="@+id/cocoment_recyclerview"
         android:nestedScrollingEnabled="false"

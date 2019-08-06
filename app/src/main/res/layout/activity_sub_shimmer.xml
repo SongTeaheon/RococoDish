@@ -6,13 +6,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!--오늘 뭐먹지 부분-->
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_marginTop="4dp"
         android:layout_gravity="center"
         app:cardCornerRadius="20dp"
         app:cardBackgroundColor="#e6e6e6"
         android:layout_width="170dp"
-        android:layout_height="40dp"></android.support.v7.widget.CardView>
+        android:layout_height="40dp"></androidx.cardview.widget.CardView>
     <!--마이페이지 부분-->
     <LinearLayout
         android:orientation="horizontal"
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <!--가게-->
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_gravity="left"
             app:cardBackgroundColor="#e6e6e6"
             android:layout_margin="8dp"
@@ -38,7 +38,7 @@
             android:layout_height="50dp"
             app:cardCornerRadius="20dp"/>
         <!--별점-->
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="70dp"
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
@@ -65,7 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <!--가게-->
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_gravity="left"
             app:cardBackgroundColor="#e6e6e6"
             android:layout_margin="8dp"
@@ -73,7 +73,7 @@
             android:layout_height="50dp"
             app:cardCornerRadius="20dp"/>
         <!--별점-->
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="70dp"
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
@@ -99,7 +99,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <!--가게-->
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_gravity="left"
             app:cardBackgroundColor="#e6e6e6"
             android:layout_margin="8dp"
@@ -107,7 +107,7 @@
             android:layout_height="50dp"
             app:cardCornerRadius="20dp"/>
         <!--별점-->
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="70dp"
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"

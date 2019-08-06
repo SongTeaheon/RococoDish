@@ -1,7 +1,7 @@
 package com.example.front_ui.PostingProcess;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
 //grid view 내부 이미지를 정사각형으로 만들기 위해 커스텀한 이미지 뷰 클래스

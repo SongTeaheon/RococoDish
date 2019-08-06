@@ -6,7 +6,7 @@
     android:background="@color/colorWhite"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <!--대댓인지를 위한 빈공간-->
@@ -37,7 +37,7 @@
             app:layout_constraintStart_toEndOf="@+id/relativeLayout2"
             app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center_horizontal"
@@ -50,7 +50,7 @@
                     android:src="@drawable/basic_user_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
 
         <TextView
@@ -94,5 +94,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="SpUsage" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

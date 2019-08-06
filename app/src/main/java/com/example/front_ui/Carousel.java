@@ -2,8 +2,8 @@ package com.example.front_ui;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPager;
+import androidx.core.view.ViewCompat;
+import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 import android.view.ViewParent;
 
