@@ -1,16 +1,13 @@
 package com.example.front_ui.PostingProcess;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,9 +24,7 @@ import com.example.front_ui.R;
 import com.example.front_ui.Utils.JsonParsing;
 import com.example.front_ui.Utils.KakaoApiStoreSearchService;
 import com.google.gson.JsonObject;
-import com.yalantis.ucrop.UCrop;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -38,8 +33,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
 import static com.example.front_ui.Utils.KakaoApiStoreSearchService.API_URL;
 
 

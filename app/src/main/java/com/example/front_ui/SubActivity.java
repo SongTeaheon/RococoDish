@@ -11,17 +11,19 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+
+import com.example.front_ui.Coupon.CouponActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.core.app.ActivityCompat;
+import androidx.viewpager.widget.ViewPager;
+import androidx.core.widget.NestedScrollView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -60,14 +62,12 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     private static final int REQUEST_LOCATION = 10002;
     private static final String TAG = "TAGSubActivity";
 
-
-
     private FusedLocationProviderClient mFusedLocationClient;
     RecyclerView main_recyclerview;
-    RecyclerView myPage_recyclerview;
+//    RecyclerView myPage_recyclerview;
     NestedScrollView nestedScrollView;
     public static Location mCurrentLocation;
-    private Location searchLocation;
+//    private Location searchLocation;
 
     private boolean mLocationPermissionGranted = false;
     TextView myPageTextview;
@@ -81,6 +81,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     TextView tv_notice;
     TextView tv_setting;
     TextView tv_qna;
+    TextView tv_couponBox;
     RecyclerViewDataAdapter recyclerViewDataAdapter;
     FloatingActionButton addPosting;
     FrameLayout loadingFrame;
@@ -116,6 +117,15 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                 .withMenuLayout(R.layout.activity_sub_drawer)
                 .withToolbarMenuToggle(pageViewToolbar)
                 .inject();
+        tv_couponBox = findViewById(R.id.couponBox_textview_drawer);
+        tv_couponBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SubActivity.this, CouponActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
 
         /*
@@ -417,7 +427,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         //가게 안에 목록 가져오는 리사이클러뷰
         recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter, loadingFrame);
         recyclerViewDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
-        main_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        main_recyclerview.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         main_recyclerview.setAdapter(recyclerViewDataAdapter);
     }
 
@@ -431,7 +441,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 
         main_recyclerview.setHasFixedSize(true);
         recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, mCurrentLocation, loadingFrame);
-        main_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        main_recyclerview.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         main_recyclerview.setAdapter(recyclerViewDataAdapter);
 
 //        Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);

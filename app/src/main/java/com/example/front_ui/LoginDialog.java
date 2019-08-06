@@ -1,17 +1,16 @@
 package com.example.front_ui;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.content.IntentCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.IntentCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -167,7 +166,7 @@ public class LoginDialog extends AppCompatActivity {
                     AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
                     auth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
-                        public void onComplete(@android.support.annotation.NonNull Task<AuthResult> task) {
+                        public void onComplete(@androidx.annotation.NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
                                 Log.d(TAG, "signInWithCredential이 성공적");
 
