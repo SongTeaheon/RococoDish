@@ -22,7 +22,7 @@ allprojects {
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.front_ui"
+        applicationId "com.rococodish.front_ui"
         minSdkVersion 22
         targetSdkVersion 28
         versionCode 1
@@ -34,6 +34,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 

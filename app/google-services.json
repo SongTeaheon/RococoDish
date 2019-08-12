@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:767390119944:android:3a1f02e44f7af9e7",
         "android_client_info": {
-          "package_name": "com.example.front_ui"
+          "package_name": "com.rococodish.front_ui"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "767390119944-5b03ea6rcbuihc583e9bg50dl16lqh0c.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.front_ui",
+            "package_name": "com.rococodish.front_ui",
             "certificate_hash": "1ba609dfa08a584fd923e86c7c0de749f134c60e"
           }
         },
@@ -26,7 +26,7 @@
           "client_id": "767390119944-8141os56audt2unmc7mnajb2lu9rcbd7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.front_ui",
+            "package_name": "com.rococodish.front_ui",
             "certificate_hash": "cbe4a82cf6108a8a07fdf969d0052d613aaad854"
           }
         },

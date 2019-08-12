@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.front_ui">
+    package="com.rococodish.front_ui">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -16,17 +16,17 @@
         android:roundIcon="@mipmap/ic_app_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".QnaActivity"></activity>
-        <activity android:name=".Login2Activity" />
+        <activity android:name="com.rococodish.front_ui.QnaActivity"></activity>
+        <activity android:name="com.rococodish.front_ui.Login2Activity" />
         <activity
-            android:name=".CocomentActivity"
+            android:name="com.rococodish.front_ui.CocomentActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Search.RegionSearchActivity"
+            android:name="com.rococodish.front_ui.Search.RegionSearchActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".StartActivity"
+            android:name="com.rococodish.front_ui.StartActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,7 +37,7 @@
         <activity android:name=".Coupon.CouponActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".DoubleRecyActivity"
+            android:name="com.rococodish.front_ui.DoubleRecyActivity"
             android:screenOrientation="portrait" /> <!-- 페이스북 -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -65,44 +65,44 @@
             android:value="@string/kakao_app_key" />
 
         <activity
-            android:name=".SettingActivity"
+            android:name="com.rococodish.front_ui.SettingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Search.SubSearchPage"
+            android:name="com.rococodish.front_ui.Search.SubSearchPage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Edit.EditActivity"
+            android:name="com.rococodish.front_ui.Edit.EditActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SignUpActivity"
+            android:name="com.rococodish.front_ui.SignUpActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AlgoliaTest.StoreNameSearchAcitivity"
+            android:name="com.rococodish.front_ui.AlgoliaTest.StoreNameSearchAcitivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Search.MainSearchActivity"
+            android:name="com.rococodish.front_ui.Search.MainSearchActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".MyPage"
+            android:name="com.rococodish.front_ui.MyPage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PostingProcess.MainShareActivity"
+            android:name="com.rococodish.front_ui.PostingProcess.MainShareActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".StorePageActivity"
+            android:name="com.rococodish.front_ui.StorePageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".FollowActivity"
+            android:name="com.rococodish.front_ui.FollowActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LoginDialog"
+            android:name="com.rococodish.front_ui.LoginDialog"
             android:theme="@style/Theme.MaterialComponents.Light.Dialog" />
         <activity
-            android:name=".SubActivity"
+            android:name="com.rococodish.front_ui.SubActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -116,7 +116,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DishView"
+            android:name="com.rococodish.front_ui.DishView"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
     </application>
