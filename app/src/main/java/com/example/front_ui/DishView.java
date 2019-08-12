@@ -10,11 +10,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -334,11 +334,20 @@ public class DishView extends AppCompatActivity {
                                 GlideApp.with(getApplicationContext())
                                         .load(userImage)
                                         .into(profileImage);
+                                //프로필 이름 업로드
+                                String userName = (String) documentSnapshot.get("nickname");
+                                profileName.setText(userName);
+                            }
+                            else{
+                                GlideApp.with(getApplicationContext())
+                                        .load(R.drawable.basic_user_image)
+                                        .into(profileImage);
+                                //프로필 이름 업로드
+                                String userName = (String) documentSnapshot.get("nickname");
+                                profileName.setText(userName);
                             }
 
-                            //프로필 이름 업로드
-                            String userName = (String) documentSnapshot.get("nickname");
-                            profileName.setText(userName);
+
                         }
                     }
                 });
@@ -391,16 +400,13 @@ public class DishView extends AppCompatActivity {
                     public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
                         assert documentSnapshot != null;
 
-                        String profileImagePath = documentSnapshot.get("profileImage").toString();
+                        @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
 
-                        if(profileImagePath != null){
-                            GlideApp.with(getApplicationContext())
-                                    .load(documentSnapshot.get("profileImage").toString())
-                                    .into(commentProfile);
-
-                            //내 프로필 사진 가져온 후 댓글 달기 가능
-                            uploadComment(commentRef, profileImagePath);
-                        }
+                        GlideApp.with(getApplicationContext())
+                                .load(imagePath != null? imagePath : R.drawable.basic_user_image)
+                                .into(commentProfile);
+                        //내 프로필 사진 가져온 후 댓글 달기 가능
+                        uploadComment(commentRef, imagePath);
 
 
                     }
@@ -465,7 +471,7 @@ public class DishView extends AppCompatActivity {
     }
 
     public void uploadComment(final CollectionReference commentRef,
-                              final String profilePath){
+                              @Nullable final String profilePath){
 
         //댓글 업로드하기
         commentSend.setOnClickListener(new View.OnClickListener() {

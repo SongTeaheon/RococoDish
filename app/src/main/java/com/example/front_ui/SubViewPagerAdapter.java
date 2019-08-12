@@ -2,8 +2,8 @@ package com.example.front_ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -126,8 +126,8 @@ public class SubViewPagerAdapter extends PagerAdapter {
                         }
 
                         list.clear();
-
-                       if(!queryDocumentSnapshots.isEmpty()){
+                        assert queryDocumentSnapshots != null;
+                        if(!queryDocumentSnapshots.isEmpty()){
 
                             for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
 

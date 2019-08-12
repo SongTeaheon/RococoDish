@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -24,9 +24,9 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/basic_user_image" />
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
-    <android.support.constraint.Guideline
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,11 +37,10 @@
         android:id="@+id/profileUpper_textview_followRecy"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/bmjua"
         android:textSize="16dp"
         android:textColor="@color/GGrey"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:text="90tan4310"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,11 +55,10 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:textSize="12dp"
-        android:fontFamily="@font/bmjua"
         android:text="홍대 미학과 18학번"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/profileUpper_textview_followRecy"
         app:layout_constraintTop_toBottomOf="@+id/profileUpper_textview_followRecy"
         tools:ignore="SpUsage" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

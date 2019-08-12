@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/MainColor"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
 
@@ -20,10 +20,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_gravity="center_horizontal"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:backgroundTint="@color/MainColor"
             app:cardCornerRadius="75dp"
             app:cardElevation="10dp"
             android:layout_marginBottom="16dp">
@@ -34,7 +35,7 @@
                 android:layout_height="75dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_store" />
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 
@@ -47,7 +48,7 @@
         android:padding="8dp"
         android:text="로코코디쉬"
         android:textAlignment="center"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/MainColor"
         android:textSize="25dp"
         android:lineSpacingMultiplier="1.5"
         app:layout_constraintEnd_toEndOf="parent"
@@ -72,4 +73,4 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="SpUsage" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,9 +3,9 @@ package com.example.front_ui;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +19,6 @@ import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
 import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.GlidePlaceHolder;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -81,10 +80,6 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
     @Override
     public void onBindViewHolder(@NonNull final CocomentViewHolder cocomentViewHolder, final int i) {
         //프로필 이미지 부분
-//        GlideApp.with(context)
-//                .load(cocomentList.get(i).getImgPath())
-//                .into(cocomentViewHolder.userImage);
-        //todo : 이전과 다르게 실시간 이미지 반영
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(cocomentList.get(i).getCommentWriterId())
@@ -96,8 +91,10 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
                         }
                         if(documentSnapshot.exists()){
 
+                            @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
+
                             GlideApp.with(context.getApplicationContext())
-                                    .load(documentSnapshot.get("profileImage"))
+                                    .load(imagePath != null? imagePath : R.drawable.basic_user_image)
                                     .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
                                     .into(cocomentViewHolder.userImage);
                         }

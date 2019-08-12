@@ -2,7 +2,7 @@ package com.example.front_ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,10 +24,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -65,7 +63,8 @@ public class CocomentActivity extends AppCompatActivity {
         final PostingInfo postingInfo = (PostingInfo) intent.getSerializableExtra("postingInfo");
 
         //대댓글에 내 이미지 등록
-        final Map<Integer, String> myImagePath = new HashMap<>();//초기화
+        @Nullable final Map<Integer, String> myImagePath = new HashMap<>();//초기화
+        @Nullable final Map<Integer, String> myName = new HashMap<>();//초기화
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
@@ -77,10 +76,14 @@ public class CocomentActivity extends AppCompatActivity {
                         }
                         if(documentSnapshot.exists()){
 
-                            myImagePath.put(0, documentSnapshot.getData().get("profileImage").toString());
+                            @Nullable String imagePath = (String) documentSnapshot.getData().get("profileImage");
+                            @Nullable String name = (String) documentSnapshot.getData().get("nickname");
+
+                            myImagePath.put(0, imagePath);
+                            myName.put(0, name);
 
                             GlideApp.with(getApplicationContext())
-                                    .load(myImagePath.get(0))
+                                    .load(myImagePath.get(0) != null? imagePath : R.drawable.basic_user_image)
                                     .into(cocomentImage);
 
                         }
@@ -114,7 +117,8 @@ public class CocomentActivity extends AppCompatActivity {
                                 .document(cocomentUuid)
                                 .set(new CommentInfo(cocomentUuid,
                                         FirebaseAuth.getInstance().getUid(),
-                                        FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),
+                                        //todo: 이거 이름부분 바꿔야함.
+                                        myName.get(0),
                                         myImagePath.get(0),
                                         cocoment,
                                         System.currentTimeMillis(),
@@ -152,9 +156,11 @@ public class CocomentActivity extends AppCompatActivity {
                         }
                         if(documentSnapshot.exists()){
 
+                            @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
+
                             //댓글 이미지
                             GlideApp.with(getApplicationContext())
-                                    .load(documentSnapshot.get("profileImage"))
+                                    .load(imagePath != null? imagePath : R.drawable.basic_user_image)
                                     .into(commentImage);
 
                             //댓글 이름
@@ -162,8 +168,6 @@ public class CocomentActivity extends AppCompatActivity {
                         }
                     }
                 });
-        //댓글 이름
-//        commentName.setText(commentInfo.getWriterName());
         //댓글 내용
         commentDesc.setText(commentInfo.getComment());
         //댓글의 시간

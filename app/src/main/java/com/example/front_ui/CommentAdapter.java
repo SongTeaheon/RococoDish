@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +16,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.front_ui.DataModel.CommentInfo;
 import com.example.front_ui.DataModel.PostingInfo;
-import com.example.front_ui.Utils.DeleteUtils;
 import com.example.front_ui.Utils.GlideApp;
 import com.example.front_ui.Utils.GlidePlaceHolder;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -101,13 +97,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                         }
                         if(documentSnapshot.exists()){
                             //프로필 이미지 부분
-                            GlideApp.with(context.getApplicationContext())
-                                    .load(documentSnapshot.get("profileImage"))
-                                    .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
-                                    .into(commentViewHolder.image);
+                            @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
 
                             //프로필 이름 부분
                             commentViewHolder.userName.setText(documentSnapshot.get("nickname").toString());
+
+                            GlideApp.with(context.getApplicationContext())
+                                    .load(imagePath != null? imagePath : R.drawable.basic_user_image)
+                                    .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
+                                    .into(commentViewHolder.image);
+
                         }
                     }
                 });

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -21,7 +21,7 @@
         <!--toolbar-->
     </RelativeLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -36,7 +36,7 @@
             android:descendantFocusability="blocksDescendants"
             android:orientation="vertical">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -45,11 +45,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/relLayout0">
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/profile_cardview_dishView"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_margin="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     app:cardCornerRadius="22dp"
                     app:cardElevation="10dp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -61,14 +63,14 @@
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
                         android:src="@drawable/basic_user_image" />
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/cardview_image"
                     android:layout_width="match_parent"
                     android:layout_height="285dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="10dp"
@@ -87,21 +89,48 @@
                         app:layout_constraintHorizontal_bias="0.494"
                         app:layout_constraintStart_toStartOf="parent"
                         app:srcCompat="@android:drawable/screen_background_light_transparent" />
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
                 <TextView
                     android:id="@+id/profileNam_dishView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
                     android:fontFamily="@font/bmjua"
-                    android:text=""
+                    android:text="유저이름"
                     android:textColor="@color/Grey"
                     android:textSize="16dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/profile_cardview_dishView"
                     app:layout_constraintStart_toEndOf="@+id/profile_cardview_dishView"
                     app:layout_constraintTop_toTopOf="@+id/profile_cardview_dishView"
-                    app:layout_constraintVertical_bias="0.488"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:id="@+id/textViewDay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/bmjua"
+                    android:text="게시한 날짜/시간"
+                    android:textColor="@color/Grey"
+                    android:textSize="10dp"
+                    app:layout_constraintStart_toEndOf="@+id/profile_cardview_dishView"
+                    app:layout_constraintTop_toBottomOf="@+id/profileNam_dishView"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:id="@+id/tv_mainText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/bmjua"
+                    android:text="가게이름"
+                    android:textColor="@color/Grey"
+                    android:textSize="26dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardview_image"
                     tools:ignore="SpUsage" />
 
                 <TextView
@@ -109,28 +138,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
                     android:fontFamily="@font/bmjua"
                     android:text="여기로부터"
                     android:textColor="@color/MainColor"
                     android:textSize="16dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cardview_image"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_mainText"
                     tools:ignore="SpUsage" />
 
-                <!--여기가 거리 넣어야 하는 곳-->
                 <TextView
                     android:id="@+id/textDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="4dp"
                     android:fontFamily="@font/bmjua"
                     android:text="0.0km!"
                     android:textColor="@color/MainColor"
                     android:textSize="16dp"
                     app:layout_constraintStart_toEndOf="@+id/textView2"
-                    app:layout_constraintTop_toBottomOf="@+id/cardview_image"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_mainText"
                     tools:ignore="SpUsage" />
                 <!--여기까지-->
 
@@ -162,7 +191,7 @@
                     android:id="@+id/imageView2"
                     android:layout_width="28dp"
                     android:layout_height="27dp"
-                    android:layout_marginTop="26dp"
+                    android:layout_marginTop="18dp"
                     android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toStartOf="@+id/textViewScore"
                     app:layout_constraintTop_toBottomOf="@+id/cardview_image"
@@ -172,7 +201,7 @@
                     android:id="@+id/textViewScore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="26dp"
+                    android:layout_marginTop="18dp"
                     android:layout_marginEnd="16dp"
                     android:fontFamily="@font/bmjua"
                     android:text="0.0"
@@ -192,7 +221,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewDay">
+                    app:layout_constraintTop_toBottomOf="@+id/textViewAddress">
 
                     <!--둘 중에 필요한 부분을 남겨주세요~!!-->
                     <TextView
@@ -244,32 +273,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="5dp"
-                    android:textColor="@color/MainColor"
-                    android:fontFamily="@font/bmjua"
-                    android:textSize="10dp"
                     android:text="좋아하는 사람 0명"
+                    android:textColor="@color/MainColor"
+                    android:textSize="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/like_imageview_dishView"
                     app:layout_constraintTop_toBottomOf="@+id/like_imageview_dishView"
                     tools:ignore="SpUsage" />
 
-                <TextView
-                    android:id="@+id/textViewDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:text="게시한 날짜/시간"
-                    android:fontFamily="@font/bmjua"
-                    android:textSize="10dp"
-                    android:textColor="@color/Grey"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewAddress"
-                    tools:ignore="SpUsage" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/comment_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -297,7 +311,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="65dp"/>
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -306,14 +320,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardCornerRadius="25dp"
+            app:cardCornerRadius="15dp"
             app:cardElevation="5dp">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -360,8 +374,8 @@
                     app:srcCompat="@drawable/ic_send"
                     android:focusable="true" />
 
-            </android.support.constraint.ConstraintLayout>
-        </android.support.v7.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

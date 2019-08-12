@@ -2,15 +2,14 @@ package com.example.front_ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.front_ui.DataModel.FollowInfo;
 import com.example.front_ui.Utils.GlideApp;
@@ -70,12 +69,12 @@ public class FollowRecyAdapter extends RecyclerView.Adapter<FollowRecyAdapter.Fo
     @Override
     public void onBindViewHolder(@NonNull FollowViewHolder followViewHolder, final int i) {
 
-        if(list.get(i).getProfileImagePath() != null){
-            GlideApp.with(context)
-                    .load(list.get(i).getProfileImagePath())
-                    .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
-                    .into(followViewHolder.profileImage);
-        }
+        @Nullable String imagePath = list.get(i).getProfileImagePath();
+        GlideApp.with(context)
+                .load(imagePath != null? imagePath : R.drawable.basic_user_image)
+                .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
+                .into(followViewHolder.profileImage);
+
 
         followViewHolder.profileUpper.setText(list.get(i).getProfileTextUpper());
 
@@ -127,7 +126,7 @@ public class FollowRecyAdapter extends RecyclerView.Adapter<FollowRecyAdapter.Fo
                                                 }
                                                 if(documentSnapshot.exists() && documentSnapshot != null){
 
-                                                    String imagePath = documentSnapshot.get("profileImage").toString();
+                                                    @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
                                                     String name = documentSnapshot.get("nickname").toString();
                                                     String email = documentSnapshot.get("eMail").toString();
                                                     String uid = documentSnapshot.getId();

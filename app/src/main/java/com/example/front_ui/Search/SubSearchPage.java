@@ -4,15 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.core.widget.NestedScrollView;
+import androidx.cursoradapter.widget.SimpleCursorAdapter;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -260,7 +259,7 @@ public class SubSearchPage extends AppCompatActivity {
         recyclerViewStore.setHasFixedSize(true);
         FragmantStoreRecyclerViewAdapter storeRecyclerViewAdapter = new FragmantStoreRecyclerViewAdapter(this, shortList);
         storeRecyclerViewAdapter.notifyDataSetChanged();
-        recyclerViewStore.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerViewStore.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerViewStore.setAdapter(storeRecyclerViewAdapter);
     }
     void initRecyclerViewPeople(){
@@ -276,7 +275,7 @@ public class SubSearchPage extends AppCompatActivity {
         recyclerViewPeople.setHasFixedSize(true);
         FragmantPeopleRecyclerViewAdapter peopleRecyclerViewAdapter = new FragmantPeopleRecyclerViewAdapter(this, shortList, currentLatitude, currentLongtitude);
         peopleRecyclerViewAdapter.notifyDataSetChanged();
-        recyclerViewPeople.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerViewPeople.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerViewPeople.setAdapter(peopleRecyclerViewAdapter);
     }
     void initRecyclerViewRegion(){
@@ -290,7 +289,7 @@ public class SubSearchPage extends AppCompatActivity {
         recyclerViewRegion.setHasFixedSize(true);
         FragmantRegionRecyclerViewAdapter regionRecyclerViewAdapter = new FragmantRegionRecyclerViewAdapter(this, shortList);
         regionRecyclerViewAdapter.notifyDataSetChanged();
-        recyclerViewRegion.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerViewRegion.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerViewRegion.setAdapter(regionRecyclerViewAdapter);
     }
     void initRecyclerViewTag(){
@@ -304,7 +303,7 @@ public class SubSearchPage extends AppCompatActivity {
         recyclerViewTag.setHasFixedSize(true);
         FragmantTagRecyclerViewAdapter tagRecyclerViewAdapter = new FragmantTagRecyclerViewAdapter(this, shortList);
         tagRecyclerViewAdapter.notifyDataSetChanged();
-        recyclerViewTag.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerViewTag.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerViewTag.setAdapter(tagRecyclerViewAdapter);
     }
 

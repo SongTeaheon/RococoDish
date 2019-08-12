@@ -2,10 +2,10 @@ package com.example.front_ui.Search;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -251,7 +251,7 @@ public class MainSearchActivity extends AppCompatActivity {
 
         mRecyclerView.setHasFixedSize(true);
         MainSearchRecyclerViewAdapter adapter = new MainSearchRecyclerViewAdapter(total_list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         mRecyclerView.setAdapter(adapter);
         //recyclerview 세팅 필요!!!
 

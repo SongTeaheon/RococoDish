@@ -1,19 +1,16 @@
 package com.example.front_ui.PostingProcess;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.front_ui.DataModel.KakaoStoreInfo;

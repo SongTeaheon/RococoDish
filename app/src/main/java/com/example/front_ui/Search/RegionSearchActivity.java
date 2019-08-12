@@ -2,11 +2,10 @@ package com.example.front_ui.Search;
 
 import android.content.Intent;
 import android.location.Location;
-import android.support.v4.app.INotificationSideChannel;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -65,7 +64,7 @@ public class RegionSearchActivity extends AppCompatActivity {
         //가게 안에 목록 가져오는 리사이클러뷰
         recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter, loadingFrame);
         recyclerViewDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
-        main_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        main_recyclerview.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         main_recyclerview.setAdapter(recyclerViewDataAdapter);
     }
 
