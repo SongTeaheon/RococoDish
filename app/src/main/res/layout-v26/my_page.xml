@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,19 +7,19 @@
     android:background="@color/colorWhite">
 
     <!--<ImageButton-->
-        <!--android:id="@+id/imageView"-->
-        <!--android:layout_width="150dp"-->
-        <!--android:layout_height="150dp"-->
-        <!--android:layout_marginStart="32dp"-->
-        <!--android:layout_marginTop="32dp"-->
-        <!--android:src="@drawable/basic_user_image"-->
-        <!--android:contentDescription="@string/todo"-->
-        <!--android:padding="0sp"-->
-        <!--android:visibility="invisible"-->
-        <!--android:scaleType="centerCrop"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--app:srcCompat="@android:drawable/screen_background_light_transparent" />-->
+    <!--android:id="@+id/imageView"-->
+    <!--android:layout_width="150dp"-->
+    <!--android:layout_height="150dp"-->
+    <!--android:layout_marginStart="32dp"-->
+    <!--android:layout_marginTop="32dp"-->
+    <!--android:src="@drawable/basic_user_image"-->
+    <!--android:contentDescription="@string/todo"-->
+    <!--android:padding="0sp"-->
+    <!--android:visibility="invisible"-->
+    <!--android:scaleType="centerCrop"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toTopOf="parent"-->
+    <!--app:srcCompat="@android:drawable/screen_background_light_transparent" />-->
     <RelativeLayout
         android:id="@+id/relLayout3"
         android:layout_width="match_parent"
@@ -38,7 +37,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         app:cardCornerRadius="50dp"
         app:cardElevation="5dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,13 +53,15 @@
         android:id="@+id/textView"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:fontFamily="@font/bmjua"
         android:gravity="center"
         android:text="게시물"
         android:textColor="@color/Grey"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="@+id/cardview_circleImage"
+        app:layout_constraintEnd_toStartOf="@+id/follow_textview"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/cardview_circleImage"
         app:layout_constraintTop_toTopOf="@+id/cardview_circleImage"
         app:layout_constraintVertical_bias="0.759"
@@ -70,7 +71,6 @@
         android:id="@+id/textNumOfData"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/bmjua"
         android:gravity="center"
@@ -78,28 +78,30 @@
         android:textColor="@color/Grey"
         android:textSize="18dp"
         app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintStart_toEndOf="@+id/cardview_circleImage"
+        app:layout_constraintEnd_toEndOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/textView"
         tools:ignore="SpUsage" />
 
     <TextView
         android:id="@+id/follow_textview"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:fontFamily="@font/bmjua"
         android:gravity="center"
         android:text="팔로워"
         android:textColor="@color/Grey"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintEnd_toStartOf="@+id/following_textview"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/textView"
         tools:ignore="SpUsage" />
 
     <TextView
         android:id="@+id/textNumOfFollower"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/bmjua"
         android:gravity="center"
@@ -107,37 +109,40 @@
         android:textColor="@color/Grey"
         android:textSize="18dp"
         app:layout_constraintBottom_toTopOf="@+id/follow_textview"
-        app:layout_constraintStart_toEndOf="@+id/textNumOfData"
+        app:layout_constraintEnd_toEndOf="@+id/follow_textview"
+        app:layout_constraintStart_toStartOf="@+id/follow_textview"
         tools:ignore="SpUsage" />
 
     <TextView
         android:id="@+id/following_textview"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="8dp"
         android:fontFamily="@font/bmjua"
         android:gravity="center"
         android:text="팔로잉"
         android:textColor="@color/Grey"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="@+id/follow_textview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/follow_textview"
+        app:layout_constraintTop_toTopOf="@+id/follow_textview"
         tools:ignore="SpUsage" />
 
     <TextView
         android:id="@+id/textNumOfFollowing"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/bmjua"
         android:gravity="center"
         android:text="0"
         android:textColor="@color/Grey"
         android:textSize="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/follow_textview"
-        app:layout_constraintStart_toEndOf="@+id/textNumOfFollower"
+        app:layout_constraintBottom_toTopOf="@+id/following_textview"
+        app:layout_constraintEnd_toEndOf="@+id/following_textview"
+        app:layout_constraintStart_toStartOf="@+id/following_textview"
         tools:ignore="SpUsage" />
 
     <GridView

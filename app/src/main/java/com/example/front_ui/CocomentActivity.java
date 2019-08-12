@@ -64,6 +64,7 @@ public class CocomentActivity extends AppCompatActivity {
 
         //대댓글에 내 이미지 등록
         @Nullable final Map<Integer, String> myImagePath = new HashMap<>();//초기화
+        @Nullable final Map<Integer, String> myName = new HashMap<>();//초기화
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
@@ -76,8 +77,10 @@ public class CocomentActivity extends AppCompatActivity {
                         if(documentSnapshot.exists()){
 
                             @Nullable String imagePath = (String) documentSnapshot.getData().get("profileImage");
+                            @Nullable String name = (String) documentSnapshot.getData().get("nickname");
 
                             myImagePath.put(0, imagePath);
+                            myName.put(0, name);
 
                             GlideApp.with(getApplicationContext())
                                     .load(myImagePath.get(0) != null? imagePath : R.drawable.basic_user_image)
@@ -114,7 +117,8 @@ public class CocomentActivity extends AppCompatActivity {
                                 .document(cocomentUuid)
                                 .set(new CommentInfo(cocomentUuid,
                                         FirebaseAuth.getInstance().getUid(),
-                                        FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),
+                                        //todo: 이거 이름부분 바꿔야함.
+                                        myName.get(0),
                                         myImagePath.get(0),
                                         cocoment,
                                         System.currentTimeMillis(),
