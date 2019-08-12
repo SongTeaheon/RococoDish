@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
 
 
     <RelativeLayout
@@ -106,14 +107,28 @@
                     <!--app:layout_constraintTop_toBottomOf="@+id/cardview_image"-->
                     <!--app:srcCompat="@mipmap/ic_pin" />-->
 
+                <TextView
+                    android:id="@+id/tv_mainText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/bmjua"
+                    android:text="가게이름"
+                    android:textColor="@color/Grey"
+                    android:textSize="26dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardview_image"
+                    tools:ignore="SpUsage" />
+
                 <ImageView
                     android:id="@+id/imageView"
                     android:layout_width="12dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="7dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cardview_image"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_mainText"
                     app:srcCompat="@drawable/ic_pin" />
 
                 <TextView
@@ -121,26 +136,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/bmjua"
                     android:text="서울 동대문구 서울시립대로 29길 3"
                     android:textColor="@color/Grey"
                     android:textSize="16dp"
                     app:layout_constraintStart_toEndOf="@+id/imageView"
-                    app:layout_constraintTop_toBottomOf="@+id/cardview_image"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_mainText"
                     tools:ignore="SpUsage" />
 
                 <RatingBar
                     android:id="@+id/ratingBar"
                     style="?android:attr/ratingBarStyleIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
                     android:isIndicator="false"
                     android:numStars="5"
                     android:rating="0"
                     android:stepSize="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textViewAddress" />
 
@@ -149,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/bmjua"
                     android:text="0.0"
                     android:textColor="@color/MainColor"
@@ -162,15 +177,15 @@
                     android:id="@+id/hashTag"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:textColor="@color/GGrey"
-                    android:textSize="16dp"
-                    app:layout_constraintTop_toBottomOf="@+id/ratingBar"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:hint="내용을 작성해주세요"
+                    android:textColor="@color/GGrey"
+                    android:textSize="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ratingBar"
                     tools:ignore="SpUsage" />
 
 
@@ -178,7 +193,7 @@
                     android:id="@+id/imageViewComplete"
                     android:layout_width="60dp"
                     android:layout_height="30dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/hashTag"

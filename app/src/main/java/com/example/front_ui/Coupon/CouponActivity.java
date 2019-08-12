@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.front_ui.R;
+import com.example.front_ui.RecyclerDecoration;
 
 public class CouponActivity extends AppCompatActivity {
 
@@ -17,6 +18,7 @@ public class CouponActivity extends AppCompatActivity {
     ImageView iv_numOfCouponUsage;
     RecyclerView recy_coupons;
     CouponAdapter couponAdapter;
+    RecyclerDecoration spaceDecoration = new RecyclerDecoration(4);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class CouponActivity extends AppCompatActivity {
         recy_coupons.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recy_coupons.setHasFixedSize(true);
         recy_coupons.setAdapter(couponAdapter);
+        recy_coupons.addItemDecoration(spaceDecoration);
 
         //쿠폰 개수 넣기
         tv_numOfCoupon.setText(couponAdapter.getItemCount() + " 장");

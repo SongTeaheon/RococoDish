@@ -96,6 +96,8 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
 
+
+
        //우측 하단 포스팅 추가 버튼
         addPosting = findViewById(R.id.addPosting_fab_subActivity);
         addPosting.setOnClickListener(new View.OnClickListener() {
@@ -222,7 +224,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 //         myPostViewPager.setOffscreenPageLimit(3);
         myPostViewPager.setClipChildren(false);
         myPostViewPager.setClipToPadding(false);
-        myPostViewPager.setCurrentItem(1);
+        myPostViewPager.setCurrentItem(3);
         myPostViewPager.setPadding(40, 0, 40, 0);
 //         myPostViewPager.setPageMargin(-300);
         myPostViewPager.setOverScrollMode(2);

@@ -29,10 +29,10 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        app:backgroundTint="@color/MainColor"
+        app:backgroundTint="@color/colorWhite"
         app:maxImageSize="40dp"
         android:src="@drawable/ic_add_black_24dp"
-        android:tint="@color/colorWhite"
+        android:tint="@color/MainColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -138,12 +138,12 @@
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:layout_marginTop="16dp"
+                            android:layout_marginTop="4dp"
                             android:layout_marginBottom="4dp"
                             android:fontFamily="@font/bmjua"
                             android:gravity="center"
                             android:text="오늘은 뭘 먹지?"
-                            android:textColor="@color/GGrey"
+                            android:textColor="@color/Grey"
                             android:textSize="24dp"
                             tools:ignore="SpUsage" />
 

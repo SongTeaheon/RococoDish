@@ -15,7 +15,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textSize="25sp"
+        android:textSize="25dp"
         android:textAlignment="center"
-        android:fontFamily="@font/bmjua"/>
+        android:fontFamily="@font/bmjua"
+        tools:ignore="SpUsage" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,13 +8,15 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardUseCompatPadding="false"
-        card_view:cardElevation="0dp">
+        card_view:cardUseCompatPadding="true"
+        card_view:contentPaddingBottom="4dp"
+        card_view:cardElevation="1dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorWhite">
+            android:background="@color/colorWhite"
+            android:paddingBottom="8dp">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -35,11 +37,11 @@
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="12dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="@dimen/spacing_small"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
                         android:fontFamily="@font/bmjua"
                         android:text="가게이름"
-                        android:textColor="@color/GGrey"
+                        android:textColor="@color/Grey"
                         android:textSize="20dp"
                         tools:ignore="SpUsage" />
 
@@ -50,7 +52,7 @@
                         android:layout_below="@+id/storeName"
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="10dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="12dp"
                         android:layout_toEndOf="@+id/storeName"
                         android:fontFamily="@font/bmjua"
                         android:text="0km"
@@ -77,7 +79,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_alignParentTop="true"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_toStartOf="@+id/storeStar"
                         card_view:srcCompat="@drawable/ic_star" />
@@ -88,26 +90,26 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="12dp"
                         android:fontFamily="@font/bmjua"
                         android:text="0.0"
-                        android:textColor="@color/MainColor"
+                        android:textColor="@color/Grey"
                         android:textSize="20dp"
                         tools:ignore="SpUsage" />
 
-                    <ImageView
-                        android:id="@+id/imageViewLine"
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_below="@+id/storeDistance"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="12dp"
-                        android:background="@color/GGrey"
-                        tools:ignore="ContentDescription" />
+                    <!--<ImageView-->
+                        <!--android:id="@+id/imageViewLine"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="2dp"-->
+                        <!--android:layout_below="@+id/storeDistance"-->
+                        <!--android:layout_alignParentStart="true"-->
+                        <!--android:layout_alignParentEnd="true"-->
+                        <!--android:layout_marginStart="12dp"-->
+                        <!--android:layout_marginTop="4dp"-->
+                        <!--android:layout_marginEnd="12dp"-->
+                        <!--android:background="@color/Grey"-->
+                        <!--tools:ignore="ContentDescription" />-->
 
                 </RelativeLayout>
 
@@ -122,9 +124,9 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="-12dp"
+                android:layout_marginTop="-16dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="8dp" />
 
         </RelativeLayout>
 
