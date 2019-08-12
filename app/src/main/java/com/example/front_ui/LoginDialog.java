@@ -378,7 +378,7 @@ public class LoginDialog extends AppCompatActivity {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
                                                         Log.d(TAG, "새로운 유저 등록에 실패했습니다.");
-                                                        progressDialog.dismiss();
+                                                         progressDialog.dismiss();
                                                     }
                                                 });
                                             }
