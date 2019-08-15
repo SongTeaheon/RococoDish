@@ -137,7 +137,7 @@ public class FeedActivity extends AppCompatActivity implements SwipeRefreshLayou
             Collections.sort(mListPosting, new Comparator<PostingInfo>() {
                 @Override
                 public int compare(PostingInfo o1, PostingInfo o2) {
-                    return o2.getDate().compareTo(o1.getDate());
+                    return ((Date)o2.getPostingTime()).compareTo((Date)o1.getPostingTime());//FIXME:아무리 생각해도 이거 Timestamp인데 자꾸 Date라고 해서 Date처럼 함.
                 }
             });
 

@@ -87,9 +87,9 @@ public class PostingInfo implements Serializable {
         return postingTime;
     }
 
-    public Date getDate(){
-       return (Date)postingTime;
-    }
+//    public Date getDate(){
+//       return (Date)postingTime;
+//    }
 
     public void setPostingTime(Object postingTime) {
         this.postingTime = postingTime;
