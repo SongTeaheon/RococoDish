@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.NonNull;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.rococodish.front_ui.Coupon.CouponActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.core.app.ActivityCompat;
@@ -53,6 +55,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -501,6 +506,42 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                     });
 
         }
+
+        //todo : 키자마자 푸쉬알림 토큰을 디비에 업데이트(기기마다 다르므로 매번 해줘야함.)
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if(!task.isSuccessful()){
+                            Log.d(TAG, "get InstanceId을 가져오는데 실패 : "+ task.getException());
+                        }
+
+                        String token = task.getResult().getToken();
+                        Log.d(TAG, "토큰 획득 성공 : "+ token);
+
+                        Map tokenMap = new HashMap();
+                        tokenMap.put("fcmToken", token);
+                        if(FirebaseAuth.getInstance().getUid() == null){
+                            return;
+                        }
+                        FirebaseFirestore.getInstance()
+                                .collection("사용자")
+                                .document(FirebaseAuth.getInstance().getUid())
+                                .update(tokenMap)
+                                .addOnSuccessListener(new OnSuccessListener() {
+                                    @Override
+                                    public void onSuccess(Object o) {
+                                        Log.d(TAG, "FCM 토큰을 가져오는데 성공했습니다.");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "FCM 토큰을 가져오는데 실패했습니다.");
+                                    }
+                                });
+                    }
+                });
     }
 
     @Override

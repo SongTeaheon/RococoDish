@@ -1,9 +1,12 @@
 package com.rococodish.front_ui.Coupon;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,7 +74,12 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
         imageViewUse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "추후예정", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "추후예정", Toast.LENGTH_SHORT).show();
+
+                CouponDialog couponDialog = new CouponDialog(context);
+                couponDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                couponDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                couponDialog.show();
             }
         });
     }

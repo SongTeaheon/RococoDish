@@ -8,4 +8,7 @@
     <!--페이스북 문자열들-->
     <string name="facebook_app_id">485865235320156</string>
     <string name="fb_login_protocol_scheme">fb485865235320156</string>
+
+    <!--fcm 푸쉬알림 관련-->
+    <string name="default_notification_channel_id">rococoDish_fcm_default_channelId</string>
 </resources>
