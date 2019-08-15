@@ -81,11 +81,11 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
-                        android:layout_toStartOf="@+id/storeStar"
+                        android:layout_toStartOf="@+id/textView_whatdoyoueat"
                         card_view:srcCompat="@drawable/ic_star" />
 
                     <TextView
-                        android:id="@+id/storeStar"
+                        android:id="@+id/textView_whatdoyoueat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"

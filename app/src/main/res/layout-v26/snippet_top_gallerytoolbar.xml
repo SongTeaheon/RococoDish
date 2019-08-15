@@ -35,7 +35,7 @@
                 </Spinner>
 
                 <TextView
-                    android:id="@+id/tv_mainText"
+                    android:id="@+id/tv_storeName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

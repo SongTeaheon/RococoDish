@@ -1,4 +1,4 @@
-package com.example.front_ui;
+package com.rococodish.front_ui;
 
 import android.graphics.Rect;
 import android.view.View;

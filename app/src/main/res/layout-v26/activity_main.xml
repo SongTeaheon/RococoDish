@@ -9,124 +9,124 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:background="@color/colorWhite">
 
-    <!--나중에 가장 윗부분을 마이페이지로 가도록 구성해야함-->
+    <!--&lt;!&ndash;나중에 가장 윗부분을 마이페이지로 가도록 구성해야함&ndash;&gt;-->
 
-    <RelativeLayout
-        android:id="@+id/relLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <include layout="@layout/activity_sub_toolbar" />
-        <!--toolbar-->
-    </RelativeLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addPosting_fab_subActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        app:backgroundTint="@color/colorWhite"
-        app:maxImageSize="40dp"
-        android:src="@drawable/ic_add_black_24dp"
-        android:tint="@color/MainColor"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!--<Button-->
-        <!--android:id="@+id/search_btn"-->
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/relLayout1"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_marginStart="16dp"-->
-        <!--android:layout_marginEnd="16dp"-->
-        <!--android:layout_marginTop="16dp"-->
-        <!--android:hint="지역 검색"-->
-        <!--android:textColorHint="@color/colorAccent"-->
-        <!--android:paddingLeft="10dp"-->
-        <!--android:paddingTop="5dp"-->
-        <!--android:paddingRight="10dp"-->
-        <!--android:paddingBottom="5dp"-->
-        <!--android:textSize="18dp"-->
-        <!--android:textStyle="bold"-->
         <!--app:layout_constraintEnd_toEndOf="parent"-->
         <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--tools:ignore="SpUsage"-->
-        <!--android:inputType="text" />-->
+        <!--app:layout_constraintTop_toTopOf="parent">-->
 
-    <!--<ListView-->
-        <!--android:id="@+id/listView"-->
-        <!--android:layout_width="match_parent"-->
+        <!--<include layout="@layout/activity_sub_toolbar" />-->
+        <!--&lt;!&ndash;toolbar&ndash;&gt;-->
+    <!--</RelativeLayout>-->
+
+    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
+        <!--android:id="@+id/addPosting_fab_subActivity"-->
+        <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_marginStart="16dp"-->
-        <!--android:layout_marginEnd="16dp"-->
-        <!--android:divider="#999999"-->
-        <!--android:dividerHeight="0.5dp"-->
-        <!--android:visibility="invisible"-->
-        <!--app:layout_constraintBottom_toBottomOf="@+id/swipe_layout"-->
-        <!--app:layout_constraintEnd_toEndOf="@+id/search_btn"-->
-        <!--app:layout_constraintStart_toStartOf="@+id/search_btn"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/search_btn"-->
-        <!--app:layout_constraintVertical_bias="0.0" />-->
-    <!--로딩창-->
-    <FrameLayout
-        android:id="@+id/loadingFrame"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:elevation="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relLayout1">
+        <!--android:layout_marginEnd="24dp"-->
+        <!--android:layout_marginBottom="24dp"-->
+        <!--app:backgroundTint="@color/colorWhite"-->
+        <!--app:maxImageSize="40dp"-->
+        <!--android:src="@drawable/ic_add_black_24dp"-->
+        <!--android:tint="@color/MainColor"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent" />-->
 
-        <include layout="@layout/dialog_loading" />
-    </FrameLayout>
+    <!--&lt;!&ndash;<Button&ndash;&gt;-->
+        <!--&lt;!&ndash;android:id="@+id/search_btn"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_alignParentStart="true"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_alignParentEnd="true"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginStart="16dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginEnd="16dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginTop="16dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:hint="지역 검색"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:textColorHint="@color/colorAccent"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:paddingLeft="10dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:paddingTop="5dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:paddingRight="10dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:paddingBottom="5dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:textSize="18dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:textStyle="bold"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_constraintTop_toTopOf="parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;tools:ignore="SpUsage"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:inputType="text" />&ndash;&gt;-->
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relLayout1">
+    <!--&lt;!&ndash;<ListView&ndash;&gt;-->
+        <!--&lt;!&ndash;android:id="@+id/listView"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_centerHorizontal="true"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_gravity="center"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginStart="16dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginEnd="16dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:divider="#999999"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:dividerHeight="0.5dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:visibility="invisible"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_constraintBottom_toBottomOf="@+id/swipe_layout"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_constraintEnd_toEndOf="@+id/search_btn"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_constraintStart_toStartOf="@+id/search_btn"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_constraintTop_toBottomOf="@+id/search_btn"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_constraintVertical_bias="0.0" />&ndash;&gt;-->
+    <!--&lt;!&ndash;로딩창&ndash;&gt;-->
+    <!--<FrameLayout-->
+        <!--android:id="@+id/loadingFrame"-->
+        <!--android:visibility="gone"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:elevation="20dp"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/relLayout1">-->
+
+        <!--<include layout="@layout/dialog_loading" />-->
+    <!--</FrameLayout>-->
+
+    <!--<androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+        <!--android:id="@+id/swipe_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/relLayout1">-->
 
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/nestedScrollView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+        <!--<androidx.core.widget.NestedScrollView-->
+            <!--android:id="@+id/nestedScrollView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent">-->
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorWhite">
+            <!--<androidx.constraintlayout.widget.ConstraintLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:background="@color/colorWhite">-->
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/mrecyclerView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorWhite"
-                    android:nestedScrollingEnabled="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                <!--<androidx.recyclerview.widget.RecyclerView-->
+                    <!--android:id="@+id/mrecyclerView"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="@color/colorWhite"-->
+                    <!--android:nestedScrollingEnabled="true"-->
+                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--app:layout_constraintEnd_toEndOf="parent"-->
+                    <!--app:layout_constraintStart_toStartOf="parent" />-->
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+        <!--</androidx.core.widget.NestedScrollView>-->
+    <!--</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
 </androidx.constraintlayout.widget.ConstraintLayout>

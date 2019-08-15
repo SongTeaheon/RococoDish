@@ -559,10 +559,10 @@ class MyAdapter extends BaseAdapter {
                                 notifyDataSetChanged();
                             }
                             notifyDataSetChanged();
-                            Log.d(TAG, "getPostingData size : " + queryDocumentSnapshots.getDocuments().size());
+                            Log.d(TAG, "getFollowerData size : " + queryDocumentSnapshots.getDocuments().size());
                             mCallback.setNumberOfData(queryDocumentSnapshots.getDocuments().size());
                         } else {
-                            Log.d(TAG, "getPostingData size : " + queryDocumentSnapshots.getDocuments().size());
+                            Log.d(TAG, "getFollowerData size : " + queryDocumentSnapshots.getDocuments().size());
                             mCallback.setNumberOfData(queryDocumentSnapshots.getDocuments().size());
                         }
                         progressDialog.dismiss();

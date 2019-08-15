@@ -57,7 +57,7 @@ public class DoubleRecyAdapter1 extends RecyclerView.Adapter<DoubleRecyAdapter1.
             storeName = itemView.findViewById(R.id.storeName);
             storeDistance = itemView.findViewById(R.id.storeDistance);
 //            storeAddress = itemView.findViewById(R.id.storeAddress);
-            storeStar = itemView.findViewById(R.id.storeStar);
+            storeStar = itemView.findViewById(R.id.textView_whatdoyoueat);
             childRecy = itemView.findViewById(R.id.recyclerView);
         }
     }

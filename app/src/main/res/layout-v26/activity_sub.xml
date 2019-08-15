@@ -132,7 +132,7 @@
                         android:background="@color/colorWhite">
 
                         <TextView
-                            android:id="@+id/storeStar"
+                            android:id="@+id/textView_whatdoyoueat"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"

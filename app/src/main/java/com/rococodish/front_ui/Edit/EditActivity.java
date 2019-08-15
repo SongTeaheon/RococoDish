@@ -80,7 +80,7 @@ public class EditActivity extends AppCompatActivity {
         oldTagMap = postingInfo.getTag();
 
         //데이터 세팅.
-        imageView = findViewById(R.id.imageView1);
+        imageView = findViewById(R.id.iv_main);
         StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
         GlideApp.with(this).load(fileReference).into(imageView);
 
@@ -99,10 +99,10 @@ public class EditActivity extends AppCompatActivity {
         //2. 알골리아 업데이트.
 
 
-        addressText = findViewById(R.id.textViewAddress);
+        addressText = findViewById(R.id.tv_address);
         addressText.setText(postingInfo.getAddress());
 
-        storeName = findViewById(R.id.tv_mainText);
+        storeName = findViewById(R.id.tv_storeName);
         storeName.setText(storeInfo.getName());
 
         starText = findViewById(R.id.starText);

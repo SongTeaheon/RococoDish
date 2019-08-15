@@ -53,7 +53,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
-                            android:id="@+id/profile_imageview_dishView"
+                            android:id="@+id/iv_profile"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
@@ -74,7 +74,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/profile_cardview_dishView">
 
                         <ImageView
-                            android:id="@+id/imageView1"
+                            android:id="@+id/iv_main"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@drawable/rounding_corner"
@@ -87,7 +87,7 @@
                     </androidx.cardview.widget.CardView>
 
                     <TextView
-                        android:id="@+id/profileNam_dishView"
+                        android:id="@+id/tv_profileName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -101,7 +101,7 @@
                         tools:ignore="SpUsage" />
 
                     <TextView
-                        android:id="@+id/textViewDay"
+                        android:id="@+id/tv_Day"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -111,11 +111,11 @@
                         android:textColor="@color/Grey"
                         android:textSize="10dp"
                         app:layout_constraintStart_toEndOf="@+id/profile_cardview_dishView"
-                        app:layout_constraintTop_toBottomOf="@+id/profileNam_dishView"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_profileName"
                         tools:ignore="SpUsage" />
 
                     <TextView
-                        android:id="@+id/tv_mainText"
+                        android:id="@+id/tv_storeName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -134,17 +134,16 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp"
                         android:fontFamily="@font/bmjua"
                         android:text="여기로부터"
                         android:textColor="@color/MainColor"
                         android:textSize="16dp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_mainText"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_storeName"
                         tools:ignore="SpUsage" />
 
                     <TextView
-                        android:id="@+id/textDistance"
+                        android:id="@+id/tv_Distance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -154,7 +153,7 @@
                         android:textColor="@color/MainColor"
                         android:textSize="16dp"
                         app:layout_constraintStart_toEndOf="@+id/textView2"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_mainText"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_storeName"
                         tools:ignore="SpUsage" />
                     <!--여기까지-->
 
@@ -169,7 +168,7 @@
                         app:srcCompat="@drawable/ic_pin" />
 
                     <TextView
-                        android:id="@+id/textViewAddress"
+                        android:id="@+id/tv_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
@@ -188,12 +187,12 @@
                         android:layout_height="27dp"
                         android:layout_marginTop="18dp"
                         android:layout_marginEnd="8dp"
-                        app:layout_constraintEnd_toStartOf="@+id/textViewScore"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_Score"
                         app:layout_constraintTop_toBottomOf="@+id/cardview_image"
                         app:srcCompat="@drawable/ic_star" />
 
                     <TextView
-                        android:id="@+id/textViewScore"
+                        android:id="@+id/tv_Score"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
@@ -216,11 +215,11 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textViewAddress">
+                        app:layout_constraintTop_toBottomOf="@+id/tv_address">
 
                         <!--둘 중에 필요한 부분을 남겨주세요~!!-->
                         <TextView
-                            android:id="@+id/hashTag_textview_dishView"
+                            android:id="@+id/tv_description"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -243,7 +242,7 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:id="@+id/like_imageview_dishView"
+                        android:id="@+id/iv_Like"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="16dp"
@@ -253,17 +252,17 @@
                         app:srcCompat="@drawable/ic_grey_heart" />
 
                     <ImageView
-                        android:id="@+id/share_imageview"
+                        android:id="@+id/iv_share"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="16dp"
-                        app:layout_constraintStart_toEndOf="@+id/like_imageview_dishView"
+                        app:layout_constraintStart_toEndOf="@+id/iv_Like"
                         app:layout_constraintTop_toBottomOf="@+id/description_box_dishView"
                         app:srcCompat="@drawable/ic_share" />
 
                     <TextView
-                        android:id="@+id/likeNum_textview_dishView"
+                        android:id="@+id/tv_likeNum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -271,12 +270,12 @@
                         android:text="좋아하는 사람 0명"
                         android:textColor="@color/MainColor"
                         android:textSize="10dp"
-                        app:layout_constraintStart_toStartOf="@+id/like_imageview_dishView"
-                        app:layout_constraintTop_toBottomOf="@+id/like_imageview_dishView"
+                        app:layout_constraintStart_toStartOf="@+id/iv_Like"
+                        app:layout_constraintTop_toBottomOf="@+id/iv_Like"
                         tools:ignore="SpUsage" />
 
                     <TextView
-                        android:id="@+id/to_comment"
+                        android:id="@+id/tv_comment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -286,8 +285,8 @@
                         android:textSize="8dp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/likeNum_textview_dishView"
-                        app:layout_constraintTop_toBottomOf="@+id/likeNum_textview_dishView"
+                        app:layout_constraintStart_toStartOf="@+id/tv_likeNum"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_likeNum"
                         tools:ignore="SpUsage" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

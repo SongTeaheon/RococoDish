@@ -43,7 +43,7 @@ public class RegionSearchActivity extends AppCompatActivity {
 
         search_btn = findViewById(R.id.search_btn);
         search_btn.setVisibility(View.GONE);
-        searchWord = findViewById(R.id.tv_mainText);
+        searchWord = findViewById(R.id.tv_storeName);
         searchWord.setText(placeName);
         searchWord.setVisibility(View.VISIBLE);
         logo = findViewById(R.id.iv_mainText);

@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.front_ui.RecyclerDecoration;
+import com.rococodish.front_ui.RecyclerDecoration;
 import com.rococodish.front_ui.R;
 
 public class CouponActivity extends AppCompatActivity {
@@ -17,7 +17,7 @@ public class CouponActivity extends AppCompatActivity {
     TextView tv_numOfCoupon;
     ImageView iv_numOfCouponUsage;
     RecyclerView recy_coupons;
-    com.example.front_ui.Coupon.CouponAdapter couponAdapter;
+    com.rococodish.front_ui.Coupon.CouponAdapter couponAdapter;
     RecyclerDecoration spaceDecoration = new RecyclerDecoration(4);
 
     @Override
@@ -29,7 +29,7 @@ public class CouponActivity extends AppCompatActivity {
         tv_numOfCoupon = findViewById(R.id.numOfCoupon);
         iv_numOfCouponUsage = findViewById(R.id.numOfCouponUsage);
         recy_coupons = findViewById(R.id.recyclerView2);
-        couponAdapter = new com.example.front_ui.Coupon.CouponAdapter(this);
+        couponAdapter = new CouponAdapter(this);
 
 
         //리사이클러뷰 세팅

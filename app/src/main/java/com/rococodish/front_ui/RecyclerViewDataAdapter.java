@@ -151,7 +151,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
             this.touchStore = (CardView) view.findViewById(R.id.touchStore);
             this.recycler_view_list = (RecyclerView) view.findViewById(R.id.recyclerView);
             storeName = (TextView) view.findViewById(R.id.storeName);
-            storeStar = (TextView) view.findViewById(R.id.storeStar);
+            storeStar = (TextView) view.findViewById(R.id.textView_whatdoyoueat);
             storeDistance = view.findViewById(R.id.storeDistance);
 //            storeAddress = view.findViewById(R.id.storeAddress);
 

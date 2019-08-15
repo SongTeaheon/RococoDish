@@ -57,7 +57,7 @@ public class StorePageActivity extends AppCompatActivity {
         docId = intent.getStringExtra("documentId");
 
         Log.d(TAG, "name, star, id :" + storeName + storeStar + docId);
-        tv_storeName = findViewById(R.id.tv_mainText);
+        tv_storeName = findViewById(R.id.tv_storeName);
 
         tv_storeName.setText(storeName);
 

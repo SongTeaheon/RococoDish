@@ -82,6 +82,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     TextView tv_setting;
     TextView tv_qna;
     TextView tv_couponBox;
+    ImageView iv_feed;
     RecyclerViewDataAdapter recyclerViewDataAdapter;
     FloatingActionButton addPosting;
     FrameLayout loadingFrame;
@@ -97,7 +98,16 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         setContentView(R.layout.activity_sub);
 
 
-
+        //피드로 넘어가는 버튼
+        iv_feed = findViewById(R.id.iv_mainText);
+        iv_feed.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "아저씨 왜 안눌리세요");
+                Intent intent = new Intent(SubActivity.this, FeedActivity.class);
+                startActivity(intent);
+            }
+        });
        //우측 하단 포스팅 추가 버튼
         addPosting = findViewById(R.id.addPosting_fab_subActivity);
         addPosting.setOnClickListener(new View.OnClickListener() {
@@ -258,7 +268,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 
 
         //별점평균 누를시 생기는 이벤트
-        starText = findViewById(R.id.storeStar);
+        starText = findViewById(R.id.textView_whatdoyoueat);
         starText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -309,7 +319,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                                     StoreInfo storeInfo = document.toObject(StoreInfo.class);
                                     Double distance = Double.parseDouble(disNumStr);
                                     Intent intent = new Intent(SubActivity.this, DishView.class);
-                                    DataPassUtils.makeIntentForData(intent, postingInfo, storeInfo, distance);
+                                    DataPassUtils.makeIntentForData(intent, postingInfo, storeInfo);
                                     SubActivity.this.startActivity(intent);
                                 }
                             });

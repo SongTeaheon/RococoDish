@@ -112,10 +112,10 @@ public class LastShareFragment extends Fragment {
 //        text_description = view.findViewById(R.id.search_btn);
         mRatingBar = view.findViewById(R.id.ratingBar);
         mStarText = view.findViewById(R.id.starText);
-        storeName = view.findViewById(R.id.tv_mainText);
+        storeName = view.findViewById(R.id.tv_storeName);
         storeName.setText(kakaoStoreInfo.place_name);
 //        String text = text_description.getText().toString();
-        postingImage = view.findViewById(R.id.imageView1);
+        postingImage = view.findViewById(R.id.iv_main);
         storage = FirebaseStorage.getInstance();
         db = FirebaseFirestore.getInstance();
 

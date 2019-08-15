@@ -1,6 +1,9 @@
 package com.rococodish.front_ui.DataModel;
 
+import com.google.firebase.Timestamp;
+
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Map;
 
 public class PostingInfo implements Serializable {
@@ -82,6 +85,10 @@ public class PostingInfo implements Serializable {
 
     public Object getPostingTime() {
         return postingTime;
+    }
+
+    public Date getDate(){
+       return (Date)postingTime;
     }
 
     public void setPostingTime(Object postingTime) {

@@ -96,7 +96,7 @@ public class SubViewPagerAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DishView.class);
-                DataPassUtils.makeIntentForData(intent, selectedPostingInfo, storeInfoMap.get(0), 0.0);
+                DataPassUtils.makeIntentForData(intent, selectedPostingInfo, storeInfoMap.get(0));
                 context.startActivity(intent);
             }
         });

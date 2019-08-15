@@ -1,4 +1,4 @@
-package com.example.front_ui.DataModel
+package com.rococodish.front_ui.DataModel
 
 class CouponInfo(val title : String,
                  val toDate : String,

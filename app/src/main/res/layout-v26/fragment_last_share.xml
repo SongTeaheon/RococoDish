@@ -67,7 +67,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:id="@+id/imageView1"
+                        android:id="@+id/iv_main"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/rounding_corner"
@@ -108,7 +108,7 @@
                     <!--app:srcCompat="@mipmap/ic_pin" />-->
 
                 <TextView
-                    android:id="@+id/tv_mainText"
+                    android:id="@+id/tv_storeName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -128,11 +128,11 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="7dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_mainText"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_storeName"
                     app:srcCompat="@drawable/ic_pin" />
 
                 <TextView
-                    android:id="@+id/textViewAddress"
+                    android:id="@+id/tv_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
@@ -142,7 +142,7 @@
                     android:textColor="@color/Grey"
                     android:textSize="16dp"
                     app:layout_constraintStart_toEndOf="@+id/imageView"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_mainText"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_storeName"
                     tools:ignore="SpUsage" />
 
                 <RatingBar
@@ -157,7 +157,7 @@
                     android:rating="0"
                     android:stepSize="1"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewAddress" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_address" />
 
                 <TextView
                     android:id="@+id/starText"
@@ -170,7 +170,7 @@
                     android:textColor="@color/MainColor"
                     android:textSize="28dp"
                     app:layout_constraintStart_toEndOf="@+id/ratingBar"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewAddress"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_address"
                     tools:ignore="SpUsage" />
 
                 <EditText

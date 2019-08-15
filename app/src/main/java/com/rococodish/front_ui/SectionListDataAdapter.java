@@ -105,7 +105,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
                 //데이터 전달
                 Intent intent = new Intent(mContext, DishView.class);
-                DataPassUtils.makeIntentForData(intent, singleItem, storeInfo, distance);
+                DataPassUtils.makeIntentForData(intent, singleItem, storeInfo);
 
                 mContext.startActivity(intent);
             }

@@ -67,6 +67,8 @@ import java.util.UUID;
 public class DishView extends AppCompatActivity {
 
     private final String TAG = "TAGDishView";
+    private final int KAKAOMAP_REQUEST = 1008;
+
     TextView deleteButton;
     TextView editButton;
     TextView tvAddress;
@@ -116,7 +118,7 @@ public class DishView extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        imageView = (ImageView) findViewById(R.id.imageView1);
+        imageView = (ImageView) findViewById(R.id.iv_main);
 
         /*
          * backbutton 뒤로가기 버튼
@@ -151,7 +153,7 @@ public class DishView extends AppCompatActivity {
                 " star :  " + storeInfo.getAver_star());
 
         //게시물 시간 설정
-        postTime = findViewById(R.id.textViewDay);
+        postTime = findViewById(R.id.tv_Day);
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         postTime.setText(transFormat.format(postingInfo.getPostingTime()));
 
@@ -165,15 +167,14 @@ public class DishView extends AppCompatActivity {
         /**
          지도로 넘어가기
          **/
-        tvAddress = findViewById(R.id.textViewAddress);
+        tvAddress = findViewById(R.id.tv_address);
         tvAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "show the kakao map");
-                String storeName = storeInfo.getName();
                 String url;
                 if(storeInfo.getKakaoId() != null){
-                    url = "daummaps://place?id=" + storeInfo.getKakaoId();
+                    url = "daummaps://place?id=" + storeInfo.getKakaoId() ;
                 }else{
                     url = "daummaps://look?p="+storeInfo.getLat() +","+storeInfo.getLon();
                 }
@@ -185,7 +186,7 @@ public class DishView extends AppCompatActivity {
          해쉬태그
          **/
 
-        hashTagText = findViewById(R.id.hashTag_textview_dishView);
+        hashTagText = findViewById(R.id.tv_description);
         if(postingInfo.hashTags != null){
             hashTagText.setText(postingInfo.hashTags);
             textHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.MainColor), new HashTagHelper.OnHashTagClickListener() {
@@ -200,13 +201,25 @@ public class DishView extends AppCompatActivity {
             hashTagText.setText("게시물 내용이 없습니다.");
         }
 
-        tvStoreName = findViewById(R.id.tv_mainText);
+        tvStoreName = findViewById(R.id.tv_storeName);
         tvStoreName.setText(storeInfo.getName());
-        tvAddress.setText(storeInfo.getAddress());
-        tvScore = findViewById(R.id.textViewScore);
-        tvScore.setText(Double.toString(postingInfo.getAver_star()));
-        tvDistance = findViewById(R.id.textDistance);
+        tvStoreName.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, StorePageActivity.class);
 
+                Log.d(TAG, "name : " + storeInfo.getName() + " averStar : " + storeInfo.getAver_star() + " docId : " + storeInfo.getStoreId());
+                intent.putExtra("storeName", storeInfo.getName());
+                intent.putExtra("averStar", storeInfo.getAver_star());
+                intent.putExtra("documentId", storeInfo.getStoreId());
+
+                mContext.startActivity(intent);
+            }
+        });
+        tvAddress.setText(storeInfo.getAddress());
+        tvScore = findViewById(R.id.tv_Score);
+        tvScore.setText(Double.toString(postingInfo.getAver_star()));
+        tvDistance = findViewById(R.id.tv_Distance);
         tvDistance.setText(SubActivity.getDistanceStr(storeInfo.getLat(), storeInfo.getLon())+"!");
 
 
@@ -270,7 +283,7 @@ public class DishView extends AppCompatActivity {
         /*
         * 공유기능
         * */
-        shareButton = findViewById(R.id.share_imageview);
+        shareButton = findViewById(R.id.iv_share);
         shareButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -314,8 +327,8 @@ public class DishView extends AppCompatActivity {
         /**
          * 포스팅 작성자의 프로필 정보(이미지, 이름) 불러오기 + 우측 상단에 띄우기
          * **/
-        profileImage = findViewById(R.id.profile_imageview_dishView);
-        profileName = findViewById(R.id.profileNam_dishView);
+        profileImage = findViewById(R.id.iv_profile);
+        profileName = findViewById(R.id.tv_profileName);
 
         FirebaseFirestore.getInstance()
                 .collection("사용자")
@@ -356,6 +369,15 @@ public class DishView extends AppCompatActivity {
          * 작성자의 프로필을 클릭시 작성자 마이페이지 이동 + postingInfo 다음 액티비티로 넘겨주기
          * **/
 
+        profileName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DishView.this, MyPage.class);
+                intent.putExtra("userUUID", postingInfo.writerId);
+                Log.d(TAG, "들어왔씁니다.");
+                startActivity(intent);
+            }
+        });
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -507,7 +529,7 @@ public class DishView extends AppCompatActivity {
     public void likeFunc(){
 
         //포스팅 -> 컬렉션 좋아요 -> 좋아요 한 사람의 uid 도큐먼트 -> isLiked를 bool값으로 true일 경우 빨간색 아예 도큐먼트가 없을 경우는 빈 하트
-        final ImageView likeImage = findViewById(R.id.like_imageview_dishView);
+        final ImageView likeImage = findViewById(R.id.iv_Like);
 
         //좋아요 했으면 빨간색으로 설정
         final DocumentReference likeRef = FirebaseFirestore.getInstance().collection("포스팅")
@@ -553,7 +575,7 @@ public class DishView extends AppCompatActivity {
             }
         });
         //좋아요 개수 보여주기
-        final TextView likesText = findViewById(R.id.likeNum_textview_dishView);
+        final TextView likesText = findViewById(R.id.tv_likeNum);
 
         FirebaseFirestore.getInstance()
                 .collection("포스팅")
