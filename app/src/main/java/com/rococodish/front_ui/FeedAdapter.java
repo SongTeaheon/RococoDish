@@ -36,6 +36,7 @@ import com.rococodish.front_ui.DataModel.PostingInfo;
 import com.rococodish.front_ui.DataModel.StoreInfo;
 import com.rococodish.front_ui.Utils.DataPassUtils;
 import com.rococodish.front_ui.Utils.GlideApp;
+import com.rococodish.front_ui.Utils.KakaoUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -209,6 +210,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ItemRowHolder>
                                     mContext.startActivity(intent);
                                 }
                             });
+                            itemRowHolder.tvAddress.setOnClickListener(new View.OnClickListener(){
+                                @Override
+                                public void onClick(View view) {
+                                    KakaoUtils.OpenKakaoMap(mContext, storeInfo.getKakaoId(), storeInfo.getGeoPoint().getLatitude(), storeInfo.getGeoPoint().getLongitude());
+                                }
+                            });
+                            loadingFrame.setVisibility(View.GONE);
+
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }

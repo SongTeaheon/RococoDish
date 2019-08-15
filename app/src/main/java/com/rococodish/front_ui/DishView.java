@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.rococodish.front_ui.DataModel.CommentInfo;
 import com.rococodish.front_ui.DataModel.PostingInfo;
 import com.rococodish.front_ui.DataModel.SerializableStoreInfo;
+import com.rococodish.front_ui.DataModel.StoreInfo;
 import com.rococodish.front_ui.Edit.EditActivity;
 import com.rococodish.front_ui.FCM.ApiClient;
 import com.rococodish.front_ui.FCM.ApiInterface;
@@ -57,6 +58,7 @@ import com.kakao.message.template.SocialObject;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 import com.kakao.util.helper.log.Logger;
+import com.rococodish.front_ui.Utils.KakaoUtils;
 import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
 import java.text.SimpleDateFormat;
@@ -180,15 +182,7 @@ public class DishView extends AppCompatActivity {
         tvAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "show the kakao map");
-                String url;
-                if(storeInfo.getKakaoId() != null){
-                    url = "daummaps://place?id=" + storeInfo.getKakaoId() ;
-                }else{
-                    url = "daummaps://look?p="+storeInfo.getLat() +","+storeInfo.getLon();
-                }
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
+                KakaoUtils.OpenKakaoMap(mContext, storeInfo.getKakaoId(), storeInfo.getLat(), storeInfo.getLon());
             }
         });
         /**

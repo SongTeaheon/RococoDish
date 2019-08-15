@@ -35,6 +35,8 @@ public class FeedActivity extends AppCompatActivity implements SwipeRefreshLayou
     RecyclerView recy_feed;
     FeedAdapter recyFeedAdapter;
     FrameLayout loadingFrame;
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
 
     private ArrayList<PostingInfo> mListPosting;
     ArrayList<String> mListFollower;
@@ -54,6 +56,9 @@ public class FeedActivity extends AppCompatActivity implements SwipeRefreshLayou
         //todo :로딩창
         loadingFrame = findViewById(R.id.loadingFrame);
         loadingFrame.setVisibility(View.VISIBLE);
+
+        mSwipeRefreshLayout = findViewById(R.id.swipe_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         getFollowerData();
     }
 
@@ -136,7 +141,6 @@ public class FeedActivity extends AppCompatActivity implements SwipeRefreshLayou
                 }
             });
 
-            loadingFrame.setVisibility(View.GONE);
 
 
             //FIXME: 지금은 한 번에 다 올리지만, 나중에는 10개만 올리고, Adapter.OnLoadMoreItemsListener를 이용해서 따로 올리는걸 해야할 듯
@@ -159,10 +163,16 @@ public class FeedActivity extends AppCompatActivity implements SwipeRefreshLayou
         recyFeedAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
         recy_feed.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recy_feed.setAdapter(recyFeedAdapter);
+        //swipe끝내기
     }
 
     @Override
     public void onRefresh() {
+        loadingFrame.setVisibility(View.VISIBLE);
+        mListPosting.clear();
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }//이건 그냥 꺼줘도 됨.
         getFollowerData();
     }
 }
