@@ -23,10 +23,17 @@ import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.rococodish.front_ui.DataModel.SerializableStoreInfo;
 import com.rococodish.front_ui.DataModel.StoreInfo;
 import com.rococodish.front_ui.DataModel.UserInfo;
 import com.rococodish.front_ui.Edit.BroadcastUtils;
+import com.rococodish.front_ui.FCM.ApiClient;
+import com.rococodish.front_ui.FCM.ApiInterface;
+import com.rococodish.front_ui.FCM.DataModel;
+import com.rococodish.front_ui.FCM.NotificationModel;
+import com.rococodish.front_ui.FCM.RootModel;
 import com.rococodish.front_ui.Utils.AlgoliaUtils;
 import com.rococodish.front_ui.Utils.GlideApp;
 import com.rococodish.front_ui.Utils.GlidePlaceHolder;
@@ -49,11 +56,17 @@ import com.yalantis.ucrop.UCrop;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import me.rishabhkhanna.customtogglebutton.CustomToggleButton;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 //interface for datapass to MyPage
 public class MyPage extends AppCompatActivity implements MyPageDataPass {
@@ -152,6 +165,10 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
 
         //유저 이름 띄우기
         userName = findViewById(R.id.userName);
+
+        final Map<Integer, String> nameMap = new HashMap<>();
+        final @Nullable Map<Integer, String> tokenMap = new HashMap<>();
+
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(userUUID)
@@ -163,7 +180,12 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                         }
                         if(documentSnapshot.exists() && documentSnapshot != null){
 
-                            userName.setText(documentSnapshot.get("nickname").toString());
+                            String name = documentSnapshot.get("nickname").toString();
+                            @Nullable String token = (String) documentSnapshot.get("fcmToken");
+
+                            userName.setText(name);
+                            nameMap.put(0, name);
+                            tokenMap.put(0, token);
                         }
                     }
                 });
@@ -206,53 +228,82 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             //팔로우 버튼 누르기 이벤트 처리
             follow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    DocumentReference followingRef = FirebaseFirestore.getInstance()
+                public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
+                    final DocumentReference followingRef = FirebaseFirestore.getInstance()
                             .collection("사용자")
                             .document(FirebaseAuth.getInstance().getUid())
                             .collection("팔로잉")
                             .document(userUUID);
-                    DocumentReference followerRef = FirebaseFirestore.getInstance()
+                    final DocumentReference followerRef = FirebaseFirestore.getInstance()
                             .collection("사용자")
                             .document(userUUID)
                             .collection("팔로워")
                             .document(FirebaseAuth.getInstance().getUid());
 
-                    if(isChecked){
-                        Log.d(TAG, "팔로우 버튼 클릭됨");
+                    follow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(isChecked){
+                                Log.d(TAG, "팔로우 버튼 클릭됨");
 
-                        //본인 사용자 -> 서브컬렉션 팔로잉 -> 도큐먼트 필드 추가
-                        followingRef.set(ImmutableMap.of("팔로우 여부", true)).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "팔로우 버튼을 눌러서 '사용자->팔로잉' 디비에 업로드 완료");
-                            }
-                        });
+                                //todo : 팔로우했을 경우 fcm알림
+                                final String toToken = tokenMap.get(0);
+                                final String toName = nameMap.get(0);
 
-                        //상대방 사용자 -> 서브컬렉션 팔로워 -> 도큐먼트 필드 추가
-                        followerRef.set(ImmutableMap.of("팔로워 여부", true)).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "팔로우 버튼을 눌러서 '사용자->팔로워' 디비에 업로드 완료");
+                                FirebaseFirestore.getInstance()
+                                        .collection("사용자")
+                                        .document(FirebaseAuth.getInstance().getUid())
+                                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                                                if(e != null){
+                                                    Log.d(TAG, e.getMessage());
+                                                }
+                                                if(documentSnapshot.exists() && documentSnapshot != null){
+                                                    String name = documentSnapshot.get("nickname").toString();
+                                                    sendFCMFollow(toToken, toName, name);
+
+                                                }
+                                            }
+                                        });
+
+
+                                Toast.makeText(MyPage.this, toName + "님을 팔로우했습니다.", Toast.LENGTH_SHORT).show();
+
+                                //본인 사용자 -> 서브컬렉션 팔로잉 -> 도큐먼트 필드 추가
+                                followingRef.set(ImmutableMap.of("팔로우 여부", true)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "팔로우 버튼을 눌러서 '사용자->팔로잉' 디비에 업로드 완료");
+                                    }
+                                });
+
+                                //상대방 사용자 -> 서브컬렉션 팔로워 -> 도큐먼트 필드 추가
+                                followerRef.set(ImmutableMap.of("팔로워 여부", true)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "팔로우 버튼을 눌러서 '사용자->팔로워' 디비에 업로드 완료");
+                                    }
+                                });
                             }
-                        });
-                    }
-                    else{
-                        Log.d(TAG, "팔로우 버튼 클릭 해제됨");
-                        //삭제 부분
-                        followingRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "팔로우 버튼 해제해서 '사용자->팔로잉' 디비 삭제 완료");
+                            else{
+                                Log.d(TAG, "팔로우 버튼 클릭 해제됨");
+                                //삭제 부분
+                                followingRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "팔로우 버튼 해제해서 '사용자->팔로잉' 디비 삭제 완료");
+                                    }
+                                });
+                                followerRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "팔로우 버튼 해제해서 '사용자->팔로워' 디비 삭제 완료");
+                                    }
+                                });
                             }
-                        });
-                        followerRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "팔로우 버튼 해제해서 '사용자->팔로워' 디비 삭제 완료");
-                            }
-                        });
-                    }
+                        }
+                    });
                 }
             });
         }
@@ -335,6 +386,35 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             });
         }
 
+    }
+
+    private void sendFCMFollow(String token, String toName, String fromName){
+        if(token == null){
+            Log.d(TAG, "팔로우 상대방의 FCM토큰이 없습니다.");
+        }
+
+        RootModel rootModel = new RootModel(token, new NotificationModel("팔로우", fromName+"님이 "+ toName+"님을 팔로우하셨습니다."), new DataModel("", ""));
+
+        Log.d(TAG, "팔로우 토큰 => "+ rootModel.getToken());
+
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+
+        final retrofit2.Call<ResponseBody> responseBodyCall = apiService.sendNotification(rootModel);
+
+        responseBodyCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.d(TAG, "팔로우 : 성공적으로 Retrofit으로 메시지를 전달했습니다.");
+
+                //todo : 보내는 게 성공하면 상대방 알림 보관함에 데이터베이스에 저장만 하면됨.
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "팔로우 : Retrofit으로 메시지를 전달에 실패했습니다. : "+ t.getMessage());
+
+            }
+        });
     }
 
     private void setNumOfFollow(String userUUID, final TextView textView, String collectionName){

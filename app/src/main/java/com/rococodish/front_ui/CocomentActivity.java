@@ -15,6 +15,11 @@ import android.widget.Toast;
 
 import com.rococodish.front_ui.DataModel.CommentInfo;
 import com.rococodish.front_ui.DataModel.PostingInfo;
+import com.rococodish.front_ui.FCM.ApiClient;
+import com.rococodish.front_ui.FCM.ApiInterface;
+import com.rococodish.front_ui.FCM.DataModel;
+import com.rococodish.front_ui.FCM.NotificationModel;
+import com.rococodish.front_ui.FCM.RootModel;
 import com.rococodish.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +36,11 @@ import java.util.Objects;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CocomentActivity extends AppCompatActivity {
 
@@ -94,7 +104,8 @@ public class CocomentActivity extends AppCompatActivity {
         if(commentInfo != null && postingInfo != null){
 
             //댓글 정보를 가져와서 붙임 & 대댓글에 내 프로필 이미지 적용
-            setComment(commentInfo);
+            @Nullable final Map<Integer, String> tokenMap = new HashMap<>();//초기화
+            setComment(commentInfo, tokenMap);
 
             //대댓글 작성을 눌렀을 경우 실행
             final String cocomentUuid = UUID.randomUUID().toString();
@@ -117,7 +128,6 @@ public class CocomentActivity extends AppCompatActivity {
                                 .document(cocomentUuid)
                                 .set(new CommentInfo(cocomentUuid,
                                         FirebaseAuth.getInstance().getUid(),
-                                        //todo: 이거 이름부분 바꿔야함.
                                         myName.get(0),
                                         myImagePath.get(0),
                                         cocoment,
@@ -126,6 +136,15 @@ public class CocomentActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Log.d(TAG, "대댓글이 업로드되었습니다.");
+
+                                //todo : fcm으로도 보냄
+                                if(commentInfo.getCommentWriterId().equals(FirebaseAuth.getInstance().getUid())){
+                                    return;
+                                }
+                                else{
+                                    //나 자신한테는 fcm안보냄.
+                                    sendFCMCocoment(tokenMap.get(0), cocoment);
+                                }
                             }
                         });
                         //키보드 자동으로 닫아줌.
@@ -143,7 +162,7 @@ public class CocomentActivity extends AppCompatActivity {
         }
     }
 
-    public void setComment(CommentInfo commentInfo){
+    public void setComment(CommentInfo commentInfo, final Map map){
         //댓글 이미지
         FirebaseFirestore.getInstance()
                 .collection("사용자")
@@ -157,6 +176,8 @@ public class CocomentActivity extends AppCompatActivity {
                         if(documentSnapshot.exists()){
 
                             @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
+                            @Nullable String token = (String) documentSnapshot.get("fcmToken");
+                            map.put(0, token);
 
                             //댓글 이미지
                             GlideApp.with(getApplicationContext())
@@ -177,5 +198,34 @@ public class CocomentActivity extends AppCompatActivity {
         String result = dateFormat.format(date);
         commentTime.setText(result);
 
+    }
+
+    public void sendFCMCocoment(String toToken, String desc){
+        if(toToken == null){
+            Log.d(TAG, "대댓글 상대방의 FCM토큰이 없습니다.");
+        }
+
+        RootModel rootModel = new RootModel(toToken, new NotificationModel("댓글에 대댓글이 달렸습니다.", "대댓글 : "+desc), new DataModel("", ""));
+
+        Log.d(TAG, "대댓글 토큰 => "+ rootModel.getToken());
+
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+
+        final retrofit2.Call<ResponseBody> responseBodyCall = apiService.sendNotification(rootModel);
+
+        responseBodyCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.d(TAG, "대댓글 : 성공적으로 Retrofit으로 메시지를 전달했습니다.");
+
+                //todo : 보내는 게 성공하면 상대방 알림 보관함에 데이터베이스에 저장만 하면됨.
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "대댓글 : Retrofit으로 메시지를 전달에 실패했습니다. : "+ t.getMessage());
+
+            }
+        });
     }
 }
