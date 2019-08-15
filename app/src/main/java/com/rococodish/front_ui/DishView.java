@@ -27,6 +27,11 @@ import com.rococodish.front_ui.DataModel.CommentInfo;
 import com.rococodish.front_ui.DataModel.PostingInfo;
 import com.rococodish.front_ui.DataModel.SerializableStoreInfo;
 import com.rococodish.front_ui.Edit.EditActivity;
+import com.rococodish.front_ui.FCM.ApiClient;
+import com.rococodish.front_ui.FCM.ApiInterface;
+import com.rococodish.front_ui.FCM.DataModel;
+import com.rococodish.front_ui.FCM.NotificationModel;
+import com.rococodish.front_ui.FCM.RootModel;
 import com.rococodish.front_ui.Utils.DeleteUtils;
 import com.rococodish.front_ui.Utils.GlideApp;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -62,6 +67,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class DishView extends AppCompatActivity {
@@ -520,9 +529,61 @@ public class DishView extends AppCompatActivity {
                     final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
+                    //todo : 댓글을 디비로 보낼 때 푸쉬알림도 같이 전송
+                    FirebaseFirestore.getInstance()
+                            .collection("사용자")
+                            .document(postingInfo.writerId)
+                            .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                @Override
+                                public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                                    if(e != null){
+                                        Log.d(TAG, e.getMessage());
+                                    }
+
+                                    if(documentSnapshot.exists() && documentSnapshot != null){
+
+                                        @Nullable String token = (String) documentSnapshot.getData().get("fcmToken");
+
+                                        if(postingInfo.writerId.equals(FirebaseAuth.getInstance().getUid())){
+                                            return;
+                                        }
+                                        else{
+                                            //자신한테는 fcm안보냄.
+                                            sendFcmComment(token, commentDesc);
+                                        }
+                                    }
+                                }
+                            });
+
                 }
             }
         });
+    }
+
+    public void sendFcmComment(String token,
+                               String desc){
+        RootModel rootModel = new RootModel(token, new NotificationModel("게시물에 댓글이 달렸습니다.", "댓글 : "+ desc), new DataModel(postingInfo.postingId, postingInfo.storeId));
+
+        Log.d(TAG, rootModel.getToken());
+
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+
+        final retrofit2.Call<ResponseBody> responseBodyCall = apiService.sendNotification(rootModel);
+
+        responseBodyCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.d(TAG, "댓글 : 성공적으로 Retrofit으로 메시지를 전달했습니다.");
+
+                //todo : 보내는 게 성공하면 상대방 알림 보관함에 데이터베이스에 저장만 하면됨.
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "댓글 : Retrofit으로 메시지를 전달에 실패했습니다. : "+ t.getMessage());
+            }
+        });
+
     }
 
     //좋아요 기능(클릭 함수까지 포함.)
