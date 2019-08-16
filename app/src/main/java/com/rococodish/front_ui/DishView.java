@@ -18,6 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -662,18 +665,12 @@ public class DishView extends AppCompatActivity {
 
         //todo : 속도 때문에 좋아요 애니메이션은 일단 보류
         //좋아요 애니메이션 적용부분
-//        ScaleAnimation scaleAnimation = new ScaleAnimation(
-//                0.7f, 1.0f, 0.7f, 1.0f, Animation.RELATIVE_TO_SELF, 0.7f);
-//        scaleAnimation.setDuration(500);
-//        BounceInterpolator bounceInterpolator = new BounceInterpolator();
-//        scaleAnimation.setInterpolator(bounceInterpolator);
-//        //likeImage가 어떤 drawable을 가질 때마다 애니메이션을 적용해줌.(결국 이미지가 변경될 때마다 bounce애니메이션 적용함.)
-//        if(likeImage.getDrawable().equals(R.drawable.ic_like)){
-//            likeImage.startAnimation(scaleAnimation);
-//        }
-//        else {
-//            likeImage.startAnimation(scaleAnimation);
-//        }
+        final ScaleAnimation scaleAnimation = new ScaleAnimation(
+                0.7f, 1.0f, 0.7f, 1.0f, Animation.RELATIVE_TO_SELF, 0.7f);
+        scaleAnimation.setDuration(500);
+        BounceInterpolator bounceInterpolator = new BounceInterpolator();
+        scaleAnimation.setInterpolator(bounceInterpolator);
+        //likeImage가 어떤 drawable을 가질 때마다 애니메이션을 적용해줌.(결국 이미지가 변경될 때마다 bounce애니메이션 적용함.)
 
 
         //클릭에 따른 좋아요 색 변경
@@ -682,6 +679,10 @@ public class DishView extends AppCompatActivity {
             public void onClick(View v) {
                 //한번더 클릭하면 기존의 값과 반대로 바꿈.
                 boolean _isLiked = !isLiked;
+
+                if(_isLiked){
+                    likeImage.startAnimation(scaleAnimation);
+                }
                 likeImage.setImageResource(_isLiked? R.drawable.ic_heart : R.drawable.ic_grey_heart);
                 //이미지 바꾸고 디비 업데이트함.
                 likeRef.update("isLiked", _isLiked);
