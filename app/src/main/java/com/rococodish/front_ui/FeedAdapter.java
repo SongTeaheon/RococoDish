@@ -2,11 +2,16 @@ package com.rococodish.front_ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,11 +20,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.collect.ImmutableMap;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
@@ -37,10 +49,15 @@ import com.rococodish.front_ui.DataModel.StoreInfo;
 import com.rococodish.front_ui.Utils.DataPassUtils;
 import com.rococodish.front_ui.Utils.GlideApp;
 
+import org.apache.http.annotation.Immutable;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ItemRowHolder> {
 
@@ -63,13 +80,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ItemRowHolder>
     @Override
     public ItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         Log.d(TAG, "onCreateViewHolder ");
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_feed_item, null);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_feed_item, viewGroup,  false);
         ItemRowHolder mh = new ItemRowHolder(v);
         return mh;
     }
 
     @Override
-    public void onBindViewHolder(ItemRowHolder itemRowHolder, final int i) {
+    public void onBindViewHolder(final ItemRowHolder itemRowHolder, final int i) {
         final PostingInfo postingInfo = mListPosting.get(i);
         getStoreData(postingInfo, itemRowHolder);
 
@@ -102,15 +119,112 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ItemRowHolder>
             }
         });
 
+        //TODO : 좋아요 총 기능,  모듈처럼 사용할 수 있도록 함수로 제작
+
+        final CollectionReference likeCollRef = FirebaseFirestore.getInstance()
+                .collection("포스팅")
+                .document(postingInfo.postingId)
+                .collection("좋아요");
+        final DocumentReference likeDocRef = likeCollRef.document(FirebaseAuth.getInstance().getUid());
+
+        //좋아요 모듈~~
+        setLikeSystem(likeCollRef, likeDocRef, itemRowHolder.tvLikeNum, itemRowHolder.ivLike);
 
 
-        //TODO:태완님 좋아요 기능좀...
-//        itemRowHolder.ivLike;
-//        likeFunc();
+        //댓글 개수 띄우기
+        FirebaseFirestore.getInstance()
+                .collection("포스팅")
+                .document(postingInfo.postingId)
+                .collection("댓글")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if(e != null){
+                            Log.d(TAG, e.getMessage());
+                        }
+                        assert queryDocumentSnapshots != null;
 
+                        itemRowHolder.tvComment.setText(String.format("댓글 %d개 보기", queryDocumentSnapshots.getDocuments().size()));
+                    }
+                });
 
-//        itemRowHolder.tvLikeNum;
-//        itemRowHolder.tvComment
+    }
+    //좋아요 총괄 함수
+    public void setLikeSystem(CollectionReference likeCollRef,
+                              final DocumentReference likeDocRef,
+                              final TextView tv_numLike,
+                              final ImageView iv_Like){
+        //todo : 좋아요 개수 띄우기
+        likeCollRef
+                .whereEqualTo("isLiked", true)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if(e != null){
+                            Log.d(TAG, e.getMessage());
+                        }
+                        assert queryDocumentSnapshots != null;
+
+                        tv_numLike.setText(String.format("좋아하는 사람 %d 명", queryDocumentSnapshots.getDocuments().size()));
+                    }
+                });
+
+        //todo : 좋아요 상태 띄우기
+        likeDocRef
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if(e != null){
+                            Log.d(TAG, e.getMessage());
+                        }
+                        if(documentSnapshot.exists()){
+                            Boolean isLiked = documentSnapshot.getBoolean("isLiked");
+
+                            iv_Like.setImageResource(isLiked? R.drawable.ic_heart : R.drawable.ic_grey_heart);
+
+                            likeClick(isLiked, iv_Like, likeDocRef);
+
+                        }
+                        else{
+
+                            boolean isLiked = false;
+
+                            iv_Like.setImageResource(R.drawable.ic_grey_heart);
+
+                            likeClick(isLiked, iv_Like, likeDocRef);
+                        }
+                    }
+                });
+    }
+    //좋아요 클릭함수
+    public void likeClick(final boolean isLiked,
+                   final ImageView iv_like,
+                   final DocumentReference likeDocRef){
+
+        //좋아요 애니메이션 적용부분
+        final ScaleAnimation scaleAnimation = new ScaleAnimation(
+                0.7f, 1.0f, 0.7f, 1.0f, Animation.RELATIVE_TO_SELF, 0.7f);
+        scaleAnimation.setDuration(500);
+        BounceInterpolator bounceInterpolator = new BounceInterpolator();
+        scaleAnimation.setInterpolator(bounceInterpolator);
+
+        iv_like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                boolean _isLiked = !isLiked;
+
+                iv_like.setImageResource(_isLiked? R.drawable.ic_heart : R.drawable.ic_grey_heart);
+
+                if(_isLiked == true){
+                    likeDocRef.set(ImmutableMap.of("isLiked", _isLiked));//false -> true일 경우가 아예 없는 경우가 있기 때문
+                    iv_like.startAnimation(scaleAnimation);
+                }
+                else{
+                    likeDocRef.update("isLiked", _isLiked);
+                }
+            }
+        });
 
     }
 
