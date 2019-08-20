@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 public class SignUpAdapter extends PagerAdapter {
 
-    private int[] images = {R.drawable.ic_logo ,R.drawable.ic_store, R.drawable.ic_food, R.drawable.ic_breakfast};
+    private int[] images = {R.drawable.ic_logo2 ,R.drawable.ic_store, R.drawable.ic_food, R.drawable.ic_breakfast};
     private String[] texts = {
             "로코코디쉬",
             "다른 사람들이 모아둔 식사를 모아보세요. \n 당신의 식사들을 소중히 담아두세요.",
