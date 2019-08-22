@@ -43,7 +43,7 @@
                     android:autoSizeMinTextSize="16dp"
                     android:autoSizeMaxTextSize="28dp"
                     tools:ignore="SpUsage" />
-                
+
                 <ImageView
                     android:id="@+id/couponStore"
                     android:layout_width="55dp"
@@ -57,16 +57,16 @@
                 <!--이 버튼 누르면 팝업창 떠서 정렬-->
 
                 <!--<ImageView-->
-                    <!--android:id="@+id/sort_button"-->
-                    <!--android:layout_width="26dp"-->
-                    <!--android:layout_height="26dp"-->
-                    <!--android:layout_alignTop="@+id/mainText"-->
-                    <!--android:layout_alignBottom="@+id/mainText"-->
-                    <!--android:layout_alignParentEnd="true"-->
-                    <!--android:layout_marginTop="1dp"-->
-                    <!--android:layout_marginEnd="16dp"-->
-                    <!--android:layout_marginBottom="1dp"-->
-                    <!--android:src="@mipmap/ic_sort" />-->
+                <!--android:id="@+id/sort_button"-->
+                <!--android:layout_width="26dp"-->
+                <!--android:layout_height="26dp"-->
+                <!--android:layout_alignTop="@+id/mainText"-->
+                <!--android:layout_alignBottom="@+id/mainText"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_marginTop="1dp"-->
+                <!--android:layout_marginEnd="16dp"-->
+                <!--android:layout_marginBottom="1dp"-->
+                <!--android:src="@mipmap/ic_sort" />-->
 
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>

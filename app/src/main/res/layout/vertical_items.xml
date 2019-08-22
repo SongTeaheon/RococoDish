@@ -60,6 +60,16 @@
                         android:textSize="15dp"
                         tools:ignore="SpUsage" />
 
+                    <ImageView
+                        android:layout_width="44dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="11dp"
+                        android:layout_toEndOf="@+id/storeDistance"
+                        android:visibility="invisible"
+                        android:src="@drawable/ic_coupon" />
+
                     <!--<TextView-->
                         <!--android:id="@+id/storeAddress"-->
                         <!--android:layout_width="wrap_content"-->

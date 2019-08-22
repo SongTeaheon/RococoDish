@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners android:radius="0dp" android:bottomLeftRadius="15dp" android:bottomRightRadius="15dp"/>
     <solid android:color="@color/colorWhite"/>
 </shape>
+<!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android">-->
+    <!--<item>-->
+        <!--<shape>-->
+            <!--<solid android:color="@color/Black" />-->
+            <!--<gradient-->
+                <!--android:startColor="@color/Black"-->
+                <!--android:centerColor="@color/Black"-->
+                <!--android:endColor="@color/colorWhite"-->
+                <!--android:angle="270" />-->
+        <!--</shape>-->
+    <!--</item>-->
+
+    <!--<item android:bottom="3dp" >-->
+        <!--<shape>-->
+            <!--<solid android:color="@color/colorWhite" />-->
+        <!--</shape>-->
+    <!--</item>-->
+<!--</layer-list>-->

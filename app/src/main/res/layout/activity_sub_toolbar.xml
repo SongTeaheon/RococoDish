@@ -6,8 +6,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/bottom_corner"
-        app:elevation="0dp">
+        android:background="@drawable/bottom_corner">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/pageViewToolbar"
