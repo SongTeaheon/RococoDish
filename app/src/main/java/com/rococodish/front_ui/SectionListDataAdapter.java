@@ -1,10 +1,13 @@
 package com.rococodish.front_ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
@@ -30,6 +33,7 @@ import com.rococodish.front_ui.Utils.GlideApp;
 import com.rococodish.front_ui.Utils.GlidePlaceHolder;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListDataAdapter.SingleItemRowHolder> { // 가로 리사이클러뷰를 위한 어뎁터
 
@@ -102,11 +106,9 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                         .registerReceiver(BroadcastUtils.getBrdCastReceiver_posting(singleItem),
                                 new IntentFilter(singleItem.getPostingId()));
 
-
                 //데이터 전달
                 Intent intent = new Intent(mContext, DishView.class);
                 DataPassUtils.makeIntentForData(intent, singleItem, storeInfo);
-
                 mContext.startActivity(intent);
             }
         });

@@ -31,7 +31,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
     public CouponAdapter(Context context){
         this.context = context;
         list = new ArrayList<>();
-        getCouponData();
+//        getCouponData();
     }
 
     public class CouponViewHolder extends RecyclerView.ViewHolder {

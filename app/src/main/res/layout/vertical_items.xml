@@ -68,7 +68,7 @@
                         android:layout_marginTop="11dp"
                         android:layout_toEndOf="@+id/storeDistance"
                         android:visibility="invisible"
-                        android:src="@drawable/ic_coupon" />
+                        android:src="@drawable/ic_coupon_drawer" />
 
                     <!--<TextView-->
                         <!--android:id="@+id/storeAddress"-->

@@ -47,8 +47,10 @@ public class SignUpAdapter extends PagerAdapter {
         ImageView image = view.findViewById(R.id.image_activitySignUpPage);
         TextView text = view.findViewById(R.id.text_activitySignUpPage);
         Button startBtn = view.findViewById(R.id.startBtn_btn_activitySignUpPage);
+//        ImageView moveToRight = view.findViewById(R.id.moveToRight_iv_activitySignUp);
 
         if(position != 3){
+            //시작하기 버튼 숨기기
             startBtn.setVisibility(View.GONE);
         }
         else{
@@ -60,7 +62,6 @@ public class SignUpAdapter extends PagerAdapter {
                 }
             });
         }
-
         image.setImageResource(images[position]);
         text.setText(texts[position]);
 

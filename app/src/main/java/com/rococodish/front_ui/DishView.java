@@ -10,11 +10,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.rococodish.front_ui.DataModel.CommentInfo;
 import com.rococodish.front_ui.DataModel.PostingInfo;
 import com.rococodish.front_ui.DataModel.SerializableStoreInfo;
@@ -120,7 +123,7 @@ public class DishView extends AppCompatActivity {
     DishViewLikeNumPass dishViewLikeNumPass;
 
     //좋아요 개수 받는 리스너
-    public void OnLikeNumListener(DishViewLikeNumPass _dishViewLikeNumPass){
+    public void OnLikeNumListener(DishViewLikeNumPass _dishViewLikeNumPass) {
         dishViewLikeNumPass = _dishViewLikeNumPass;
     }
 
@@ -153,7 +156,7 @@ public class DishView extends AppCompatActivity {
          * **/
         //LastFragmentShare에서 받은 아이템 정보를 갖고옴.
         Intent intent = getIntent();
-        if(intent == null){
+        if (intent == null) {
             Log.e(TAG, "intent is null");
         }
 
@@ -193,7 +196,7 @@ public class DishView extends AppCompatActivity {
          **/
 
         hashTagText = findViewById(R.id.tv_description);
-        if(postingInfo.hashTags != null){
+        if (postingInfo.hashTags != null) {
             hashTagText.setText(postingInfo.hashTags);
             textHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.MainColor), new HashTagHelper.OnHashTagClickListener() {
                 @Override
@@ -202,14 +205,13 @@ public class DishView extends AppCompatActivity {
                 }
             });
             textHashTagHelper.handle(hashTagText);
-        }
-        else{
+        } else {
             hashTagText.setText("게시물 내용이 없습니다.");
         }
 
         tvStoreName = findViewById(R.id.tv_storeName);
         tvStoreName.setText(storeInfo.getName());
-        tvStoreName.setOnClickListener(new View.OnClickListener(){
+        tvStoreName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, StorePageActivity.class);
@@ -226,7 +228,7 @@ public class DishView extends AppCompatActivity {
         tvScore = findViewById(R.id.tv_Score);
         tvScore.setText(Double.toString(postingInfo.getAver_star()));
         tvDistance = findViewById(R.id.tv_Distance);
-        tvDistance.setText(SubActivity.getDistanceStr(storeInfo.getLat(), storeInfo.getLon())+"!");
+        tvDistance.setText(SubActivity.getDistanceStr(storeInfo.getLat(), storeInfo.getLon()) + "!");
 
 
         //todo : 이미지 불러올 때 다른 앱들처럼 용량 낮은 깨진파일먼저 갖고 와서 placeholder로 붙이고 나중에 퀄리티 높은 이미지 덮어씌우기(데이터가 느릴 경우 소비자 지루함 방지용)
@@ -234,10 +236,10 @@ public class DishView extends AppCompatActivity {
         GlideApp.with(this).load(fileReference).into(imageView);
 
         /**
-        * 게시물 삭제 및 수정 버튼 처리
-        * */
+         * 게시물 삭제 및 수정 버튼 처리
+         * */
 
-        if(postingInfo.getWriterId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+        if (postingInfo.getWriterId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
             Log.d(TAG, "내 게시물!!!");
             deleteButton = findViewById(R.id.delete_button);
             editButton = findViewById(R.id.edit_button);
@@ -261,7 +263,7 @@ public class DishView extends AppCompatActivity {
                                     commentList.clear();
                                     Log.d(TAG, "size : " + commentList.size());
                                     commentAdapter.notifyDataSetChanged();
-                                    DeleteUtils.deletePosting(mContext,  db, storage, storeId, postingInfo, imagePath, postingAverStar);
+                                    DeleteUtils.deletePosting(mContext, db, storage, storeId, postingInfo, imagePath, postingAverStar);
                                 }
                             })
                             .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -287,10 +289,10 @@ public class DishView extends AppCompatActivity {
         }
 
         /*
-        * 공유기능
-        * */
+         * 공유기능
+         * */
         shareButton = findViewById(R.id.iv_share);
-        shareButton.setOnClickListener(new View.OnClickListener(){
+        shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String disStr = SubActivity.getDistanceStr(storeInfo.getLat(), storeInfo.getLon());
@@ -307,7 +309,7 @@ public class DishView extends AppCompatActivity {
                         .setSocial(SocialObject.newBuilder().setLikeCount(postingInfo.getNumLike()).setCommentCount(0)
                                 .setSharedCount(0).setViewCount(0).build())
                         .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
-                                .setAndroidExecutionParams("distance="+disStr+"&postingId="+postingInfo.getPostingId()+"&storeId="+storeInfo.getStoreId())
+                                .setAndroidExecutionParams("distance=" + disStr + "&postingId=" + postingInfo.getPostingId() + "&storeId=" + storeInfo.getStoreId())
                                 .build()))
                         .setAddressTitle(storeInfo.getName())
                         .build();
@@ -342,22 +344,21 @@ public class DishView extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        if (e != null){
+                        if (e != null) {
                             Log.d(TAG, e.getMessage());
                         }
-                        if (documentSnapshot.exists()){
+                        if (documentSnapshot.exists()) {
 
                             //프로필 이미지 업로드
                             userImage = (String) documentSnapshot.get("profileImage");
-                            if(userImage != null){
+                            if (userImage != null) {
                                 GlideApp.with(getApplicationContext())
                                         .load(userImage)
                                         .into(profileImage);
                                 //프로필 이름 업로드
                                 String userName = (String) documentSnapshot.get("nickname");
                                 profileName.setText(userName);
-                            }
-                            else{
+                            } else {
                                 GlideApp.with(getApplicationContext())
                                         .load(R.drawable.basic_user_image)
                                         .into(profileImage);
@@ -431,7 +432,7 @@ public class DishView extends AppCompatActivity {
                         @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
 
                         GlideApp.with(getApplicationContext())
-                                .load(imagePath != null? imagePath : R.drawable.basic_user_image)
+                                .load(imagePath != null ? imagePath : R.drawable.basic_user_image)
                                 .into(commentProfile);
                         //내 프로필 사진 가져온 후 댓글 달기 가능
                         uploadComment(commentRef, imagePath);
@@ -459,23 +460,22 @@ public class DishView extends AppCompatActivity {
 
     public void realTimeFetchComment(CollectionReference commentRef,
                                      final TextView hasNoComments,
-                                     final ProgressDialog progressDialog){
+                                     final ProgressDialog progressDialog) {
         //실시간 댓글 가져오기
         commentRef
                 .orderBy("time", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        if(e != null){
+                        if (e != null) {
                             Log.d(TAG, e.getMessage());
                         }
                         assert queryDocumentSnapshots != null;
 
 
-                        if (queryDocumentSnapshots.getDocuments().isEmpty()){
+                        if (queryDocumentSnapshots.getDocuments().isEmpty()) {
                             hasNoComments.setVisibility(View.VISIBLE);//"댓글이 없습니다" 텍스트 보여주기
-                        }
-                        else{
+                        } else {
                             hasNoComments.setVisibility(View.GONE);
                         }
 
@@ -485,7 +485,7 @@ public class DishView extends AppCompatActivity {
                         //3. for문이 끝나면 데이터 변경이 있는지 감지하고 비동기로 데이터 변경을 받으니까 자동반영됨.
                         commentList.clear();
 
-                        for(DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
+                        for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()) {
 
                             CommentInfo commentInfo = dc.toObject(CommentInfo.class);
                             commentList.add(commentInfo);
@@ -499,17 +499,16 @@ public class DishView extends AppCompatActivity {
     }
 
     public void uploadComment(final CollectionReference commentRef,
-                              @Nullable final String profilePath){
+                              @Nullable final String profilePath) {
 
         //댓글 업로드하기
         commentSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(TextUtils.isEmpty(commentEdit.getText().toString().trim())){
+                if (TextUtils.isEmpty(commentEdit.getText().toString().trim())) {
                     Toast.makeText(DishView.this, "빈칸을 채워주세요.", Toast.LENGTH_SHORT).show();
-                }
-                else{
+                } else {
                     final String commentDesc = commentEdit.getText().toString();
                     commentEdit.getText().clear();
 
@@ -533,20 +532,25 @@ public class DishView extends AppCompatActivity {
                             .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                 @Override
                                 public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                                    if(e != null){
+                                    if (e != null) {
                                         Log.d(TAG, e.getMessage());
                                     }
 
-                                    if(documentSnapshot.exists() && documentSnapshot != null){
+                                    if (documentSnapshot.exists() && documentSnapshot != null) {
 
                                         @Nullable String token = (String) documentSnapshot.getData().get("fcmToken");
 
-                                        if(postingInfo.writerId.equals(FirebaseAuth.getInstance().getUid())){
-                                            return;
+                                        //token null 에러 방지
+                                        if(token == null){
+                                            Log.d(TAG, "fcm_token이 없는 유저입니다.");
                                         }
                                         else{
-                                            //자신한테는 fcm안보냄.
-                                            sendFcmComment(token, commentDesc);
+                                            if (postingInfo.writerId.equals(FirebaseAuth.getInstance().getUid())) {
+                                                return;
+                                            } else {
+                                                //자신한테는 fcm안보냄.
+                                                sendFcmComment(token, commentDesc);
+                                            }
                                         }
                                     }
                                 }
@@ -558,8 +562,8 @@ public class DishView extends AppCompatActivity {
     }
 
     public void sendFcmComment(String token,
-                               String desc){
-        RootModel rootModel = new RootModel(token, new NotificationModel("게시물에 댓글이 달렸습니다.", "댓글 : "+ desc), new DataModel(postingInfo.postingId, postingInfo.storeId));
+                               String desc) {
+        RootModel rootModel = new RootModel(token, new NotificationModel("게시물에 댓글이 달렸습니다.", "댓글 : " + desc), new DataModel(postingInfo.postingId, postingInfo.storeId));
 
         Log.d(TAG, rootModel.getToken());
 
@@ -577,14 +581,14 @@ public class DishView extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d(TAG, "댓글 : Retrofit으로 메시지를 전달에 실패했습니다. : "+ t.getMessage());
+                Log.d(TAG, "댓글 : Retrofit으로 메시지를 전달에 실패했습니다. : " + t.getMessage());
             }
         });
 
     }
 
     //좋아요 기능(클릭 함수까지 포함.)
-    public void likeFunc(){
+    public void likeFunc() {
 
         //포스팅 -> 컬렉션 좋아요 -> 좋아요 한 사람의 uid 도큐먼트 -> isLiked를 bool값으로 true일 경우 빨간색 아예 도큐먼트가 없을 경우는 빈 하트
         final ImageView likeImage = findViewById(R.id.iv_Like);
@@ -602,9 +606,9 @@ public class DishView extends AppCompatActivity {
 
                 assert documentSnapshot != null;
 
-                if(documentSnapshot.exists()){
+                if (documentSnapshot.exists()) {
 
-                    int img = documentSnapshot.getBoolean("isLiked")? R.drawable.ic_heart : R.drawable.ic_grey_heart;
+                    int img = documentSnapshot.getBoolean("isLiked") ? R.drawable.ic_heart : R.drawable.ic_grey_heart;
                     likeImage.setImageResource(img);
 
                     isLiked = documentSnapshot.getBoolean("isLiked");
@@ -612,7 +616,7 @@ public class DishView extends AppCompatActivity {
 
                 }
                 //완전 처음 게시물에 들어갔을 경우(좋아요 부분을 디비에 만들어야함.)
-                else{
+                else {
                     //삭제되어서 필드가 없을 경우를 제외하곤 좋아요 추가
                     FirebaseFirestore.getInstance()
                             .collection("포스팅")
@@ -622,7 +626,7 @@ public class DishView extends AppCompatActivity {
                                 public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
                                     assert documentSnapshot != null;
 
-                                    if(documentSnapshot.exists()){
+                                    if (documentSnapshot.exists()) {
                                         likeRef.set(ImmutableMap.of("isLiked", false));
 
                                         likeClick(likeImage, likeRef, false);
@@ -645,11 +649,11 @@ public class DishView extends AppCompatActivity {
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
                         assert queryDocumentSnapshots != null;
 
-                        likesText.setText("좋아하는 사람 "+queryDocumentSnapshots.getDocuments().size()+ "명");
+                        likesText.setText("좋아하는 사람 " + queryDocumentSnapshots.getDocuments().size() + "명");
 
                         //좋아요 개수 디비에 업데이트트
                         String like_text = likesText.getText().toString();
-                        int likes = Integer.valueOf(like_text.substring(8, like_text.length()-1));//슬라이싱으로 좋아요 개수만 정수로 가져옴.
+                        int likes = Integer.valueOf(like_text.substring(8, like_text.length() - 1));//슬라이싱으로 좋아요 개수만 정수로 가져옴.
 
                         dishViewLikeNumPass.likeNumPass(likes);
 
@@ -661,9 +665,8 @@ public class DishView extends AppCompatActivity {
     //좋아요 클릭부분만
     public void likeClick(final ImageView likeImage,
                           final DocumentReference likeRef,
-                          final boolean isLiked){
+                          final boolean isLiked) {
 
-        //todo : 속도 때문에 좋아요 애니메이션은 일단 보류
         //좋아요 애니메이션 적용부분
         final ScaleAnimation scaleAnimation = new ScaleAnimation(
                 0.7f, 1.0f, 0.7f, 1.0f, Animation.RELATIVE_TO_SELF, 0.7f);
@@ -680,10 +683,10 @@ public class DishView extends AppCompatActivity {
                 //한번더 클릭하면 기존의 값과 반대로 바꿈.
                 boolean _isLiked = !isLiked;
 
-                if(_isLiked){
+                if (_isLiked) {
                     likeImage.startAnimation(scaleAnimation);
                 }
-                likeImage.setImageResource(_isLiked? R.drawable.ic_heart : R.drawable.ic_grey_heart);
+                likeImage.setImageResource(_isLiked ? R.drawable.ic_heart : R.drawable.ic_grey_heart);
                 //이미지 바꾸고 디비 업데이트함.
                 likeRef.update("isLiked", _isLiked);
             }
@@ -691,7 +694,7 @@ public class DishView extends AppCompatActivity {
     }
 
     //댓글 부분 리사이클러뷰 설정
-    public void commentRecyclerviewInit(PostingInfo postingInfo){
+    public void commentRecyclerviewInit(PostingInfo postingInfo) {
         commentAdapter = new CommentAdapter(this, commentList, postingInfo);
         commentRecy = findViewById(R.id.comment_recyclerview);
         RecyclerView.LayoutManager lm = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -712,12 +715,11 @@ public class DishView extends AppCompatActivity {
             Log.d(TAG, "brdCastRecevie : " + intent.getStringExtra("hashTags"));
             postingInfo.setHashTags(intent.getStringExtra("hashTags"));
             postingInfo.setAver_star(intent.getFloatExtra("aver_star", 0.0f));
-            postingInfo.setTag((HashMap)intent.getSerializableExtra("tag"));
+            postingInfo.setTag((HashMap) intent.getSerializableExtra("tag"));
 
-            if(postingInfo.hashTags != null){
+            if (postingInfo.hashTags != null) {
                 hashTagText.setText(postingInfo.hashTags);
-            }
-            else{
+            } else {
                 hashTagText.setText("게시물 내용이 없습니다.");
             }
             tvScore.setText(Double.toString(postingInfo.getAver_star()));
