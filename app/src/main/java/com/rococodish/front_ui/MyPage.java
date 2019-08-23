@@ -261,6 +261,10 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                                                 }
                                                 if(documentSnapshot.exists() && documentSnapshot != null){
                                                     String name = documentSnapshot.get("nickname").toString();
+
+                                                    if(toToken == null){
+                                                        return;
+                                                    }
                                                     sendFCMFollow(toToken, toName, name);
 
                                                 }

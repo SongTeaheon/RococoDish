@@ -27,10 +27,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="50dp"
-            android:text="안녕하세요"
             android:fontFamily="@font/bmjua"
-            android:textSize="20dp"
+            android:text="안녕하세요"
             android:textColor="@color/MainColor"
+            android:textSize="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpUsage" />
@@ -54,15 +54,13 @@
             android:id="@+id/myPage_textview_activitySub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="28dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="70dp"
             android:fontFamily="@font/bmjua"
             android:text="마이페이지"
             android:textColor="@color/MainColor"
             android:textSize="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView7"
             app:layout_constraintTop_toBottomOf="@+id/userName_textview_drawer"
             tools:ignore="SpUsage" />
 
@@ -70,15 +68,13 @@
             android:id="@+id/notice_textview_activitySub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="28dp"
-            android:layout_marginEnd="8dp"
             android:fontFamily="@font/bmjua"
             android:text="공지사항"
             android:textColor="@color/MainColor"
             android:textSize="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView9"
             app:layout_constraintTop_toBottomOf="@+id/couponBox_textview_drawer"
             tools:ignore="SpUsage" />
 
@@ -86,15 +82,13 @@
             android:id="@+id/setting_textview_activitySub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="28dp"
-            android:layout_marginEnd="8dp"
             android:fontFamily="@font/bmjua"
             android:text="환경설정"
             android:textColor="@color/MainColor"
             android:textSize="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView10"
             app:layout_constraintTop_toBottomOf="@+id/notice_textview_activitySub"
             tools:ignore="SpUsage" />
 
@@ -102,15 +96,13 @@
             android:id="@+id/qna_textview_activitySub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="28dp"
-            android:layout_marginEnd="8dp"
             android:fontFamily="@font/bmjua"
             android:text="문의하기"
             android:textColor="@color/MainColor"
             android:textSize="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView12"
             app:layout_constraintTop_toBottomOf="@+id/setting_textview_activitySub"
             tools:ignore="SpUsage" />
 
@@ -118,33 +110,95 @@
             android:id="@+id/logOut_textview_drawer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginBottom="32dp"
             android:fontFamily="@font/bmjua"
             android:text="로그아웃"
             android:textColor="@color/MainColor"
             android:textSize="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView14"
             tools:ignore="SpUsage" />
 
         <TextView
             android:id="@+id/couponBox_textview_drawer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="28dp"
-            android:layout_marginEnd="8dp"
             android:fontFamily="@font/bmjua"
-            android:visibility="visible"
             android:text="쿠폰함"
             android:textColor="@color/MainColor"
             android:textSize="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/imageView8"
             app:layout_constraintTop_toBottomOf="@+id/myPage_textview_activitySub" />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:tint="@color/MainColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/myPage_textview_activitySub"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/myPage_textview_activitySub"
+            app:srcCompat="@drawable/ic_person_pin_black_24dp" />
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:tint="@color/MainColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/couponBox_textview_drawer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/couponBox_textview_drawer"
+            app:srcCompat="@drawable/ic_coupon_drawer" />
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tint="@color/MainColor"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/notice_textview_activitySub"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/notice_textview_activitySub"
+            app:srcCompat="@drawable/ic_notification" />
+
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:tint="@color/MainColor"
+            app:layout_constraintBottom_toBottomOf="@+id/setting_textview_activitySub"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/setting_textview_activitySub"
+            app:srcCompat="@drawable/ic_settings_black_24dp" />
+
+        <ImageView
+            android:id="@+id/imageView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:tint="@color/MainColor"
+            app:layout_constraintBottom_toBottomOf="@+id/qna_textview_activitySub"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/qna_textview_activitySub"
+            app:srcCompat="@drawable/ic_raise_your_hand_to_ask" />
+
+        <ImageView
+            android:id="@+id/imageView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:tint="@color/MainColor"
+            app:layout_constraintBottom_toBottomOf="@+id/logOut_textview_drawer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/logOut_textview_drawer"
+            app:srcCompat="@drawable/ic_logout" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -52,7 +52,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="16dp"
                     android:visibility="invisible"
-                    android:src="@drawable/ic_coupon"/>
+                    android:src="@drawable/ic_coupon_drawer"/>
 
                 <!--이 버튼 누르면 팝업창 떠서 정렬-->
 

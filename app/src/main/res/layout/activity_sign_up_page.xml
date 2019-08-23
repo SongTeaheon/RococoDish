@@ -73,4 +73,18 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="SpUsage" />
 
+    <ImageView
+        android:id="@+id/moveToRight_iv_activitySignUp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:tint="@color/MainColor"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/text_activitySignUpPage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout3"
+        app:srcCompat="@drawable/ic_right_arrow" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

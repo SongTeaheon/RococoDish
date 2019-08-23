@@ -143,6 +143,9 @@ public class CocomentActivity extends AppCompatActivity {
                                 }
                                 else{
                                     //나 자신한테는 fcm안보냄.
+                                    if(tokenMap.get(0) == null){
+                                        return;
+                                    }
                                     sendFCMCocoment(tokenMap.get(0), cocoment);
                                 }
                             }
