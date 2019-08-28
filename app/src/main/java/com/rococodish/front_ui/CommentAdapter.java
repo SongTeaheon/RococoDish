@@ -38,7 +38,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
+public class    CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
 
     private PostingInfo postingInfo;
     private List<CommentInfo> parentList;

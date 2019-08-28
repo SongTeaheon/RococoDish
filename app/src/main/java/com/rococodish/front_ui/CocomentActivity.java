@@ -14,10 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rococodish.front_ui.DataModel.CommentInfo;
+import com.rococodish.front_ui.DataModel.NoticeInfo;
 import com.rococodish.front_ui.DataModel.PostingInfo;
 import com.rococodish.front_ui.FCM.ApiClient;
 import com.rococodish.front_ui.FCM.ApiInterface;
-import com.rococodish.front_ui.FCM.DataModel;
 import com.rococodish.front_ui.FCM.NotificationModel;
 import com.rococodish.front_ui.FCM.RootModel;
 import com.rococodish.front_ui.Utils.GlideApp;
@@ -147,6 +147,7 @@ public class CocomentActivity extends AppCompatActivity {
                                         return;
                                     }
                                     sendFCMCocoment(tokenMap.get(0), cocoment);
+                                    sendToNoticeBox(commentInfo.getCommentWriterId(), cocoment, postingInfo);
                                 }
                             }
                         });
@@ -203,12 +204,37 @@ public class CocomentActivity extends AppCompatActivity {
 
     }
 
+    private void sendToNoticeBox(String toUUID, String commentDesc, PostingInfo postingInfo) {
+        String docId = UUID.randomUUID().toString();
+        FirebaseFirestore.getInstance()
+                .collection("사용자")
+                .document(toUUID)
+                .collection("알림함")
+                .document(docId)
+                .set(
+                        new NoticeInfo(
+                                docId,
+                                Objects.requireNonNull(FirebaseAuth.getInstance().getUid()),
+                                postingInfo.storeName,
+                                "대댓글",
+                                commentDesc,
+                                System.currentTimeMillis(),
+                                postingInfo
+                        )
+                ).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "성공적으로 상대방의 알림함에 댓글 알림이 도착했습니다.");
+            }
+        });
+    }
+
     public void sendFCMCocoment(String toToken, String desc){
         if(toToken == null){
             Log.d(TAG, "대댓글 상대방의 FCM토큰이 없습니다.");
         }
 
-        RootModel rootModel = new RootModel(toToken, new NotificationModel("댓글에 대댓글이 달렸습니다.", "대댓글 : "+desc), new DataModel("", ""));
+        RootModel rootModel = new RootModel(toToken, new NotificationModel("댓글에 대댓글이 달렸습니다.", "대댓글 : "+desc, ".Notice.NoticeActivity"));
 
         Log.d(TAG, "대댓글 토큰 => "+ rootModel.getToken());
 
@@ -219,7 +245,7 @@ public class CocomentActivity extends AppCompatActivity {
         responseBodyCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.d(TAG, "대댓글 : 성공적으로 Retrofit으로 메시지를 전달했습니다.");
+                Log.d(TAG, "대댓글 : 성공적으로 Retrofit으로 메시지를 전달했습니다. => ");
 
                 //todo : 보내는 게 성공하면 상대방 알림 보관함에 데이터베이스에 저장만 하면됨.
             }

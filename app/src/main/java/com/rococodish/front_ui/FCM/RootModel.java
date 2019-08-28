@@ -10,15 +10,14 @@ public class RootModel {
     @SerializedName("notification")
     private NotificationModel notification;
 
-    @SerializedName("data")
-    private DataModel data;
+//    @SerializedName("data")
+//    private String data;
 
     public RootModel(String token,
-                     NotificationModel notification,
-                     DataModel data){
+                     NotificationModel notification){
         this.token = token;
         this.notification = notification;
-        this.data = data;
+//        this.data = data;
     }
 
     public String getToken() {
@@ -37,11 +36,11 @@ public class RootModel {
         this.notification = notification;
     }
 
-    public DataModel getData() {
-        return data;
-    }
-
-    public void setData(DataModel data) {
-        this.data = data;
-    }
+//    public String getData() {
+//        return data;
+//    }
+//
+//    public void setData(String data) {
+//        this.data = data;
+//    }
 }

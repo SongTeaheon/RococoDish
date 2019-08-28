@@ -14,6 +14,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.rococodish.front_ui.Notice.NoticeActivity;
 import com.rococodish.front_ui.R;
 import com.rococodish.front_ui.SubActivity;
 
@@ -78,7 +79,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     //어떤 방식으로 메시지를 보낼지 설정
     private void sendNotification(String messageTitle, String messageBody) {
-        Intent intent = new Intent(this, SubActivity.class);//원래는 알림함으로 이동시킴.(일단 서브액티비티로 지정)
+        Intent intent = new Intent(this, NoticeActivity.class);//원래는 알림함으로 이동시킴.(일단 서브액티비티로 지정)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);

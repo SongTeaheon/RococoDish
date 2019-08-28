@@ -1,6 +1,7 @@
 package com.rococodish.front_ui.Coupon;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ public class CouponActivity extends AppCompatActivity {
 
     TextView tv_numOfCoupon;
     ImageView iv_numOfCouponUsage;
+    ImageView iv_backBtn;
     RecyclerView recy_coupons;
     com.rococodish.front_ui.Coupon.CouponAdapter couponAdapter;
     RecyclerDecoration spaceDecoration = new RecyclerDecoration(4);
@@ -28,7 +30,9 @@ public class CouponActivity extends AppCompatActivity {
         //요소들 세팅
         tv_numOfCoupon = findViewById(R.id.numOfCoupon);
         iv_numOfCouponUsage = findViewById(R.id.numOfCouponUsage);
-        recy_coupons = findViewById(R.id.recyclerView2);
+        recy_coupons = findViewById(R.id.rv_notice);
+        iv_backBtn = findViewById(R.id.backButton);
+
         couponAdapter = new CouponAdapter(this);
 
 
@@ -40,5 +44,13 @@ public class CouponActivity extends AppCompatActivity {
 
         //쿠폰 개수 넣기
         tv_numOfCoupon.setText(couponAdapter.getItemCount() + " 장");
+
+        //뒤로가기 버튼
+        iv_backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }
