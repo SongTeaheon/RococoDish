@@ -114,7 +114,6 @@ public class FollowRecyAdapter extends RecyclerView.Adapter<FollowRecyAdapter.Fo
 
                                 String docId = dc.getId();
 
-
                                 FirebaseFirestore.getInstance()
                                         .collection("사용자")
                                         .document(docId)
@@ -132,15 +131,11 @@ public class FollowRecyAdapter extends RecyclerView.Adapter<FollowRecyAdapter.Fo
                                                     String uid = documentSnapshot.getId();
 
                                                     list.add(new FollowInfo(imagePath, name, email, uid));
-
-//                                                    notifyItemChanged(list.size()-1);
                                                     notifyDataSetChanged();
                                                 }
                                             }
                                         });
                             }
-                            notifyDataSetChanged();
-
                         }
                     }
                 });

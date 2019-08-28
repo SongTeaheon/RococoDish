@@ -113,6 +113,7 @@
                         android:background="@drawable/rounding_corner"
                         android:contentDescription="@string/todo"
                         android:scaleType="centerCrop"
+                        android:transitionName="foodImage"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.494"
                         app:layout_constraintStart_toStartOf="parent"

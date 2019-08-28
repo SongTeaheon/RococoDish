@@ -37,6 +37,7 @@ import com.rococodish.front_ui.DataModel.PostingInfo;
 import com.rococodish.front_ui.DataModel.StoreInfo;
 import com.rococodish.front_ui.Edit.BroadcastUtils;
 import com.rococodish.front_ui.Interface.FirebasePredicate;
+import com.rococodish.front_ui.Notice.NoticeActivity;
 import com.rococodish.front_ui.PostingProcess.MainShareActivity;
 import com.rococodish.front_ui.Search.SubSearchPage;
 import com.rococodish.front_ui.Utils.DataPassUtils;
@@ -83,10 +84,10 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     SlidingRootNav slidingRootNav;
     TextView logOutText;
     TextView userNameText;
-    TextView tv_notice;
     TextView tv_setting;
     TextView tv_qna;
     TextView tv_couponBox;
+    TextView tv_noticeBox;
     ImageView iv_feed;
     RecyclerViewDataAdapter recyclerViewDataAdapter;
     FloatingActionButton addPosting;
@@ -142,6 +143,14 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
                 startActivity(intent);
             }
         });
+        tv_noticeBox = findViewById(R.id.notice_textview_activitySub);
+        tv_noticeBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SubActivity.this, NoticeActivity.class));
+            }
+        });
+
 
 
 
@@ -189,16 +198,9 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
             }
         });
 
-        tv_notice = findViewById(R.id.notice_textview_activitySub);
         tv_setting = findViewById(R.id.setting_textview_activitySub);
         tv_qna = findViewById(R.id.qna_textview_activitySub);
 
-        tv_notice.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(SubActivity.this, "추후 예정", Toast.LENGTH_SHORT).show();
-            }
-        });
         tv_setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

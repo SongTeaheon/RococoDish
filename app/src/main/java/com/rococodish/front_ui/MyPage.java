@@ -25,13 +25,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rococodish.front_ui.DataModel.NoticeInfo;
 import com.rococodish.front_ui.DataModel.SerializableStoreInfo;
 import com.rococodish.front_ui.DataModel.StoreInfo;
 import com.rococodish.front_ui.DataModel.UserInfo;
 import com.rococodish.front_ui.Edit.BroadcastUtils;
 import com.rococodish.front_ui.FCM.ApiClient;
 import com.rococodish.front_ui.FCM.ApiInterface;
-import com.rococodish.front_ui.FCM.DataModel;
 import com.rococodish.front_ui.FCM.NotificationModel;
 import com.rococodish.front_ui.FCM.RootModel;
 import com.rococodish.front_ui.Utils.AlgoliaUtils;
@@ -59,6 +59,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -168,6 +169,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
 
         final Map<Integer, String> nameMap = new HashMap<>();
         final @Nullable Map<Integer, String> tokenMap = new HashMap<>();
+        final Map<Integer, String> uidMap = new HashMap<>();
 
         FirebaseFirestore.getInstance()
                 .collection("사용자")
@@ -181,10 +183,12 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                         if(documentSnapshot.exists() && documentSnapshot != null){
 
                             String name = documentSnapshot.get("nickname").toString();
+                            String uid = documentSnapshot.get("uid").toString();
                             @Nullable String token = (String) documentSnapshot.get("fcmToken");
 
                             userName.setText(name);
                             nameMap.put(0, name);
+                            uidMap.put(0, uid);
                             tokenMap.put(0, token);
                         }
                     }
@@ -249,6 +253,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                                 //todo : 팔로우했을 경우 fcm알림
                                 final String toToken = tokenMap.get(0);
                                 final String toName = nameMap.get(0);
+                                final String toUid = uidMap.get(0);
 
                                 FirebaseFirestore.getInstance()
                                         .collection("사용자")
@@ -266,6 +271,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                                                         return;
                                                     }
                                                     sendFCMFollow(toToken, toName, name);
+                                                    sendToNoticeBox(toUid, name);
 
                                                 }
                                             }
@@ -391,13 +397,39 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         }
 
     }
+    private void sendToNoticeBox(String toUUID, String userName) {
+        String docId = UUID.randomUUID().toString();
+        FirebaseFirestore.getInstance()
+                .collection("사용자")
+                .document(toUUID)
+                .collection("알림함")
+                .document(docId)
+                .set(
+                        new NoticeInfo(
+                                docId,
+                                Objects.requireNonNull(FirebaseAuth.getInstance().getUid()),
+                                null,
+                                "팔로우",
+                                 userName+" 님이 팔로우하셨습니다.",
+                                System.currentTimeMillis(),
+                                null
+                        )
+                ).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "성공적으로 상대방의 알림함에 댓글 알림이 도착했습니다.");
+            }
+        });
+    }
+
+
 
     private void sendFCMFollow(String token, String toName, String fromName){
         if(token == null){
             Log.d(TAG, "팔로우 상대방의 FCM토큰이 없습니다.");
         }
 
-        RootModel rootModel = new RootModel(token, new NotificationModel("팔로우", fromName+"님이 "+ toName+"님을 팔로우하셨습니다."), new DataModel("", ""));
+        RootModel rootModel = new RootModel(token, new NotificationModel("팔로우", fromName+"님이 "+ toName+"님을 팔로우하셨습니다.", ".Notice.NoticeActivity"));
 
         Log.d(TAG, "팔로우 토큰 => "+ rootModel.getToken());
 

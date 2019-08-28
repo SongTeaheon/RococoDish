@@ -71,7 +71,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="28dp"
             android:fontFamily="@font/bmjua"
-            android:text="공지사항"
+            android:text="알림함"
             android:textColor="@color/MainColor"
             android:textSize="24dp"
             app:layout_constraintStart_toEndOf="@+id/imageView9"
@@ -148,13 +148,13 @@
         <ImageView
             android:id="@+id/imageView8"
             android:tint="@color/MainColor"
-            android:layout_width="wrap_content"
+            android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/couponBox_textview_drawer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/couponBox_textview_drawer"
-            app:srcCompat="@drawable/ic_coupon_drawer" />
+            app:srcCompat="@drawable/ic_coupon" />
 
         <ImageView
             android:id="@+id/imageView9"

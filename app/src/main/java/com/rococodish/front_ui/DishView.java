@@ -8,10 +8,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,13 +31,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rococodish.front_ui.DataModel.CommentInfo;
+import com.rococodish.front_ui.DataModel.NoticeInfo;
 import com.rococodish.front_ui.DataModel.PostingInfo;
 import com.rococodish.front_ui.DataModel.SerializableStoreInfo;
-import com.rococodish.front_ui.DataModel.StoreInfo;
 import com.rococodish.front_ui.Edit.EditActivity;
 import com.rococodish.front_ui.FCM.ApiClient;
 import com.rococodish.front_ui.FCM.ApiInterface;
-import com.rococodish.front_ui.FCM.DataModel;
 import com.rococodish.front_ui.FCM.NotificationModel;
 import com.rococodish.front_ui.FCM.RootModel;
 import com.rococodish.front_ui.Utils.DeleteUtils;
@@ -231,9 +231,21 @@ public class DishView extends AppCompatActivity {
         tvDistance.setText(SubActivity.getDistanceStr(storeInfo.getLat(), storeInfo.getLon()) + "!");
 
 
-        //todo : 이미지 불러올 때 다른 앱들처럼 용량 낮은 깨진파일먼저 갖고 와서 placeholder로 붙이고 나중에 퀄리티 높은 이미지 덮어씌우기(데이터가 느릴 경우 소비자 지루함 방지용)
-        StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
+        final StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
         GlideApp.with(this).load(fileReference).into(imageView);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DishView.this, ZoomActivity.class);
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        DishView.this,
+                        imageView,
+                        Objects.requireNonNull(ViewCompat.getTransitionName(imageView)));
+                intent.putExtra("foodImagePath", postingInfo.imagePathInStorage);
+                startActivity(intent, options.toBundle());
+            }
+        });
 
         /**
          * 게시물 삭제 및 수정 버튼 처리
@@ -541,15 +553,16 @@ public class DishView extends AppCompatActivity {
                                         @Nullable String token = (String) documentSnapshot.getData().get("fcmToken");
 
                                         //token null 에러 방지
-                                        if(token == null){
+                                        if (token == null) {
                                             Log.d(TAG, "fcm_token이 없는 유저입니다.");
-                                        }
-                                        else{
+                                        } else {
                                             if (postingInfo.writerId.equals(FirebaseAuth.getInstance().getUid())) {
                                                 return;
                                             } else {
                                                 //자신한테는 fcm안보냄.
                                                 sendFcmComment(token, commentDesc);
+                                                //todo : fcm보내고 보낸 정보를 상대방 알림함에 전송
+                                                sendToNoticeBox(Objects.requireNonNull(documentSnapshot.get("uid")).toString(), commentDesc);
                                             }
                                         }
                                     }
@@ -561,11 +574,41 @@ public class DishView extends AppCompatActivity {
         });
     }
 
+    public void sendToNoticeBox(String toUUID, String commentDesc) {
+        String docId = UUID.randomUUID().toString();
+        FirebaseFirestore.getInstance()
+                .collection("사용자")
+                .document(toUUID)
+                .collection("알림함")
+                .document(docId)
+                .set(
+                        new NoticeInfo(
+                                docId,
+                                Objects.requireNonNull(FirebaseAuth.getInstance().getUid()),
+                                postingInfo.storeName,
+                                "댓글",
+                                commentDesc,
+                                System.currentTimeMillis(),
+                                postingInfo
+                        )
+                ).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "성공적으로 상대방의 알림함에 댓글 알림이 도착했습니다.");
+            }
+        });
+    }
+
     public void sendFcmComment(String token,
                                String desc) {
-        RootModel rootModel = new RootModel(token, new NotificationModel("게시물에 댓글이 달렸습니다.", "댓글 : " + desc), new DataModel(postingInfo.postingId, postingInfo.storeId));
+        RootModel rootModel = new RootModel(
+                token,
+                new NotificationModel(
+                        "게시물에 댓글이 달렸습니다.",
+                        "댓글 : " + desc,
+                        ".Notice.NoticeActivity"));
 
-        Log.d(TAG, rootModel.getToken());
+        Log.d(TAG, "댓글 토큰 => " + rootModel.getToken());
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
@@ -574,8 +617,12 @@ public class DishView extends AppCompatActivity {
         responseBodyCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.d(TAG, "댓글 : 성공적으로 Retrofit으로 메시지를 전달했습니다.");
-
+                if(response.isSuccessful()){
+                    Log.d(TAG, "댓글 : 성공적으로 Retrofit으로 메시지를 전달했습니다.");
+                }
+                else{
+                    Log.d(TAG, "댓글 => Retrofit 보내기 에러 : "+ response.message());
+                }
                 //todo : 보내는 게 성공하면 상대방 알림 보관함에 데이터베이스에 저장만 하면됨.
             }
 
