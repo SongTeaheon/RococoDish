@@ -5,10 +5,13 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.NonNull;
@@ -57,8 +60,15 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
@@ -95,6 +105,12 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     ViewPager myPostViewPager;
     SubViewPagerAdapter viewPagerAdapter;
 
+    String SaveMarketVersion;
+    String SaveAppVersion;
+
+    TextView whatDoYou;
+    public String Apppackage = "com.rococodish.front_ui";
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -103,6 +119,14 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
 
+
+        CompareVersion();
+
+//        try {
+//            SaveMarketVersion = new getMarketVersion().execute().get();
+//        } catch (ExecutionException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         //피드로 넘어가는 버튼
         iv_feed = findViewById(R.id.iv_mainText);
@@ -275,13 +299,13 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 
 
         //별점평균 누를시 생기는 이벤트
-        starText = findViewById(R.id.textView_whatdoyoueat);
-        starText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        starText = findViewById(R.id.textView_whatdoyoueat);
+//        starText.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        }); todo
 
         //검색 동작.
         search_btn = findViewById(R.id.search_btn);
@@ -606,5 +630,93 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         double distance = LocationUtil.getDistanceFromMe(mCurrentLocation, lat, lon);//내 위치로부터의 거리 측정.
         String distanceStr = MathUtil.adjustedDistance(distance);
         return distanceStr;
+    }
+
+    private Boolean isNetWork() {//버전 확인을 위한 네트워크 체크 함수
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        boolean isMobileAvailable = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isAvailable();
+        boolean isMobileConnect = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+        boolean isWifiAvailable = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isAvailable();
+        boolean isWifiConnect = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+
+        return (isWifiAvailable && isWifiConnect) || (isMobileAvailable && isMobileConnect);
+    }
+
+    private class getMarketVersion extends AsyncTask<String, String, String> {
+
+        String MarketVersion;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String AppFromPlayStore = "https://play.google.com/store/apps/details?id=com.rococodish.front_ui";
+                Document doc = Jsoup.connect(AppFromPlayStore).get();
+
+                Elements Version = doc.select(".htlgb ");
+
+                for (int i = 0; i < 10; i++) {
+                    MarketVersion = Version.get(i).text();
+                    if (Pattern.matches("^[0-9]{1}.[0-9]{1}$", MarketVersion)) {
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return MarketVersion;
+        }
+    }
+
+    private String getAppVersion() {
+        PackageManager pm = getPackageManager();
+        PackageInfo pInfo = null;
+
+        try {
+            pInfo = pm.getPackageInfo(getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e1) {
+            e1.printStackTrace();
+        }
+
+        String currentVersion = pInfo.versionName;
+
+        return currentVersion;
+    }
+
+
+    public void CompareVersion() {
+        if (isNetWork()) {
+            try {
+                SaveMarketVersion = new getMarketVersion().execute().get();
+                SaveAppVersion = getAppVersion();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            if (!SaveMarketVersion.equals(SaveAppVersion)) {
+                new AlertDialog.Builder(SubActivity.this)
+                        .setMessage("업데이트가 필요합니다.\n업데이트를 해 주세요.")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                finish();
+                                Uri uri = Uri.parse("market://details?id=" + Apppackage);
+                                Intent it = new Intent(Intent.ACTION_VIEW, uri);
+                                startActivity(it);
+                            }
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                finish();
+                            }
+                        })
+                        .setCancelable(false)
+                        .show();
+            }
+        } else Toast.makeText(SubActivity.this, "인터넷 연결이 되어있지않아 버전정보를 확인할 수 없음", Toast.LENGTH_SHORT).show();
     }
 }

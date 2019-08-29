@@ -126,6 +126,8 @@ dependencies {
     implementation "ru.tinkoff.scrollingpagerindicator:scrollingpagerindicator:1.0.6"
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
 
+    //Jsoup 라이브러리
+    implementation 'org.jsoup:jsoup:1.9.2'
 
 }
 
