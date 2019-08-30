@@ -96,6 +96,10 @@ public class FragmantPeopleRecyclerViewAdapter extends RecyclerView.Adapter<Frag
             if(userInfo.profileImage != null) {
                 StorageReference fileReference = storage.getReferenceFromUrl(userInfo.profileImage);
                 GlideApp.with(mContext).load(fileReference).into(imageViewPeople);
+            }else{
+                GlideApp.with(mContext)
+                        .load(R.drawable.basic_user_image)
+                        .into(imageViewPeople);
             }
         }
     }

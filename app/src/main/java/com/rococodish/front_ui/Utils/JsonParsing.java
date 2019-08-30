@@ -135,9 +135,13 @@ public class JsonParsing {
                 String nickname = jsonObject1.getString("nickname");
                 String eMail = jsonObject2.getJSONObject("eMail").getString("value");
                 String idStr = jsonObject2.getJSONObject("uid").getString("value");
-                String profilePath = jsonObject2.getJSONObject("profileImage").getString("value");
-
-                Log.d(TAG, nickname +" " + eMail + " " + idStr + " " + profilePath);
+                String profilePath = null;
+                try {
+                    profilePath = jsonObject2.getJSONObject("profileImage").getString("value");
+                }catch(JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d(TAG, nickname +" " + eMail + " " + idStr);
 
                 nickname = nickname.replace("<em>", "");
                 nickname = nickname.replace("</em>", "");
@@ -145,13 +149,17 @@ public class JsonParsing {
                 eMail = eMail.replace("</em>", "");
                 idStr = idStr.replace("<em>", "");
                 idStr = idStr.replace("</em>", "");
-                profilePath = profilePath.replace("<em>", "");
-                profilePath = profilePath.replace("</em>", "");
-                Log.d(TAG, nickname +" " + eMail + " " + idStr + " " + profilePath);
+
+                Log.d(TAG, nickname +" " + eMail + " " + idStr);
                 userInfo.nickname = nickname;
                 userInfo.eMail = eMail;
                 userInfo.uid = idStr;
-                userInfo.profileImage = profilePath;
+                if(profilePath != null) {
+                    profilePath = profilePath.replace("<em>", "");
+                    profilePath = profilePath.replace("</em>", "");
+                    userInfo.profileImage = profilePath;
+                    Log.d(TAG, "profilePath is not null " + profilePath);
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();

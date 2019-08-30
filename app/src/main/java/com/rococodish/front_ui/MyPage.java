@@ -377,6 +377,7 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                                                     FirebaseFirestore.getInstance().collection("사용자")
                                                             .document(userUUID)
                                                             .update("profileImage", null);
+                                                    AlgoliaUtils.changeProfileImagePath(userInfo, null);
                                                     GlideApp.with(getApplicationContext())
                                                             .load(R.drawable.basic_user_image)
                                                             .into(circleImageView);

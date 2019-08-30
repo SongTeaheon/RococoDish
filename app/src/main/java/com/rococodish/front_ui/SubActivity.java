@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.rococodish.front_ui.AlgoliaTest.StoreNameSearchAcitivity;
 import com.rococodish.front_ui.Coupon.CouponActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.core.app.ActivityCompat;
@@ -128,6 +129,17 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 //            e.printStackTrace();
 //        }
 
+//        /*
+//         * 임시 기능입니다. 임시가게이름 검색!
+//         * */
+//        ImageView tv_storeSearch = findViewById(R.id.iv_mainText);
+//        tv_storeSearch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(SubActivity.this, StoreNameSearchAcitivity.class);
+//                startActivity(intent);
+//            }
+//        });
         //피드로 넘어가는 버튼
         iv_feed = findViewById(R.id.iv_mainText);
         iv_feed.setOnClickListener(new View.OnClickListener(){
