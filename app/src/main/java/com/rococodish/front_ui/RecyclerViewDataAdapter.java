@@ -1,8 +1,11 @@
 package com.rococodish.front_ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,8 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.rococodish.front_ui.Coupon.CouponExplainActivity;
 import com.rococodish.front_ui.Utils.LocationUtil;
 import com.rococodish.front_ui.Utils.MathUtil;
 import com.google.firebase.firestore.CollectionReference;
@@ -68,9 +73,6 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
     @Override
     public void onBindViewHolder(ItemRowHolder itemRowHolder, final int i) {
-
-
-
         Log.d(TAG, "onBindViewHolder : " + i);
         Log.d(TAG, "storeName : " + list.get(i).getName());
         Log.d(TAG, "storeId : " + list.get(i).getStoreId());
@@ -89,6 +91,20 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         itemRowHolder.storeName.setText(sectionName);
         itemRowHolder.storeStar.setText(Double.toString(sectionStar));
         itemRowHolder.storeDistance.setText(distanceStr);
+
+        //coupon여부 확인
+        if(singleItem.isCoupon){
+            itemRowHolder.iv_coupon.setVisibility(View.VISIBLE);
+            itemRowHolder.iv_coupon.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, CouponExplainActivity.class);
+                    intent.putExtra("storeId", singleItem.getStoreId());
+                    intent.putExtra("storeName", singleItem.getName());
+                    mContext.startActivity(intent);
+                }
+            });
+        }
 //        itemRowHolder.storeAddress.setText(address);
         //to do : distance 표시
 
@@ -136,6 +152,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     class ItemRowHolder extends RecyclerView.ViewHolder {
 
         public CardView touchStore;
+        public ImageView iv_coupon;
         public TextView storeName;
         public TextView storeStar;
         public TextView storeDistance;
@@ -153,6 +170,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
             storeName = (TextView) view.findViewById(R.id.storeName);
             storeStar = (TextView) view.findViewById(R.id.textView_whatdoyoueat);
             storeDistance = view.findViewById(R.id.storeDistance);
+            iv_coupon = view.findViewById(R.id.iv_coupon);
 //            storeAddress = view.findViewById(R.id.storeAddress);
 
 

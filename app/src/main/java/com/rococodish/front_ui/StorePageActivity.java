@@ -1,5 +1,6 @@
 package com.rococodish.front_ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +10,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.rococodish.front_ui.Coupon.CouponExplainActivity;
 import com.rococodish.front_ui.DataModel.PostingInfo;
 import com.rococodish.front_ui.DataModel.StoreInfo;
 import com.rococodish.front_ui.DataModel.StorePostInfo;
@@ -33,17 +36,20 @@ public class StorePageActivity extends AppCompatActivity {
 
     TextView tv_storeName;
     TextView tv_storeStar;
+    ImageView iv_coupon;
     ImageView backBtn;
     GridView gridView;
     ProgressBar progressBar;
     List<StorePostInfo> list = new ArrayList<>();
     StoreInfo storeInfo;
+    Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.store_page);
 
+        mContext = this;
         backBtn = findViewById(R.id.backButton);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +57,8 @@ public class StorePageActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        iv_coupon = findViewById(R.id.iv_coupon);
 
         Intent intent = getIntent();
         storeName = intent.getStringExtra("storeName");
@@ -83,6 +91,18 @@ public class StorePageActivity extends AppCompatActivity {
                             Log.d(TAG, e.getMessage());
                         assert documentSnapshot != null && documentSnapshot.exists();
                         storeInfo = documentSnapshot.toObject(StoreInfo.class);
+                        if(storeInfo.isCoupon) {
+                            iv_coupon.setVisibility(View.VISIBLE);
+                            iv_coupon.setOnClickListener(new View.OnClickListener(){
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(mContext, CouponExplainActivity.class);
+                                    intent.putExtra("storeId", docId);
+                                    intent.putExtra("storeName", storeInfo.getName());
+                                    mContext.startActivity(intent);
+                                }
+                            });
+                        }
                     }
                 });
 
