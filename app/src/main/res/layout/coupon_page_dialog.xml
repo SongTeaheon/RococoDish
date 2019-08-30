@@ -41,7 +41,7 @@
 
                 <!--쿠폰이름-->
                 <TextView
-                    android:id="@+id/textView10"
+                    android:id="@+id/tv_couponName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
@@ -72,7 +72,7 @@
                     android:textSize="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView10" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_couponName" />
 
                 <!--주의사항2-->
                 <TextView

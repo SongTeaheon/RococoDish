@@ -3,9 +3,11 @@ package com.rococodish.front_ui;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,7 +74,7 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
     @NonNull
     @Override
     public CocomentViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view  = LayoutInflater.from(context).inflate(R.layout.recyclerview_cocomment_row, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.recyclerview_cocomment_row, viewGroup, false);
         CocomentViewHolder cocomentViewHolder = new CocomentViewHolder(view);
         return cocomentViewHolder;
     }
@@ -86,15 +88,15 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        if(e != null){
+                        if (e != null) {
                             Log.d(TAG, e.getMessage());
                         }
-                        if(documentSnapshot.exists()){
+                        if (documentSnapshot.exists()) {
 
                             @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
 
                             GlideApp.with(context.getApplicationContext())
-                                    .load(imagePath != null? imagePath : R.drawable.basic_user_image)
+                                    .load(imagePath != null ? imagePath : R.drawable.basic_user_image)
                                     .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
                                     .into(cocomentViewHolder.userImage);
                         }
@@ -103,13 +105,13 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
 
         //유저이름 부분
         cocomentViewHolder.userName.setText(cocomentList.get(i).getWriterName());
-        cocomentViewHolder.userName.setOnClickListener(new View.OnClickListener(){
+        cocomentViewHolder.userName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 moveToMyPage(i);
             }
         });
-        cocomentViewHolder.userImage.setOnClickListener(new View.OnClickListener(){
+        cocomentViewHolder.userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 moveToMyPage(i);
@@ -127,18 +129,18 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
 
 
         //TODO : 꾸욱 누르면 대댓글 삭제
-        final String[] options = new String[] {"삭제", "닫기"};
+        final String[] options = new String[]{"삭제", "닫기"};
         cocomentViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (cocomentList.get(i).getCommentWriterId().equals(FirebaseAuth.getInstance().getUid())){
+                if (cocomentList.get(i).getCommentWriterId().equals(FirebaseAuth.getInstance().getUid())) {
 
                     new AlertDialog.Builder(context)
                             .setTitle("내가 쓴 대댓글")
                             .setItems(options, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    switch (options[which]){
+                                    switch (options[which]) {
 
                                         case "삭제":
                                             FirebaseFirestore.getInstance()
@@ -170,7 +172,7 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
         return cocomentList.size();
     }
 
-    private void moveToMyPage(int i){
+    private void moveToMyPage(int i) {
         Intent intent = new Intent(context, MyPage.class);
         intent.putExtra("userUUID", cocomentList.get(i).getCommentWriterId());
         context.startActivity(intent);

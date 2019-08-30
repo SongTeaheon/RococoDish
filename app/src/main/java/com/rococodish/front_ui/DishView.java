@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.ListenerRegistration;
 import com.rococodish.front_ui.DataModel.CommentInfo;
 import com.rococodish.front_ui.DataModel.NoticeInfo;
 import com.rococodish.front_ui.DataModel.PostingInfo;
@@ -121,6 +122,10 @@ public class DishView extends AppCompatActivity {
     ImageView commentSend;//댓글 업로드 버튼
     int gloabal_like;
     DishViewLikeNumPass dishViewLikeNumPass;
+
+    ListenerRegistration listenerRegistration_comment;
+    EventListener<QuerySnapshot> eventListener_comment;
+
 
     //좋아요 개수 받는 리스너
     public void OnLikeNumListener(DishViewLikeNumPass _dishViewLikeNumPass) {
@@ -234,16 +239,17 @@ public class DishView extends AppCompatActivity {
         final StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
         GlideApp.with(this).load(fileReference).into(imageView);
 
+        //todo : 이미지 클릭 시 확대 창으로 이동
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DishView.this, ZoomActivity.class);
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         DishView.this,
                         imageView,
-                        Objects.requireNonNull(ViewCompat.getTransitionName(imageView)));
+                        Objects.requireNonNull(ViewCompat.getTransitionName(imageView))).toBundle();
                 intent.putExtra("foodImagePath", postingInfo.imagePathInStorage);
-                startActivity(intent, options.toBundle());
+                startActivity(intent, options);
             }
         });
 
@@ -442,12 +448,13 @@ public class DishView extends AppCompatActivity {
                         assert documentSnapshot != null;
 
                         @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
+                        String userName = documentSnapshot.get("nickname").toString();
 
                         GlideApp.with(getApplicationContext())
                                 .load(imagePath != null ? imagePath : R.drawable.basic_user_image)
                                 .into(commentProfile);
                         //내 프로필 사진 가져온 후 댓글 달기 가능
-                        uploadComment(commentRef, imagePath);
+                        uploadComment(commentRef, imagePath, userName);
 
 
                     }
@@ -474,44 +481,52 @@ public class DishView extends AppCompatActivity {
                                      final TextView hasNoComments,
                                      final ProgressDialog progressDialog) {
         //실시간 댓글 가져오기
-        commentRef
+        eventListener_comment = new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.d(TAG, e.getMessage());
+                }
+                assert queryDocumentSnapshots != null;
+
+
+                if (queryDocumentSnapshots.getDocuments().isEmpty()) {
+                    hasNoComments.setVisibility(View.VISIBLE);//"댓글이 없습니다" 텍스트 보여주기
+                } else {
+                    hasNoComments.setVisibility(View.GONE);
+                }
+
+                //todo : 삭제 자동반영하는 법
+                //1. 데이터를 불러올 때 비동기인 addSnapshotListener로 불러와야함.
+                //2. for문을 돌려서 데이터를 불러오기 직전에 리스트를 싹다 지워줌.(다시 불러올 때 중복 방지)
+                //3. for문이 끝나면 데이터 변경이 있는지 감지하고 비동기로 데이터 변경을 받으니까 자동반영됨.
+                commentList.clear();
+
+                for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()) {
+
+                    CommentInfo commentInfo = dc.toObject(CommentInfo.class);
+                    commentList.add(commentInfo);
+                    commentAdapter.notifyItemChanged(commentList.size());
+                }
+                commentAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
+        };
+        listenerRegistration_comment = commentRef
                 .orderBy("time", Query.Direction.ASCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.d(TAG, e.getMessage());
-                        }
-                        assert queryDocumentSnapshots != null;
-
-
-                        if (queryDocumentSnapshots.getDocuments().isEmpty()) {
-                            hasNoComments.setVisibility(View.VISIBLE);//"댓글이 없습니다" 텍스트 보여주기
-                        } else {
-                            hasNoComments.setVisibility(View.GONE);
-                        }
-
-                        //todo : 삭제 자동반영하는 법
-                        //1. 데이터를 불러올 때 비동기인 addSnapshotListener로 불러와야함.
-                        //2. for문을 돌려서 데이터를 불러오기 직전에 리스트를 싹다 지워줌.(다시 불러올 때 중복 방지)
-                        //3. for문이 끝나면 데이터 변경이 있는지 감지하고 비동기로 데이터 변경을 받으니까 자동반영됨.
-                        commentList.clear();
-
-                        for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()) {
-
-                            CommentInfo commentInfo = dc.toObject(CommentInfo.class);
-                            commentList.add(commentInfo);
-                            commentAdapter.notifyItemChanged(commentList.size());
-                        }
-                        commentAdapter.notifyDataSetChanged();
-                        progressDialog.dismiss();
-                    }
-                });
+                .addSnapshotListener(eventListener_comment);
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        listenerRegistration_comment.remove();
+    }
+
     public void uploadComment(final CollectionReference commentRef,
-                              @Nullable final String profilePath) {
+                              @Nullable final String profilePath,
+                              final String userName) {
 
         //댓글 업로드하기
         commentSend.setOnClickListener(new View.OnClickListener() {
@@ -560,7 +575,11 @@ public class DishView extends AppCompatActivity {
                                                 return;
                                             } else {
                                                 //자신한테는 fcm안보냄.
-                                                sendFcmComment(token, commentDesc, documentSnapshot.get("uid").toString(), profilePath);
+                                                sendFcmComment(token,
+                                                        commentDesc,
+                                                        documentSnapshot.get("uid").toString(),
+                                                        profilePath,
+                                                        userName);
                                             }
                                         }
                                     }
@@ -572,7 +591,7 @@ public class DishView extends AppCompatActivity {
         });
     }
 
-    public void sendToNoticeBox(String toUUID, String commentDesc, String senderImagePath) {
+    public void sendToNoticeBox(String toUUID, String commentDesc, String senderImagePath, String userName) {
         String docId = UUID.randomUUID().toString();
         FirebaseFirestore.getInstance()
                 .collection("사용자")
@@ -584,7 +603,7 @@ public class DishView extends AppCompatActivity {
                                 docId,
                                 Objects.requireNonNull(FirebaseAuth.getInstance().getUid()),
                                 senderImagePath,
-                                postingInfo.storeName,
+                                userName,
                                 "댓글",
                                 commentDesc,
                                 System.currentTimeMillis(),
@@ -601,7 +620,8 @@ public class DishView extends AppCompatActivity {
     public void sendFcmComment(String token,
                                final String desc,
                                final String senderUid,
-                               final String myImagePath) {
+                               final String myImagePath,
+                               final String userName) {
         RootModel rootModel = new RootModel(
                 token,
                 new NotificationModel(
@@ -620,7 +640,7 @@ public class DishView extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.isSuccessful()){
                     Log.d(TAG, "댓글 : 성공적으로 Retrofit으로 메시지를 전달했습니다.");
-                    sendToNoticeBox(senderUid, desc, myImagePath);
+                    sendToNoticeBox(senderUid, desc, myImagePath, userName);
 
                 }
                 else{

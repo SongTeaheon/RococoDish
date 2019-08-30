@@ -1,6 +1,7 @@
 package com.rococodish.front_ui.Coupon;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,17 +11,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.rococodish.front_ui.RecyclerDecoration;
 import com.rococodish.front_ui.R;
 
 public class CouponActivity extends AppCompatActivity {
 
+    String TAG = "TAGCouponActivity";
     TextView tv_numOfCoupon;
     ImageView iv_numOfCouponUsage;
     ImageView iv_backBtn;
     RecyclerView recy_coupons;
     com.rococodish.front_ui.Coupon.CouponAdapter couponAdapter;
     RecyclerDecoration spaceDecoration = new RecyclerDecoration(4);
+    ListenerRegistration listener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,7 +54,23 @@ public class CouponActivity extends AppCompatActivity {
         recy_coupons.addItemDecoration(spaceDecoration);
 
         //쿠폰 개수 넣기
-        tv_numOfCoupon.setText(couponAdapter.getItemCount() + " 장");
+        EventListener<QuerySnapshot> eventListener = new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.d(TAG, e.getMessage());
+                }
+                if(queryDocumentSnapshots != null){
+                    tv_numOfCoupon.setText(queryDocumentSnapshots.size() + " 장");
+                }
+            }
+        };
+        listener = FirebaseFirestore.getInstance()
+                .collection("사용자")
+                .document(FirebaseAuth.getInstance().getUid())
+                .collection("쿠폰함")
+                .whereEqualTo("isCouponUsed", false)
+                .addSnapshotListener(eventListener);
 
         //뒤로가기 버튼
         iv_backBtn.setOnClickListener(new View.OnClickListener() {
@@ -52,5 +79,11 @@ public class CouponActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        listener.remove();
     }
 }

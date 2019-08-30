@@ -120,7 +120,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         setContentView(R.layout.activity_sub);
 
 
-        CompareVersion();
+//        CompareVersion();
 
 //        try {
 //            SaveMarketVersion = new getMarketVersion().execute().get();

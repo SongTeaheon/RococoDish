@@ -273,24 +273,6 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                                                 }
                                             }
                                         });
-//                                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//                                            @Override
-//                                            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-//                                                if(e != null){
-//                                                    Log.d(TAG, e.getMessage());
-//                                                }
-//                                                if(documentSnapshot.exists() && documentSnapshot != null){
-//                                                    String name = documentSnapshot.get("nickname").toString();
-//                                                    @Nullable String profileImagePath = (String) documentSnapshot.get("profileImage");
-//
-//                                                    if(toToken == null){
-//                                                        return;
-//                                                    }
-//                                                    sendFCMFollow(toToken, toName, name, toUid, profileImagePath);
-//                                                }
-//                                            }
-//                                        });
-
 
                                 Toast.makeText(MyPage.this, toName + "님을 팔로우했습니다.", Toast.LENGTH_SHORT).show();
 

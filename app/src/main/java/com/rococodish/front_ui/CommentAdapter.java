@@ -17,6 +17,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.ListenerRegistration;
 import com.rococodish.front_ui.DataModel.CommentInfo;
 import com.rococodish.front_ui.DataModel.PostingInfo;
 import com.rococodish.front_ui.Utils.GlideApp;
@@ -45,6 +46,9 @@ public class    CommentAdapter extends RecyclerView.Adapter<CommentAdapter.Comme
     private Context context;
     private String TAG = "TAGCommentAdapter";
     private String myUid = FirebaseAuth.getInstance().getUid();
+
+    ListenerRegistration listenerRegistration;
+    EventListener<QuerySnapshot> eventListener;
 
 
 
@@ -262,39 +266,40 @@ public class    CommentAdapter extends RecyclerView.Adapter<CommentAdapter.Comme
         /**
          * 대댓글을 화면에 띄우기 Cocomments Fetch
          * **/
-        FirebaseFirestore.getInstance()
+        eventListener = new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null){
+                    Log.d(TAG, e.getMessage());
+                }
+                if(queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()){
+
+                    childList.clear();
+
+                    for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
+
+                        CommentInfo commentInfo = dc.toObject(CommentInfo.class);
+                        childList.add(commentInfo);
+                        cocomentAdapter.notifyItemChanged(childList.size());
+                    }
+
+                    cocomentAdapter.notifyDataSetChanged();
+
+                }
+                else{
+                    childList.clear();
+                    cocomentAdapter.notifyDataSetChanged();
+                }
+            }
+        };
+        listenerRegistration = FirebaseFirestore.getInstance()
                 .collection("포스팅")
                 .document(postingInfo.postingId)
                 .collection("댓글")
                 .document(docId)
                 .collection("대댓글")
                 .orderBy("time", Query.Direction.ASCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null){
-                            Log.d(TAG, e.getMessage());
-                        }
-                        if(queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()){
-
-                            childList.clear();
-
-                           for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
-
-                               CommentInfo commentInfo = dc.toObject(CommentInfo.class);
-                               childList.add(commentInfo);
-                               cocomentAdapter.notifyItemChanged(childList.size());
-                           }
-
-                           cocomentAdapter.notifyDataSetChanged();
-
-                        }
-                        else{
-                            childList.clear();
-                            cocomentAdapter.notifyDataSetChanged();
-                        }
-                    }
-                });
+                .addSnapshotListener(eventListener);
 
         //댓글 올라오는 애니메이션
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.up_from_bottom);
@@ -306,9 +311,25 @@ public class    CommentAdapter extends RecyclerView.Adapter<CommentAdapter.Comme
         return parentList.size();
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     private void moveToMyPage(int i){
         Intent intent = new Intent(context, MyPage.class);
         intent.putExtra("userUUID", parentList.get(i).getCommentWriterId());
         context.startActivity(intent);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        listenerRegistration.remove();
     }
 }
