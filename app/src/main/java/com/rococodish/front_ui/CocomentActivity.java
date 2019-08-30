@@ -146,8 +146,7 @@ public class CocomentActivity extends AppCompatActivity {
                                     if(tokenMap.get(0) == null){
                                         return;
                                     }
-                                    sendFCMCocoment(tokenMap.get(0), cocoment);
-                                    sendToNoticeBox(commentInfo.getCommentWriterId(), cocoment, postingInfo);
+                                    sendFCMCocoment(tokenMap.get(0), cocoment, commentInfo.getCommentWriterId(), postingInfo, myImagePath.get(0));
                                 }
                             }
                         });
@@ -204,7 +203,7 @@ public class CocomentActivity extends AppCompatActivity {
 
     }
 
-    private void sendToNoticeBox(String toUUID, String commentDesc, PostingInfo postingInfo) {
+    private void sendToNoticeBox(String toUUID, String commentDesc, PostingInfo postingInfo, String senderImagePath) {
         String docId = UUID.randomUUID().toString();
         FirebaseFirestore.getInstance()
                 .collection("사용자")
@@ -215,6 +214,7 @@ public class CocomentActivity extends AppCompatActivity {
                         new NoticeInfo(
                                 docId,
                                 Objects.requireNonNull(FirebaseAuth.getInstance().getUid()),
+                                senderImagePath,
                                 postingInfo.storeName,
                                 "대댓글",
                                 commentDesc,
@@ -229,7 +229,11 @@ public class CocomentActivity extends AppCompatActivity {
         });
     }
 
-    public void sendFCMCocoment(String toToken, String desc){
+    public void sendFCMCocoment(String toToken,
+                                final String desc,
+                                final String senderUid,
+                                final PostingInfo postingInfo,
+                                final String myImagePath){
         if(toToken == null){
             Log.d(TAG, "대댓글 상대방의 FCM토큰이 없습니다.");
         }
@@ -245,9 +249,12 @@ public class CocomentActivity extends AppCompatActivity {
         responseBodyCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.d(TAG, "대댓글 : 성공적으로 Retrofit으로 메시지를 전달했습니다. => ");
 
-                //todo : 보내는 게 성공하면 상대방 알림 보관함에 데이터베이스에 저장만 하면됨.
+                if(response.isSuccessful()){
+                    Log.d(TAG, "대댓글 : 성공적으로 Retrofit으로 메시지를 전달했습니다.");
+                    sendToNoticeBox(senderUid, desc, postingInfo, myImagePath);
+                }
+
             }
 
             @Override

@@ -560,9 +560,7 @@ public class DishView extends AppCompatActivity {
                                                 return;
                                             } else {
                                                 //자신한테는 fcm안보냄.
-                                                sendFcmComment(token, commentDesc);
-                                                //todo : fcm보내고 보낸 정보를 상대방 알림함에 전송
-                                                sendToNoticeBox(Objects.requireNonNull(documentSnapshot.get("uid")).toString(), commentDesc);
+                                                sendFcmComment(token, commentDesc, documentSnapshot.get("uid").toString(), profilePath);
                                             }
                                         }
                                     }
@@ -574,7 +572,7 @@ public class DishView extends AppCompatActivity {
         });
     }
 
-    public void sendToNoticeBox(String toUUID, String commentDesc) {
+    public void sendToNoticeBox(String toUUID, String commentDesc, String senderImagePath) {
         String docId = UUID.randomUUID().toString();
         FirebaseFirestore.getInstance()
                 .collection("사용자")
@@ -585,6 +583,7 @@ public class DishView extends AppCompatActivity {
                         new NoticeInfo(
                                 docId,
                                 Objects.requireNonNull(FirebaseAuth.getInstance().getUid()),
+                                senderImagePath,
                                 postingInfo.storeName,
                                 "댓글",
                                 commentDesc,
@@ -600,7 +599,9 @@ public class DishView extends AppCompatActivity {
     }
 
     public void sendFcmComment(String token,
-                               String desc) {
+                               final String desc,
+                               final String senderUid,
+                               final String myImagePath) {
         RootModel rootModel = new RootModel(
                 token,
                 new NotificationModel(
@@ -619,11 +620,12 @@ public class DishView extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.isSuccessful()){
                     Log.d(TAG, "댓글 : 성공적으로 Retrofit으로 메시지를 전달했습니다.");
+                    sendToNoticeBox(senderUid, desc, myImagePath);
+
                 }
                 else{
                     Log.d(TAG, "댓글 => Retrofit 보내기 에러 : "+ response.message());
                 }
-                //todo : 보내는 게 성공하면 상대방 알림 보관함에 데이터베이스에 저장만 하면됨.
             }
 
             @Override

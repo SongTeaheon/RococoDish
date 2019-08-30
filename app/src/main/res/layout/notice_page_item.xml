@@ -19,27 +19,56 @@
         android:layout_height="match_parent"
         android:background="@color/colorWhite">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+<!--        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--            android:id="@+id/imageViewBack"-->
+<!--            android:layout_width="55dp"-->
+<!--            android:layout_height="55dp"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:layout_marginBottom="8dp"-->
+<!--            android:src="@color/MainColor"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+        <androidx.cardview.widget.CardView
             android:id="@+id/imageViewBack"
             android:layout_width="55dp"
             android:layout_height="55dp"
+            app:cardCornerRadius="27.5dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:src="@color/MainColor"
+            app:cardBackgroundColor="@color/MainColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageViewPeople"
+<!--        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--            android:id="@+id/imageViewPeople"-->
+<!--            android:layout_width="51dp"-->
+<!--            android:layout_height="51dp"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:src="@color/colorWhite"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/imageViewBack"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/imageViewBack" />-->
+
+        <androidx.cardview.widget.CardView
             android:layout_width="51dp"
             android:layout_height="51dp"
+            app:cardCornerRadius="25.5dp"
+            android:background="#fff"
             android:layout_marginStart="10dp"
-            android:src="@color/colorWhite"
             app:layout_constraintBottom_toBottomOf="@+id/imageViewBack"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageViewBack" />
+            app:layout_constraintTop_toTopOf="@+id/imageViewBack" >
+            <ImageView
+                android:id="@+id/imageViewPeople"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/basic_user_image"
+                android:scaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/tv_storeNameOfNotice"
@@ -51,7 +80,7 @@
             android:text="음식점이름"
             android:textColor="@color/GGrey"
             android:textSize="16dp"
-            app:layout_constraintStart_toEndOf="@+id/imageViewPeople"
+            app:layout_constraintStart_toEndOf="@+id/imageViewBack"
             app:layout_constraintTop_toTopOf="@+id/imageViewBack"
             tools:ignore="SpUsage" />
 
@@ -66,7 +95,7 @@
             android:text="댓글"
             android:textColor="@color/MainColor"
             android:textSize="12dp"
-            app:layout_constraintStart_toEndOf="@+id/imageViewPeople"
+            app:layout_constraintStart_toEndOf="@+id/imageViewBack"
             app:layout_constraintTop_toBottomOf="@+id/tv_storeNameOfNotice"
             tools:ignore="SpUsage" />
 <!--        위 텍스트뷰는 댓글인지 대댓글인지-->
@@ -102,7 +131,7 @@
             android:text="작성 날짜/시간"
             android:textColor="@color/Grey"
             android:textSize="8dp"
-            app:layout_constraintStart_toEndOf="@+id/imageViewPeople"
+            app:layout_constraintStart_toEndOf="@+id/imageViewBack"
             app:layout_constraintTop_toBottomOf="@+id/tv_commentOrCocoment"
             tools:ignore="SpUsage" />
 
