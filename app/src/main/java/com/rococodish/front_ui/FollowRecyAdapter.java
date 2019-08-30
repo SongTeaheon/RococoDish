@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.ListenerRegistration;
 import com.rococodish.front_ui.DataModel.FollowInfo;
 import com.rococodish.front_ui.Utils.GlideApp;
 import com.rococodish.front_ui.Utils.GlidePlaceHolder;
@@ -32,6 +33,8 @@ public class FollowRecyAdapter extends RecyclerView.Adapter<FollowRecyAdapter.Fo
     List<FollowInfo> list;
     String userUUID;
     String collectionName;
+    ListenerRegistration listener;
+    EventListener<QuerySnapshot> eventListener;
 
     public FollowRecyAdapter(Context context,
                              String userUUID,
@@ -91,53 +94,70 @@ public class FollowRecyAdapter extends RecyclerView.Adapter<FollowRecyAdapter.Fo
     }
 
     @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
     public int getItemCount() {
         return list.size();
     }
 
     public void getFollowData(){
-        FirebaseFirestore.getInstance()
+        eventListener = new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable final QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.d(TAG, e.getMessage());
+                }
+                if(!queryDocumentSnapshots.isEmpty() && queryDocumentSnapshots != null){
+
+                    list.clear();//삭제 반영을 위해서 미리 깨끗하게 지움(아이템 중복 방지)
+
+                    for(DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
+
+                        String docId = dc.getId();
+
+                        FirebaseFirestore.getInstance()
+                                .collection("사용자")
+                                .document(docId)
+                                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                        if(e != null){
+                                            Log.d(TAG, e.getMessage());
+                                        }
+                                        if(documentSnapshot.exists() && documentSnapshot != null){
+
+                                            @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
+                                            String name = documentSnapshot.get("nickname").toString();
+                                            String email = documentSnapshot.get("eMail").toString();
+                                            String uid = documentSnapshot.getId();
+
+                                            list.add(new FollowInfo(imagePath, name, email, uid));
+                                            notifyDataSetChanged();
+                                        }
+                                    }
+                                });
+                    }
+                }
+            }
+        };
+        listener = FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(userUUID)
                 .collection(collectionName)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable final QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if(e != null){
-                            Log.d(TAG, e.getMessage());
-                        }
-                        if(!queryDocumentSnapshots.isEmpty() && queryDocumentSnapshots != null){
+                .addSnapshotListener(eventListener);
+    }
 
-                            list.clear();//삭제 반영을 위해서 미리 깨끗하게 지움(아이템 중복 방지)
-
-                            for(DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
-
-                                String docId = dc.getId();
-
-                                FirebaseFirestore.getInstance()
-                                        .collection("사용자")
-                                        .document(docId)
-                                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                                                if(e != null){
-                                                    Log.d(TAG, e.getMessage());
-                                                }
-                                                if(documentSnapshot.exists() && documentSnapshot != null){
-
-                                                    @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
-                                                    String name = documentSnapshot.get("nickname").toString();
-                                                    String email = documentSnapshot.get("eMail").toString();
-                                                    String uid = documentSnapshot.getId();
-
-                                                    list.add(new FollowInfo(imagePath, name, email, uid));
-                                                    notifyDataSetChanged();
-                                                }
-                                            }
-                                        });
-                            }
-                        }
-                    }
-                });
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        listener.remove();
     }
 }

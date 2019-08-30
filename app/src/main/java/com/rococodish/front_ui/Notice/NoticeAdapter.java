@@ -164,6 +164,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
         });
     }
 
+
     @Override
     public int getItemCount() {
         return list.size();

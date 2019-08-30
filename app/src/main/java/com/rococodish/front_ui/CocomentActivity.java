@@ -2,7 +2,9 @@ package com.rococodish.front_ui;
 
 import android.app.Activity;
 import android.content.Intent;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -81,10 +83,10 @@ public class CocomentActivity extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        if(e != null){
+                        if (e != null) {
                             Log.d(TAG, e.getMessage());
                         }
-                        if(documentSnapshot.exists()){
+                        if (documentSnapshot.exists()) {
 
                             @Nullable String imagePath = (String) documentSnapshot.getData().get("profileImage");
                             @Nullable String name = (String) documentSnapshot.getData().get("nickname");
@@ -93,7 +95,7 @@ public class CocomentActivity extends AppCompatActivity {
                             myName.put(0, name);
 
                             GlideApp.with(getApplicationContext())
-                                    .load(myImagePath.get(0) != null? imagePath : R.drawable.basic_user_image)
+                                    .load(myImagePath.get(0) != null ? imagePath : R.drawable.basic_user_image)
                                     .into(cocomentImage);
 
                         }
@@ -101,7 +103,7 @@ public class CocomentActivity extends AppCompatActivity {
                 });
 
         //받은 댓글정보가 있을 경우에만 실행
-        if(commentInfo != null && postingInfo != null){
+        if (commentInfo != null && postingInfo != null) {
 
             //댓글 정보를 가져와서 붙임 & 대댓글에 내 프로필 이미지 적용
             @Nullable final Map<Integer, String> tokenMap = new HashMap<>();//초기화
@@ -112,10 +114,9 @@ public class CocomentActivity extends AppCompatActivity {
             writeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(TextUtils.isEmpty(cocomentEdit.getText().toString().trim())){
+                    if (TextUtils.isEmpty(cocomentEdit.getText().toString().trim())) {
                         Toast.makeText(CocomentActivity.this, "빈 칸을 채워주세요.", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
+                    } else {
                         final String cocoment = cocomentEdit.getText().toString();
                         cocomentEdit.getText().clear();
 
@@ -138,15 +139,19 @@ public class CocomentActivity extends AppCompatActivity {
                                 Log.d(TAG, "대댓글이 업로드되었습니다.");
 
                                 //todo : fcm으로도 보냄
-                                if(commentInfo.getCommentWriterId().equals(FirebaseAuth.getInstance().getUid())){
+                                if (commentInfo.getCommentWriterId().equals(FirebaseAuth.getInstance().getUid())) {
                                     return;
-                                }
-                                else{
+                                } else {
                                     //나 자신한테는 fcm안보냄.
-                                    if(tokenMap.get(0) == null){
+                                    if (tokenMap.get(0) == null) {
                                         return;
                                     }
-                                    sendFCMCocoment(tokenMap.get(0), cocoment, commentInfo.getCommentWriterId(), postingInfo, myImagePath.get(0));
+                                    sendFCMCocoment(tokenMap.get(0),
+                                            cocoment,
+                                            commentInfo.getCommentWriterId(),
+                                            postingInfo,
+                                            myImagePath.get(0),
+                                            myName.get(0));
                                 }
                             }
                         });
@@ -158,14 +163,13 @@ public class CocomentActivity extends AppCompatActivity {
                 }
             });
 
-        }
-        else{
+        } else {
             Toast.makeText(this, "이미 삭제된 댓글입니다.", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
 
-    public void setComment(CommentInfo commentInfo, final Map map){
+    public void setComment(CommentInfo commentInfo, final Map map) {
         //댓글 이미지
         FirebaseFirestore.getInstance()
                 .collection("사용자")
@@ -173,10 +177,10 @@ public class CocomentActivity extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        if(e != null){
+                        if (e != null) {
                             Log.d(TAG, e.getMessage());
                         }
-                        if(documentSnapshot.exists()){
+                        if (documentSnapshot.exists()) {
 
                             @Nullable String imagePath = (String) documentSnapshot.get("profileImage");
                             @Nullable String token = (String) documentSnapshot.get("fcmToken");
@@ -184,7 +188,7 @@ public class CocomentActivity extends AppCompatActivity {
 
                             //댓글 이미지
                             GlideApp.with(getApplicationContext())
-                                    .load(imagePath != null? imagePath : R.drawable.basic_user_image)
+                                    .load(imagePath != null ? imagePath : R.drawable.basic_user_image)
                                     .into(commentImage);
 
                             //댓글 이름
@@ -203,7 +207,11 @@ public class CocomentActivity extends AppCompatActivity {
 
     }
 
-    private void sendToNoticeBox(String toUUID, String commentDesc, PostingInfo postingInfo, String senderImagePath) {
+    private void sendToNoticeBox(String toUUID,
+                                 String commentDesc,
+                                 PostingInfo postingInfo,
+                                 String senderImagePath,
+                                 String userName) {
         String docId = UUID.randomUUID().toString();
         FirebaseFirestore.getInstance()
                 .collection("사용자")
@@ -215,7 +223,7 @@ public class CocomentActivity extends AppCompatActivity {
                                 docId,
                                 Objects.requireNonNull(FirebaseAuth.getInstance().getUid()),
                                 senderImagePath,
-                                postingInfo.storeName,
+                                userName,
                                 "대댓글",
                                 commentDesc,
                                 System.currentTimeMillis(),
@@ -233,14 +241,15 @@ public class CocomentActivity extends AppCompatActivity {
                                 final String desc,
                                 final String senderUid,
                                 final PostingInfo postingInfo,
-                                final String myImagePath){
-        if(toToken == null){
+                                final String myImagePath,
+                                final String userName) {
+        if (toToken == null) {
             Log.d(TAG, "대댓글 상대방의 FCM토큰이 없습니다.");
         }
 
-        RootModel rootModel = new RootModel(toToken, new NotificationModel("댓글에 대댓글이 달렸습니다.", "대댓글 : "+desc, ".Notice.NoticeActivity"));
+        RootModel rootModel = new RootModel(toToken, new NotificationModel("댓글에 대댓글이 달렸습니다.", "대댓글 : " + desc, ".Notice.NoticeActivity"));
 
-        Log.d(TAG, "대댓글 토큰 => "+ rootModel.getToken());
+        Log.d(TAG, "대댓글 토큰 => " + rootModel.getToken());
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
@@ -250,16 +259,16 @@ public class CocomentActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     Log.d(TAG, "대댓글 : 성공적으로 Retrofit으로 메시지를 전달했습니다.");
-                    sendToNoticeBox(senderUid, desc, postingInfo, myImagePath);
+                    sendToNoticeBox(senderUid, desc, postingInfo, myImagePath, userName);
                 }
 
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d(TAG, "대댓글 : Retrofit으로 메시지를 전달에 실패했습니다. : "+ t.getMessage());
+                Log.d(TAG, "대댓글 : Retrofit으로 메시지를 전달에 실패했습니다. : " + t.getMessage());
 
             }
         });
