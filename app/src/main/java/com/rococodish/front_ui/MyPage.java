@@ -258,24 +258,38 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                                 FirebaseFirestore.getInstance()
                                         .collection("사용자")
                                         .document(FirebaseAuth.getInstance().getUid())
-                                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                        .get()
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                             @Override
-                                            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                                                if(e != null){
-                                                    Log.d(TAG, e.getMessage());
-                                                }
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                 if(documentSnapshot.exists() && documentSnapshot != null){
                                                     String name = documentSnapshot.get("nickname").toString();
+                                                    @Nullable String profileImagePath = (String) documentSnapshot.get("profileImage");
 
                                                     if(toToken == null){
                                                         return;
                                                     }
-                                                    sendFCMFollow(toToken, toName, name);
-                                                    sendToNoticeBox(toUid, name);
-
+                                                    sendFCMFollow(toToken, toName, name, toUid, profileImagePath);
                                                 }
                                             }
                                         });
+//                                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//                                            @Override
+//                                            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+//                                                if(e != null){
+//                                                    Log.d(TAG, e.getMessage());
+//                                                }
+//                                                if(documentSnapshot.exists() && documentSnapshot != null){
+//                                                    String name = documentSnapshot.get("nickname").toString();
+//                                                    @Nullable String profileImagePath = (String) documentSnapshot.get("profileImage");
+//
+//                                                    if(toToken == null){
+//                                                        return;
+//                                                    }
+//                                                    sendFCMFollow(toToken, toName, name, toUid, profileImagePath);
+//                                                }
+//                                            }
+//                                        });
 
 
                                 Toast.makeText(MyPage.this, toName + "님을 팔로우했습니다.", Toast.LENGTH_SHORT).show();
@@ -381,7 +395,6 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                                                     FirebaseFirestore.getInstance().collection("사용자")
                                                             .document(userUUID)
                                                             .update("profileImage", null);
-                                                    //todo : 나갔다 들어오면서 이전 액티비티에서 전해오는 userUUID가 NULL이ㄷ 되버리는 에러
                                                     GlideApp.with(getApplicationContext())
                                                             .load(R.drawable.basic_user_image)
                                                             .into(circleImageView);
@@ -397,7 +410,14 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         }
 
     }
-    private void sendToNoticeBox(String toUUID, String userName) {
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
+    private void sendToNoticeBox(String toUUID, String userName, String senderImagePath) {
         String docId = UUID.randomUUID().toString();
         FirebaseFirestore.getInstance()
                 .collection("사용자")
@@ -408,7 +428,8 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
                         new NoticeInfo(
                                 docId,
                                 Objects.requireNonNull(FirebaseAuth.getInstance().getUid()),
-                                null,
+                                senderImagePath,
+                                userName,
                                 "팔로우",
                                  userName+" 님이 팔로우하셨습니다.",
                                 System.currentTimeMillis(),
@@ -424,7 +445,11 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
 
 
 
-    private void sendFCMFollow(String token, String toName, String fromName){
+    private void sendFCMFollow(String token,
+                               String toName,
+                               final String fromName,
+                               final String senderUid,
+                               final String myImagePath){
         if(token == null){
             Log.d(TAG, "팔로우 상대방의 FCM토큰이 없습니다.");
         }
@@ -440,9 +465,11 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         responseBodyCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.d(TAG, "팔로우 : 성공적으로 Retrofit으로 메시지를 전달했습니다.");
 
-                //todo : 보내는 게 성공하면 상대방 알림 보관함에 데이터베이스에 저장만 하면됨.
+                if(response.isSuccessful()){
+                    Log.d(TAG, "팔로우 : 성공적으로 Retrofit으로 메시지를 전달했습니다.");
+                    sendToNoticeBox(senderUid, fromName, myImagePath);
+                }
             }
 
             @Override

@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApiNotAvailableException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,11 +39,15 @@ import com.rococodish.front_ui.FollowActivity;
 import com.rococodish.front_ui.R;
 import com.rococodish.front_ui.Utils.DataPassUtils;
 import com.rococodish.front_ui.Utils.GlideApp;
+import com.rococodish.front_ui.Utils.GlidePlaceHolder;
 
+import java.net.URL;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeViewholder> {
 
@@ -50,14 +55,15 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
     Context context;
     List<NoticeInfo> list;
     ImageView iv_personImage;
-    @Nullable TextView tv_storeName;
+    @Nullable
+    TextView tv_storeName;
     TextView tv_typeOfNotification;
     TextView tv_noticeDesc;
     TextView tv_noticeTime;
 
-    FirebaseFirestore _db = FirebaseFirestore.getInstance();
+    FirebaseStorage storage = FirebaseStorage.getInstance();
 
-    public NoticeAdapter(Context context){
+    public NoticeAdapter(Context context) {
         this.context = context;
         list = new ArrayList<>();
         getNoticeData();
@@ -83,34 +89,24 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull NoticeViewholder holder, final int position) {
         //알림 보낸 사람 프로필 이미지 세팅
-        FirebaseFirestore.getInstance()
-                .collection("사용자")
-                .document(list.get(position).getSenderUid())
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        if(e != null){
-                            Log.d(TAG, e.getMessage());
-                        }
-                        if(documentSnapshot.exists()){
-                            @Nullable String imagePath = (String) documentSnapshot.getData().get("profileImage");
-                            if(imagePath != null){
-                                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(imagePath);
-                                GlideApp.with(context)
-                                        .load(storageReference)
-                                        .into(iv_personImage);
-                            }
-                            else{
-                                GlideApp.with(context)
-                                        .load(R.drawable.basic_user_image)
-                                        .into(iv_personImage);
-                            }
-
-                        }
-                    }
-                });
+        GlideApp.with(context)
+                .asBitmap()
+                .load(list.get(position).getSenderImagePath() != null ?list.get(position).getSenderImagePath() : R.drawable.basic_user_image)
+                .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
+                .error(R.drawable.ic_error_black_24dp)
+                .into(iv_personImage);
 
         //가게 이름 설정
         assert tv_storeName != null;
@@ -134,26 +130,25 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(noticeType.equals("팔로우")){
+                if (noticeType.equals("팔로우")) {
                     Intent intent = new Intent(context, FollowActivity.class);
                     intent.putExtra("userUUID", FirebaseAuth.getInstance().getUid());
                     intent.putExtra("pageNum", 0);
                     context.startActivity(intent);
-                }
-                else{
+                } else {
                     final Intent intent = new Intent(context, DishView.class);
                     @Nullable final PostingInfo postingInfo = list.get(position).getPostingInfo();
-                    if(postingInfo != null){
+                    if (postingInfo != null) {
                         FirebaseFirestore.getInstance()
                                 .collection("가게")
                                 .document(postingInfo.storeId)
                                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                     @Override
                                     public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                                        if(e != null){
+                                        if (e != null) {
                                             Log.d(TAG, e.getMessage());
                                         }
-                                        if(documentSnapshot.exists()){
+                                        if (documentSnapshot.exists()) {
                                             StoreInfo storeInfo = documentSnapshot.toObject(StoreInfo.class);
                                             SerializableStoreInfo serializableStoreInfo = new SerializableStoreInfo(storeInfo);
 
@@ -163,7 +158,6 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
                                         }
                                     }
                                 });
-
                     }
                 }
             }
@@ -175,7 +169,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
         return list.size();
     }
 
-    private void getNoticeData(){
+    private void getNoticeData() {
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("알림을 불러오고 있습니다.");
         progressDialog.show();
@@ -189,19 +183,18 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             @Nullable QuerySnapshot snapshotList = task.getResult();
 
-                            if(!snapshotList.isEmpty()){
-                                for(DocumentSnapshot dc : snapshotList.getDocuments()){
+                            if (!snapshotList.isEmpty()) {
+                                for (DocumentSnapshot dc : snapshotList.getDocuments()) {
                                     NoticeInfo noticeInfo = dc.toObject(NoticeInfo.class);
 
                                     list.add(noticeInfo);
                                 }
                                 notifyDataSetChanged();
                                 progressDialog.dismiss();
-                            }
-                            else{
+                            } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(context, "알림함이 비어있습니다.", Toast.LENGTH_LONG).show();
                             }
