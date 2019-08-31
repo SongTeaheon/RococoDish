@@ -25,6 +25,8 @@ public class CouponExplainActivity extends AppCompatActivity {
     final String TAG = "TAGCouponExplainAct";
     TextView tv_storeName;
     TextView tv_couponExplain;
+    TextView tv_couponPeriod;
+    TextView title;
     ImageView backBtn;
 
     FirebaseFirestore db;
@@ -41,8 +43,10 @@ public class CouponExplainActivity extends AppCompatActivity {
         storeId = intent.getStringExtra("storeId");
         storeName = intent.getStringExtra("storeName");
 
+        title = findViewById(R.id.tv_storeName);
+        title.setText("쿠폰안내");
 
-        tv_storeName = findViewById(R.id.tv_storeName);
+        tv_storeName = findViewById(R.id.couponName);
         tv_storeName.setText(storeName);
 
         backBtn = findViewById(R.id.backButton);
@@ -53,8 +57,8 @@ public class CouponExplainActivity extends AppCompatActivity {
             }
         });
 
-
-        tv_couponExplain = findViewById(R.id.tv_couponExplain);
+        tv_couponExplain = findViewById(R.id.couponValue);
+        tv_couponPeriod = findViewById(R.id.couponPeriod);
 
         db.collection("가게").document(storeId).collection("쿠폰")
                 .document("쿠폰")
@@ -67,6 +71,7 @@ public class CouponExplainActivity extends AppCompatActivity {
                             if (document.exists()) {
                                 Log.d(TAG, "DocumentSnapshot data: " + document.getString("내용"));
                                 tv_couponExplain.setText(document.getString("내용"));
+                                tv_couponPeriod.setText(document.getString("게시기간"));
                             } else {
                                 Log.d(TAG, "No such document");
                             }

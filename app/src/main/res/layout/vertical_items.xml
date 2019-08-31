@@ -68,7 +68,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="11dp"
                         android:layout_toEndOf="@+id/storeDistance"
-                        android:src="@drawable/ic_coupon_drawer"
+                        android:src="@drawable/ic_coupon"
                         android:visibility="invisible"
                         card_view:srcCompat="@drawable/ic_coupon"
                         tools:srcCompat="@drawable/ic_coupon" />

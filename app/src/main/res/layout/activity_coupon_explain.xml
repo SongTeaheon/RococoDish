@@ -22,12 +22,168 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/tv_couponExplain"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/couponName"
+        android:layout_width="wrap_content"
+        android:layout_height="26dp"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/bmjua"
+        android:text="음식점이름"
+        android:textColor="@color/GGrey"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relLayout2"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="83dp"
+        android:layout_height="26dp"
+        android:fontFamily="@font/bmjua"
+        android:text="할인 쿠폰"
+        android:textColor="@color/GGrey"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@+id/couponName"
+        app:layout_constraintTop_toBottomOf="@+id/relLayout2"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/couponPeriod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/bmjua"
+        android:text="쿠폰 게시 기간 2019-09-01 ~ 2019-12-31"
+        android:textColor="@color/Grey"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/couponValue"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/couponValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/bmjua"
+        android:text="메뉴 동반자 수만큼 선택 쿠폰 (최대 4개)"
+        android:textColor="@color/MainColor"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/couponName"
+        tools:ignore="SpUsage" />
+
+    <ImageView
+        android:id="@+id/imageViewLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/LightGrey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/couponPeriod"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/couponCaution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/bmjua"
+        android:text="유의사항"
+        android:textColor="@color/GGrey"
+        android:textSize="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewLine"
+        app:layout_goneMarginTop="16dp"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/couponCautionContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/bmjua"
+        android:text="- 쿠폰은 한 번에 1개 씩만 사용 가능합니다"
+        android:textColor="@color/Grey"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/couponCaution"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/couponCautionContent2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/bmjua"
+        android:text="- 해당 쿠폰은 양도 및 판매될 수 없습니다."
+        android:textColor="@color/Grey"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/couponCautionContent3"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/couponCautionContent6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/bmjua"
+        android:text="- 쿠폰을 사용하려면 사장님께 해당 쿠폰을 보여드려야 합니다."
+        android:textColor="@color/Grey"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/couponCautionContent2"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/couponCautionContent4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/bmjua"
+        android:text="- 해당 쿠폰은 한 번 사용 시 사라지며, 확인 없이 사용한 경우 복구가 불가능합니다."
+        android:textColor="@color/Grey"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/couponCautionContent6"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/couponCautionContent5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/bmjua"
+        android:text="- 쿠폰 유효기간은 6개월입니다."
+        android:textColor="@color/Grey"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/couponCautionContent4"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/couponCautionContent3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/bmjua"
+        android:text="- 해당 쿠폰은 사장님께서 쿠폰 게시기간동안 가장 잘쓴 게시글을 선정해서 전달됩니다."
+        android:textColor="@color/Grey"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/couponCautionContent"
+        tools:ignore="SpUsage" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

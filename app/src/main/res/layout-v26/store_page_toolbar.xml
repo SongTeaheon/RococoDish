@@ -51,7 +51,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/ic_coupon_drawer"
+                    android:src="@drawable/ic_coupon"
                     android:visibility="invisible"
                     tools:srcCompat="@drawable/ic_coupon" />
 
