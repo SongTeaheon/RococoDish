@@ -14,12 +14,12 @@ import android.widget.TextView;
 
 public class SignUpAdapter extends PagerAdapter {
 
-    private int[] images = {R.drawable.ic_logo2 ,R.drawable.ic_store, R.drawable.ic_food, R.drawable.ic_breakfast};
+    private int[] images = {R.drawable.ic_logo2 ,R.mipmap.plususe, R.mipmap.mapuse, R.mipmap.ic_app_icon};
     private String[] texts = {
             "로코코디쉬",
-            "다른 사람들이 모아둔 식사를 모아보세요. \n 당신의 식사들을 소중히 담아두세요.",
-            "맛있는 식사 \n 퀄리티 좋은 가게 \n 로코코디쉬에서 찾아보세요.",
-            "이제 시작해보세요 \n 로코코디쉬"
+            "디저트처럼 가볍게 \n 당신의 식사를 공유하세요.",
+            "다른 사람들이 공유한 맛집이 \n 어디에 있는지 바로 확인하세요.",
+            "이제 시작해보세요. \n 로코코디쉬"
     };
     LayoutInflater inflater;
     private Context context;

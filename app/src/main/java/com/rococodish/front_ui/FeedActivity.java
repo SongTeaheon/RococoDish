@@ -7,20 +7,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.rococodish.front_ui.DataModel.PostingInfo;
+import com.rococodish.front_ui.PostingProcess.MainShareActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,13 +40,14 @@ public class FeedActivity extends AppCompatActivity implements SwipeRefreshLayou
     FeedAdapter recyFeedAdapter;
     FrameLayout loadingFrame;
     SwipeRefreshLayout mSwipeRefreshLayout;
+    FloatingActionButton addPosting;
 
 
     private ArrayList<PostingInfo> mListPosting;
     ArrayList<String> mListFollower;
     FirebaseFirestore db;
     Context mContext;
-
+    ImageView backBtn;
 
 
     @Override
@@ -60,6 +65,24 @@ public class FeedActivity extends AppCompatActivity implements SwipeRefreshLayou
         mSwipeRefreshLayout = findViewById(R.id.swipe_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         getFollowerData();
+
+        //우측 하단 포스팅 추가 버튼
+        addPosting = findViewById(R.id.addPosting_fab_subActivity_feed);
+        addPosting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FeedActivity.this, MainShareActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        backBtn = findViewById(R.id.backButton);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void getFollowerData(){

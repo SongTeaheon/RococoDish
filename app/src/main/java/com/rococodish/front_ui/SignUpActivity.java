@@ -69,7 +69,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
         scrollingPagerIndicator = findViewById(R.id.viewpager_indicator_activitySignUp);
         scrollingPagerIndicator.attachToPager(viewPager);
-        scrollingPagerIndicator.setDotColor(getResources().getColor(R.color.colorWhite));
+        scrollingPagerIndicator.setDotColor(getResources().getColor(R.color.LightGrey));
         scrollingPagerIndicator.setSelectedDotColor(getResources().getColor(R.color.colorAccent));
 //
 //        //이메일로 시작하기

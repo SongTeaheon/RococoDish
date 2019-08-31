@@ -106,13 +106,6 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     ViewPager myPostViewPager;
     SubViewPagerAdapter viewPagerAdapter;
 
-    String SaveMarketVersion;
-    String SaveAppVersion;
-
-    TextView whatDoYou;
-    public String Apppackage = "com.rococodish.front_ui";
-
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,7 +134,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 //            }
 //        });
         //피드로 넘어가는 버튼
-        iv_feed = findViewById(R.id.iv_mainText);
+        iv_feed = findViewById(R.id.feed_btn);
         iv_feed.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -644,91 +637,91 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         return distanceStr;
     }
 
-    private Boolean isNetWork() {//버전 확인을 위한 네트워크 체크 함수
-        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        boolean isMobileAvailable = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isAvailable();
-        boolean isMobileConnect = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
-        boolean isWifiAvailable = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isAvailable();
-        boolean isWifiConnect = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+//    private Boolean isNetWork() {//버전 확인을 위한 네트워크 체크 함수
+//        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//        boolean isMobileAvailable = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isAvailable();
+//        boolean isMobileConnect = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+//        boolean isWifiAvailable = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isAvailable();
+//        boolean isWifiConnect = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+//
+//        return (isWifiAvailable && isWifiConnect) || (isMobileAvailable && isMobileConnect);
+//    }
 
-        return (isWifiAvailable && isWifiConnect) || (isMobileAvailable && isMobileConnect);
-    }
+//    private class getMarketVersion extends AsyncTask<String, String, String> {
+//
+//        String MarketVersion;
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                String AppFromPlayStore = "https://play.google.com/store/apps/details?id=com.rococodish.front_ui";
+//                Document doc = Jsoup.connect(AppFromPlayStore).get();
+//
+//                Elements Version = doc.select(".htlgb ");
+//
+//                for (int i = 0; i < 10; i++) {
+//                    MarketVersion = Version.get(i).text();
+//                    if (Pattern.matches("^[0-9]{1}.[0-9]{1}$", MarketVersion)) {
+//                        break;
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return MarketVersion;
+//        }
+//    }
 
-    private class getMarketVersion extends AsyncTask<String, String, String> {
-
-        String MarketVersion;
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                String AppFromPlayStore = "https://play.google.com/store/apps/details?id=com.rococodish.front_ui";
-                Document doc = Jsoup.connect(AppFromPlayStore).get();
-
-                Elements Version = doc.select(".htlgb ");
-
-                for (int i = 0; i < 10; i++) {
-                    MarketVersion = Version.get(i).text();
-                    if (Pattern.matches("^[0-9]{1}.[0-9]{1}$", MarketVersion)) {
-                        break;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return MarketVersion;
-        }
-    }
-
-    private String getAppVersion() {
-        PackageManager pm = getPackageManager();
-        PackageInfo pInfo = null;
-
-        try {
-            pInfo = pm.getPackageInfo(getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e1) {
-            e1.printStackTrace();
-        }
-
-        String currentVersion = pInfo.versionName;
-
-        return currentVersion;
-    }
-
-
-    public void CompareVersion() {
-        if (isNetWork()) {
-            try {
-                SaveMarketVersion = new getMarketVersion().execute().get();
-                SaveAppVersion = getAppVersion();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-
-            if (!SaveMarketVersion.equals(SaveAppVersion)) {
-                new AlertDialog.Builder(SubActivity.this)
-                        .setMessage("업데이트가 필요합니다.\n업데이트를 해 주세요.")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                finish();
-                                Uri uri = Uri.parse("market://details?id=" + Apppackage);
-                                Intent it = new Intent(Intent.ACTION_VIEW, uri);
-                                startActivity(it);
-                            }
-                        })
-                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                finish();
-                            }
-                        })
-                        .setCancelable(false)
-                        .show();
-            }
-        } else Toast.makeText(SubActivity.this, "인터넷 연결이 되어있지않아 버전정보를 확인할 수 없음", Toast.LENGTH_SHORT).show();
-    }
+//    private String getAppVersion() {
+//        PackageManager pm = getPackageManager();
+//        PackageInfo pInfo = null;
+//
+//        try {
+//            pInfo = pm.getPackageInfo(getPackageName(), 0);
+//        } catch (PackageManager.NameNotFoundException e1) {
+//            e1.printStackTrace();
+//        }
+//
+//        String currentVersion = pInfo.versionName;
+//
+//        return currentVersion;
+//    }
+//
+//
+//    public void CompareVersion() {
+//        if (isNetWork()) {
+//            try {
+//                SaveMarketVersion = new getMarketVersion().execute().get();
+//                SaveAppVersion = getAppVersion();
+//            } catch (InterruptedException | ExecutionException e) {
+//                e.printStackTrace();
+//            }
+//
+//            if (!SaveMarketVersion.equals(SaveAppVersion)) {
+//                new AlertDialog.Builder(SubActivity.this)
+//                        .setMessage("업데이트가 필요합니다.\n업데이트를 해 주세요.")
+//                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                finish();
+//                                Uri uri = Uri.parse("market://details?id=" + Apppackage);
+//                                Intent it = new Intent(Intent.ACTION_VIEW, uri);
+//                                startActivity(it);
+//                            }
+//                        })
+//                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                finish();
+//                            }
+//                        })
+//                        .setCancelable(false)
+//                        .show();
+//            }
+//        } else Toast.makeText(SubActivity.this, "인터넷 연결이 되어있지않아 버전정보를 확인할 수 없음", Toast.LENGTH_SHORT).show();
+//    }
 }
