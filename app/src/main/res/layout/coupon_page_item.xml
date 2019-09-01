@@ -15,7 +15,7 @@
         android:background="@color/colorWhite">
 
         <TextView
-            android:id="@+id/itemCouponName"
+            android:id="@+id/tv_storeName_coupon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -30,7 +30,7 @@
             tools:ignore="SpUsage" />
 
         <TextView
-            android:id="@+id/itemCouponDate"
+            android:id="@+id/tv_couponDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -39,13 +39,13 @@
             android:fontFamily="@font/bmjua"
             android:text="쿠폰내용"
             android:textColor="@color/Grey"
-            android:textSize="10dp"
+            android:textSize="12dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemCouponName"
+            app:layout_constraintTop_toBottomOf="@+id/tv_storeName_coupon"
             tools:ignore="SpUsage" />
 
         <TextView
-            android:id="@+id/itemCouponAdvantage"
+            android:id="@+id/tv_validationDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -55,14 +55,14 @@
             android:fontFamily="@font/bmjua"
             android:text="유효기간 2019-04-30 ~ 2019-08-01"
             android:textColor="@color/Grey"
-            android:textSize="10dp"
+            android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemCouponDate"
+            app:layout_constraintTop_toBottomOf="@+id/tv_couponDesc"
             tools:ignore="SpUsage" />
 
         <ImageView
-            android:id="@+id/imageViewUse"
+            android:id="@+id/iv_userCoupon"
             android:layout_width="70dp"
             android:layout_height="25dp"
             android:layout_marginBottom="16dp"
