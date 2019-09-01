@@ -85,7 +85,6 @@ public class SubViewPagerAdapter extends PagerAdapter {
                         }
                         if(!queryDocumentSnapshots.isEmpty()){
                             for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
-
                                 storeInfoMap.put(0, dc.toObject(StoreInfo.class));
                             }
                         }
@@ -133,7 +132,9 @@ public class SubViewPagerAdapter extends PagerAdapter {
 
                                 PostingInfo postingInfo = dc.toObject(PostingInfo.class);
 
-                                list.add(postingInfo);
+                                if(!postingInfo.writerId.equals("aSmH6CXAr3Y6eTyuBqWo8mz9Wdx2")) {
+                                    list.add(postingInfo);
+                                }
 
                                 notifyDataSetChanged();
                             }

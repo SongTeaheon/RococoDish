@@ -47,6 +47,8 @@ public class StoreSearchFragment extends Fragment {
     private int count_cafe;
     private ArrayList<KakaoStoreInfo> dataList_cafe =null;
     private ArrayList<KakaoStoreInfo> dataList_store = null;
+    private ArrayList<KakaoStoreInfo> other_store = new ArrayList<>();
+
 
     ConstraintLayout constraint;
 
@@ -99,6 +101,7 @@ public class StoreSearchFragment extends Fragment {
                 Log.d(TAG, "search button clicked. searchWord : "+ searchWord);
                 count_cafe = -1;
                 count_store = -1;
+                includeOtherStore(searchWord);//이팔사팔공사팔을 추가하자
                 requestSearchApi(searchWord);
                 imm.hideSoftInputFromWindow(searchWordText.getWindowToken(), 0);
             }
@@ -112,6 +115,7 @@ public class StoreSearchFragment extends Fragment {
                     Log.d(TAG, "search button clicked. searchWord : "+ searchWord);
                     count_cafe = -1;
                     count_store = -1;
+                    includeOtherStore(searchWord);//이팔사팔공사팔을 추가하자
                     requestSearchApi(searchWord);
                     imm.hideSoftInputFromWindow(searchWordText.getWindowToken(), 0);
                 }
@@ -158,7 +162,7 @@ public class StoreSearchFragment extends Fragment {
 
 
     //네이버 api 검색 실행. 성공하면 정보 받아서 리사이클러뷰 어댑터로 넘긴다.
-    private void requestSearchApi(String searchWord){
+    private void requestSearchApi(final String searchWord){
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(API_URL)
@@ -183,6 +187,7 @@ public class StoreSearchFragment extends Fragment {
                     count_store = 0;
                     dataList_store = null;
                 }
+
                 //cafe완료된면
                 if (count_cafe >= 0) {
                     setFragVpAdapter();
@@ -221,9 +226,21 @@ public class StoreSearchFragment extends Fragment {
 
     }
 
+    private void includeOtherStore(String searchWord){
+        if(searchWord.contains("이팔사팔")){
+            Log.d(TAG, "이팔사팔 추가!!!!");
+            KakaoStoreInfo k = new KakaoStoreInfo(null, "이팔사팔공사팔", "", "", "", "", "서울 동대문구 전농로 225", "서울 동대문구 전농동 103-94", "127.052903","37.583949", "");
+            other_store.add(k);
+        }
+    }
     //recycler view를 네이버 api에서 가져온 리스트와 함께 어댑터 세팅
     private void setFragVpAdapter() {
         //TODO:여기서 다 세팅할 필요없을 거 같은데 확인필요
+        if(dataList_store == null)
+            dataList_store = other_store;
+        else
+            dataList_store.addAll(other_store);
+
         storeSearchFragVpAdapter = new StoreSearchFragVpAdapter(getFragmentManager(), dataList_store, dataList_cafe);
         storeSearchFragVpAdapter.notifyDataSetChanged();
         tabLayout.setupWithViewPager(viewPager);
