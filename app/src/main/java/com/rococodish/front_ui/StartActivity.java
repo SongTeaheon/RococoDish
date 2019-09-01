@@ -23,7 +23,7 @@ public class StartActivity extends AppCompatActivity {
         tv = findViewById(R.id.tv_activityStart);
         Animation splashAnim = AnimationUtils.loadAnimation(this, R.anim.splash_screen);
         logo.startAnimation(splashAnim);
-        logo.startAnimation(splashAnim);
+        tv.startAnimation(splashAnim);
 
         final Intent intent = new Intent(this, SubActivity.class);
         new Handler().postDelayed(new Runnable() {

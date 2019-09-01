@@ -68,7 +68,6 @@
 
         <TextView
             android:id="@+id/desc_cocoment"
-            android:textSize="10dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -76,6 +75,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
             android:text="댓글내용들어갑니다."
+            android:textSize="12dp"
             app:layout_constraintBottom_toTopOf="@+id/time_cocoment"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/linearLayout2"

@@ -100,6 +100,7 @@ public class StoreSearchFragment extends Fragment {
                 count_cafe = -1;
                 count_store = -1;
                 requestSearchApi(searchWord);
+                imm.hideSoftInputFromWindow(searchWordText.getWindowToken(), 0);
             }
         });
 

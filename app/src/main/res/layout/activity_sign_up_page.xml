@@ -74,17 +74,25 @@
         tools:ignore="SpUsage" />
 
     <ImageView
-        android:id="@+id/moveToRight_iv_activitySignUp"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
+        android:id="@+id/iv_next"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_next"
         android:tint="@color/MainColor"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/text_activitySignUpPage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout3"
-        app:srcCompat="@drawable/ic_right_arrow" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_pre"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_pre"
+        android:tint="@color/MainColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
