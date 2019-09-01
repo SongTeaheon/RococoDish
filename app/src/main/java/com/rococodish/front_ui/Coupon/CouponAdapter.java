@@ -38,7 +38,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
     TextView itemCouponName;
     TextView itemCouponDate;
     TextView itemCouponAdvantage;
-    TextView itemCouponDiscount;
+//    TextView itemCouponDiscount;
     ImageView imageViewUse;
     List<CouponInfo> list;
     ListenerRegistration listener;
@@ -58,7 +58,6 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
             itemCouponName = itemView.findViewById(R.id.itemCouponName);
             itemCouponDate = itemView.findViewById(R.id.itemCouponDate);
             itemCouponAdvantage = itemView.findViewById(R.id.itemCouponAdvantage);
-            itemCouponDiscount = itemView.findViewById(R.id.itemCouponDiscount);
             imageViewUse = itemView.findViewById(R.id.imageViewUse);
         }
     }
@@ -95,8 +94,8 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
         //최소금액 표시
         itemCouponAdvantage.setText(list.get(position).getAtLeastPrice());
 
-        //할인금액
-        itemCouponDiscount.setText(list.get(position).getDiscountMoney());
+//        //할인금액
+//        itemCouponDiscount.setText(list.get(position).getDiscountMoney());
 
         //사용하기 클릭
         imageViewUse.setOnClickListener(new View.OnClickListener() {
