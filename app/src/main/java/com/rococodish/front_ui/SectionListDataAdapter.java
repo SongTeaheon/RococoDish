@@ -38,6 +38,9 @@ import java.util.Objects;
 
 public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListDataAdapter.SingleItemRowHolder> { // 가로 리사이클러뷰를 위한 어뎁터
 
+    private final int TYPE_NORMAL = 0;
+    private final int TYPE_SELETED = 1;
+
     private ArrayList<PostingInfo> list;
     private Context mContext;
     private static final String TAG = "TAGSectionViewAdapter";
@@ -72,10 +75,16 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
 
     @Override
-    public SingleItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public SingleItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         Log.d(TAG, "onCreateViewHolder");
+        View v = null;
 
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.polar_style, null);
+        if(viewType == TYPE_SELETED){
+            Log.d(TAG, "isSelected????????YEs!!!!!!!!" + viewType);
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.polar_style2, null);
+        }else {
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.polar_style, null);
+        }
         SingleItemRowHolder mh = new SingleItemRowHolder(v);
         return mh;
     }
@@ -96,9 +105,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
 
         //coupon여부 확인
-//        if(singleItem.isSelected){
-//            holder.iv_crown.setVisibility(View.VISIBLE);
-//        }
+
 
         //태완태완 이미지 선택시 반응입니다. 여기가 그 각 포스팅1 글 누르면 발생하는 이벤트 부분입니다.
         holder.view.setOnClickListener(new View.OnClickListener() {
@@ -130,10 +137,18 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         return postingInfo.getViewId();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        PostingInfo postingInfo = list.get(position);
+        if(list.get(position).isSelected)
+            return TYPE_SELETED;
+        else
+            return TYPE_NORMAL;
+    }
+
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageView;
-        private ImageView iv_crown;
         View view;
 
         public SingleItemRowHolder(View view) {
