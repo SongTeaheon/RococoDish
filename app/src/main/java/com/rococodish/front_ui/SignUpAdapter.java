@@ -45,66 +45,26 @@ public class SignUpAdapter extends PagerAdapter {
         View view = inflater.inflate(R.layout.activity_sign_up_page, container, false);
 
         ImageView image = view.findViewById(R.id.image_activitySignUpPage);
-        ImageView pre = view.findViewById(R.id.iv_pre);
         ImageView next = view.findViewById(R.id.iv_next);
         TextView text = view.findViewById(R.id.text_activitySignUpPage);
         Button startBtn = view.findViewById(R.id.startBtn_btn_activitySignUpPage);
 //        ImageView moveToRight = view.findViewById(R.id.moveToRight_iv_activitySignUp);
 
-        switch (position) {
-            case 0: {
-                startBtn.setVisibility(View.GONE);
-                pre.setVisibility(View.GONE);
-                next.setVisibility(View.VISIBLE);
-                break;
-            }
-            case 1:
-            case 2: {
-                startBtn.setVisibility(View.GONE);
-                pre.setVisibility(View.VISIBLE);
-                next.setVisibility(View.VISIBLE);
-                break;
-            }
-            case 3: {
-                startBtn.setVisibility(View.VISIBLE);
-                pre.setVisibility(View.GONE);
-                next.setVisibility(View.GONE);
-                startBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, LoginDialog.class);
-                        context.startActivity(intent);
-                    }
-                });
-                break;
-            }
-            default: {
-                startBtn.setVisibility(View.VISIBLE);
-                pre.setVisibility(View.GONE);
-                next.setVisibility(View.GONE);
-                startBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, LoginDialog.class);
-                        context.startActivity(intent);
-                    }
-                });
-            }
+        if(position != 3){
+            //시작하기 버튼 숨기기
+            startBtn.setVisibility(View.GONE);
+            next.setVisibility(View.VISIBLE);
         }
-
-//        if(position != 3){
-//            //시작하기 버튼 숨기기
-//            startBtn.setVisibility(View.GONE);
-//        }
-//        else{
-//            startBtn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(context, LoginDialog.class);
-//                    context.startActivity(intent);
-//                }
-//            });
-//        }
+        else{
+            next.setVisibility(View.VISIBLE);
+            startBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, LoginDialog.class);
+                    context.startActivity(intent);
+                }
+            });
+        }
 
         image.setImageResource(images[position]);
         text.setText(texts[position]);

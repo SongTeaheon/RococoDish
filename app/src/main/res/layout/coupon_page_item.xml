@@ -22,7 +22,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/bmjua"
-            android:text="가게이름 할인 쿠폰"
+            android:text="가게이름"
             android:textColor="@color/GGrey"
             android:textSize="16dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +37,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/bmjua"
-            android:text="유효기간 2019-04-30 ~ 2019-08-01"
+            android:text="쿠폰내용"
             android:textColor="@color/Grey"
             android:textSize="10dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +53,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
             android:fontFamily="@font/bmjua"
-            android:text="최소 0원 이상 구매 시 사용가능"
+            android:text="유효기간 2019-04-30 ~ 2019-08-01"
             android:textColor="@color/Grey"
             android:textSize="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -61,45 +61,15 @@
             app:layout_constraintTop_toBottomOf="@+id/itemCouponDate"
             tools:ignore="SpUsage" />
 
-        <TextView
-            android:id="@+id/itemCouponDiscount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:fontFamily="@font/bmjua"
-            android:text="1000"
-            android:textColor="@color/MainColor"
-            android:textSize="16dp"
-            app:layout_constraintEnd_toStartOf="@+id/itemCouponDiscountWon"
-            app:layout_constraintTop_toTopOf="@+id/itemCouponName"
-            tools:ignore="SpUsage" />
-
-        <TextView
-            android:id="@+id/itemCouponDiscountWon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="0dp"
-            android:fontFamily="@font/bmjua"
-            android:text="원 할인"
-            android:textColor="@color/GGrey"
-            android:textSize="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/itemCouponName"
-            tools:ignore="SpUsage" />
-
         <ImageView
             android:id="@+id/imageViewUse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="0dp"
+            android:layout_width="70dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="16dp"
             android:src="@drawable/ic_coupon_use"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemCouponDiscountWon" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
