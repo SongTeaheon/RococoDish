@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.rococodish.front_ui.Coupon.CouponExplainActivity;
 import com.rococodish.front_ui.DataModel.PostingInfo;
 import com.rococodish.front_ui.DataModel.StoreInfo;
 import com.rococodish.front_ui.Edit.BroadcastUtils;
@@ -94,6 +95,10 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 .into(holder.imageView);
 
 
+        //coupon여부 확인
+        if(singleItem.isSelected){
+            holder.iv_crown.setVisibility(View.VISIBLE);
+        }
 
         //태완태완 이미지 선택시 반응입니다. 여기가 그 각 포스팅1 글 누르면 발생하는 이벤트 부분입니다.
         holder.view.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +133,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageView;
+        private ImageView iv_crown;
         View view;
 
         public SingleItemRowHolder(View view) {
@@ -135,6 +141,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             this.view = view;
             Log.d(TAG, "singleItemRowHolder");
             this.imageView = (ImageView) view.findViewById(R.id.imagefood);
+            this.iv_crown = view.findViewById(R.id.iv_crown);
         }
 
     }

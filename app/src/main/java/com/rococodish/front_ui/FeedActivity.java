@@ -48,7 +48,7 @@ public class FeedActivity extends AppCompatActivity implements SwipeRefreshLayou
     FirebaseFirestore db;
     Context mContext;
     ImageView backBtn;
-
+    boolean isExist = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,9 +131,8 @@ public class FeedActivity extends AppCompatActivity implements SwipeRefreshLayou
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 //조건에 해당하는게 없는지 확인
-                                if (task.getResult().isEmpty()) {
-                                    Log.d(TAG, "task.getResult : " + task.getResult().isEmpty());
-                                    Toast.makeText(mContext, "팔로우한 사람들의 게시글이 존재하지 않습니다", Toast.LENGTH_LONG).show();
+                                if (!task.getResult().isEmpty()) {
+                                    isExist = true;
                                 }
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Log.d(TAG, "포스팅 id : " + document.getId());
@@ -143,6 +142,9 @@ public class FeedActivity extends AppCompatActivity implements SwipeRefreshLayou
                                 //다끝났으면 팔로워들의 데이터를 시간 순으로 가져오자.
                                 if(count >= mListFollower.size() -1){
                                     display();
+                                    if(!isExist) {
+                                        Toast.makeText(mContext, "팔로우한 사람들의 게시글이 존재하지 않습니다", Toast.LENGTH_LONG).show();
+                                    }
                                 }
                                 display();
                             } else {
@@ -151,6 +153,8 @@ public class FeedActivity extends AppCompatActivity implements SwipeRefreshLayou
                         }
                     });
         }
+
+
     }
 
     private void display(){

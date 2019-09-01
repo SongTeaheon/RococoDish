@@ -71,6 +71,7 @@ public class LastShareFragment extends Fragment {
     private final String TAG = "TAGLastShareFragment";
     RatingBar mRatingBar;
     TextView mStarText;
+    TextView tv_address;
     EditText text_description;
     EditText tags;
     TextView text_title;
@@ -112,6 +113,8 @@ public class LastShareFragment extends Fragment {
 //        text_description = view.findViewById(R.id.search_btn);
         mRatingBar = view.findViewById(R.id.ratingBar);
         mStarText = view.findViewById(R.id.starText);
+        tv_address = view.findViewById(R.id.tv_address);
+        tv_address.setText(kakaoStoreInfo.road_address_name);
         storeName = view.findViewById(R.id.tv_storeName);
         storeName.setText(kakaoStoreInfo.place_name);
 //        String text = text_description.getText().toString();

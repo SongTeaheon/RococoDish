@@ -22,6 +22,7 @@ public class PostingInfo implements Serializable {
     public String postingId;
     public float aver_star;
     public String hashTags;
+    public boolean isSelected = false;
 
     private int viewId; //recyclervieadapter에서만 쓰이는 데이터입니다. 신경안쓰셔도 됩니당
 
@@ -180,5 +181,13 @@ public class PostingInfo implements Serializable {
 
     public void setViewId(int viewId) {
         this.viewId = viewId;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }
