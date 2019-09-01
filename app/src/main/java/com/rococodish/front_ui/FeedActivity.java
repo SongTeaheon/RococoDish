@@ -103,6 +103,7 @@ public class FeedActivity extends AppCompatActivity implements SwipeRefreshLayou
                             if (task.getResult().isEmpty()) {
                                 Log.d(TAG, "task.getResult : " + task.getResult().isEmpty());
                                 Toast.makeText(mContext, "팔로워가 없습니다. 관심있는 친구를 팔로우 하세요!", Toast.LENGTH_LONG).show();
+                                finish();
                             }else {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Log.d(TAG, "팔로워 id : " + document.getId());
@@ -143,7 +144,8 @@ public class FeedActivity extends AppCompatActivity implements SwipeRefreshLayou
                                 if(count >= mListFollower.size() -1){
                                     display();
                                     if(!isExist) {
-                                        Toast.makeText(mContext, "팔로우한 사람들의 게시글이 존재하지 않습니다", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(mContext, "게시글이 존재하지 않습니다", Toast.LENGTH_LONG).show();
+                                        finish();
                                     }
                                 }
                                 display();
