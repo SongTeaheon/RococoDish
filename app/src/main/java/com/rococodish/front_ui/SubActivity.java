@@ -114,6 +114,14 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         setContentView(R.layout.activity_sub);
 
 
+//        Intent getIntent = getIntent();
+//        @Nullable boolean fromNotice = getIntent.getBooleanExtra("fromNotice", false);
+//        if(fromNotice == true){
+//            Intent intent = new Intent(SubActivity.this, NoticeActivity.class);
+//            startActivity(intent);
+//        }
+
+
 //        CompareVersion();
 
 //        try {
@@ -133,6 +141,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 //                startActivity(intent);
 //            }
 //        });
+
         //피드로 넘어가는 버튼
         iv_feed = findViewById(R.id.feed_btn);
         iv_feed.setOnClickListener(new View.OnClickListener(){
