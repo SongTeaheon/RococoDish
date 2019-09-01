@@ -105,6 +105,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     FrameLayout loadingFrame;
     ViewPager myPostViewPager;
     SubViewPagerAdapter viewPagerAdapter;
+    private BackPressCloseHandler backPressCloseHandler;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -113,6 +114,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
 
+        backPressCloseHandler = new BackPressCloseHandler(this);
 
 //        Intent getIntent = getIntent();
 //        @Nullable boolean fromNotice = getIntent.getBooleanExtra("fromNotice", false);
@@ -594,21 +596,22 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         }
         //이미 닫혀있는 상태에서 취소 누르면 종료할 건지 다이얼로그 뜨게함.
         else{
-            new AlertDialog.Builder(this)
-                    .setMessage("정말 종료하시겠습니까?")
-                    .setCancelable(true)
-                    .setPositiveButton("종료", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    })
-                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
+            backPressCloseHandler.onBackPressed();
+//            new AlertDialog.Builder(this)
+//                    .setMessage("정말 종료하시겠습니까?")
+//                    .setCancelable(true)
+//                    .setPositiveButton("종료", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            finish();
+//                        }
+//                    })
+//                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                        }
+//                    }).show();
         }
     }
 

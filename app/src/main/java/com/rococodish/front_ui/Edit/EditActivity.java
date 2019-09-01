@@ -109,6 +109,7 @@ public class EditActivity extends AppCompatActivity {
         starText.setText(Float.toString(postingInfo.getAver_star()));
 
         mRatingBar = findViewById(R.id.ratingBar);
+        mRatingBar.setRating(postingInfo.getAver_star());
         RatingBarUtils.setupStarRatingBar(mRatingBar, starText);
 
         //backButton

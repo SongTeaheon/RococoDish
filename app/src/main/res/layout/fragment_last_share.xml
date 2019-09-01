@@ -155,7 +155,7 @@
                     android:isIndicator="false"
                     android:numStars="5"
                     android:rating="0"
-                    android:stepSize="1"
+                    android:stepSize="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_address" />
 
@@ -164,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/bmjua"
                     android:text="0.0"
                     android:textColor="@color/MainColor"
