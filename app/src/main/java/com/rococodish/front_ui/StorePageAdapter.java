@@ -49,8 +49,12 @@ public class StorePageAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        if(convertView == null)
+        if(list.get(position).getPostingInfo().isSelected) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.store_page_item2, parent, false);
+        }else{
             convertView = LayoutInflater.from(context).inflate(R.layout.store_page_item, parent, false);
+        }
+
 
         postImage = convertView.findViewById(R.id.imagefood0);
         starNum = convertView.findViewById(R.id.storePageScore);
