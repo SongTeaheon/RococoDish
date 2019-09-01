@@ -25,7 +25,7 @@ public class StorePageAdapter extends BaseAdapter {
     ImageView postImage;
     TextView starNum;
     TextView likeNum;
-    ImageView iv_crown;
+//    ImageView iv_crown;
 
     public StorePageAdapter(Context context, List<StorePostInfo> list){
         this.context = context;
@@ -55,7 +55,7 @@ public class StorePageAdapter extends BaseAdapter {
         postImage = convertView.findViewById(R.id.imagefood0);
         starNum = convertView.findViewById(R.id.storePageScore);
         likeNum = convertView.findViewById(R.id.storePageLike);
-        iv_crown = convertView.findViewById(R.id.iv_crown);
+//        iv_crown = convertView.findViewById(R.id.iv_crown);
 
         //게시물 사진
         StorageReference fileReference = FirebaseStorage.getInstance()
@@ -70,9 +70,9 @@ public class StorePageAdapter extends BaseAdapter {
 
         //게시물당 좋아요 개수
         likeNum.setText(list.get(position).getLikeNum());
-        if(list.get(position).getPostingInfo().isSelected){
-            iv_crown.setVisibility(View.VISIBLE);
-        }
+//        if(list.get(position).getPostingInfo().isSelected){
+//            iv_crown.setVisibility(View.VISIBLE);
+//        }
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override

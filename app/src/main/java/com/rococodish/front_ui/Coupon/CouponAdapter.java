@@ -22,24 +22,21 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.rococodish.front_ui.DataModel.CouponInfo;
 import com.rococodish.front_ui.R;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 import javax.annotation.Nullable;
 
 public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponViewHolder> {
 
     Context context;
-    TextView itemCouponName;
-    TextView itemCouponDate;
-    TextView itemCouponAdvantage;
-//    TextView itemCouponDiscount;
-    ImageView imageViewUse;
+    TextView itemStoreName;
+    TextView itemCouponDesc;
+    TextView itemValidationDate;
+    ImageView iv_useCoupon;
     List<CouponInfo> list;
     ListenerRegistration listener;
     String TAG = "TAGCouponAdapter";
@@ -55,10 +52,10 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
     public class CouponViewHolder extends RecyclerView.ViewHolder {
         public CouponViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemCouponName = itemView.findViewById(R.id.itemCouponName);
-            itemCouponDate = itemView.findViewById(R.id.itemCouponDate);
-            itemCouponAdvantage = itemView.findViewById(R.id.itemCouponAdvantage);
-            imageViewUse = itemView.findViewById(R.id.imageViewUse);
+            itemStoreName = itemView.findViewById(R.id.tv_storeName_coupon);
+            itemCouponDesc = itemView.findViewById(R.id.tv_couponDesc);
+            itemValidationDate = itemView.findViewById(R.id.tv_validationDate);
+            iv_useCoupon = itemView.findViewById(R.id.iv_userCoupon);
         }
     }
 
@@ -83,30 +80,37 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
 
     @Override
     public void onBindViewHolder(@NonNull CouponViewHolder holder, final int position) {
-        //쿠폰 이름
-        itemCouponName.setText(list.get(position).getTitle());
+        //가게 이름
+        itemStoreName.setText(list.get(position).getStoreName());
 
         //쿠폰 유효기간
         String toDate = list.get(position).getToDate();
         String fromDate = list.get(position).getFromDate();
-        itemCouponDate.setText("유효기간 : " + toDate + " ~ " + fromDate);
+        itemValidationDate.setText("유효기간 : " + toDate + " ~ " + fromDate);
 
-        //최소금액 표시
-        itemCouponAdvantage.setText(list.get(position).getAtLeastPrice());
+        //쿠폰 내용
+        itemCouponDesc.setText(list.get(position).getCouponDesc());
 
-//        //할인금액
-//        itemCouponDiscount.setText(list.get(position).getDiscountMoney());
+
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO : 클릭하면 다음 가게 페이지 쿠폰내용으로 이동
+                //TODO : storeId, storeName intent로 이동
+
+            }
+        });
 
         //사용하기 클릭
-        imageViewUse.setOnClickListener(new View.OnClickListener() {
+        iv_useCoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String docId = list.get(position).getDocId();
-                String title = list.get(position).getTitle();
+                String title = list.get(position).getCouponDesc();
                 yesClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //todo : isCouponUsed 필드값을 true로 바꾸고 어댑터를 새로 불러옴.
                         FirebaseFirestore.getInstance()
                                 .collection("사용자")
                                 .document(FirebaseAuth.getInstance().getUid())

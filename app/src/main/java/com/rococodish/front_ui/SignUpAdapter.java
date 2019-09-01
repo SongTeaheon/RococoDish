@@ -50,13 +50,13 @@ public class SignUpAdapter extends PagerAdapter {
         Button startBtn = view.findViewById(R.id.startBtn_btn_activitySignUpPage);
 //        ImageView moveToRight = view.findViewById(R.id.moveToRight_iv_activitySignUp);
 
-        if(position != 3){
+        if(position != 3) {
             //시작하기 버튼 숨기기
             startBtn.setVisibility(View.GONE);
             next.setVisibility(View.VISIBLE);
         }
         else{
-            next.setVisibility(View.VISIBLE);
+            next.setVisibility(View.GONE);
             startBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

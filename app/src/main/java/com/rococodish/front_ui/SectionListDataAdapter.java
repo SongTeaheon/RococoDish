@@ -96,9 +96,9 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
 
         //coupon여부 확인
-        if(singleItem.isSelected){
-            holder.iv_crown.setVisibility(View.VISIBLE);
-        }
+//        if(singleItem.isSelected){
+//            holder.iv_crown.setVisibility(View.VISIBLE);
+//        }
 
         //태완태완 이미지 선택시 반응입니다. 여기가 그 각 포스팅1 글 누르면 발생하는 이벤트 부분입니다.
         holder.view.setOnClickListener(new View.OnClickListener() {
@@ -141,7 +141,6 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             this.view = view;
             Log.d(TAG, "singleItemRowHolder");
             this.imageView = (ImageView) view.findViewById(R.id.imagefood);
-            this.iv_crown = view.findViewById(R.id.iv_crown);
         }
 
     }
