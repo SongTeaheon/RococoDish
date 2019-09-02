@@ -3,6 +3,7 @@ package com.rococodish.front_ui.Coupon;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
@@ -94,12 +95,17 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
         itemCouponDesc.setText(list.get(position).getCouponDesc());
 
 
-
+        final String storeId = list.get(position).getStoreId();
+        final String storeName = list.get(position).getStoreName();
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO : 클릭하면 다음 가게 페이지 쿠폰내용으로 이동
                 //TODO : storeId, storeName intent로 이동
+                Intent intent = new Intent(context, CouponExplainActivity.class);
+                intent.putExtra("storeId", storeId);
+                intent.putExtra("storeName", storeName);
+                context.startActivity(intent);
 
             }
         });

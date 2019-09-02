@@ -19,7 +19,7 @@ public class KakaoStoreInfo implements Parcelable, Cloneable {
     public String y;
     public String place_url;
 
-    public KakaoStoreInfo(String id, String place_name, String category_name, String category_group_name, String category_group_code, String phone, String road_address_name, String address_name, String x, String mapx1, String place_url) {
+    public KakaoStoreInfo(String id, String place_name, String category_name, String category_group_name, String category_group_code, String phone, String road_address_name, String address_name, String x, String y, String place_url) {
         this.id = id;
         this.place_name = place_name;
         this.category_name = category_name;
