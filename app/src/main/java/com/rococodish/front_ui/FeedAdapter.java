@@ -94,7 +94,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ItemRowHolder>
         StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
         GlideApp.with(mContext).load(fileReference).into(itemRowHolder.ivMain);
 
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat transFormat = new SimpleDateFormat("yy MM/dd HH:mm");
         itemRowHolder.tvDay.setText(transFormat.format(postingInfo.getPostingTime()));
         itemRowHolder.tvStoreName.setText(postingInfo.getStoreName());
         itemRowHolder.tvAddress.setText(postingInfo.getAddress());
