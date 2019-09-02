@@ -128,7 +128,7 @@
             android:value="@string/kakao_app_key" /> <!-- 파이어베이스 fcm -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_logo" />
+            android:resource="@drawable/ic_rococo_mini" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/MainColor" />
