@@ -16,11 +16,15 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.rococodish.front_ui.Notice.NoticeActivity;
 import com.rococodish.front_ui.R;
+import com.rococodish.front_ui.StartActivity;
 import com.rococodish.front_ui.SubActivity;
+
+import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private String TAG = "TAGMyFirebaseMsgService";
+    Intent intent;
 
 
     @Override
@@ -39,13 +43,32 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 // Handle message within 10 seconds
                 handleNow();
             }
+
+//            //rootModel에 goNotice값이 true면 서브액티비티 먼저 이동
+//            if(remoteMessage.getData().get("goNotice").equals("true")){
+//                Intent intent = new Intent(this, SubActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.putExtra("goNotice", "true");
+//                startActivity(intent);
+//            }
         }
 
         //알림이 왔을 때
         if (remoteMessage.getNotification() != null){
             Log.d(TAG, "알림의 내용입니다 : " + remoteMessage.getNotification().getBody());
 
-            sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+//            sendNotification(remoteMessage.getNotification().getTitle(),
+//                    remoteMessage.getNotification().getBody());
+//            Map data = remoteMessage.getData();
+//            sendNotification((String) data.get("title"),
+//                    (String) data.get("body"),
+//                    (String) data.get("click_action"));
+
+            String title = remoteMessage.getNotification().getTitle();
+            String body = remoteMessage.getNotification().getBody();
+            String clickAction = remoteMessage.getNotification().getClickAction();
+
+            sendNotification(title, body, clickAction);
         }
 
     }
@@ -78,9 +101,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //    }
 
     //어떤 방식으로 메시지를 보낼지 설정
-    private void sendNotification(String messageTitle, String messageBody) {
-        Intent intent = new Intent(this, NoticeActivity.class);//원래는 알림함으로 이동시킴.(일단 서브액티비티로 지정)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    private void sendNotification(String messageTitle,
+                                  String messageBody,
+                                  String click_action) {
+
+        //알림함으로 이동
+        if(click_action.equals(".Notice.NoticeActivity")){
+            intent = new Intent(this, NoticeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+        //SubActivity로 이동
+        else if(click_action.equals(".SubActivity")){
+            intent = new Intent(getApplicationContext(), SubActivity.class);
+            intent.putExtra("goNotice", "true");
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+        else{
+            intent = new Intent(this, StartActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
@@ -108,7 +147,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(channel);
         }
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(0/* ID of notification */, notificationBuilder.build());
     }
 
 

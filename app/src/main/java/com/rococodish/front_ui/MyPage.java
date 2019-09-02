@@ -33,6 +33,7 @@ import com.rococodish.front_ui.DataModel.UserInfo;
 import com.rococodish.front_ui.Edit.BroadcastUtils;
 import com.rococodish.front_ui.FCM.ApiClient;
 import com.rococodish.front_ui.FCM.ApiInterface;
+import com.rococodish.front_ui.FCM.DataModel;
 import com.rococodish.front_ui.FCM.NotificationModel;
 import com.rococodish.front_ui.FCM.RootModel;
 import com.rococodish.front_ui.Utils.AlgoliaUtils;
@@ -431,8 +432,6 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         });
     }
 
-
-
     private void sendFCMFollow(String token,
                                String toName,
                                final String fromName,
@@ -442,7 +441,12 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             Log.d(TAG, "팔로우 상대방의 FCM토큰이 없습니다.");
         }
 
-        RootModel rootModel = new RootModel(token, new NotificationModel("팔로우", fromName+"님이 "+ toName+"님을 팔로우하셨습니다.", ".Notice.NoticeActivity"));
+        RootModel rootModel = new RootModel(
+                token,
+                new NotificationModel(
+                        "팔로우",
+                        fromName+"님이 "+ toName+"님을 팔로우하셨습니다.",
+                        DishView.clickActionNotice));
 
         Log.d(TAG, "팔로우 토큰 => "+ rootModel.getToken());
 

@@ -116,12 +116,13 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
 
         backPressCloseHandler = new BackPressCloseHandler(this);
 
-//        Intent getIntent = getIntent();
-//        @Nullable boolean fromNotice = getIntent.getBooleanExtra("fromNotice", false);
-//        if(fromNotice == true){
-//            Intent intent = new Intent(SubActivity.this, NoticeActivity.class);
-//            startActivity(intent);
-//        }
+        @Nullable String goNotice = getIntent().getStringExtra("goNotice");
+        Log.d(TAG, "푸쉬알림에서 받은 데이터 => "+goNotice);
+        if(goNotice != null && goNotice.equals("true")){
+            Intent intent = new Intent(SubActivity.this, NoticeActivity.class);
+            startActivity(intent);
+        }
+
 
 
 //        CompareVersion();
@@ -644,6 +645,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     }
 
     public static String getDistanceStr(double lat, double lon){
+        assert(mCurrentLocation != null);
         double distance = LocationUtil.getDistanceFromMe(mCurrentLocation, lat, lon);//내 위치로부터의 거리 측정.
         String distanceStr = MathUtil.adjustedDistance(distance);
         return distanceStr;
