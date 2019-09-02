@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.Timestamp;
 import com.rococodish.front_ui.DataModel.NoticeInfo;
 import com.rococodish.front_ui.DataModel.SerializableStoreInfo;
 import com.rococodish.front_ui.DataModel.StoreInfo;
@@ -32,6 +33,7 @@ import com.rococodish.front_ui.DataModel.UserInfo;
 import com.rococodish.front_ui.Edit.BroadcastUtils;
 import com.rococodish.front_ui.FCM.ApiClient;
 import com.rococodish.front_ui.FCM.ApiInterface;
+import com.rococodish.front_ui.FCM.DataModel;
 import com.rococodish.front_ui.FCM.NotificationModel;
 import com.rococodish.front_ui.FCM.RootModel;
 import com.rococodish.front_ui.Utils.AlgoliaUtils;
@@ -56,7 +58,11 @@ import com.yalantis.ucrop.UCrop;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -426,8 +432,6 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
         });
     }
 
-
-
     private void sendFCMFollow(String token,
                                String toName,
                                final String fromName,
@@ -437,7 +441,12 @@ public class MyPage extends AppCompatActivity implements MyPageDataPass {
             Log.d(TAG, "팔로우 상대방의 FCM토큰이 없습니다.");
         }
 
-        RootModel rootModel = new RootModel(token, new NotificationModel("팔로우", fromName+"님이 "+ toName+"님을 팔로우하셨습니다.", ".Notice.NoticeActivity"));
+        RootModel rootModel = new RootModel(
+                token,
+                new NotificationModel(
+                        "팔로우",
+                        fromName+"님이 "+ toName+"님을 팔로우하셨습니다.",
+                        DishView.clickActionNotice));
 
         Log.d(TAG, "팔로우 토큰 => "+ rootModel.getToken());
 
@@ -554,7 +563,7 @@ class MyAdapter extends BaseAdapter {
 
     Context mContext;
     int layout;
-    ArrayList<PostingInfo> list;
+    List<PostingInfo> list;
     LayoutInflater inf;
     FirebaseStorage storage;
     StorageReference storageReference;
@@ -682,8 +691,13 @@ class MyAdapter extends BaseAdapter {
                                 PostingInfo postingInfo = document.toObject(PostingInfo.class);
                                 //해당 가게 정보의 post데이터를 가져온다.
                                 list.add(postingInfo);
-                                notifyDataSetChanged();
                             }
+                            Collections.sort(list, new Comparator<PostingInfo>() {
+                                @Override
+                                public int compare(PostingInfo t0, PostingInfo t1) {
+                                    return ((Date)t1.getPostingTime()).compareTo((Date)t0.getPostingTime());
+                                }
+                            });
                             notifyDataSetChanged();
                             Log.d(TAG, "getFollowerData size : " + queryDocumentSnapshots.getDocuments().size());
                             mCallback.setNumberOfData(queryDocumentSnapshots.getDocuments().size());

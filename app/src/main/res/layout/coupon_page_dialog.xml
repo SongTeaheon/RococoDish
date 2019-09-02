@@ -34,8 +34,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="16dp"
                     android:src="@drawable/ic_coupon"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_couponName"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,16 +45,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
                     android:layout_marginEnd="24dp"
-                    android:fontFamily="@font/bmjua"
-                    android:maxLines="1"
                     android:ellipsize="end"
+                    android:fontFamily="@font/bmjua"
+                    android:maxLines="2"
                     android:text="쿠폰명"
                     android:textAlignment="viewStart"
                     android:textColor="@color/Grey"
                     android:textSize="22dp"
+                    app:layout_constraintBottom_toTopOf="@+id/textView11"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
@@ -64,15 +65,16 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
                     android:layout_marginEnd="24dp"
                     android:fontFamily="@font/bmjua"
                     android:lineSpacingExtra="15dp"
-                    android:text="본 쿠폰은 사용 확인 시 \n반환이 되지 않습니다!! \n반드시 사용가능한 곳에서 \n사용 확인이 된 상태에서만 \n사용 확인을 눌러주세요!!!"
+                    android:text="본 쿠폰은 사용 확인 시 \n반환이 되지 않습니다!! \n계산시에 점원이나 사장님께\n보여주세요!!"
                     android:textAlignment="textStart"
                     android:textColor="@color/MainColor"
                     android:textSize="20dp"
+                    app:layout_constraintBottom_toTopOf="@+id/textView12"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_couponName" />
 
@@ -89,6 +91,7 @@
                     android:textSize="12dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView11" />
 

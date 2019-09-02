@@ -20,6 +20,7 @@ import com.rococodish.front_ui.DataModel.NoticeInfo;
 import com.rococodish.front_ui.DataModel.PostingInfo;
 import com.rococodish.front_ui.FCM.ApiClient;
 import com.rococodish.front_ui.FCM.ApiInterface;
+import com.rococodish.front_ui.FCM.DataModel;
 import com.rococodish.front_ui.FCM.NotificationModel;
 import com.rococodish.front_ui.FCM.RootModel;
 import com.rococodish.front_ui.Utils.GlideApp;
@@ -247,7 +248,12 @@ public class CocomentActivity extends AppCompatActivity {
             Log.d(TAG, "대댓글 상대방의 FCM토큰이 없습니다.");
         }
 
-        RootModel rootModel = new RootModel(toToken, new NotificationModel("댓글에 대댓글이 달렸습니다.", "대댓글 : " + desc, ".Notice.NoticeActivity"));
+        RootModel rootModel = new RootModel(
+                toToken,
+                new NotificationModel(
+                        "댓글에 대댓글이 달렸습니다.",
+                        "대댓글 : " + desc,
+                        DishView.clickActionNotice));
 
         Log.d(TAG, "대댓글 토큰 => " + rootModel.getToken());
 
