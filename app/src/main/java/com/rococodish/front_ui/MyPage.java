@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.Timestamp;
 import com.rococodish.front_ui.DataModel.NoticeInfo;
 import com.rococodish.front_ui.DataModel.SerializableStoreInfo;
 import com.rococodish.front_ui.DataModel.StoreInfo;
@@ -56,7 +57,11 @@ import com.yalantis.ucrop.UCrop;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -554,7 +559,7 @@ class MyAdapter extends BaseAdapter {
 
     Context mContext;
     int layout;
-    ArrayList<PostingInfo> list;
+    List<PostingInfo> list;
     LayoutInflater inf;
     FirebaseStorage storage;
     StorageReference storageReference;
@@ -682,8 +687,13 @@ class MyAdapter extends BaseAdapter {
                                 PostingInfo postingInfo = document.toObject(PostingInfo.class);
                                 //해당 가게 정보의 post데이터를 가져온다.
                                 list.add(postingInfo);
-                                notifyDataSetChanged();
                             }
+                            Collections.sort(list, new Comparator<PostingInfo>() {
+                                @Override
+                                public int compare(PostingInfo t0, PostingInfo t1) {
+                                    return ((Date)t1.getPostingTime()).compareTo((Date)t0.getPostingTime());
+                                }
+                            });
                             notifyDataSetChanged();
                             Log.d(TAG, "getFollowerData size : " + queryDocumentSnapshots.getDocuments().size());
                             mCallback.setNumberOfData(queryDocumentSnapshots.getDocuments().size());
