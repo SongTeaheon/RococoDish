@@ -34,7 +34,7 @@
                     android:layout_marginEnd="12dp"
                     android:layout_toStartOf="@+id/main_search_btn"
                     android:layout_toEndOf="@+id/backButton"
-                    android:hint="가게, 지역, 태그, 이름으로 검색"
+                    android:hint="가게, 지역, 이름으로 검색"
                     android:textColor="@color/GGrey"
                     android:textSize="16dp"
                     android:background="@drawable/search_edittext"
