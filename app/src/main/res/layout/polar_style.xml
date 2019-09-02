@@ -8,8 +8,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_imagefood"
-        android:layout_width="180dp"
-        android:layout_height="135dp"
+        android:layout_width="170dp"
+        android:layout_height="127.5dp"
         android:layout_margin="8dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
