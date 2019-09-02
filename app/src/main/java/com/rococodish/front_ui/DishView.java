@@ -176,7 +176,7 @@ public class DishView extends AppCompatActivity {
 
         //게시물 시간 설정
         postTime = findViewById(R.id.tv_Day);
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat transFormat = new SimpleDateFormat("yy MM/dd HH:mm");
         postTime.setText(transFormat.format(postingInfo.getPostingTime()));
 
 
