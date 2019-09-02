@@ -38,6 +38,7 @@ import com.rococodish.front_ui.DataModel.SerializableStoreInfo;
 import com.rococodish.front_ui.Edit.EditActivity;
 import com.rococodish.front_ui.FCM.ApiClient;
 import com.rococodish.front_ui.FCM.ApiInterface;
+import com.rococodish.front_ui.FCM.DataModel;
 import com.rococodish.front_ui.FCM.NotificationModel;
 import com.rococodish.front_ui.FCM.RootModel;
 import com.rococodish.front_ui.Utils.DeleteUtils;
@@ -206,7 +207,7 @@ public class DishView extends AppCompatActivity {
             textHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.MainColor), new HashTagHelper.OnHashTagClickListener() {
                 @Override
                 public void onHashTagClicked(String hashTag) {
-                    Toast.makeText(getApplicationContext(), hashTag, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), hashTag, Toast.LENGTH_SHORT).show();
                 }
             });
             textHashTagHelper.handle(hashTagText);
@@ -239,19 +240,19 @@ public class DishView extends AppCompatActivity {
         final StorageReference fileReference = storage.getReferenceFromUrl(postingInfo.imagePathInStorage);
         GlideApp.with(this).load(fileReference).into(imageView);
 
-        //todo : 이미지 클릭 시 확대 창으로 이동
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DishView.this, ZoomActivity.class);
-                Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        DishView.this,
-                        imageView,
-                        Objects.requireNonNull(ViewCompat.getTransitionName(imageView))).toBundle();
-                intent.putExtra("foodImagePath", postingInfo.imagePathInStorage);
-                startActivity(intent, options);
-            }
-        });
+//        //todo : 이미지 클릭 시 확대 창으로 이동
+//        imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(DishView.this, ZoomActivity.class);
+//                Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                        DishView.this,
+//                        imageView,
+//                        Objects.requireNonNull(ViewCompat.getTransitionName(imageView))).toBundle();
+//                intent.putExtra("foodImagePath", postingInfo.imagePathInStorage);
+//                startActivity(intent, options);
+//            }
+//        });
 
         /**
          * 게시물 삭제 및 수정 버튼 처리
@@ -617,6 +618,9 @@ public class DishView extends AppCompatActivity {
         });
     }
 
+    static String clickActionNotice = ".Notice.NoticeActivity";
+    static String clickActionSubActivity = ".SubActivity";
+
     public void sendFcmComment(String token,
                                final String desc,
                                final String senderUid,
@@ -627,7 +631,7 @@ public class DishView extends AppCompatActivity {
                 new NotificationModel(
                         "게시물에 댓글이 달렸습니다.",
                         "댓글 : " + desc,
-                        ".Notice.NoticeActivity"));
+                        clickActionNotice));
 
         Log.d(TAG, "댓글 토큰 => " + rootModel.getToken());
 
@@ -638,13 +642,12 @@ public class DishView extends AppCompatActivity {
         responseBodyCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     Log.d(TAG, "댓글 : 성공적으로 Retrofit으로 메시지를 전달했습니다.");
                     sendToNoticeBox(senderUid, desc, myImagePath, userName);
 
-                }
-                else{
-                    Log.d(TAG, "댓글 => Retrofit 보내기 에러 : "+ response.message());
+                } else {
+                    Log.d(TAG, "댓글 => Retrofit 보내기 에러 : " + response.message());
                 }
             }
 

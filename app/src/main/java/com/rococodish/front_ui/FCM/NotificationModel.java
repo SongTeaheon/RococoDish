@@ -6,7 +6,9 @@ public class NotificationModel {
     private String body;
     private String click_action;
 
-    public NotificationModel(String title, String body, String click_action) {
+    public NotificationModel(String title,
+                             String body,
+                             String click_action) {
         this.title = title;
         this.body = body;
         this.click_action = click_action;

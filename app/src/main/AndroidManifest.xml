@@ -58,6 +58,7 @@
             android:screenOrientation="portrait" /> <!-- 카카오 로그인 메타데이터 -->
         <activity
             android:name=".Notice.NoticeActivity"
+            android:parentActivityName=".SubActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name=".Notice.NoticeActivity" />
@@ -150,5 +151,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
 
 </manifest>

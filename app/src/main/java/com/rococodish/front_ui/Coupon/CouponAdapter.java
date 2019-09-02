@@ -1,6 +1,8 @@
 package com.rococodish.front_ui.Coupon;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
@@ -111,29 +113,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
                 yesClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        FirebaseFirestore.getInstance()
-                                .collection("사용자")
-                                .document(FirebaseAuth.getInstance().getUid())
-                                .collection("쿠폰함")
-                                .document(docId)
-                                .update("isCouponUsed", true)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(context, "쿠폰이 사용되었습니다.", Toast.LENGTH_LONG).show();
-                                        list.clear();
-                                        notifyDataSetChanged();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(context, "쿠폰 사용에 문제가 생겼습니다.", Toast.LENGTH_LONG).show();
-                                        list.clear();
-                                        notifyDataSetChanged();
-                                    }
-                                });
-                        couponDialog.dismiss();
+                        userCouponData(docId);
                     }
                 };
                 couponDialog = new CouponDialog(context, docId, title, yesClickListener);
@@ -142,6 +122,32 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
                 couponDialog.show();
             }
         });
+    }
+
+    void userCouponData(String docId){
+        FirebaseFirestore.getInstance()
+                .collection("사용자")
+                .document(FirebaseAuth.getInstance().getUid())
+                .collection("쿠폰함")
+                .document(docId)
+                .update("isCouponUsed", true)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(context, "쿠폰이 사용되었습니다.", Toast.LENGTH_LONG).show();
+                        list.clear();
+                        notifyDataSetChanged();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "쿠폰 사용에 문제가 생겼습니다.", Toast.LENGTH_LONG).show();
+                        list.clear();
+                        notifyDataSetChanged();
+                    }
+                });
+        couponDialog.dismiss();
     }
 
     @Override
