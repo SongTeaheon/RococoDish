@@ -110,41 +110,41 @@ public class StoreNameSearchAcitivity extends AppCompatActivity {
     private void sendStoreDataToAlgolia() {
         Log.d(TAG, "get all store data");
 
-//        db.collection("가게")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Log.d(TAG, document.getId() + " => " + document.getString("name"));
-//                                StoreInfo storeInfo = document.toObject(StoreInfo.class);
-//
-//                                AlgoliaUtils.addObject("store", storeInfo);
-//                            }
-//                        } else {
-//                            Log.d(TAG, "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
-
-        db.collection("사용자")
+        db.collection("가게")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getString("nickname"));
-                                UserInfo userInfo = document.toObject(UserInfo.class);
-                                userInfo.setUid(document.getId());
+                                Log.d(TAG, document.getId() + " => " + document.getString("name"));
+                                StoreInfo storeInfo = document.toObject(StoreInfo.class);
 
-                                AlgoliaUtils.addObject("user", userInfo);
+                                AlgoliaUtils.addObject("store", storeInfo);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
+
+//        db.collection("사용자")
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Log.d(TAG, document.getId() + " => " + document.getString("nickname"));
+//                                UserInfo userInfo = document.toObject(UserInfo.class);
+//                                userInfo.setUid(document.getId());
+//
+//                                AlgoliaUtils.addObject("user", userInfo);
+//                            }
+//                        } else {
+//                            Log.d(TAG, "Error getting documents: ", task.getException());
+//                        }
+//                    }
+//                });
     }
 }
