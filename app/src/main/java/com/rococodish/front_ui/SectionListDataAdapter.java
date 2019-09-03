@@ -52,13 +52,15 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     private String uuid;
     int index;
     FrameLayout loadingFrame;
+    int mode;
 
 
     public SectionListDataAdapter(Context context,
                                   StoreInfo storeInfo,
                                   double distance,
                                   int index,
-                                  FrameLayout loadingFrame) {
+                                  FrameLayout loadingFrame,
+                                  int mode) {
         Log.d(TAG, "SectionListDataAdapter");
         this.mContext = context;
         this.storeInfo = storeInfo;
@@ -70,6 +72,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         list = new ArrayList<>();
         getPostDataFromCloud(storeInfo.getStoreId());
         this.loadingFrame = loadingFrame;
+        this.mode = mode;//mode 0은 subActivity, 1은 검색화면에서 넘어온 것!!
     }
 
 
@@ -184,7 +187,9 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                             //post데이터가 들어오면 리사이클러뷰를 refresh한다.
                             Log.d(TAG, "notifyDataSetChanged!!!!!!!!!");
                             notifyDataSetChanged();
-
+                            if(mode == 1){//mode가 1이면 loading frame바로 gone처리한다
+                                loadingFrame.setVisibility(View.GONE);
+                            }
                             if(index == 3)//다이얼로그 끝!
                                 loadingFrame.setVisibility(View.GONE);
 

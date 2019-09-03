@@ -198,7 +198,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         /*
         * 임시 기능입니다. 임시가게이름 검색!
         * */
-//        TextView tv_storeSearch = findViewById(R.id.textview_storesearch);
+//        ImageView tv_storeSearch = findViewById(R.id.iv_mainText);
 //        tv_storeSearch.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -485,7 +485,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         Log.d(TAG, "initRecyclerView");
         main_recyclerview.setHasFixedSize(true);
         //가게 안에 목록 가져오는 리사이클러뷰
-        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter, loadingFrame);
+        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter, loadingFrame, 0);
         recyclerViewDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
         main_recyclerview.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         main_recyclerview.setAdapter(recyclerViewDataAdapter);
@@ -500,7 +500,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         loadingFrame = findViewById(R.id.loadingFrame);
 
         main_recyclerview.setHasFixedSize(true);
-        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, mCurrentLocation, loadingFrame);
+        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, mCurrentLocation, loadingFrame, 0);
         main_recyclerview.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         main_recyclerview.setAdapter(recyclerViewDataAdapter);
 

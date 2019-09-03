@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.View;
 
@@ -14,7 +15,7 @@ import ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator;
 public class SignUpActivity extends AppCompatActivity {
 
     private String TAG = "TAGSignUpActivity";
-//    TextView emailLogin;
+    //    TextView emailLogin;
 //    TextView facebookLogin;
 //    TextView googleLogin;
 //    List<AuthUI.IdpConfig> providers = Arrays.asList(new AuthUI.IdpConfig.EmailBuilder()
@@ -108,6 +109,15 @@ public class SignUpActivity extends AppCompatActivity {
 //            }
 //        });
 
+    }
+
+    public void mOnClick(View v) {
+        int position;
+
+        if (v.getId() == R.id.iv_next) {
+            position = viewPager.getCurrentItem();
+            viewPager.setCurrentItem(position + 1, true);
+        }
     }
 
 //    public void setGoogleLogin(Context context){

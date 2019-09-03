@@ -34,7 +34,6 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="76dp"
                     android:layout_marginEnd="92dp"
-                    android:fontFamily="@font/bmjua"
                     android:gravity="center"
                     android:text="유저이름"
                     android:textColor="@color/GGrey"

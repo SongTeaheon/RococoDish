@@ -21,8 +21,7 @@ public class RegionSearchActivity extends AppCompatActivity {
     FrameLayout loadingFrame;
     RecyclerViewDataAdapter recyclerViewDataAdapter;
     TextView searchWord;
-    ImageView logo;
-    ImageView search_btn;//should be gone
+    ImageView backBtn;
 
 
     @Override
@@ -40,14 +39,15 @@ public class RegionSearchActivity extends AppCompatActivity {
         Location mSearchLocation = new Location("dummyprovider");
         mSearchLocation.setLongitude(lon);
         mSearchLocation.setLatitude(lat);
-
-        search_btn = findViewById(R.id.search_btn);
-        search_btn.setVisibility(View.GONE);
+        backBtn = findViewById(R.id.backButton);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         searchWord = findViewById(R.id.tv_storeName);
         searchWord.setText(placeName);
-        searchWord.setVisibility(View.VISIBLE);
-        logo = findViewById(R.id.iv_mainText);
-        logo.setVisibility(View.INVISIBLE);
         main_recyclerview = findViewById(R.id.mrecyclerView);
         initRecyclerView(mSearchLocation);
 
@@ -62,7 +62,7 @@ public class RegionSearchActivity extends AppCompatActivity {
         Log.d(TAG, "initRecyclerView");
         main_recyclerview.setHasFixedSize(true);
         //가게 안에 목록 가져오는 리사이클러뷰
-        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter, loadingFrame);
+        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter, loadingFrame, 1);
         recyclerViewDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
         main_recyclerview.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         main_recyclerview.setAdapter(recyclerViewDataAdapter);

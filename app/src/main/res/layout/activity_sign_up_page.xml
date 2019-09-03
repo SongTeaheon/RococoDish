@@ -81,6 +81,7 @@
         android:layout_marginBottom="16dp"
         android:src="@drawable/ic_next"
         android:tint="@color/MainColor"
+        android:onClick="mOnClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
