@@ -1,11 +1,9 @@
 package com.rococodish.front_ui;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rococodish.front_ui.Coupon.CouponExplainActivity;
 import com.rococodish.front_ui.Utils.LocationUtil;
@@ -46,12 +45,14 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     private Location mCurrentLocation;
     int isCalled;//onBindView가 다음으로 몇 번째가 불릴 건지 센다. - 중복해서 불리는 건 세지 않는다.
     FrameLayout loadingFrame;
+    int mode;
 
 
 
     public RecyclerViewDataAdapter(Context context,
                                    Location cLocation,
-                                   FrameLayout loadingFrame) {
+                                   FrameLayout loadingFrame,
+                                   int mode) {
         Log.d(TAG, "adpater constructor called");
         Log.d(TAG, "x, y : " + cLocation.getLongitude() + " " + cLocation.getLatitude());
         list= new ArrayList<>();
@@ -61,6 +62,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         getCloseStoreIdAndGetData();
         isCalled = 0;
         this.loadingFrame = loadingFrame;
+        this.mode = mode;//mode 0은 subActivity, 1은 검색화면에서 넘어온 것!!
     }
 
     @Override
@@ -110,7 +112,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
         if(isCalled <= i) {
 
-            itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance, i, loadingFrame);
+            itemListDataAdapter = new SectionListDataAdapter(mContext, singleItem, distance, i, loadingFrame, mode);
             itemListDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
             itemRowHolder.recycler_view_list.setHasFixedSize(true);
             itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
@@ -228,15 +230,22 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
             public void onGeoQueryReady() {
                 Log.d(TAG, "All initial data has been loaded and events have been fired!" + radius +" size : "+ dcSet.size()+"mypoint "+myPoint.getLatitude()+" "+ myPoint.getLongitude());
                 //가게 수가 50개가 넘거나 반경이 100km가 넘으면 STOP
-                if(radius < 10){
-                    radius += 2;
-                    getCloseStoreIdAndGetData();
-                }else if( radius < 50){
-                    radius += 10;
-                    getCloseStoreIdAndGetData();
-                }else if( radius < 1000){
-                    radius = 1000;
-                    getCloseStoreIdAndGetData();
+                if(mode != 1){
+                    if(radius < 10){
+                        radius += 2;
+                        getCloseStoreIdAndGetData();
+                    }else if( radius < 50){
+                        radius += 10;
+                        getCloseStoreIdAndGetData();
+                    }else if( radius < 1000){
+                        radius = 1000;
+                        getCloseStoreIdAndGetData();
+                    }
+                }else if(mode == 1){
+                    if(list.isEmpty()){
+                        loadingFrame.setVisibility(View.GONE);
+                        Toast.makeText(mContext, "검색된 가게가 없습니다.", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 

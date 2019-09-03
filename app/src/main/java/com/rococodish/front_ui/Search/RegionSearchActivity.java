@@ -62,7 +62,7 @@ public class RegionSearchActivity extends AppCompatActivity {
         Log.d(TAG, "initRecyclerView");
         main_recyclerview.setHasFixedSize(true);
         //가게 안에 목록 가져오는 리사이클러뷰
-        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter, loadingFrame);
+        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, locationCenter, loadingFrame, 1);
         recyclerViewDataAdapter.setHasStableIds(true); //dataSetChange할 때, blink하는 문제를 해결하기 위해!! getItemId 오버라이드 필요!!
         main_recyclerview.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         main_recyclerview.setAdapter(recyclerViewDataAdapter);
