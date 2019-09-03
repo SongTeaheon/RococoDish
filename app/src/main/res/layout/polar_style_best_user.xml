@@ -48,10 +48,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/bmjua"
                 android:text="유저이름"
                 android:textColor="@color/Grey"
-                android:textSize="16dp"
+                android:textSize="14dp"
                 app:layout_constraintStart_toEndOf="@+id/profile_cardview_dishView"
                 app:layout_constraintTop_toTopOf="@+id/profile_cardview_dishView"
                 tools:ignore="SpUsage" />

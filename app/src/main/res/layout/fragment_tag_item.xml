@@ -38,10 +38,9 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/bmjua"
             android:text="#태그내용"
             android:textColor="@color/GGrey"
-            android:textSize="16dp"
+            android:textSize="14dp"
             app:layout_constraintStart_toEndOf="@+id/imageViewTag"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpUsage" />
@@ -53,10 +52,9 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="@font/bmjua"
             android:text="게시물 수 0개"
             android:textColor="@color/Grey"
-            android:textSize="10dp"
+            android:textSize="8dp"
             app:layout_constraintStart_toEndOf="@+id/imageViewTag"
             app:layout_constraintTop_toBottomOf="@+id/itemTagName"
             tools:ignore="SpUsage" />

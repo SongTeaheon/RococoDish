@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include layout="@layout/activity_sub_toolbar" />
+        <include layout="@layout/store_page_toolbar" />
         <!--toolbar-->
     </RelativeLayout>
 
