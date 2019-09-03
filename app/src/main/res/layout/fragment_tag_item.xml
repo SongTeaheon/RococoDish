@@ -40,7 +40,8 @@
             android:layout_marginTop="16dp"
             android:text="#태그내용"
             android:textColor="@color/GGrey"
-            android:textSize="14dp"
+            android:textSize="16dp"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/imageViewTag"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpUsage" />
@@ -54,7 +55,7 @@
             android:layout_marginTop="8dp"
             android:text="게시물 수 0개"
             android:textColor="@color/Grey"
-            android:textSize="8dp"
+            android:textSize="10dp"
             app:layout_constraintStart_toEndOf="@+id/imageViewTag"
             app:layout_constraintTop_toBottomOf="@+id/itemTagName"
             tools:ignore="SpUsage" />
