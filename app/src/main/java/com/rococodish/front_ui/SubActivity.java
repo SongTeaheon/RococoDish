@@ -274,6 +274,58 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         getLocationPermission(); //Permission완료해야 recyclerview를 불러온다.(그 전에 불러오면 안되기 때문)
 
 
+
+        /*
+         * kakao로 데이터가 날아온 경우. dishview로 날아가야함.
+         * */
+        Intent intent = getIntent();
+        if(intent != null){
+            //카카오톡 메시지를 통해 온 경우.
+            Uri uri = intent.getData();
+            if(uri != null) {
+                Log.d(TAG, "uriuri : " + uri.toString());
+
+                final String postingId = uri.getQueryParameter("postingId");
+                final String storeId = uri.getQueryParameter("storeId");
+                String disStr = uri.getQueryParameter("distance");
+                disStr = disStr.replace("m", "");
+                disStr = disStr.replace("k", "");
+                disStr = disStr.replace("km", "");
+
+                final String disNumStr = disStr;
+                Log.d(TAG, "disSTr : " + disNumStr);
+
+
+                getDataWithId("포스팅", postingId, new FirebasePredicate() {
+                    @Override
+                    public void afterGetData(DocumentSnapshot document) {
+                        if (document.exists()) {
+                            Log.d(TAG, "kakao Data Start");
+                            final PostingInfo postingInfo = document.toObject(PostingInfo.class);
+                            getDataWithId("가게", storeId, new FirebasePredicate() {
+                                @Override
+                                public void afterGetData(DocumentSnapshot document) {
+                                    StoreInfo storeInfo = document.toObject(StoreInfo.class);
+                                    Double distance = Double.parseDouble(disNumStr);
+                                    Intent intent = new Intent(SubActivity.this, DishView.class);
+                                    DataPassUtils.makeIntentForData(intent, postingInfo, storeInfo);
+                                    Log.d(TAG, "kakao Data Done");
+                                    SubActivity.this.startActivity(intent);
+                                }
+                            });
+                        }else{
+                            Toast.makeText(SubActivity.this, "해당 게시글이 삭제되었습니다", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }else {
+                Log.e(TAG, "no uri");
+            }
+        }
+
+
+
+
 //        마이페이지용 리사이클러 뷰 변수
         myPostViewPager = findViewById(R.id.myPage_viewpager_activitySub);
         myPostViewPager.setPageTransformer(true, new Carousel(this));
@@ -337,50 +389,7 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
             }
         });
 
-        /*
-        * kakao로 데이터가 날아온 경우. dishview로 날아가야함.
-        * */
-        Intent intent = getIntent();
-        if(intent != null){
-            //카카오톡 메시지를 통해 온 경우.
-            Uri uri = intent.getData();
-            if(uri != null) {
-                Log.d(TAG, "uriuri : " + uri.toString());
 
-                final String postingId = uri.getQueryParameter("postingId");
-                final String storeId = uri.getQueryParameter("storeId");
-                String disStr = uri.getQueryParameter("distance");
-                disStr = disStr.replace("m", "");
-                disStr = disStr.replace("km", "");
-
-                final String disNumStr = disStr;
-
-
-                getDataWithId("포스팅", postingId, new FirebasePredicate() {
-                    @Override
-                    public void afterGetData(DocumentSnapshot document) {
-                        if (document.exists()) {
-                            final PostingInfo postingInfo = document.toObject(PostingInfo.class);
-                            getDataWithId("가게", storeId, new FirebasePredicate() {
-                                @Override
-                                public void afterGetData(DocumentSnapshot document) {
-                                    StoreInfo storeInfo = document.toObject(StoreInfo.class);
-                                    Double distance = Double.parseDouble(disNumStr);
-                                    Intent intent = new Intent(SubActivity.this, DishView.class);
-                                    DataPassUtils.makeIntentForData(intent, postingInfo, storeInfo);
-                                    SubActivity.this.startActivity(intent);
-                                }
-                            });
-                        }else{
-                            Toast.makeText(SubActivity.this, "해당 게시글이 삭제되었습니다", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            }else {
-                Log.e(TAG, "no uri");
-            }
-
-        }
     }
 
 
@@ -619,23 +628,22 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
         Log.d(TAG, "getDataFromFirestore");
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(collectionName).document(id)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        predicate.afterGetData(documentSnapshot);
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if(e != null){
+                            return;
+                        }
+                        if(documentSnapshot != null){
+                            predicate.afterGetData(documentSnapshot);
+                        }
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                     @Override
-                     public void onFailure(@NonNull Exception e) {
-                         Log.e(TAG, "해당 데이터가 삭제되었습니다.");
-                }
-        });
+                });
     }
 
     public static String getDistanceStr(double lat, double lon){
         assert(mCurrentLocation != null);
+        Log.d(TAG, "getDistanceStr : " + mCurrentLocation.getLongitude() + ", " + mCurrentLocation.getLongitude());
         double distance = LocationUtil.getDistanceFromMe(mCurrentLocation, lat, lon);//내 위치로부터의 거리 측정.
         String distanceStr = MathUtil.adjustedDistance(distance);
         return distanceStr;

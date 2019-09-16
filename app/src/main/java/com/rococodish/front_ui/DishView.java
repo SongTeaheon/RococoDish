@@ -315,6 +315,7 @@ public class DishView extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String disStr = SubActivity.getDistanceStr(storeInfo.getLat(), storeInfo.getLon());
+                Log.d(TAG, "dis : " + disStr);
                 Log.d(TAG, "num like " + postingInfo.getNumLike());
                 LocationTemplate params = LocationTemplate.newBuilder(storeInfo.getAddress(),
                         ContentObject.newBuilder(storeInfo.getName(),
