@@ -69,10 +69,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
-                android:fontFamily="@font/bmjua"
                 android:text="유저이름"
+                android:textStyle="bold"
                 android:textColor="@color/Grey"
-                android:textSize="16dp"
+                android:textSize="14dp"
                 app:layout_constraintStart_toEndOf="@+id/profile_cardview_dishView"
                 app:layout_constraintTop_toTopOf="@+id/profile_cardview_dishView"
                 tools:ignore="SpUsage" />
@@ -83,10 +83,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
-                android:fontFamily="@font/bmjua"
                 android:text="게시한 날짜/시간"
                 android:textColor="@color/Grey"
-                android:textSize="10dp"
+                android:textSize="8dp"
                 app:layout_constraintStart_toEndOf="@+id/profile_cardview_dishView"
                 app:layout_constraintTop_toBottomOf="@+id/tv_profileName"
                 tools:ignore="SpUsage" />
@@ -234,6 +233,7 @@
                 android:layout_height="30dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:visibility="invisible"
                 app:layout_constraintStart_toEndOf="@+id/iv_Like"
                 app:layout_constraintTop_toBottomOf="@+id/description_box_dishView"
                 app:srcCompat="@drawable/ic_share" />

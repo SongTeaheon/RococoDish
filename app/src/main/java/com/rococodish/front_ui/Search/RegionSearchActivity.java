@@ -21,8 +21,7 @@ public class RegionSearchActivity extends AppCompatActivity {
     FrameLayout loadingFrame;
     RecyclerViewDataAdapter recyclerViewDataAdapter;
     TextView searchWord;
-    ImageView logo;
-    ImageView search_btn;//should be gone
+    ImageView backBtn;
 
 
     @Override
@@ -40,14 +39,15 @@ public class RegionSearchActivity extends AppCompatActivity {
         Location mSearchLocation = new Location("dummyprovider");
         mSearchLocation.setLongitude(lon);
         mSearchLocation.setLatitude(lat);
-
-        search_btn = findViewById(R.id.search_btn);
-        search_btn.setVisibility(View.GONE);
+        backBtn = findViewById(R.id.backButton);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         searchWord = findViewById(R.id.tv_storeName);
         searchWord.setText(placeName);
-        searchWord.setVisibility(View.VISIBLE);
-        logo = findViewById(R.id.iv_mainText);
-        logo.setVisibility(View.INVISIBLE);
         main_recyclerview = findViewById(R.id.mrecyclerView);
         initRecyclerView(mSearchLocation);
 

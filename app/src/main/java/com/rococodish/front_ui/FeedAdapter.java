@@ -324,6 +324,17 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ItemRowHolder>
                                     mContext.startActivity(intent);
                                 }
                             });
+                            itemRowHolder.tvComment.setOnClickListener(new View.OnClickListener(){
+                                @Override
+                                public void onClick(View view) {
+                                    //DishView로 이동
+                                    //데이터 전달
+                                    Intent intent = new Intent(mContext, DishView.class);
+                                    DataPassUtils.makeIntentForData(intent, postingInfo, storeInfo);
+
+                                    mContext.startActivity(intent);
+                                }
+                            });
                             itemRowHolder.tvAddress.setOnClickListener(new View.OnClickListener(){
                                 @Override
                                 public void onClick(View view) {
