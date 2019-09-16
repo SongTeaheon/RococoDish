@@ -479,6 +479,9 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     //주변 가게 recyclerviewt세팅!
     public void initRecyclerView(Location locationCenter) {
         //todo :로딩창
+        Log.d(TAG, "initRecyclerView");
+        Log.d(TAG, locationCenter.getLatitude()+ ", " + locationCenter.getLongitude());
+
         loadingFrame = findViewById(R.id.loadingFrame);
         loadingFrame.setVisibility(View.VISIBLE);
 
@@ -495,27 +498,14 @@ public class SubActivity extends AppCompatActivity implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
         // 새로고침 코드
-        getCurrentLocation();
+        getLocationPermission();
 
-        loadingFrame = findViewById(R.id.loadingFrame);
-
-        main_recyclerview.setHasFixedSize(true);
-        recyclerViewDataAdapter = new RecyclerViewDataAdapter(this, mCurrentLocation, loadingFrame, 0);
-        main_recyclerview.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        main_recyclerview.setAdapter(recyclerViewDataAdapter);
-
-//        Recyclerview_myPage_Adapter myPageAdapter = new Recyclerview_myPage_Adapter(this);
-//        myPage_recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-//        myPage_recyclerview.setAdapter(myPageAdapter);
         //TODO : 뷰페이저로 수정
         myPostViewPager.removeAllViews();//다 지워주고(중복 방지)
         viewPagerAdapter = new SubViewPagerAdapter(this);//데이터 불러옴
         myPostViewPager.setAdapter(viewPagerAdapter);
         viewPagerAdapter.notifyDataSetChanged();//다시 불러온거 업데이트
 
-
-        // 새로고침 완료
-        recyclerViewDataAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
