@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.view.ViewCompat;
@@ -30,6 +31,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.rococodish.front_ui.DataModel.CommentInfo;
 import com.rococodish.front_ui.DataModel.NoticeInfo;
@@ -482,6 +486,8 @@ public class DishView extends AppCompatActivity {
     public void realTimeFetchComment(CollectionReference commentRef,
                                      final TextView hasNoComments,
                                      final ProgressDialog progressDialog) {
+
+
         //실시간 댓글 가져오기
         eventListener_comment = new EventListener<QuerySnapshot>() {
             @Override
@@ -489,29 +495,100 @@ public class DishView extends AppCompatActivity {
                 if (e != null) {
                     Log.d(TAG, e.getMessage());
                 }
-                assert queryDocumentSnapshots != null;
+                if(!queryDocumentSnapshots.isEmpty()){
 
-
-                if (queryDocumentSnapshots.getDocuments().isEmpty()) {
-                    hasNoComments.setVisibility(View.VISIBLE);//"댓글이 없습니다" 텍스트 보여주기
-                } else {
                     hasNoComments.setVisibility(View.GONE);
+
+
+                    for(DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()){
+
+                        CommentInfo commentInfo = dc.getDocument().toObject(CommentInfo.class);
+
+                        //TODO : 아래 파이어스토어 DocumentChange 참고
+                        //https://codinginflow.com/tutorials/android/cloud-firestore/part-13-documentchanges
+
+                        int newIndex = dc.getNewIndex();
+                        int oldIndex = dc.getOldIndex();
+
+                        if(dc.getType() == DocumentChange.Type.ADDED){
+                            Log.d(TAG, "댓글이 추가되었습니다.");
+                            Log.d(TAG, "oldIndex : "+oldIndex);
+                            Log.d(TAG, "newIndex : "+newIndex);
+                            commentList.add(commentInfo);
+                            commentAdapter.notifyItemInserted(newIndex);
+                            progressDialog.dismiss();
+                        }
+
+                        else if(dc.getType() == DocumentChange.Type.REMOVED){
+                            Log.d(TAG, "댓글이 삭제되었습니다.");
+                            Log.d(TAG, "oldIndex : "+oldIndex);
+                            Log.d(TAG, "newIndex : "+newIndex);
+                            commentList.remove(oldIndex);
+                            commentAdapter.notifyItemRemoved(oldIndex);
+                            progressDialog.dismiss();
+                        }
+                    }
+                }
+                else{
+                    commentList.clear();
+                    hasNoComments.setVisibility(View.VISIBLE);//"댓글이 없습니다" 텍스트 보여주기
+                    commentAdapter.notifyDataSetChanged();
+                    progressDialog.dismiss();
                 }
 
-                //todo : 삭제 자동반영하는 법
-                //1. 데이터를 불러올 때 비동기인 addSnapshotListener로 불러와야함.
-                //2. for문을 돌려서 데이터를 불러오기 직전에 리스트를 싹다 지워줌.(다시 불러올 때 중복 방지)
-                //3. for문이 끝나면 데이터 변경이 있는지 감지하고 비동기로 데이터 변경을 받으니까 자동반영됨.
-                commentList.clear();
+//                commentList.clear();
+//
+//
+//                if (queryDocumentSnapshots.isEmpty()) {
+//                    hasNoComments.setVisibility(View.VISIBLE);//"댓글이 없습니다" 텍스트 보여주기
+////                    commentList.clear();
+//                    commentAdapter.notifyDataSetChanged();
+//                    progressDialog.dismiss();
+//
+//                } else {
+//                    hasNoComments.setVisibility(View.GONE);
+//
+//                    //todo : 삭제 자동반영하는 법
+//                    //1. 데이터를 불러올 때 비동기인 addSnapshotListener로 불러와야함.
+//                    //2. for문을 돌려서 데이터를 불러오기 직전에 리스트를 싹다 지워줌.(다시 불러올 때 중복 방지)
+//                    //3. for문이 끝나면 데이터 변경이 있는지 감지하고 비동기로 데이터 변경을 받으니까 자동반영됨.
+////                    commentList.clear();
+//
+//                    for(int k = 0; k < queryDocumentSnapshots.getDocuments().size(); k++){
+//                        DocumentSnapshot snapshot = queryDocumentSnapshots.getDocuments().get(k);
+//
+//                        CommentInfo commentInfo = snapshot.toObject(CommentInfo.class);
+//                        commentList.add(commentInfo);
+////                        commentAdapter.notifyItemChanged(k);
+//                       }
+////                    commentAdapter.notifyItemRangeInserted(0, commentList.size());
+////                    commentAdapter.notifyItemRangeRemoved(0, commentList.size());
+//                    commentAdapter.notifyDataSetChanged();
+//                    progressDialog.dismiss();
+//                }
 
-                for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()) {
+                //----------------------------------------------------------------------
 
-                    CommentInfo commentInfo = dc.toObject(CommentInfo.class);
-                    commentList.add(commentInfo);
-                    commentAdapter.notifyItemChanged(commentList.size());
-                }
-                commentAdapter.notifyDataSetChanged();
-                progressDialog.dismiss();
+//                if (queryDocumentSnapshots.getDocuments().isEmpty()) {
+//                    hasNoComments.setVisibility(View.VISIBLE);//"댓글이 없습니다" 텍스트 보여주기
+//                } else {
+//                    hasNoComments.setVisibility(View.GONE);
+//                }
+//
+//                //todo : 삭제 자동반영하는 법
+//                //1. 데이터를 불러올 때 비동기인 addSnapshotListener로 불러와야함.
+//                //2. for문을 돌려서 데이터를 불러오기 직전에 리스트를 싹다 지워줌.(다시 불러올 때 중복 방지)
+//                //3. for문이 끝나면 데이터 변경이 있는지 감지하고 비동기로 데이터 변경을 받으니까 자동반영됨.
+//                commentList.clear();
+//
+//                for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()) {
+//
+//                    CommentInfo commentInfo = dc.toObject(CommentInfo.class);
+//                    commentList.add(commentInfo);
+//                    commentAdapter.notifyItemChanged(commentList.size());
+//                }
+//                commentAdapter.notifyDataSetChanged();
+//                progressDialog.dismiss();
             }
         };
         listenerRegistration_comment = commentRef
@@ -768,7 +845,7 @@ public class DishView extends AppCompatActivity {
 
     //댓글 부분 리사이클러뷰 설정
     public void commentRecyclerviewInit(PostingInfo postingInfo) {
-        commentAdapter = new CommentAdapter(this, commentList, postingInfo);
+        commentAdapter = new CommentAdapter(this, commentList, postingInfo, storeInfo);
         commentRecy = findViewById(R.id.comment_recyclerview);
         RecyclerView.LayoutManager lm = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         commentRecy.setLayoutManager(lm);

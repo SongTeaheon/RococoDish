@@ -16,6 +16,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rococodish.front_ui.DataModel.CommentInfo;
 import com.rococodish.front_ui.DataModel.PostingInfo;
@@ -151,7 +152,8 @@ public class CocomentAdapter extends RecyclerView.Adapter<CocomentAdapter.Cocome
                                                     .collection("대댓글")
                                                     .document(cocomentList.get(i).getDocUuid())
                                                     .delete();
-                                            notifyItemChanged(i);
+                                            Toast.makeText(context, "대댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+
                                         case "닫기":
                                             dialog.dismiss();
                                     }

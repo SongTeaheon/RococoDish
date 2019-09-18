@@ -128,7 +128,6 @@ dependencies {
 
     //Jsoup 라이브러리
     implementation 'org.jsoup:jsoup:1.11.2'
-
 }
 
 

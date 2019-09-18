@@ -1,5 +1,6 @@
 package com.rococodish.front_ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,10 +17,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.rococodish.front_ui.DataModel.CommentInfo;
 import com.rococodish.front_ui.DataModel.PostingInfo;
+import com.rococodish.front_ui.DataModel.SerializableStoreInfo;
 import com.rococodish.front_ui.Utils.GlideApp;
 import com.rococodish.front_ui.Utils.GlidePlaceHolder;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,6 +46,7 @@ import javax.annotation.Nullable;
 public class    CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
 
     private PostingInfo postingInfo;
+    private SerializableStoreInfo serializableStoreInfo;
     private List<CommentInfo> parentList;
     private Context context;
     private String TAG = "TAGCommentAdapter";
@@ -54,11 +59,13 @@ public class    CommentAdapter extends RecyclerView.Adapter<CommentAdapter.Comme
 
     public CommentAdapter(Context context,
                           List<CommentInfo> parentList,
-                          PostingInfo postingInfo){
+                          PostingInfo postingInfo,
+                          SerializableStoreInfo serializableStoreInfo){
 
         this.parentList = parentList;
         this.context = context;
         this.postingInfo = postingInfo;
+        this.serializableStoreInfo = serializableStoreInfo;
     }
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder {
@@ -204,30 +211,67 @@ public class    CommentAdapter extends RecyclerView.Adapter<CommentAdapter.Comme
                                             //우선 대댓글 삭제해주고
                                             commentRef
                                                     .collection("대댓글")
-                                                    .get()
-                                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                                         @Override
-                                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                                            //대댓이 있다면
+                                                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                                            if(e != null) return;
+                                                            assert queryDocumentSnapshots != null;
                                                             if (!queryDocumentSnapshots.getDocuments().isEmpty()){
-                                                                for(DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
+                                                                for(int j = 0; j < queryDocumentSnapshots.getDocuments().size(); j++){
+
+                                                                    DocumentSnapshot dc = queryDocumentSnapshots.getDocuments().get(j);
 
                                                                     commentRef
                                                                             .collection("대댓글")
                                                                             .document(dc.getId())
                                                                             .delete();
-                                                                    //대댓글 삭제 후 댓글 삭제
-                                                                    commentRef.delete();
-
                                                                 }
+                                                                commentRef.delete();
+                                                                Intent intent = new Intent(context, DishView.class);
+                                                                intent.putExtra("postingInfo", postingInfo);
+                                                                intent.putExtra("storeInfo", serializableStoreInfo);
+                                                                context.startActivity(intent);
+                                                                ((Activity) context).finish();
+                                                                ((Activity) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                                                Toast.makeText(context, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
                                                             }
                                                             else{
                                                                 //대댓글이 없으면 댓글만 삭제
                                                                 commentRef.delete();
-                                                                notifyItemChanged(i);
+                                                                Toast.makeText(context, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
                                                             }
                                                         }
                                                     });
+//                                                    .get()
+//                                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                                                        @Override
+//                                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                                                            //대댓이 있다면
+//                                                            if (!queryDocumentSnapshots.getDocuments().isEmpty()){
+////                                                                for(DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()){
+////
+////                                                                    commentRef
+////                                                                            .collection("대댓글")
+////                                                                            .document(dc.getId())
+////                                                                            .delete();
+////                                                                }
+//                                                                commentRef.delete();
+//                                                                for(int j = 0; j < queryDocumentSnapshots.getDocuments().size(); j++){
+//
+//                                                                    DocumentSnapshot dc = queryDocumentSnapshots.getDocuments().get(j);
+//
+//                                                                    commentRef
+//                                                                            .collection("대댓글")
+//                                                                            .document(dc.getId())
+//                                                                            .delete();
+//                                                                }
+//                                                            }
+//                                                            else{
+//                                                                //대댓글이 없으면 댓글만 삭제
+//                                                                commentRef.delete();
+//                                                            }
+//                                                        }
+//                                                    });
 
                                             break;
                                         case "취소":
@@ -280,9 +324,8 @@ public class    CommentAdapter extends RecyclerView.Adapter<CommentAdapter.Comme
 
                         CommentInfo commentInfo = dc.toObject(CommentInfo.class);
                         childList.add(commentInfo);
-                        cocomentAdapter.notifyItemChanged(childList.size());
+//                        cocomentAdapter.notifyItemChanged(childList.size());
                     }
-
                     cocomentAdapter.notifyDataSetChanged();
 
                 }
