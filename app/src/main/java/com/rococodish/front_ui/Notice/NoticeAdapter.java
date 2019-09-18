@@ -136,6 +136,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
                     intent.putExtra("pageNum", 0);
                     context.startActivity(intent);
                 } else {
+                    //댓글,대댓글 클릭했을 경우
                     final Intent intent = new Intent(context, DishView.class);
                     @Nullable final PostingInfo postingInfo = list.get(position).getPostingInfo();
                     if (postingInfo != null) {
@@ -156,6 +157,9 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
                                             intent.putExtra("storeInfo", serializableStoreInfo);
                                             context.startActivity(intent);
                                         }
+                                        else{
+                                            Toast.makeText(context, "삭제된 게시물입니다.", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 });
                     }
@@ -174,7 +178,6 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("알림을 불러오고 있습니다.");
         progressDialog.show();
-        //todo : 파이어스토어에서 댓글, 대댓글, 팔로우 알림 가져오기
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(FirebaseAuth.getInstance().getUid())

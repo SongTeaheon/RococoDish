@@ -49,7 +49,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
     public CouponAdapter(Context context){
         this.context = context;
         list = new ArrayList<>();
-        getCouponData();
+        fetchCouponData();
     }
 
     public class CouponViewHolder extends RecyclerView.ViewHolder {
@@ -119,7 +119,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
                 yesClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        userCouponData(docId);
+                        useCoupon(docId, position);
                     }
                 };
                 couponDialog = new CouponDialog(context, docId, title, yesClickListener);
@@ -130,7 +130,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
         });
     }
 
-    void userCouponData(String docId){
+    void useCoupon(String docId, final int position){
         FirebaseFirestore.getInstance()
                 .collection("사용자")
                 .document(FirebaseAuth.getInstance().getUid())
@@ -141,7 +141,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(context, "쿠폰이 사용되었습니다.", Toast.LENGTH_LONG).show();
-                        list.clear();
+                        notifyItemRemoved(position);
                         notifyDataSetChanged();
                     }
                 })
@@ -149,7 +149,6 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(context, "쿠폰 사용에 문제가 생겼습니다.", Toast.LENGTH_LONG).show();
-                        list.clear();
                         notifyDataSetChanged();
                     }
                 });
@@ -162,7 +161,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
     }
 
 
-    private void getCouponData(){
+    private void fetchCouponData(){
 
 
         EventListener<QuerySnapshot> eventListener = new EventListener<QuerySnapshot>() {
@@ -174,16 +173,29 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
                 if(queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()){
 
                     list.clear();
-
-                    for(DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()){
-
+                    for(int i = 0; i < queryDocumentSnapshots.getDocuments().size(); i++){
+                        DocumentSnapshot snapshot = queryDocumentSnapshots.getDocuments().get(i);
                         CouponInfo couponInfo = snapshot.toObject(CouponInfo.class);
-
                         list.add(couponInfo);
-
                     }
                     notifyDataSetChanged();
                 }
+                else if(queryDocumentSnapshots.isEmpty()){
+                    list.clear();
+                    notifyDataSetChanged();
+                }
+//                if(queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()){
+//
+//                    list.clear();
+//
+//                    for(DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()){
+//
+//                        CouponInfo couponInfo = snapshot.toObject(CouponInfo.class);
+//
+//                        list.add(couponInfo);
+//                    }
+//                    notifyDataSetChanged();
+//                }
             }
         };
 
