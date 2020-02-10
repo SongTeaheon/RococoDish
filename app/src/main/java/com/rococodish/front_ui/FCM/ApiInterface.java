@@ -9,7 +9,7 @@ import retrofit2.http.POST;
 
 public interface ApiInterface {
 
-    String serverKey = "AAAAsqwD-Ag:APA91bFp8RVejD5mPooZACmSbly2fQTad7w_LWA5w5thdhx7COMOxxWvyCQCDfNzNGCOJdE0Q99dOn4WI96-5SetQQxNLIQxnFNB_MKEJrNYPKT2BUtXvsCyZC6MI8SXinn-BgwqnTK5";
+    String serverKey = "";
 
     @Headers({"Authorization: key=" + serverKey, "Content-Type:application/json"})
     @POST("fcm/send")

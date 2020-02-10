@@ -2,13 +2,19 @@
     <string name="app_name">로코코디쉬</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment"></string>
     <string name="todo">TODO</string>
 
     <!--페이스북 문자열들-->
-    <string name="facebook_app_id">485865235320156</string>
-    <string name="fb_login_protocol_scheme">fb485865235320156</string>
+    <string name="facebook_app_id"></string>
+    <string name="fb_login_protocol_scheme"></string>
 
     <!--fcm 푸쉬알림 관련-->
-    <string name="default_notification_channel_id">rococoDish_fcm_default_channelId</string>
+    <string name="default_notification_channel_id"></string>
+
+    <string name="kakaoApiId"></string>
+    <string name="FCMApiServerKey"></string>
+    <string name="AlgoliaApplicationID"></string>
+    <string name="AlgoliaAdminAPIKey"></string>
+
 </resources>

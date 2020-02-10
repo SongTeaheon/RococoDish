@@ -1,5 +1,6 @@
 package com.rococodish.front_ui.Utils;
 
+import android.content.res.Resources;
 import android.util.Log;
 
 import com.algolia.search.saas.AlgoliaException;
@@ -12,6 +13,7 @@ import com.rococodish.front_ui.DataModel.StoreInfo;
 import com.rococodish.front_ui.DataModel.UserInfo;
 import com.rococodish.front_ui.Interface.AlgoliaSearchPredicate;
 import com.google.gson.Gson;
+import com.rococodish.front_ui.R;
 import com.rococodish.front_ui.Utils.JsonParsing;
 
 import org.json.JSONArray;
@@ -21,8 +23,8 @@ import org.json.JSONObject;
 
 public class AlgoliaUtils {
     private static final String TAG = "TAGAlgoliaUtils";
-    private static final String AlgoliaApplicationID = "TYMUUCLMND";
-    private static final String AlgoliaAdminAPIKey = "c4c2b2d45e16459c1eb2322e74e31b86";
+    private static final String AlgoliaApplicationID = Resources.getSystem().getString(R.string.AlgoliaApplicationID);
+    private static final String AlgoliaAdminAPIKey = Resources.getSystem().getString(R.string.AlgoliaAdminAPIKey);
     public static Client client = new Client(AlgoliaApplicationID, AlgoliaAdminAPIKey);
 
     public static void addObject(String indexName, Object data) {

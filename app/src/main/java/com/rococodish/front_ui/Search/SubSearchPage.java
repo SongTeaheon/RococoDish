@@ -58,7 +58,8 @@ public class SubSearchPage extends AppCompatActivity {
     Retrofit retrofit;
     KakaoApiStoreSearchService service;
     //TODO: 리팩토링 : kakao api utils따로 만들어서 StoreSearchFragment코드랑 합치기
-    private final String kakaoApiId = "KakaoAK 952900bd9ca440b836d9c490525aef64";
+    private final String kakaoApiId = getString(R.string.kakaoApiId);
+
 
     public static MyDBHandler dbHandler;
     SimpleCursorAdapter mAdapter = null;

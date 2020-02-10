@@ -39,7 +39,7 @@ import static com.rococodish.front_ui.Utils.KakaoApiStoreSearchService.API_URL;
 
 public class StoreSearchFragment extends Fragment {
     private final String TAG = "TAGStoreResearchFrag";
-    private final String kakaoApiId = "KakaoAK 952900bd9ca440b836d9c490525aef64";
+    private final String kakaoApiId = getString(R.string.kakaoApiId);
     private final String code_store = "FD6"; //음식점
     private final String code_cafe = "CE7"; //카페
 

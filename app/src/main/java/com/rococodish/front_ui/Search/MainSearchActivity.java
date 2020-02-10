@@ -41,8 +41,7 @@ public class MainSearchActivity extends AppCompatActivity {
 
     Retrofit retrofit;
     KakaoApiStoreSearchService service;
-    private final String kakaoApiId = "KakaoAK 952900bd9ca440b836d9c490525aef64";
-
+    private final String kakaoApiId = getString(R.string.kakaoApiId);
 
 
 
